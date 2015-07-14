@@ -1,0 +1,6 @@
+vendor/
+data/
+.idea/
+build/
+.kdev4
+*.kdev4
