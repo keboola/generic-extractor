@@ -27,6 +27,14 @@ class ResponseUrlScroller implements ScrollerInterface
 		$this->includeParams = $includeParams;
 	}
 
+	public static function create(array $config)
+	{
+		return new self(
+			!empty($config['urlKey']) ? $config['urlKey'] : 'next_page',
+			!empty($config['includeParams']) ? (bool) $config['includeParams'] : false
+		);
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */

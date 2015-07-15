@@ -1,8 +1,9 @@
 <?php
 
-use	Keboola\GenericExtractor\Config\Configuration;
+use	Keboola\GenericExtractor\Config\Configuration,
+	Keboola\GenericExtractor\GenericExtractor;
 use	Keboola\Temp\Temp;
-use	Keboola\GenericExtractor\GenericExtractor;
+use	Keboola\Juicer\Common\Logger;
 
 require_once(dirname(__FILE__) . "/vendor/autoload.php");
 
@@ -10,6 +11,7 @@ const APP_NAME = 'ex-generic-v2';
 
 $temp = new Temp(APP_NAME);
 
+Logger::initLogger(APP_NAME);
 
 $arguments = getopt("d::", array("data::"));
 if (!isset($arguments["data"])) {
@@ -19,10 +21,6 @@ if (!isset($arguments["data"])) {
 
 $configuration = new Configuration(APP_NAME, $temp);
 $config = $configuration->getConfig($arguments['data']);
-$configuration->initialize($config);
-
-
-// $executor = new Executor($configuration);
 
 $extractor = new GenericExtractor($temp);
 $extractor->setApi($configuration->getApi());

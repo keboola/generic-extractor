@@ -16,4 +16,6 @@ interface ScrollerInterface
 	 * Reset the pageination pointer
 	 */
 	public function reset();
+
+	public static function create(array $config);
 }

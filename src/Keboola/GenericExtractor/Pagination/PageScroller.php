@@ -44,6 +44,16 @@ class PageScroller implements ScrollerInterface
 		$this->firstPage = $this->page = $firstPage;
 	}
 
+	public static function create(array $config)
+	{
+		return new self(
+			!empty($config['pageParam']) ? $config['pageParam'] : 'page',
+			!empty($config['limit']) ? $config['limit'] : null,
+			!empty($config['limitParam']) ? $config['limitParam'] : 'limit',
+			!empty($config['firstPage']) ? $config['firstPage'] : 1
+		);
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */

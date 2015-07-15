@@ -19,4 +19,11 @@ class NoScroller implements ScrollerInterface
 	 * {@inheritdoc}
 	 */
 	public function reset() {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public static function create(array $config) {
+		return new self;
+	}
 }

@@ -3,6 +3,7 @@
 namespace Keboola\GenericExtractor\Pagination;
 
 use	Keboola\Utils\Utils;
+use	Keboola\Juicer\Exception\UserException;
 
 /**
  * Scrolls using simple "limit" and "offset" query parameters.
@@ -33,6 +34,19 @@ class OffsetScroller implements ScrollerInterface
 		$this->limit = $limit;
 		$this->limitParam = $limitParam;
 		$this->offsetParam = $offsetParam;
+	}
+
+	public static function create(array $config)
+	{
+		if (empty($config['limit'])) {
+			throw new UserException("Missing required 'pagination.limit' attribute for pagination");
+		}
+
+		return new self(
+			$config['limit'],
+			!empty($config['limitParam']) ? $config['limitParam'] : 'limit',
+			!empty($config['offsetParam']) ? $config['offsetParam'] : 'offset'
+		);
 	}
 
 	/**

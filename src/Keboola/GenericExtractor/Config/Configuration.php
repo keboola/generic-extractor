@@ -39,8 +39,8 @@ class Configuration extends BaseConfiguration
 		// TODO init api
 		$this->api = new Api([
 			'baseUrl' => $this->getBaseUrl($apiYml, $config),
-			'scroller' => $this->getScroller($apiYml),
-			'auth' => $this->getAuth($apiYml)
+			'auth' => $this->getAuth($apiYml, $config),
+			'scroller' => $this->getScroller($apiYml)
 		]);
 
 		return $config;
@@ -59,34 +59,34 @@ class Configuration extends BaseConfiguration
 	 * - type of the auth method TODO - is that needed?
 	 * - Method that accepts GuzzleClient as parameter and adds the emitter/defaults to it
 	 *
-	 * @param string $configName
+	 * @param array $api
+	 * @param Config $config
 	 * @return Authentication\AuthInterface
 	 */
-	public function getAuth($config)
+	public function getAuth($api, Config $config)
 	{
-		$bucket = $this->configBucket;
-		if (empty($bucket['auth']['type'])) {
+		if (empty($api['authentication']['type'])) {
 			Logger::log("INFO", "Using NO Auth");
 			return new Authentication\NoAuth();
 		}
 
-		Logger::log("INFO", "Using '{$bucket['auth']['type']}' Auth");
-		switch ($bucket['auth']['type']) {
+		Logger::log("INFO", "Using '{$api['authentication']['type']}' Auth");
+		switch ($api['authentication']['type']) {
 			case 'basic':
-				return new Authentication\Basic($bucket['items'][$configName]);
+				return new Authentication\Basic($config->getAttributes());
 				break;
 			case 'bearer':
-				throw new ApplicationException(501, "The bearer method is not implemented yet");
+				throw new ApplicationException("The bearer method is not implemented yet");
 				break;
 			case 'url.query':
-				if (empty($bucket['query'])) {
+				if (empty($api['query'])) {
 					throw new UserException("The query authentication method requires query parameters to be defined in the configuration bucket attributes.");
 				}
 
-				return new Authentication\Query(new Builder(), $bucket['items'][$configName], $bucket['query']);
+				return new Authentication\Query(new Builder(), $config->getAttributes(), $api['query']);
 				break;
 			default:
-				throw new UserException("Unknown authorization type '{$bucket['auth']['type']}'");
+				throw new UserException("Unknown authorization type '{$api['authentication']['type']}'");
 				break;
 		}
 	}
@@ -142,55 +142,33 @@ class Configuration extends BaseConfiguration
 
 	/**
 	 * Return pagination scoller
+	 * @param array $api
 	 * @return Pagination\ScrollerInterface
 	 * @todo refactor Scrollers to use config arrays
 	 */
-	public function getScroller()
+	public function getScroller($api)
 	{
-		if (empty($this->configBucket['pagination']) || empty($this->configBucket['pagination']['method'])) {
-			return new Pagination\NoScroller();
+		if (empty($api['pagination']) || empty($api['pagination']['method'])) {
+			return Pagination\NoScroller::create([]);
 		}
-		$pagination = $this->configBucket['pagination'];
+		$pagination = $api['pagination'];
 
 		switch ($pagination['method']) {
 			case 'offset':
-				if (empty($pagination['limit'])) {
-					throw new UserException("Missing required 'pagination.limit' attribute for pagination");
-				}
-
-				return new Pagination\OffsetScroller(
-					$pagination['limit'],
-					!empty($pagination['limitParam']) ? $pagination['limitParam'] : 'limit',
-					!empty($pagination['offsetParam']) ? $pagination['offsetParam'] : 'offset'
-				);
+				return Pagination\OffsetScroller::create($pagination);
 				break;
 			case 'response.param':
-				throw new ApplicationException(501, "Pagination by param Not yet implemented");
+				throw new ApplicationException("Pagination by param Not yet implemented", 501);
 				break;
 			case 'response.url':
-				return new Pagination\ResponseUrlScroller(
-					!empty($pagination['urlKey']) ? $pagination['urlKey'] : 'next_page',
-					!empty($pagination['includeParams']) ? (bool) $pagination['includeParams'] : false
-				);
+				return Pagination\ResponseUrlScroller::create($pagination);
+				break;
 			case 'pagenum':
-				return new Pagination\PageScroller(
-					!empty($pagination['pageParam']) ? $pagination['pageParam'] : 'page',
-					!empty($pagination['limit']) ? $pagination['limit'] : null,
-					!empty($pagination['limitParam']) ? $pagination['limitParam'] : 'limit',
-					!empty($pagination['firstPage']) ? $pagination['firstPage'] : 1
-				);
+				return Pagination\PageScroller::create($pagination);
 				break;
 			default:
 				throw new UserException("Unknown pagination method '{$pagination['method']}'");
 				break;
 		}
-	}
-
-	/**
-	 * @param array $config
-	 */
-	public function initialize($config)
-	{
-		var_dump($config);
 	}
 }
