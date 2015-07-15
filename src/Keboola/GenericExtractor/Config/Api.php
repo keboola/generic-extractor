@@ -25,6 +25,11 @@ class Api
 	 */
 	protected $scroller;
 
+	/**
+	 * @var Headers
+	 */
+	protected $headers;
+
 	public function __construct(array $config)
 	{
 		if (!empty($config['baseUrl'])) {
@@ -35,6 +40,9 @@ class Api
 		}
 		if (!empty($config['auth'])) {
 			$this->setAuth($config['auth']);
+		}
+		if (!empty($config['headers'])) {
+			$this->setHeaders($config['headers']);
 		}
 	}
 
@@ -66,5 +74,15 @@ class Api
 	public function getAuth()
 	{
 		return $this->auth;
+	}
+
+	public function setHeaders(Headers $headers)
+	{
+		$this->headers = $headers;
+	}
+
+	public function getHeaders()
+	{
+		return $this->headers;
 	}
 }

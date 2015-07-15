@@ -40,7 +40,8 @@ class Configuration extends BaseConfiguration
 		$this->api = new Api([
 			'baseUrl' => $this->getBaseUrl($apiYml, $config),
 			'auth' => $this->getAuth($apiYml, $config),
-			'scroller' => $this->getScroller($apiYml)
+			'scroller' => $this->getScroller($apiYml),
+			'headers' => $this->getHeaders($apiYml, $config)
 		]);
 
 		return $config;
@@ -115,32 +116,6 @@ class Configuration extends BaseConfiguration
 	}
 
 	/**
-	 * @param string $configName
-	 * @return array
-	 */
-	public function getHeaders($configName)
-	{
-		$bucket = $this->configBucket;
-		$tableAttrs = $bucket['items'][$configName];
-
-		if (!empty($bucket['http']['requiredHeaders'])) {
-			$requiredHeaders = explode(",", $bucket['http']['requiredHeaders']);
-			array_walk($requiredHeaders, function(&$value) {$value = trim($value);});
-
-			foreach($requiredHeaders as $reqHeader) {
-				if (empty($tableAttrs['header'][$reqHeader])) {
-					throw new UserException("Missing required header {$reqHeader} in configuration table attributes!");
-				}
-			}
-		}
-
-		$tHeaders = empty($tableAttrs['header']) ? [] : $tableAttrs['header'];
-		$bHeaders = empty($bucket['http']['header']) ? [] : $bucket['http']['header'];
-
-		return array_replace($bHeaders, $tHeaders);
-	}
-
-	/**
 	 * Return pagination scoller
 	 * @param array $api
 	 * @return Pagination\ScrollerInterface
@@ -170,5 +145,15 @@ class Configuration extends BaseConfiguration
 				throw new UserException("Unknown pagination method '{$pagination['method']}'");
 				break;
 		}
+	}
+
+	/**
+	 * @param array $api
+	 * @param Config $config
+	 * @return array
+	 */
+	public function getHeaders($api, Config $config)
+	{
+		return Headers::create($api, $config);
 	}
 }

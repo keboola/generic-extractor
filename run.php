@@ -25,5 +25,4 @@ $config = $configuration->getConfig($arguments['data']);
 $extractor = new GenericExtractor($temp);
 $extractor->setApi($configuration->getApi());
 $extractor->setAppName("ex-generic-v2"); // TODO from cfg
-$extractor->setHeaders(); // TODO
 $extractor->run($config);
