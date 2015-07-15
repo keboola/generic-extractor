@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a3465ce2f682dc4a74f2a5c3f8d77435",
+    "hash": "5549b26d3fda7c4b5572b7910d4807af",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -569,6 +569,51 @@
                 "stream"
             ],
             "time": "2014-08-17 21:15:53"
+        },
+        {
+            "name": "keboola/codebuilder",
+            "version": "0.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/keboola/php-codebuilder.git",
+                "reference": "953636fec5b76f5e441337eb3ea43976a478779d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/keboola/php-codebuilder/zipball/953636fec5b76f5e441337eb3ea43976a478779d",
+                "reference": "953636fec5b76f5e441337eb3ea43976a478779d",
+                "shasum": ""
+            },
+            "require": {
+                "keboola/php-utils": "~0.1.10",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Keboola\\Code": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ondrej Vana",
+                    "email": "kachna@keboola.cz"
+                }
+            ],
+            "description": "Execute JSON defined user scripts",
+            "keywords": [
+                "script",
+                "user",
+                "user-script"
+            ],
+            "time": "2015-02-16 13:06:08"
         },
         {
             "name": "keboola/csv",

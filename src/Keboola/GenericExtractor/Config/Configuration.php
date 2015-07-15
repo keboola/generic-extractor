@@ -5,6 +5,7 @@ namespace Keboola\GenericExtractor\Config;
 use	Keboola\Juicer\Exception\ApplicationException,
 	Keboola\Juicer\Exception\UserException;
 use	Keboola\Juicer\Config\Configuration as BaseConfiguration,
+	Keboola\Juicer\Config\Config,
 	Keboola\Juicer\Common\Logger;
 use	Keboola\GenericExtractor\Authentication,
 	Keboola\GenericExtractor\Pagination;
@@ -12,11 +13,44 @@ use	Keboola\Code\Builder;
 use	Keboola\Utils\Utils,
 	Keboola\Utils\Exception\JsonDecodeException;
 
+// TODO move to parent class with a loader fn
+use Symfony\Component\Yaml\Yaml;
+
 /**
  * {@inheritdoc}
  */
 class Configuration extends BaseConfiguration
 {
+	/**
+	 * @var Api
+	 */
+	protected $api;
+
+	/**
+	 * @param string $dataDir Path to folder containing config.yml
+	 * @return Config
+	 */
+	public function getConfig($dataDir)
+	{
+		$config = parent::getConfig($dataDir);
+
+		// TODO check if it exists (have some getter fn in parent Configuration)
+		$apiYml = Yaml::parse(file_get_contents($dataDir . "/config.yml"))['api'];
+		// TODO init api
+		$this->api = new Api([
+			'baseUrl' => $this->getBaseUrl($apiYml, $config),
+			'scroller' => $this->getScroller($apiYml),
+			'auth' => $this->getAuth($apiYml)
+		]);
+
+		return $config;
+	}
+
+	public function getApi()
+	{
+		return $this->api;
+	}
+
 	/**
 	 * Should return a class that contains
 	 * - info about what attrs store the Auth keys
@@ -58,23 +92,25 @@ class Configuration extends BaseConfiguration
 	}
 
 	/**
+	 * @param array $api
+	 * @param Config $config
 	 * @return string
 	 */
-	public function getBaseUrl($configName)
+	public function getBaseUrl($api, Config $config)
 	{
-		if (empty($this->configBucket['baseUrl'])) {
-			throw new UserException("The 'baseUrl' attribute must be set in {$this->configBucketId}");
+		if (empty($api['baseUrl'])) {
+			throw new UserException("The 'baseUrl' attribute must be set in API configuration");
 		}
 
-		if (filter_var($this->configBucket['baseUrl'], FILTER_VALIDATE_URL)) {
-			return $this->configBucket['baseUrl'];
+		if (filter_var($api['baseUrl'], FILTER_VALIDATE_URL)) {
+			return $api['baseUrl'];
 		} else {
 			try {
-				$fn = Utils::json_decode($this->configBucket['baseUrl']);
+				$fn = Utils::json_decode($api['baseUrl']);
 			} catch(JsonDecodeException $e) {
-				throw new UserException("The 'baseUrl' attribute in {$this->configBucketId} is not an URL string, neither a valid JSON containing an user function! Error: " . $e->getMessage(), $e);
+				throw new UserException("The 'baseUrl' attribute in API configuration is not an URL string, neither a valid JSON containing an user function! Error: " . $e->getMessage(), $e);
 			}
-			return (new Builder())->run($fn, ['attr' => $this->configBucket['items'][$configName]]);
+			return (new Builder())->run($fn, ['attr' => $config->getAttributes()]);
 		}
 	}
 

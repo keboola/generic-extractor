@@ -3,19 +3,23 @@
 namespace Keboola\GenericExtractor;
 
 use	Keboola\Juicer\Extractor\Extractors\JsonExtractor,
-	Keboola\Juicer\Config\Config;
-use	Syrup\ComponentBundle\Exception\SyrupComponentException;
+	Keboola\Juicer\Config\Config,
+	Keboola\Juicer\Exception\ApplicationException;
 use	GuzzleHttp\Client;
 use	Keboola\GenericExtractor\GenericExtractorJob,
 	Keboola\GenericExtractor\Authentication\AuthInterface,
 	Keboola\GenericExtractor\Pagination\ScrollerInterface,
-	Keboola\Code\Builder;
+	Keboola\GenericExtractor\Config\Api;
+use	Keboola\Code\Builder;
 use	Keboola\Utils\Utils;
 
 class GenericExtractor extends JsonExtractor
 {
 	protected $name = "generic";
 	protected $prefix = "ex-api";
+	/**
+	 * @var string
+	 */
 	protected $baseUrl;
 	/**
 	 * @var array
@@ -95,6 +99,16 @@ class GenericExtractor extends JsonExtractor
 	public function setAppName($api)
 	{
 		$this->name = $api;
+	}
+
+	/**
+	 * @param Api $api
+	 */
+	public function setApi(Api $api)
+	{
+		$this->setBaseUrl($api->getBaseUrl());
+		$this->setAuth($api->getAuth());
+		$this->setScroller($api->getScroller());
 	}
 
 	/**

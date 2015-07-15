@@ -25,9 +25,7 @@ $configuration->initialize($config);
 // $executor = new Executor($configuration);
 
 $extractor = new GenericExtractor($temp);
-// Do all these in a function in EX TODO
-$extractor->setBaseUrl($configuration->getBaseUrl($config)); // TODO
-$extractor->setAuth(); // TODO
-$extractor->setScroller(); // TODO
+$extractor->setApi($configuration->getApi());
 $extractor->setAppName("ex-generic-v2"); // TODO from cfg
+$extractor->setHeaders(); // TODO
 $extractor->run($config);
