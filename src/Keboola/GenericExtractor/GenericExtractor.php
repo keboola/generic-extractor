@@ -50,50 +50,52 @@ class GenericExtractor extends JsonExtractor
 
 		$this->auth->authenticateClient($client);
 
-		$this->parser->setAllowArrayStringMix(true);
+		$parser = $this->getParser($config);
+		$parser->setAllowArrayStringMix(true);
 
 		$builder = new Builder();
 
-		$runTimes = [];
-		$jobTimes = [];
-		foreach($config["jobs"] as $jobConfig) {
-			$this->saveLastJobTime($jobConfig->getJobId(), "start");
-			$startTime = time();
+// 		$runTimes = [];
+// 		$jobTimes = [];
+		foreach($config->getJobs() as $jobConfig) {
+// 			$this->saveLastJobTime($jobConfig->getJobId(), "start");
+// 			$startTime = time();
 
-			foreach(['start', 'success', 'error', 'success_startTime'] as $timeAttr) {
-				if (empty($config['attributes']['job'][$jobConfig->getJobId()][$timeAttr])) {
-					$config['attributes']['job'][$jobConfig->getJobId()][$timeAttr] = date(DATE_W3C, 0);
-				}
-			}
+// 			foreach(['start', 'success', 'error', 'success_startTime'] as $timeAttr) {
+// 				if (empty($config['attributes']['job'][$jobConfig->getJobId()][$timeAttr])) {
+// 					$config['attributes']['job'][$jobConfig->getJobId()][$timeAttr] = date(DATE_W3C, 0);
+// 				}
+// 			}
 
-			$job = new GenericExtractorJob($jobConfig, $client, $this->parser);
+			$job = new GenericExtractorJob($jobConfig, $client, $parser);
 			$job->setScroller($this->scroller);
-			$job->setAttributes($config['attributes']);
+			$job->setAttributes($config->getAttributes());
 			$job->setBuilder($builder);
 			try {
 				$job->run();
 			} catch(\Exception $e) {
-				$this->saveLastJobTime($jobConfig->getJobId(), "error");
-				$this->saveLastJobTime(
-					$jobConfig->getJobId(),
-					"error_startTime",
-					date(DATE_W3C, $startTime)
-				);
+// 				$this->saveLastJobTime($jobConfig->getJobId(), "error");
+// 				$this->saveLastJobTime(
+// 					$jobConfig->getJobId(),
+// 					"error_startTime",
+// 					date(DATE_W3C, $startTime)
+// 				);
 				throw $e;
 			}
 
-			$jobTimes[$jobConfig->getJobId()]['success'] = date(DATE_W3C);
-			$jobTimes[$jobConfig->getJobId()]['success_startTime'] = date(DATE_W3C, $startTime);
-			$runTimes[$jobConfig->getJobId()] = $job->getRunTime();
+// 			$jobTimes[$jobConfig->getJobId()]['success'] = date(DATE_W3C);
+// 			$jobTimes[$jobConfig->getJobId()]['success_startTime'] = date(DATE_W3C, $startTime);
+// 			$runTimes[$jobConfig->getJobId()] = $job->getRunTime();
 		}
 
-		$this->sapiUpload($this->parser->getCsvFiles());
-		foreach($jobTimes as $jobId => $times) {
-			$this->saveLastJobTime($jobId, "success", $times['success']);
-			$this->saveLastJobTime($jobId, "success_startTime", $times['success_startTime']);
-		}
+// 		foreach($jobTimes as $jobId => $times) {
+// 			$this->saveLastJobTime($jobId, "success", $times['success']);
+// 			$this->saveLastJobTime($jobId, "success_startTime", $times['success_startTime']);
+// 		}
 
-		return $runTimes;
+		$this->updateParserMetadata($parser);
+
+		return $parser->getCsvFiles();
 	}
 
 	public function setAppName($api)

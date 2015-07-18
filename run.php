@@ -19,10 +19,13 @@ if (!isset($arguments["data"])) {
 	exit(1);
 }
 
-$configuration = new Configuration(APP_NAME, $temp);
-$config = $configuration->getConfig($arguments['data']);
+$configuration = new Configuration($arguments['data'], APP_NAME, $temp);
+$config = $configuration->getConfig();
 
 $extractor = new GenericExtractor($temp);
 $extractor->setApi($configuration->getApi());
 $extractor->setAppName("ex-generic-v2"); // TODO from cfg
-$extractor->run($config);
+$extractor->setMetadata($configuration->getConfigMetadata());
+$results = $extractor->run($config);
+$configuration->storeResults($results);
+$configuration->saveConfigMetadata($extractor->getMetadata());

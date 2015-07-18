@@ -27,15 +27,14 @@ class Configuration extends BaseConfiguration
 	protected $api;
 
 	/**
-	 * @param string $dataDir Path to folder containing config.yml
 	 * @return Config
 	 */
-	public function getConfig($dataDir)
+	public function getConfig()
 	{
-		$config = parent::getConfig($dataDir);
+		$config = parent::getConfig();
 
 		// TODO check if it exists (have some getter fn in parent Configuration)
-		$apiYml = Yaml::parse(file_get_contents($dataDir . "/config.yml"))['api'];
+		$apiYml = $this->getYmlConfig()['parameters']['api'];
 		// TODO init api
 		$this->api = new Api([
 			'baseUrl' => $this->getBaseUrl($apiYml, $config),

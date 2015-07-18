@@ -46,7 +46,7 @@ class GenericExtractorJob extends JsonRecursiveJob
 		try {
 			$this->params = empty($this->config["params"])
 				? []
-				: Utils::json_decode($this->config["params"]);
+				: $this->config["params"];
 		} catch(JsonDecodeException $e) {
 			$e = new UserException("Error decoding parameters Json: " . $e->getMessage());
 			$e->setData(['params' => $this->config["params"]]);
