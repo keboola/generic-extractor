@@ -49,10 +49,13 @@ class Query implements AuthInterface
 	public function authenticateClient(Client $client)
 	{
 		$sub = new UrlSignature();
+		// Create array of objects
+		// FIXME should be an option while loading from YML?
+		$q = (array) json_decode(json_encode($this->query));
 		$sub->setSignatureGenerator(
 			function () {
 				$query = [];
-				foreach($this->query as $key => $value) {
+				foreach($q as $key => $value) {
 					$query[$key] = $this->builder->run($value, ['attr' => $this->attrs]);
 				}
 				return $query;

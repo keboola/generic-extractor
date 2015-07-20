@@ -28,6 +28,10 @@ class GenericExtractorJob extends JsonRecursiveJob
 	 */
 	protected $attributes;
 	/**
+	 * @var array
+	 */
+	protected $metadata;
+	/**
 	 * @var string
 	 */
 	protected $lastResponseHash;
@@ -115,9 +119,12 @@ class GenericExtractorJob extends JsonRecursiveJob
 
 	protected function getParams()
 	{
-		$params = (array) $this->params;
-		array_walk($params, function(&$value, $key){
-			$value = is_scalar($value) ? $value : $this->stringBuilder->run($value, ['attr' => $this->attributes]);
+		$params = (array) Utils::json_decode(json_encode($this->params));
+		array_walk($params, function(&$value, $key) {
+			$value = is_scalar($value) ? $value : $this->stringBuilder->run($value, [
+				'attr' => $this->attributes,
+				'time' => $this->metadata['time']
+			]);
 		});
 		return $params;
 	}
@@ -140,6 +147,8 @@ class GenericExtractorJob extends JsonRecursiveJob
 		$scroller = clone $this->scroller;
 		$scroller->reset();
 		$job->setScroller($scroller);
+		$job->setMetadata($this->metadata);
+		$job->setAttributes($this->attributes);
 		return $job;
 	}
 
@@ -157,5 +166,13 @@ class GenericExtractorJob extends JsonRecursiveJob
 	public function setBuilder(Builder $builder)
 	{
 		$this->stringBuilder = $builder;
+	}
+
+	/**
+	 * @param array $metadata
+	 */
+	public function setMetadata(array $metadata)
+	{
+		$this->metadata = $metadata;
 	}
 }

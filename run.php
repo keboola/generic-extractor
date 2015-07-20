@@ -38,10 +38,10 @@ try {
 	);
 	$configuration->saveConfigMetadata($extractor->getMetadata());
 } catch(UserException $e) {
-	Logger::log('error', $e->getMessage(), $e->getData());
+	Logger::log('error', $e->getMessage(), (array) $e->getData());
 	exit(1);
 } catch(ApplicationException $e) {
-	Logger::log('error', $e->getMessage(), $e->getData());
+	Logger::log('error', $e->getMessage(), (array) $e->getData());
 	exit($e->getCode() ?: 2);
 }
 

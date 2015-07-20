@@ -55,6 +55,8 @@ class GenericExtractor extends JsonExtractor
 
 		$builder = new Builder();
 
+		$this->metadata['time']['previousStart'] = empty($this->metadata['time']['previousStart']) ? 0 : $this->metadata['time']['previousStart'];
+		$this->metadata['time']['currentStart'] = time();
 // 		$runTimes = [];
 // 		$jobTimes = [];
 		foreach($config->getJobs() as $jobConfig) {
@@ -70,6 +72,7 @@ class GenericExtractor extends JsonExtractor
 			$job = new GenericExtractorJob($jobConfig, $client, $parser);
 			$job->setScroller($this->scroller);
 			$job->setAttributes($config->getAttributes());
+			$job->setMetadata($this->metadata);
 			$job->setBuilder($builder);
 			try {
 				$job->run();
@@ -92,6 +95,9 @@ class GenericExtractor extends JsonExtractor
 // 			$this->saveLastJobTime($jobId, "success", $times['success']);
 // 			$this->saveLastJobTime($jobId, "success_startTime", $times['success_startTime']);
 // 		}
+
+		$this->metadata['time']['previousStart'] = $this->metadata['time']['currentStart'];
+		unset($this->metadata['time']['currentStart']);
 
 		$this->updateParserMetadata($parser);
 

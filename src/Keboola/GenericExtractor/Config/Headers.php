@@ -52,7 +52,7 @@ class Headers
 	public function loadConfig(Config $config)
 	{
 		$attrs = $config->getAttributes();
-		$configHeaders = empty($attrs['headers']) ? [] : $attrs['headers'];
+		$configHeaders = empty($attrs['http']['headers']) ? [] : $attrs['http']['headers'];
 
 		if (!empty($this->requiredHeaders)) {
 			foreach($this->requiredHeaders as $rHeader) {
