@@ -64,11 +64,11 @@ class Configuration extends BaseConfiguration
 	public function getAuth($api, Config $config)
 	{
 		if (empty($api['authentication']['type'])) {
-			Logger::log("INFO", "Using NO Auth");
+			Logger::log("DEBUG", "Using NO Auth");
 			return new Authentication\NoAuth();
 		}
 
-		Logger::log("INFO", "Using '{$api['authentication']['type']}' Auth");
+		Logger::log("DEBUG", "Using '{$api['authentication']['type']}' Auth");
 		switch ($api['authentication']['type']) {
 			case 'basic':
 				return new Authentication\Basic($config->getAttributes());

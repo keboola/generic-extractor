@@ -16,7 +16,7 @@ $temp = new Temp(APP_NAME);
 Logger::initLogger(APP_NAME);
 
 try {
-	$arguments = getopt("d::", array("data::"));
+	$arguments = getopt("d::", ["data::"]);
 	if (!isset($arguments["data"])) {
 		throw new UserException('Data folder not set.');
 	}
@@ -25,8 +25,8 @@ try {
 	$config = $configuration->getConfig();
 
 	$extractor = new GenericExtractor($temp);
+	$extractor->setLogger(Logger::getLogger());
 	$extractor->setApi($configuration->getApi());
-	$extractor->setAppName("ex-generic-v2"); // TODO from cfg
 	$extractor->setMetadata($configuration->getConfigMetadata());
 
 	$results = $extractor->run($config);

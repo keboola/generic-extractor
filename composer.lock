@@ -742,12 +742,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "5928c1d3612802f5694e444f0109e6e761615b9b"
+                "reference": "28b8b39d68da068d79ce6b49dc49128cc1673e16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/5928c1d3612802f5694e444f0109e6e761615b9b",
-                "reference": "5928c1d3612802f5694e444f0109e6e761615b9b",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/28b8b39d68da068d79ce6b49dc49128cc1673e16",
+                "reference": "28b8b39d68da068d79ce6b49dc49128cc1673e16",
                 "shasum": ""
             },
             "require": {
@@ -784,7 +784,7 @@
                 "keboola",
                 "syrup"
             ],
-            "time": "2015-07-19 23:19:10"
+            "time": "2015-07-20 06:04:04"
         },
         {
             "name": "keboola/php-csvtable",

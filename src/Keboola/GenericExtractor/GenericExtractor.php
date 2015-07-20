@@ -112,6 +112,7 @@ class GenericExtractor extends JsonExtractor
 		$this->setAuth($api->getAuth());
 		$this->setScroller($api->getScroller());
 		$this->setHeaders($api->getHeaders()->getHeaders());
+		$this->setAppName($api->getName());
 	}
 
 	/**
