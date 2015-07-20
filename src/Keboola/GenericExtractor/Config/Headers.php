@@ -2,7 +2,9 @@
 
 namespace Keboola\GenericExtractor\Config;
 
-use	Keboola\Juicer\Config\Config;
+use	Keboola\Juicer\Config\Config,
+	Keboola\Juicer\Exception\ApplicationException,
+	Keboola\Juicer\Exception\UserException;
 /**
  * API Headers wrapper
  */
