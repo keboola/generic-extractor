@@ -20,14 +20,14 @@ Example:
 
 -- OR --
 
-    `{
+    {
         "function": "concat",
         "args": [
             "https://",
             { "attr": "domain" },
             ".example.com/api/v2/"
         ]
-    }`
+    }
 
 - for *https://yourDomain.example.com/api/v2/*
 - uses `config` part, where attribute **domain** would contain `yourDomain`
@@ -38,16 +38,16 @@ Example:
 - Should be an array, eg: `App-Key,X-User-Email`
 - **http.headers.{Header-Name}** attribute in config section (eg: `http.headers.App-Key`)
 
-	api:
-		http:
-			requiredHeaders:
-				- App-Key
-				- X-User-Email
-	config:
-		http:
-			headers:
-				App-Key: asdf1234
-				X-User-Email: some@email.com
+		api:
+			http:
+				requiredHeaders:
+					- App-Key
+					- X-User-Email
+		config:
+			http:
+				headers:
+					App-Key: asdf1234
+					X-User-Email: some@email.com
 
 ## http.headers.{Header-Name}
 
@@ -61,12 +61,12 @@ Example:
 - **authentication.type**: `basic`
 - use **username** and **password** attributes in the config section
 
-	api:
-		authentication:
-			type: basic
-    config:
-        username: whoever
-        password: soSecret
+		api:
+			authentication:
+				type: basic
+		config:
+			username: whoever
+			password: soSecret
 
 ### url.query
 
@@ -81,28 +81,28 @@ Example:
     - this will generate a *sig* parameter value from MD5 of merged configuration table attributes *apiKey* and *secret*, followed by current *time()* at the time of the request (time() being the PHP function)
 	- Allowed functions are listed below in the *User functions* section
 
-	api:
-		authentication:
-			type: url.query
-		query:
-			apiKey:
-				attr: apiKey # will assign "asdf1234" to the apiKey query parameter
-			sig:
-				function: md5
-				args:
-					-
-						function: concat
-						args:
-							- attr: apiKey
-							- attr: secret
-							- function: time
-	config:
-		apiKey: asdf1234
-		secret: qwop1290
+		api:
+			authentication:
+				type: url.query
+			query:
+				apiKey:
+					attr: apiKey # will assign "asdf1234" to the apiKey query parameter
+				sig:
+					function: md5
+					args:
+						-
+							function: concat
+							args:
+								- attr: apiKey
+								- attr: secret
+								- function: time
+		config:
+			apiKey: asdf1234
+			secret: qwop1290
 
 # Pagination
 ## Methods
-Configured in bucket attr. `pagination.method`
+Configured in `api.pagination.method`
 
 ### offset
 
