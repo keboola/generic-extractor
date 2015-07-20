@@ -86,9 +86,9 @@ Example:
 					type: url.query
 				query:
 					apiKey:
-						attr: apiKey # will assign "asdf1234" to the apiKey query parameter
+						attr: apiKey # will assign "asdf1234" to the 'apiKey' query parameter
 					sig:
-						function: md5
+						function: md5 # will assign result of md5($apiKey.$secret.time()) to 'sig' query parameter
 						args:
 							-
 								function: concat
