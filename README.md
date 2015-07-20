@@ -137,11 +137,11 @@ Configured in `api.pagination.method`
 	- whether or not to add "params" from the configuration to the URL's query from response
 	- if enabled and the next page URL has the same query parameters as the "params" field, values from the "params" are used
 
-		api:
-			pagination:
-				method: response.url
-				urlKey: nextPage
-				includeParams: true
+			api:
+				pagination:
+					method: response.url
+					urlKey: nextPage
+					includeParams: true
 
 ### pagenum
 simple page number increasing 1 by 1
@@ -154,12 +154,12 @@ simple page number increasing 1 by 1
 - **pagination.limitParam**:(optional)
     - query parameter name to use for *limit*
 
-		api:
-			pagination:
-				method: pagenum
-				pageParam: page
-				limit: 500
-				limitParam: count # this will result in ?page=12&count=500 query parameters
+			api:
+				pagination:
+					method: pagenum
+					pageParam: page
+					limit: 500
+					limitParam: count # this will result in ?page=12&count=500 query parameters
 
 # Config
 
