@@ -3,7 +3,7 @@
 namespace Keboola\GenericExtractor;
 
 use	Keboola\Juicer\Extractor\Jobs\JsonRecursiveJob,
-	Keboola\Juicer\Common\JobConfig,
+	Keboola\Juicer\Config\JobConfig,
 	Keboola\Juicer\Common\Logger;
 use	Keboola\Utils\Utils,
 	Keboola\Utils\Exception\JsonDecodeException;
