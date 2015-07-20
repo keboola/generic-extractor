@@ -114,11 +114,11 @@ Configured in `api.pagination.method`
 - **pagination.offsetParam**(optional)
     - sets which query parameter should contain the offset value (default to `offset`)
 
-		api:
-			pagination:
-				method: offset
-				limitParam: limit # default, can be omitted
-				offsetParam: offset # default, can be omitted
+			api:
+				pagination:
+					method: offset
+					limitParam: limit # default, can be omitted
+					offsetParam: offset # default, can be omitted
 
 ### response.param
 
