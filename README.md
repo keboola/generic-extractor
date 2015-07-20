@@ -34,7 +34,7 @@ Example:
 
 ## http.requiredHeaders
 
-- Headers required to be set in all configuraiton tables
+- Headers required to be set in the config section
 - Should be an array, eg: `App-Key,X-User-Email`
 - **http.headers.{Header-Name}** attribute in config section (eg: `http.headers.App-Key`)
 
@@ -71,7 +71,7 @@ Example:
 ### url.query
 
 - Supports signature function as a value
-- Values should be described in configuration bucket attributes
+- Values should be described in `api` section
 - Example bucket attributes:
 
 - **authentication.type**: `url.query`
@@ -114,6 +114,12 @@ Configured in `api.pagination.method`
 - **pagination.offsetParam**(optional)
     - sets which query parameter should contain the offset value (default to `offset`)
 
+		api:
+			pagination:
+				method: offset
+				limitParam: limit # default, can be omitted
+				offsetParam: offset # default, can be omitted
+
 ### response.param
 
 - **TODO**
@@ -131,6 +137,12 @@ Configured in `api.pagination.method`
 	- whether or not to add "params" from the configuration to the URL's query from response
 	- if enabled and the next page URL has the same query parameters as the "params" field, values from the "params" are used
 
+		api:
+			pagination:
+				method: response.url
+				urlKey: nextPage
+				includeParams: true
+
 ### pagenum
 simple page number increasing 1 by 1
 
@@ -142,40 +154,39 @@ simple page number increasing 1 by 1
 - **pagination.limitParam**:(optional)
     - query parameter name to use for *limit*
 
-# Config table
+		api:
+			pagination:
+				method: pagenum
+				pageParam: page
+				limit: 500
+				limitParam: count # this will result in ?page=12&count=500 query parameters
+
+# Config
+
+## Metadata
+- The extractor loads start time of its previous execution into its metadata. This can then be used in user functions as `time: previousStart`.
+- Current execution start is also available at `time: currentStart`.
+- This can be used to create incremental exports with minimal overlap, using for example `[start_time: [time: previousStart], end_time: [time: currentStart]]`
+- Both values are stored as Unix timestamp. `date` function can be used to convert it.
+
 ## Attributes
-Attributes must be configured accordingly to the bucket configuration (eg *auth*, *pagination*, *http.requiredHeaders*)
+Attributes must be configured accordingly to the `api` configuration (eg *auth*, *pagination*, *http.requiredHeaders*)
 
-There are system attributes created automatically when each job (row of the configuration table) is executed, and when it's finished:
-
-- **job.{rowId}.start**: last time the job was started
-- **job.{rowId}.success**: last time the job finished successfully
-- **job.{rowId}.success_startTime**: start time of last successful run
-- **job.{rowId}.error**: last time the job failed
-
-Where `{rowId}` matches the **rowId** column for each row within the table
-
-## Data
+## Jobs
 - Columns:
-    - **endpoint**(required): The API endpoint
+    - **endpoint** (required): The API endpoint
     - **params**: Query parameters of the api call, JSON encoded
         - Each parameter in the JSON encoded object may either contain a string, eg: `{""start_date"": ""2014-12-26""}`
         - OR contain an user function as described below, for example to load value from parameters:
         - ```
             {""start_date"":{""function"":""date"",""args"":[""Y-m-d+H:i"",{""function"":""strtotime"",""args"":[{""attr"":""job.1.success""}]}]}}
             ```
-    - **rowId**(required): An unique identificator of the configuration row
     - **dataType**: Type of data returned by the endpoint. It also describes a table name, where the results will be stored
     - **dataField**: Allows to override which field of the response will be exported.
         - If there's multiple arrays in the response "root" the extractor may not know which array to export and fail
         - If the response is an array, the whole response is used by default
         - If there's no array within the root, the path to response data **must** be specified in *dataField*
         - Can contain a path to nested value, dot separater (eg `result.results.products`)
-    - **recursionParams**: A Json encoded additional configuration for recursion.
-        - Currently only "filter" key is supported, which should contain a value consisting of a name of a field from the parent's response, logical operator and a value to compare against. Supported operators are "**==**", "**<**", "**>**", "**<=**", "**>=**", "**!=**"
-        - Example: `type!=employee` or `product.value>150`
-        - The filter is whitespace sensitive, therefore `value == 100` will look into `value ` for a ` 100` value, instead of `value` and `100` as likely desired.
-        - **TODO** functions
 
 # User functions
 Can currently be used in query type authentication or endpoint parameters
@@ -194,36 +205,74 @@ Can currently be used in query type authentication or endpoint parameters
 - `implode`: Concatenate an array from the second argument, using glue string from the first arg
 
 ## Syntax
-The function must be specified in a JSON format, which may contain one of the following 4 objects:
+The function must be specified in a YML format, which may contain one of the following 4 objects:
 
-- **String**: `{ "something" }`
+- **String**: `"something"`
 - **Function**: One of the allowed functions above
     - Example (this will return current date in this format: `2014-12-08+09:38`:
 
         ```
-        {
-            "function": "date",
-            "args": [
-                "Y-m-d+H:i"
-            ]
-        }
+		"function": "date",
+		"args":
+			- "Y-m-d+H:i"
         ```
 
     - Example with a nested function (will return a date in the same format from 3 days ago):
 
         ```
-        {
-            "function": "date",
-            "args": [
-                "Y-m-d+H:i",
-                {
-                    "function": "strtotime",
-                    "args": ["3 days ago"]
-                }
-            ]
-        }
+		"function": "date",
+		"args":
+			- "Y-m-d+H:i",
+			-
+				"function": "strtotime",
+				"args": ["3 days ago"]
         ```
 
-- **Configuration table Attribute**: `{ "attr": "attributeName" }` or `{ "attr": "nested.attribute.name" }`
+- **Config Attribute**: `"attr": "attributeName"` or `"attr": "nested.attribute.name"`
+- **Metadata**: `time: previousStart` or `time: currentStart` - only useable in job params.
 - **Query parameter**: **TODO**
+
+# Example configuration
+
+		parameters:
+			api:
+				baseUrl: '{"function":"concat","args":["https://",{"attr":"domain"},".zendesk.com/api/v2/"]}'
+				authentication:
+					type: basic
+				pagination:
+					method: response.url
+				name: zendesk
+			config:
+				id: test_docker
+				domain: yours
+				username: you@wish.com/token
+				password: ohIdkSrsly
+				jobs:
+					-
+						endpoint: exports/tickets.json
+						params:
+							start_time:
+								time: previousStart
+							end_time:
+								function: strtotime
+								args:
+									- 2015-07-20 00:00
+						dataType: tickets_export
+						dataField: ''
+		# Not yet implemented
+		#                children:
+		#                    -
+		#                        endpoint: tickets/{1:id}/comments.json
+		#                        recursionFilter: "status!=Deleted"
+		#                        dataType: comments
+					-
+						endpoint: users.json
+						params: {}
+						dataType: users
+						dataField: ''
+					-
+						endpoint: tickets.json
+						params: {}
+						dataType: tickets
+						dataField: ''
 
