@@ -81,24 +81,24 @@ Example:
     - this will generate a *sig* parameter value from MD5 of merged configuration table attributes *apiKey* and *secret*, followed by current *time()* at the time of the request (time() being the PHP function)
 	- Allowed functions are listed below in the *User functions* section
 
-		api:
-			authentication:
-				type: url.query
-			query:
-				apiKey:
-					attr: apiKey # will assign "asdf1234" to the apiKey query parameter
-				sig:
-					function: md5
-					args:
-						-
-							function: concat
-							args:
-								- attr: apiKey
-								- attr: secret
-								- function: time
-		config:
-			apiKey: asdf1234
-			secret: qwop1290
+			api:
+				authentication:
+					type: url.query
+				query:
+					apiKey:
+						attr: apiKey # will assign "asdf1234" to the apiKey query parameter
+					sig:
+						function: md5
+						args:
+							-
+								function: concat
+								args:
+									- attr: apiKey
+									- attr: secret
+									- function: time
+			config:
+				apiKey: asdf1234
+				secret: qwop1290
 
 # Pagination
 ## Methods
