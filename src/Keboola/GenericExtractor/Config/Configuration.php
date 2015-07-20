@@ -13,9 +13,6 @@ use	Keboola\Code\Builder;
 use	Keboola\Utils\Utils,
 	Keboola\Utils\Exception\JsonDecodeException;
 
-// TODO move to parent class with a loader fn
-use Symfony\Component\Yaml\Yaml;
-
 /**
  * {@inheritdoc}
  */
@@ -40,7 +37,8 @@ class Configuration extends BaseConfiguration
 			'baseUrl' => $this->getBaseUrl($apiYml, $config),
 			'auth' => $this->getAuth($apiYml, $config),
 			'scroller' => $this->getScroller($apiYml),
-			'headers' => $this->getHeaders($apiYml, $config)
+			'headers' => $this->getHeaders($apiYml, $config),
+			'name' => $this->getName($apiYml)
 		]);
 
 		return $config;
@@ -154,5 +152,13 @@ class Configuration extends BaseConfiguration
 	public function getHeaders($api, Config $config)
 	{
 		return Headers::create($api, $config);
+	}
+
+	/**
+	 * @param array $api
+	 */
+	public function getName($api)
+	{
+		return empty($api['name']) ? 'generic' : $api['name'];
 	}
 }

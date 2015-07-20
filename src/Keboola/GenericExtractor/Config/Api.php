@@ -14,6 +14,10 @@ class Api
 	 * @var string
 	 */
 	protected $baseUrl;
+	/**
+	 * @var string
+	 */
+	protected $name;
 
 	/**
 	 * @var AuthInterface
@@ -44,6 +48,19 @@ class Api
 		if (!empty($config['headers'])) {
 			$this->setHeaders($config['headers']);
 		}
+		if (!empty($config['name'])) {
+			$this->setName($config['name']);
+		}
+	}
+
+	public function setName($name)
+	{
+		$this->name = $name;
+	}
+
+	public function getName()
+	{
+		return $this->name;
 	}
 
 	public function setBaseUrl($url)
