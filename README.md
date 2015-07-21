@@ -187,6 +187,29 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
         - If the response is an array, the whole response is used by default
         - If there's no array within the root, the path to response data **must** be specified in *dataField*
         - Can contain a path to nested value, dot separater (eg `result.results.products`)
+	- **children**: Array of child jobs that use the jobs' results to iterate
+		- The endpoint must use a placeholder enclosed in `{}`
+		- The placeholder can be prefixed by a number, that refers to higher level of nesting. By default, data from direct parent are used. The direct parent can be referred as `{id}` or `{1:id}`. A "grandparent" result would then be `{2:id}` etc.
+		- **placeholders** array must define each placeholder. It must be a set of `key: value` pairs, where **key** is the placeholder (eg `"1:id"`) and the value is a path within the response object - if nested, use `.` as a separator.
+			- Example:
+
+					endpoint: tickets.json
+					children:
+						-
+							endpoint: tickets/{id}/comments.json
+							placeholders:
+								id: id # the ticket id is in the `id` field
+							children:
+								-
+									endpoint: tickets/{2:ticket_id}/comments/{comment_id}/details.json
+									placeholders:
+										comment_id: id # the comment id is also in the id field of the comments response
+										"2:ticket_id": id # uses the id from tickets.json - 2 levels up
+
+		- **recursionFilter**:
+			- Can contain a value consisting of a name of a field from the parent's response, logical operator and a value to compare against. Supported operators are "**==**", "**<**", "**>**", "**<=**", "**>=**", "**!=**"
+			- Example: `type!=employee` or `product.value>150`
+			- The filter is whitespace sensitive, therefore `value == 100` will look into `value ` for a ` 100` value, instead of `value` and `100` as likely desired.
 
 # User functions
 Can currently be used in query type authentication or endpoint parameters
@@ -259,12 +282,14 @@ The function must be specified in a YML format, which may contain one of the fol
 									- 2015-07-20 00:00
 						dataType: tickets_export
 						dataField: ''
-		# Not yet implemented
-		#                children:
-		#                    -
-		#                        endpoint: tickets/{1:id}/comments.json
-		#                        recursionFilter: "status!=Deleted"
-		#                        dataType: comments
+		                children:
+		                    -
+		                        endpoint: tickets/{id}/comments.json
+		                        recursionFilter: "status!=Deleted"
+		                        dataType: comments
+		                        placeholders:
+		                            # placeholder: path in data
+		                            id: id
 					-
 						endpoint: users.json
 						params: {}
