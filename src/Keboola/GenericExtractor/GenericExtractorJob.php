@@ -94,7 +94,7 @@ class GenericExtractorJob extends JsonRecursiveJob
 	 */
 	protected function firstPage()
 	{
-		$url = Utils::buildUrl(trim($this->config["endpoint"], "/"), $this->getParams());
+		$url = Utils::buildUrl($this->config["endpoint"], $this->getParams());
 
 		return $this->client->createRequest("GET", $url);
 	}
@@ -143,7 +143,8 @@ class GenericExtractorJob extends JsonRecursiveJob
 	 */
 	protected function createChild(JobConfig $config)
 	{
-		$job = new static($config, $this->client, $this->parser);
+// 		$job = new static($config, $this->client, $this->parser);
+		$job = parent::createChild($config);
 		$scroller = clone $this->scroller;
 		$scroller->reset();
 		$job->setScroller($scroller);
