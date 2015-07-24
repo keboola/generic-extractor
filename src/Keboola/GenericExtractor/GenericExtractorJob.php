@@ -4,11 +4,11 @@ namespace Keboola\GenericExtractor;
 
 use	Keboola\Juicer\Extractor\Jobs\JsonRecursiveJob,
 	Keboola\Juicer\Config\JobConfig,
-	Keboola\Juicer\Common\Logger;
+	Keboola\Juicer\Common\Logger,
+	Keboola\Juicer\Exception\ApplicationException,
+	Keboola\Juicer\Exception\UserException;
 use	Keboola\Utils\Utils,
 	Keboola\Utils\Exception\JsonDecodeException;
-use	Syrup\ComponentBundle\Exception\SyrupComponentException,
-	Syrup\ComponentBundle\Exception\UserException;
 use	Keboola\GenericExtractor\Pagination\ScrollerInterface,
 	Keboola\Code\Builder;
 
@@ -143,13 +143,13 @@ class GenericExtractorJob extends JsonRecursiveJob
 	 */
 	protected function createChild(JobConfig $config)
 	{
-// 		$job = new static($config, $this->client, $this->parser);
 		$job = parent::createChild($config);
 		$scroller = clone $this->scroller;
 		$scroller->reset();
 		$job->setScroller($scroller);
 		$job->setMetadata($this->metadata);
 		$job->setAttributes($this->attributes);
+		$job->setBuilder($this->stringBuilder);
 		return $job;
 	}
 

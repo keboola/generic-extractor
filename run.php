@@ -23,10 +23,11 @@ try {
 
 	$configuration = new Configuration($arguments['data'], APP_NAME, $temp);
 	$config = $configuration->getConfig();
+	$api = $configuration->getApi($config);
 
 	$extractor = new GenericExtractor($temp);
 	$extractor->setLogger(Logger::getLogger());
-	$extractor->setApi($configuration->getApi());
+	$extractor->setApi($api);
 	$extractor->setMetadata($configuration->getConfigMetadata());
 
 	$results = $extractor->run($config);
@@ -34,7 +35,7 @@ try {
 	$configuration->storeResults(
 		$results,
 		$config->getConfigName(),
-		'ex-api-' . $configuration->getApi()->getName()
+		'ex-api-' . $api->getName()
 	);
 	$configuration->saveConfigMetadata($extractor->getMetadata());
 } catch(UserException $e) {

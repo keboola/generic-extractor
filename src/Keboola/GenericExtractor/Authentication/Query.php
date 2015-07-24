@@ -2,8 +2,8 @@
 namespace Keboola\GenericExtractor\Authentication;
 
 use	GuzzleHttp\Client;
-use	Syrup\ComponentBundle\Exception\SyrupComponentException,
-	Syrup\ComponentBundle\Exception\UserException;
+use	Keboola\Juicer\Exception\ApplicationException,
+	Keboola\Juicer\Exception\UserException;
 use	Keboola\GenericExtractor\Subscriber\UrlSignature,
 	Keboola\Code\Builder;
 use	Keboola\Utils\Utils,

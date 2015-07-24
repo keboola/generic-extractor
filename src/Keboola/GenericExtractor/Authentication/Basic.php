@@ -2,8 +2,8 @@
 namespace Keboola\GenericExtractor\Authentication;
 
 use	GuzzleHttp\Client;
-use	Syrup\ComponentBundle\Exception\SyrupComponentException,
-	Syrup\ComponentBundle\Exception\UserException;
+use	Keboola\Juicer\Exception\ApplicationException,
+	Keboola\Juicer\Exception\UserException;
 
 /**
  * Basic HTTP Authentication using name and password
