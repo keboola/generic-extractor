@@ -57,44 +57,16 @@ class GenericExtractor extends JsonExtractor
 
 		$this->metadata['time']['previousStart'] = empty($this->metadata['time']['previousStart']) ? 0 : $this->metadata['time']['previousStart'];
 		$this->metadata['time']['currentStart'] = time();
-// 		$runTimes = [];
-// 		$jobTimes = [];
+
 		foreach($config->getJobs() as $jobConfig) {
-// 			$this->saveLastJobTime($jobConfig->getJobId(), "start");
-// 			$startTime = time();
-
-// 			foreach(['start', 'success', 'error', 'success_startTime'] as $timeAttr) {
-// 				if (empty($config['attributes']['job'][$jobConfig->getJobId()][$timeAttr])) {
-// 					$config['attributes']['job'][$jobConfig->getJobId()][$timeAttr] = date(DATE_W3C, 0);
-// 				}
-// 			}
-
 			$job = new GenericExtractorJob($jobConfig, $client, $parser);
 			$job->setScroller($this->scroller);
 			$job->setAttributes($config->getAttributes());
 			$job->setMetadata($this->metadata);
 			$job->setBuilder($builder);
-			try {
-				$job->run();
-			} catch(\Exception $e) {
-// 				$this->saveLastJobTime($jobConfig->getJobId(), "error");
-// 				$this->saveLastJobTime(
-// 					$jobConfig->getJobId(),
-// 					"error_startTime",
-// 					date(DATE_W3C, $startTime)
-// 				);
-				throw $e;
-			}
 
-// 			$jobTimes[$jobConfig->getJobId()]['success'] = date(DATE_W3C);
-// 			$jobTimes[$jobConfig->getJobId()]['success_startTime'] = date(DATE_W3C, $startTime);
-// 			$runTimes[$jobConfig->getJobId()] = $job->getRunTime();
+			$job->run();
 		}
-
-// 		foreach($jobTimes as $jobId => $times) {
-// 			$this->saveLastJobTime($jobId, "success", $times['success']);
-// 			$this->saveLastJobTime($jobId, "success_startTime", $times['success_startTime']);
-// 		}
 
 		$this->metadata['time']['previousStart'] = $this->metadata['time']['currentStart'];
 		unset($this->metadata['time']['currentStart']);
