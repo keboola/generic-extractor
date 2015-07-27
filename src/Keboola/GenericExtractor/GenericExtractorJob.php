@@ -176,4 +176,10 @@ class GenericExtractorJob extends JsonRecursiveJob
 	{
 		$this->metadata = $metadata;
 	}
+
+	protected function download($request, $format = self::JSON)
+	{
+		Logger::log("DEBUG", (string) $request);
+		return parent::download($request, $format);
+	}
 }
