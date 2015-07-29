@@ -179,6 +179,7 @@ class GenericExtractorJob extends JsonRecursiveJob
 
 	protected function download($request, $format = self::JSON)
 	{
+		// TODO mode for outputting this to the user
 		Logger::log("DEBUG", (string) $request);
 		return parent::download($request, $format);
 	}

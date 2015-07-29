@@ -32,10 +32,13 @@ try {
 
 	$results = $extractor->run($config);
 
+	$outputBucket = empty($config->getAttributes()['outputBucket'])
+		? 'ex-api-' . $api->getName() . "-" . $config->getConfigName()
+		: $config->getAttributes()['outputBucket'];
+
 	$configuration->storeResults(
 		$results,
-		$config->getConfigName(),
-		'ex-api-' . $api->getName()
+		$outputBucket
 	);
 	$configuration->saveConfigMetadata($extractor->getMetadata());
 } catch(UserException $e) {
