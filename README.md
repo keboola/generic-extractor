@@ -172,6 +172,9 @@ simple page number increasing 1 by 1
 ## Attributes
 Attributes must be configured accordingly to the `api` configuration (eg *auth*, *pagination*, *http.requiredHeaders*)
 
+- **outputBucket**: Name of the bucket to store the output data
+- **id**: Optional, if **outputBucket** is set. Otherwise the id is used to generate the output bucket name
+
 ## Jobs
 - Columns:
     - **endpoint** (required): The API endpoint
