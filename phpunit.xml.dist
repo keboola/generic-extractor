@@ -11,7 +11,7 @@
          bootstrap="bootstrap.php">
 
 	<testsuite name="Generic Extractor Test Suite">
-		<directory>Tests</directory>
+		<directory>tests</directory>
 	</testsuite>
 
 </phpunit>
