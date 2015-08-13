@@ -2,18 +2,21 @@
 
 namespace Keboola\GenericExtractor;
 
-use	Keboola\Juicer\Extractor\Extractors\JsonExtractor,
+use	Keboola\Juicer\Extractor\Extractor,
 	Keboola\Juicer\Config\Config,
+	Keboola\Juicer\Client\RestClient,
+	Keboola\Juicer\Parser\Json,
+	Keboola\Juicer\Pagination\ScrollerInterface,
 	Keboola\Juicer\Exception\ApplicationException;
-use	GuzzleHttp\Client;
+// use	GuzzleHttp\Client;
 use	Keboola\GenericExtractor\GenericExtractorJob,
 	Keboola\GenericExtractor\Authentication\AuthInterface,
-	Keboola\GenericExtractor\Pagination\ScrollerInterface,
-	Keboola\GenericExtractor\Config\Api;
+	Keboola\GenericExtractor\Config\Api,
+	Keboola\GenericExtractor\Subscriber\LogRequest;
 use	Keboola\Code\Builder;
 use	Keboola\Utils\Utils;
 
-class GenericExtractor extends JsonExtractor
+class GenericExtractor extends Extractor
 {
 	protected $name = "generic";
 	protected $prefix = "ex-api";
@@ -36,23 +39,16 @@ class GenericExtractor extends JsonExtractor
 
 	public function run(Config $config)
 	{
-		/**
-		 * @var Client
-		 */
-		$client = new Client(
-			[
-				"base_url" => $this->baseUrl,
-// 				"defaults" => $this->getClientDefaults()
-			]
-		);
-		$client->setDefaultOption('headers', $this->headers);
-		$client->getEmitter()->attach($this->getBackoff());
+		$client = RestClient::create(["base_url" => $this->baseUrl]);
 
-		$this->auth->authenticateClient($client);
+		$this->auth->authenticateClient($client->getClient());
+		// Verbose Logging of all requests
+		$client->getClient()->getEmitter()->attach(new LogRequest);
 
-		$parser = $this->getParser($config);
-		$parser->setAllowArrayStringMix(true);
+		$parser = Json::create($config, $this->getLogger(), $this->getTemp(), $this->metadata);
+		$parser->getParser()->setAllowArrayStringMix(true);
 
+		//TODO needs to run before passing cfg to the job?
 		$builder = new Builder();
 
 		$this->metadata['time']['previousStart'] = empty($this->metadata['time']['previousStart']) ? 0 : $this->metadata['time']['previousStart'];
@@ -71,14 +67,17 @@ class GenericExtractor extends JsonExtractor
 		$this->metadata['time']['previousStart'] = $this->metadata['time']['currentStart'];
 		unset($this->metadata['time']['currentStart']);
 
-		$this->updateParserMetadata($parser);
+		$this->metadata = array_merge_recursive($this->metadata, $parser->getMetadata());
 
-		return $parser->getCsvFiles();
+		return $parser->getResults();
 	}
 
-	public function setAppName($api)
+	/**
+	 * @param string $name
+	 */
+	public function setAppName($name)
 	{
-		$this->name = $api;
+		$this->name = $name;
 	}
 
 	/**

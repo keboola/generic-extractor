@@ -3,13 +3,13 @@
 namespace Keboola\GenericExtractor\Config;
 
 use	Keboola\GenericExtractor\Authentication\AuthInterface,
-	Keboola\GenericExtractor\Pagination\ScrollerInterface;
+	Keboola\GenericExtractor\Authentication;
 use	Keboola\Juicer\Exception\ApplicationException,
+	Keboola\Juicer\Pagination\ScrollerInterface,
+	Keboola\Juicer\Pagination,
 	Keboola\Juicer\Config\Config,
 	Keboola\Juicer\Exception\UserException,
 	Keboola\Juicer\Common\Logger;
-use	Keboola\GenericExtractor\Authentication,
-	Keboola\GenericExtractor\Pagination;
 use	Keboola\Code\Builder;
 use	Keboola\Utils\Utils,
 	Keboola\Utils\Exception\JsonDecodeException;

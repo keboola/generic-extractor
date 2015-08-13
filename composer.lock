@@ -742,15 +742,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "7ce283bf9e666d476f4bcbaebe255c56d831b487"
+                "reference": "08e976f9b759c89671e71ad27effada477b5dc21"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/7ce283bf9e666d476f4bcbaebe255c56d831b487",
-                "reference": "7ce283bf9e666d476f4bcbaebe255c56d831b487",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/08e976f9b759c89671e71ad27effada477b5dc21",
+                "reference": "08e976f9b759c89671e71ad27effada477b5dc21",
                 "shasum": ""
             },
             "require": {
+                "guzzlehttp/guzzle": "~4.2.3",
                 "guzzlehttp/retry-subscriber": "~0.1.2",
                 "keboola/filter": "~0.1.0",
                 "keboola/json-parser": "~0.2.0",
@@ -784,7 +785,7 @@
                 "keboola",
                 "syrup"
             ],
-            "time": "2015-07-29 22:10:54"
+            "time": "2015-08-13 07:40:16"
         },
         {
             "name": "keboola/php-csvtable",
@@ -1039,16 +1040,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v2.7.2",
+            "version": "v2.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "969d709ad428076bf1084e386dc26dd904d9fb84"
+                "reference": "a9af4708b4bb650c4897e9b8dfbfbdb2ea5f0486"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/969d709ad428076bf1084e386dc26dd904d9fb84",
-                "reference": "969d709ad428076bf1084e386dc26dd904d9fb84",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/a9af4708b4bb650c4897e9b8dfbfbdb2ea5f0486",
+                "reference": "a9af4708b4bb650c4897e9b8dfbfbdb2ea5f0486",
                 "shasum": ""
             },
             "require": {
@@ -1157,7 +1158,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2015-07-13 19:27:49"
+            "time": "2015-07-31 13:24:45"
         },
         {
             "name": "symfony/yaml",
@@ -1211,16 +1212,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.18.2",
+            "version": "v1.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "e8e6575abf6102af53ec283f7f14b89e304fa602"
+                "reference": "1ea4e5f81c6d005fe84d0b38e1c4f1955eb86844"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/e8e6575abf6102af53ec283f7f14b89e304fa602",
-                "reference": "e8e6575abf6102af53ec283f7f14b89e304fa602",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/1ea4e5f81c6d005fe84d0b38e1c4f1955eb86844",
+                "reference": "1ea4e5f81c6d005fe84d0b38e1c4f1955eb86844",
                 "shasum": ""
             },
             "require": {
@@ -1229,7 +1230,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.18-dev"
+                    "dev-master": "1.20-dev"
                 }
             },
             "autoload": {
@@ -1264,7 +1265,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2015-06-06 23:31:24"
+            "time": "2015-08-12 15:56:39"
         }
     ],
     "packages-dev": [
@@ -1586,16 +1587,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "2.1.9",
+            "version": "2.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "5bd48b86cd282da411bb80baac1398ce3fefac41"
+                "reference": "2d7c03c0e4e080901b8f33b2897b0577be18a13c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/5bd48b86cd282da411bb80baac1398ce3fefac41",
-                "reference": "5bd48b86cd282da411bb80baac1398ce3fefac41",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/2d7c03c0e4e080901b8f33b2897b0577be18a13c",
+                "reference": "2d7c03c0e4e080901b8f33b2897b0577be18a13c",
                 "shasum": ""
             },
             "require": {
@@ -1603,7 +1604,7 @@
                 "phpunit/php-file-iterator": "~1.3",
                 "phpunit/php-text-template": "~1.2",
                 "phpunit/php-token-stream": "~1.3",
-                "sebastian/environment": "~1.0",
+                "sebastian/environment": "^1.3.2",
                 "sebastian/version": "~1.0"
             },
             "require-dev": {
@@ -1618,7 +1619,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.1.x-dev"
+                    "dev-master": "2.2.x-dev"
                 }
             },
             "autoload": {
@@ -1644,7 +1645,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-07-26 12:54:47"
+            "time": "2015-08-04 03:42:39"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -2138,16 +2139,16 @@
         },
         {
             "name": "sebastian/environment",
-            "version": "1.3.0",
+            "version": "1.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/environment.git",
-                "reference": "4fe0a44cddd8cc19583a024bdc7374eb2fef0b87"
+                "reference": "6324c907ce7a52478eeeaede764f48733ef5ae44"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/4fe0a44cddd8cc19583a024bdc7374eb2fef0b87",
-                "reference": "4fe0a44cddd8cc19583a024bdc7374eb2fef0b87",
+                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/6324c907ce7a52478eeeaede764f48733ef5ae44",
+                "reference": "6324c907ce7a52478eeeaede764f48733ef5ae44",
                 "shasum": ""
             },
             "require": {
@@ -2184,7 +2185,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2015-07-26 06:42:57"
+            "time": "2015-08-03 06:14:51"
         },
         {
             "name": "sebastian/exporter",

@@ -2,9 +2,10 @@
 
 namespace Keboola\GenericExtractor;
 
-use	Keboola\Juicer\Extractor\Jobs\JsonRecursiveJob,
+use	Keboola\Juicer\Extractor\RecursiveJob,
 	Keboola\Juicer\Config\JobConfig,
 	Keboola\Juicer\Common\Logger,
+	Keboola\Juicer\Client\RequestInterface,
 	Keboola\Juicer\Exception\ApplicationException,
 	Keboola\Juicer\Exception\UserException;
 use	Keboola\Utils\Utils,
@@ -12,9 +13,9 @@ use	Keboola\Utils\Utils,
 use	Keboola\GenericExtractor\Pagination\ScrollerInterface,
 	Keboola\Code\Builder;
 
-class GenericExtractorJob extends JsonRecursiveJob
+class GenericExtractorJob extends RecursiveJob
 {
-	protected $configName;
+// 	protected $configName;
 	/**
 	 * @var array
 	 */
@@ -47,19 +48,9 @@ class GenericExtractorJob extends JsonRecursiveJob
 	 */
 	public function run()
 	{
-		try {
-			$this->params = empty($this->config["params"])
-				? []
-				: $this->config["params"];
-		} catch(JsonDecodeException $e) {
-			$e = new UserException("Error decoding parameters Json: " . $e->getMessage());
-			$e->setData(['params' => $this->config["params"]]);
-			throw $e;
-		}
+		$this->buildParams($this->config);
 
-		$this->configName = preg_replace("/[^A-Za-z0-9\-\._]/", "_", trim($this->config["endpoint"], "/"));
-
-		$request = $this->firstPage();
+		$request = $this->firstPage($this->config);
 		while ($request !== false) {
 			$response = $this->download($request);
 
@@ -69,72 +60,32 @@ class GenericExtractorJob extends JsonRecursiveJob
 				$this->scroller->reset();
 				break;
 			} else {
-				try {
-					$data = $this->parse($response);
-				} catch(\Keboola\Json\Exception\JsonParserException $e) {
-					throw new UserException(
-						"[500] Error parsing response JSON: " . $e->getMessage(),
-						$e,
-						$e->getData()
-					);
-				}
+				$data = $this->parse($response);
 
 				$this->lastResponseHash = $responseHash;
 			}
 
-			$request = $this->nextPage($response, $data);
+			$request = $this->nextPage($this->config, $response, $data);
 		}
 	}
 
 	/**
-	 * Return a download request
-	 * @todo add replaceDates?
-	 *
-	 * @return \GuzzleHttp\Message\Request
+	 * @param JobConfig $config
+	 * @return array
 	 */
-	protected function firstPage()
+	protected function buildParams(JobConfig $config)
 	{
-		$url = Utils::buildUrl($this->config["endpoint"], $this->getParams());
-
-		return $this->client->createRequest("GET", $url);
-	}
-
-	/**
-	 * Return a download request OR false if no next page exists
-	 *
-	 * @param mixed $response
-	 * @param array $data
-	 * @return \GuzzleHttp\Message\Request | false
-	 */
-	protected function nextPage($response, $data)
-	{
-		$url = $this->scroller->getNextPageUrl($response, $data, $this->config['endpoint'], $this->getParams());
-
-		if (false === $url) {
-			return false;
-		} else {
-			return $this->client->createRequest("GET", $url);
-		}
-	}
-
-	protected function getParams()
-	{
-		$params = (array) Utils::json_decode(json_encode($this->params));
+		$params = (array) Utils::json_decode(json_encode($config->getParams()));
 		array_walk($params, function(&$value, $key) {
 			$value = is_scalar($value) ? $value : $this->stringBuilder->run($value, [
 				'attr' => $this->attributes,
 				'time' => $this->metadata['time']
 			]);
 		});
-		return $params;
-	}
 
-	/**
-	 * @param ScrollerInterface $scroller
-	 */
-	public function setScroller(ScrollerInterface $scroller)
-	{
-		$this->scroller = $scroller;
+		$config->setParams($params);
+
+		return $params;
 	}
 
 	/**
@@ -175,12 +126,5 @@ class GenericExtractorJob extends JsonRecursiveJob
 	public function setMetadata(array $metadata)
 	{
 		$this->metadata = $metadata;
-	}
-
-	protected function download($request, $format = self::JSON)
-	{
-		// TODO mode for outputting this to the user
-		Logger::log("DEBUG", (string) $request);
-		return parent::download($request, $format);
 	}
 }

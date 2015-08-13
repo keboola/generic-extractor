@@ -170,7 +170,7 @@ simple page number increasing 1 by 1
 - Both values are stored as Unix timestamp. `date` function can be used to convert it.
 
 ## Attributes
-Attributes must be configured accordingly to the `api` configuration (eg *auth*, *pagination*, *http.requiredHeaders*)
+Attributes must be configured accordingly to the `api` configuration (eg *auth*, *pagination*, *http.requiredHeaders*). They are under the `config` section of the configuration. (see example below)
 
 - **outputBucket**: Name of the bucket to store the output data
 - **id**: Optional, if **outputBucket** is set. Otherwise the id is used to generate the output bucket name
@@ -213,6 +213,7 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
 			- Can contain a value consisting of a name of a field from the parent's response, logical operator and a value to compare against. Supported operators are "**==**", "**<**", "**>**", "**<=**", "**>=**", "**!=**"
 			- Example: `type!=employee` or `product.value>150`
 			- The filter is whitespace sensitive, therefore `value == 100` will look into `value␣` for a `␣100` value, instead of `value` and `100` as likely desired.
+	- **method**: GET (default), POST or FORM
 
 # User functions
 Can currently be used in query type authentication or endpoint parameters
