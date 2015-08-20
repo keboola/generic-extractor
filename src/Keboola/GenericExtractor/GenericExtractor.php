@@ -39,7 +39,12 @@ class GenericExtractor extends Extractor
 
 	public function run(Config $config)
 	{
-		$client = RestClient::create(["base_url" => $this->baseUrl]);
+		$client = RestClient::create([
+			'base_url' => $this->baseUrl,
+			'defaults' => [
+				'headers' => $this->headers
+			]
+		]);
 
 		$this->auth->authenticateClient($client->getClient());
 		// Verbose Logging of all requests

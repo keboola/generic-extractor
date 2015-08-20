@@ -19,5 +19,12 @@ class ExtractorTestCase extends \PHPUnit_Framework_TestCase
 // 		$property->setAccessible(true);
 // 		return $property->getValue($obj);
 // 	}
+	protected function getLogger($name = 'test', $null = false)
+	{
+		return new \Monolog\Logger(
+			$name,
+			$null ? [new \Monolog\Handler\NullHandler()] : []
+		);
+	}
 
 }

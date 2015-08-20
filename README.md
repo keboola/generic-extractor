@@ -160,6 +160,7 @@ simple page number increasing 1 by 1
 					pageParam: page
 					limit: 500
 					limitParam: count # this will result in ?page=12&count=500 query parameters
+- **pagination.firstPage**: (optional) `1` by default. Set the first page number.
 
 # Config
 
