@@ -7,22 +7,20 @@ php:
 - hhvm
 matrix:
   allow_failures:
-    - php: 7.0
-    - php: hhvm
+  - php: 7.0
+  - php: hhvm
 notifications:
-  email: false
+  slack:
+    secure: fRVSNiGtTdKQsP+LOVeYlK/Ed2NjB4HoZgBFkBqkirNlS8ZuvyQSto6xr1VNHxRCBx6DjeyXwyHD1OPAX6/CkcTcOaNYFXJnSTmrEjRtA8lK021t6xyCiUtuP3LLC67ukUl59zx2eVMbp3H2AVRUoJQ/rCwxGjFx4HJqQdiQPH65Fj6YGeG/YCyXywYU1GwaEOW0IcioMY+Ltsn34blgfHZ5ZYlEHj79HJu66T/muYi5P+YPwzkn3+/AeRDR0JHb6kAs2EOOtbu55KVtbdpsMEgBFqtMOm74rDQW2gGQ0sw841A/sQ4Yolmi86OKKlQILrIO0rmkMMqNKeotHEeOiT2pQOwwzc82pylj6CQGJKLBU/Id7qI6MUsSGLZZD4iNaxh1kKOCFhdPSPRiSlFXcFDS9wNhY7/ZUKDU2hOAZJDTgSCcgrqPGfN/JwTbIO5UkLw5bMDbCXP9Bw+56JGhiHwMUMc+3cHwQAgR5ueAzajMoQUKpnwAxlyemaCF6d8WU2b0unxFecaYi7n3G8a12biD+imvglBCaE1I0E8goPjmEZJmizNtB8barDIQMMJS1aU95GvO9XfwxG7bJXuk18L0XJkJ7GdIWeItehh4UcWlS0tZbloxbfXXbPlJa/43nnV1ZyA3ud0w7Dzy0GuE8xHacLcKNHguHL2bIhUMIwU=
 install:
-  - composer install --dev --no-scripts
+- composer install --dev --no-scripts
 script:
-  #- ./vendor/bin/phpcs --standard=psr2 --ignore=vendor -n .
-  - phpunit --coverage-clover build/logs/clover.xml
+- phpunit --coverage-clover build/logs/clover.xml
 after_script:
-  - vendor/bin/test-reporter
+- vendor/bin/test-reporter
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
-notifications:
-  slack: keboola:atHihCm3qSPtAy0EowLA5WjD
+- bash <(curl -s https://codecov.io/bash)
 addons:
   code_climate:
     repo_token:
-      secure: "MsQUWSBgCzE3WLhBYyMfPGLe9TREn/M9TAItXIEY9MNOXFG3sJFk7z7mCnQfqCsJwtG7WAI6Ye4tLuO7Bs5GZgo5+ZfGiEWOb9kYgTpgjseHVwU2z1Tm7RP6fFh7kCf4O1ZEYRi/ocYuGhfxKtMau5LM3Z1tNA1e8kClsv1hs/Qwu7x0CxiqlPOenAuIUqcfL3ub3eETLiN3C5Jgo5pbzV3axYpxRylmg1UfgbFKxNOneSYRzoCYZCUEqmlLDwRowdQ990MAjG0iFP0qGn4DisCuFp/PtgSH44MeZMFpUSM1a+LgtELypkVWf3jX8r9ykZFR3ToZpD0//Yk5+vdvVKGd+gnrIA6P72NTkDMi3gEgDDrl9m2wW7GwJUveH+28OepDxS4g8UPcrMuACCV+BdwU8WWzq2SDgK206vANcHfc78oSOb7b8auybzehMG9qbQSAojihV0j18WmU1OVA786w7VqL/+FH9lCfNAx+n0DMoarMhmbOEo3E8emhzWewVUL4DRu8LhuAQkOKNgbU0ZKtWPYe9bj1LRfSAmHxkwTsXHy3DbWhrwygOJ936T1QVZfgv0rzmcQkIUJrnpvTHrdNZ+MuWX4OxWvFNs6xHNZNc7mlYayVlohV8ovGXaw1YR6xt3ZtJUgT+aRkchQqa3iXsCMsVZUmHYFJITBpAEc="
+      secure: MsQUWSBgCzE3WLhBYyMfPGLe9TREn/M9TAItXIEY9MNOXFG3sJFk7z7mCnQfqCsJwtG7WAI6Ye4tLuO7Bs5GZgo5+ZfGiEWOb9kYgTpgjseHVwU2z1Tm7RP6fFh7kCf4O1ZEYRi/ocYuGhfxKtMau5LM3Z1tNA1e8kClsv1hs/Qwu7x0CxiqlPOenAuIUqcfL3ub3eETLiN3C5Jgo5pbzV3axYpxRylmg1UfgbFKxNOneSYRzoCYZCUEqmlLDwRowdQ990MAjG0iFP0qGn4DisCuFp/PtgSH44MeZMFpUSM1a+LgtELypkVWf3jX8r9ykZFR3ToZpD0//Yk5+vdvVKGd+gnrIA6P72NTkDMi3gEgDDrl9m2wW7GwJUveH+28OepDxS4g8UPcrMuACCV+BdwU8WWzq2SDgK206vANcHfc78oSOb7b8auybzehMG9qbQSAojihV0j18WmU1OVA786w7VqL/+FH9lCfNAx+n0DMoarMhmbOEo3E8emhzWewVUL4DRu8LhuAQkOKNgbU0ZKtWPYe9bj1LRfSAmHxkwTsXHy3DbWhrwygOJ936T1QVZfgv0rzmcQkIUJrnpvTHrdNZ+MuWX4OxWvFNs6xHNZNc7mlYayVlohV8ovGXaw1YR6xt3ZtJUgT+aRkchQqa3iXsCMsVZUmHYFJITBpAEc=
