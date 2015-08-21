@@ -28,7 +28,7 @@ try {
 	$extractor = new GenericExtractor($temp);
 	$extractor->setLogger(Logger::getLogger());
 	$extractor->setApi($api);
-	$extractor->setMetadata($configuration->getConfigMetadata());
+	$extractor->setMetadata($configuration->getConfigMetadata() ?: []);
 
 	$results = $extractor->run($config);
 

@@ -1,0 +1,12 @@
+parameters:
+    api:
+        baseUrl: http://private-53977-extractormock.apiary-mock.com/
+        pagination:
+            method: response.url
+            urlKey: next
+    config:
+        outputBucket: responseUrl
+        jobs:
+            -
+                endpoint: scroll
+                #dataType: tags
