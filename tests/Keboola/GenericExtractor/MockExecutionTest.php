@@ -32,6 +32,20 @@ class MockExecutionTest extends ExtractorTestCase
 		$this->rmDir('./tests/data/getPost/out');
 	}
 
+	public function testBasicAuth()
+	{
+		$output = shell_exec('php ./run.php --data=./tests/data/basicAuth');
+
+		$this->assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
+
+		$this->assertDirectoryEquals(
+			'./tests/data/basicAuth/expected/tables/',
+			'./tests/data/basicAuth/out/tables/'
+		);
+
+		$this->rmDir('./tests/data/basicAuth/out');
+	}
+
 	protected function rmDir($dirPath)
 	{
 		foreach(

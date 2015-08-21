@@ -1,0 +1,13 @@
+parameters:
+    api:
+        baseUrl: http://private-53977-extractormock.apiary-mock.com/
+        authentication:
+            type: basic
+    config:
+        username: test
+        password: test
+        outputBucket: getPost
+        jobs:
+            -
+                endpoint: basic
+                dataType: get
