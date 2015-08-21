@@ -13,3 +13,5 @@ parameters:
             -
                 endpoint: post
                 method: POST
+                params:
+                    parameter: value
