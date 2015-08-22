@@ -23,6 +23,11 @@ try {
 
 	$configuration = new Configuration($arguments['data'], APP_NAME, $temp);
 	$config = $configuration->getConfig();
+
+	if ($config->getAttribute('debug')) {
+		Logger::initLogger(APP_NAME, true);
+	}
+
 	$api = $configuration->getApi($config);
 
 	$extractor = new GenericExtractor($temp);
@@ -32,9 +37,8 @@ try {
 
 	$results = $extractor->run($config);
 
-	$outputBucket = empty($config->getAttributes()['outputBucket'])
-		? 'ex-api-' . $api->getName() . "-" . $config->getConfigName()
-		: $config->getAttributes()['outputBucket'];
+	$outputBucket = $config->getAttribute('outputBucket') ?:
+		'ex-api-' . $api->getName() . "-" . $config->getConfigName();
 
 	$configuration->storeResults(
 		$results,

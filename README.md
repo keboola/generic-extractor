@@ -175,6 +175,7 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
 
 - **outputBucket**: Name of the bucket to store the output data
 - **id**: Optional, if **outputBucket** is set. Otherwise the id is used to generate the output bucket name
+- **debug**: If set to `true`, the extractor will output detailed information about it's run, including all API requests. **Warning**, this may reveal your tokens or other sensitive data in the events in your project! It is intended only to help solving issues with configuration.
 
 ## Jobs
 - Columns:
