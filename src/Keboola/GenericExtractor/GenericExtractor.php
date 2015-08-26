@@ -72,7 +72,7 @@ class GenericExtractor extends Extractor
 		$this->metadata['time']['previousStart'] = $this->metadata['time']['currentStart'];
 		unset($this->metadata['time']['currentStart']);
 
-		$this->metadata = array_merge_recursive($this->metadata, $parser->getMetadata());
+		$this->metadata = array_replace_recursive($this->metadata, $parser->getMetadata());
 
 		return $parser->getResults();
 	}
