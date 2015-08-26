@@ -51,15 +51,19 @@ try {
 } catch(ApplicationException $e) {
 	Logger::log('error', $e->getMessage(), (array) $e->getData());
 	exit($e->getCode() > 1 ? $e->getCode(): 2);
-} catch(ErrorException $e) {
+// } catch(ErrorException $e) {
+// 	Logger::log('error', $e->getMessage(), [
+// 		'errFile' => $e->getFile(),
+// 		'errLine' => $e->getLine(),
+// 		'trace' => $e->getTrace()
+// 	]);
+// 	exit(2);
+} catch(Exception $e) {
 	Logger::log('error', $e->getMessage(), [
 		'errFile' => $e->getFile(),
 		'errLine' => $e->getLine(),
 		'trace' => $e->getTrace()
 	]);
-	exit(2);
-} catch(Exception $e) {
-	Logger::log('error', $e->getMessage());
 	exit(2);
 }
 

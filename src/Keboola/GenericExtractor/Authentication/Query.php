@@ -29,16 +29,7 @@ class Query implements AuthInterface
 
 	public function __construct(Builder $builder, $attrs, $definitions)
 	{
-		$query = [];
-		try {
-			foreach($definitions as $key => $definition) {
-				$query[$key] = Utils::json_decode($definition);
-			}
-		} catch(JsonDecodeException $e) {
-			throw new UserException($e->getMessage());
-		}
-
-		$this->query = $query;
+		$this->query = $definitions;
 		$this->attrs = $attrs;
 		$this->builder = $builder;
 	}
@@ -49,11 +40,10 @@ class Query implements AuthInterface
 	public function authenticateClient(Client $client)
 	{
 		$sub = new UrlSignature();
-		// Create array of objects
-		// FIXME should be an option while loading from YML?
+		// Create array of objects instead of arrays from YML
 		$q = (array) json_decode(json_encode($this->query));
 		$sub->setSignatureGenerator(
-			function () {
+			function () use ($q) {
 				$query = [];
 				foreach($q as $key => $value) {
 					$query[$key] = $this->builder->run($value, ['attr' => $this->attrs]);
