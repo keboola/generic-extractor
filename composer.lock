@@ -688,16 +688,16 @@
         },
         {
             "name": "keboola/json-parser",
-            "version": "0.2.1",
+            "version": "0.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-jsonparser.git",
-                "reference": "b4cdaf266a6f9ef3468537f8bc55e26cc5d2cc04"
+                "reference": "c4b7b4860980e0c7d672b3ec5f57e685caae2363"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-jsonparser/zipball/b4cdaf266a6f9ef3468537f8bc55e26cc5d2cc04",
-                "reference": "b4cdaf266a6f9ef3468537f8bc55e26cc5d2cc04",
+                "url": "https://api.github.com/repos/keboola/php-jsonparser/zipball/c4b7b4860980e0c7d672b3ec5f57e685caae2363",
+                "reference": "c4b7b4860980e0c7d672b3ec5f57e685caae2363",
                 "shasum": ""
             },
             "require": {
@@ -708,6 +708,7 @@
                 "php": ">=5.4.0"
             },
             "require-dev": {
+                "codeclimate/php-test-reporter": "dev-master",
                 "phpunit/phpunit": "3.7.*"
             },
             "type": "library",
@@ -734,7 +735,7 @@
                 "json2csv",
                 "parser"
             ],
-            "time": "2015-03-23 12:24:13"
+            "time": "2015-08-25 20:07:01"
         },
         {
             "name": "keboola/juicer",
@@ -742,12 +743,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "0f18969731e6f43f5bf0d17f67b44508ae92c32a"
+                "reference": "a75e6e00e745c5687902b305a986bbde94db1a9f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/0f18969731e6f43f5bf0d17f67b44508ae92c32a",
-                "reference": "0f18969731e6f43f5bf0d17f67b44508ae92c32a",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/a75e6e00e745c5687902b305a986bbde94db1a9f",
+                "reference": "a75e6e00e745c5687902b305a986bbde94db1a9f",
                 "shasum": ""
             },
             "require": {
@@ -785,7 +786,7 @@
                 "extractor",
                 "keboola"
             ],
-            "time": "2015-08-22 19:54:27"
+            "time": "2015-08-26 02:17:26"
         },
         {
             "name": "keboola/php-csvtable",
@@ -1212,25 +1213,29 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.20.0",
+            "version": "v1.21.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "1ea4e5f81c6d005fe84d0b38e1c4f1955eb86844"
+                "reference": "913d282caca9ee0e8d05940c6caa486d58810dd4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/1ea4e5f81c6d005fe84d0b38e1c4f1955eb86844",
-                "reference": "1ea4e5f81c6d005fe84d0b38e1c4f1955eb86844",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/913d282caca9ee0e8d05940c6caa486d58810dd4",
+                "reference": "913d282caca9ee0e8d05940c6caa486d58810dd4",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.7"
             },
+            "require-dev": {
+                "symfony/debug": "~2.7",
+                "symfony/phpunit-bridge": "~2.7"
+            },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.20-dev"
+                    "dev-master": "1.21-dev"
                 }
             },
             "autoload": {
@@ -1265,7 +1270,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2015-08-12 15:56:39"
+            "time": "2015-08-24 09:51:18"
         }
     ],
     "packages-dev": [
@@ -1275,12 +1280,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/codeclimate/php-test-reporter.git",
-                "reference": "418ae782307841ac50fe26daa4cfe04520b0de9c"
+                "reference": "f7afa2f80e88faf722167488f47dea0ba6178a45"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codeclimate/php-test-reporter/zipball/418ae782307841ac50fe26daa4cfe04520b0de9c",
-                "reference": "418ae782307841ac50fe26daa4cfe04520b0de9c",
+                "url": "https://api.github.com/repos/codeclimate/php-test-reporter/zipball/f7afa2f80e88faf722167488f47dea0ba6178a45",
+                "reference": "f7afa2f80e88faf722167488f47dea0ba6178a45",
                 "shasum": ""
             },
             "require": {
@@ -1325,7 +1330,7 @@
                 "codeclimate",
                 "coverage"
             ],
-            "time": "2015-04-18 14:43:54"
+            "time": "2015-08-24 20:58:42"
         },
         {
             "name": "doctrine/instantiator",
