@@ -688,16 +688,16 @@
         },
         {
             "name": "keboola/json-parser",
-            "version": "0.2.3",
+            "version": "0.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-jsonparser.git",
-                "reference": "c4b7b4860980e0c7d672b3ec5f57e685caae2363"
+                "reference": "85aff59ce6104ca6112bcdd9b94d4d13ed4996f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-jsonparser/zipball/c4b7b4860980e0c7d672b3ec5f57e685caae2363",
-                "reference": "c4b7b4860980e0c7d672b3ec5f57e685caae2363",
+                "url": "https://api.github.com/repos/keboola/php-jsonparser/zipball/85aff59ce6104ca6112bcdd9b94d4d13ed4996f4",
+                "reference": "85aff59ce6104ca6112bcdd9b94d4d13ed4996f4",
                 "shasum": ""
             },
             "require": {
@@ -735,7 +735,7 @@
                 "json2csv",
                 "parser"
             ],
-            "time": "2015-08-25 20:07:01"
+            "time": "2015-08-26 09:41:27"
         },
         {
             "name": "keboola/juicer",
@@ -1213,16 +1213,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.21.0",
+            "version": "v1.21.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "913d282caca9ee0e8d05940c6caa486d58810dd4"
+                "reference": "ca8d3aa90b6a01c82e07909fe815d6b443e75a23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/913d282caca9ee0e8d05940c6caa486d58810dd4",
-                "reference": "913d282caca9ee0e8d05940c6caa486d58810dd4",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ca8d3aa90b6a01c82e07909fe815d6b443e75a23",
+                "reference": "ca8d3aa90b6a01c82e07909fe815d6b443e75a23",
                 "shasum": ""
             },
             "require": {
@@ -1270,7 +1270,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2015-08-24 09:51:18"
+            "time": "2015-08-26 08:58:31"
         }
     ],
     "packages-dev": [
