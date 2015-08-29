@@ -8,6 +8,8 @@ use	Keboola\Juicer\Config\JobConfig,
 	Keboola\Juicer\Client\RestClient,
 	Keboola\Juicer\Parser\Json;
 use	Keboola\Temp\Temp;
+use	Keboola\Utils\Utils;
+use	Keboola\Code\Builder;
 // use	GuzzleHttp\Client;
 
 class GenericExtractorJobTest extends ExtractorTestCase
@@ -77,6 +79,81 @@ class GenericExtractorJobTest extends ExtractorTestCase
 		]);
 
 		$this->assertEquals('http://example.com/api/ep?something=2', $req->getEndpoint());
+	}
+
+	public function testBuildParams()
+	{
+		$cfg = JobConfig::create([
+			'endpoint' => 'ep',
+			'params' => Utils::json_decode('{
+				"timeframe": "this_24_hours",
+				"filters": {
+					"function": "concat",
+					"args": [
+						{
+							"function": "date",
+							"args": ["Y-m-d"]
+						},
+						"string",
+						{"attr": "das.attribute"}
+					]
+				}
+			}')
+		]);
+
+		$job = $this->getJob($cfg);
+		$job->setAttributes([
+			'das.attribute' => "something interesting"
+		]);
+		$job->setMetadata([
+			'time' => [
+				'previousStart' => 0,
+				'currentStart' => time()
+			]
+		]);
+		$job->setBuilder(new Builder());
+
+		$params = self::callMethod($job, 'buildParams', [
+			$cfg
+		]);
+
+		$this->assertEquals([
+			'timeframe' => 'this_24_hours',
+			'filters' => '2015-08-29stringsomething interesting'
+		], $params);
+	}
+
+	/**
+	 * @expectedException \Keboola\Juicer\Exception\UserException
+	 * @expectedExceptionMessage User script error: date() expects at least 1 parameter, 0 given
+	 */
+	public function testBuildParamsException()
+	{
+
+		$cfg = JobConfig::create([
+			'endpoint' => 'ep',
+			'params' => Utils::json_decode('{
+				"filters": {
+					"function": "date"
+				}
+			}')
+		]);
+
+		$job = $this->getJob($cfg);
+		$job->setAttributes([
+			'das.attribute' => "something interesting"
+		]);
+		$job->setMetadata([
+			'time' => [
+				'previousStart' => 0,
+				'currentStart' => time()
+			]
+		]);
+		$job->setBuilder(new Builder());
+
+		$params = self::callMethod($job, 'buildParams', [
+			$cfg
+		]);
 	}
 
 	protected function getJob(JobConfig $config)

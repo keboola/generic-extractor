@@ -10,8 +10,9 @@ use	Keboola\Juicer\Extractor\RecursiveJob,
 	Keboola\Juicer\Exception\UserException;
 use	Keboola\Utils\Utils,
 	Keboola\Utils\Exception\JsonDecodeException;
-use	Keboola\GenericExtractor\Pagination\ScrollerInterface,
-	Keboola\Code\Builder;
+use	Keboola\GenericExtractor\Pagination\ScrollerInterface;
+use	Keboola\Code\Builder,
+	Keboola\Code\Exception\UserScriptException;
 
 class GenericExtractorJob extends RecursiveJob
 {
@@ -76,12 +77,16 @@ class GenericExtractorJob extends RecursiveJob
 	protected function buildParams(JobConfig $config)
 	{
 		$params = (array) Utils::json_decode(json_encode($config->getParams()));
-		array_walk($params, function(&$value, $key) {
-			$value = is_scalar($value) ? $value : $this->stringBuilder->run($value, [
-				'attr' => $this->attributes,
-				'time' => $this->metadata['time']
-			]);
-		});
+		try {
+			array_walk($params, function(&$value, $key) {
+				$value = !is_object($value) ? $value : $this->stringBuilder->run($value, [
+					'attr' => $this->attributes,
+					'time' => $this->metadata['time']
+				]);
+			});
+		} catch(UserScriptException $e) {
+			throw new UserException('User script error: ' . $e->getMessage());
+		}
 
 		$config->setParams($params);
 

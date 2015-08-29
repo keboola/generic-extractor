@@ -572,16 +572,16 @@
         },
         {
             "name": "keboola/codebuilder",
-            "version": "0.1.4",
+            "version": "0.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-codebuilder.git",
-                "reference": "953636fec5b76f5e441337eb3ea43976a478779d"
+                "reference": "018bf513ff821f3260587914e6c0dd34d431e9ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-codebuilder/zipball/953636fec5b76f5e441337eb3ea43976a478779d",
-                "reference": "953636fec5b76f5e441337eb3ea43976a478779d",
+                "url": "https://api.github.com/repos/keboola/php-codebuilder/zipball/018bf513ff821f3260587914e6c0dd34d431e9ac",
+                "reference": "018bf513ff821f3260587914e6c0dd34d431e9ac",
                 "shasum": ""
             },
             "require": {
@@ -613,7 +613,7 @@
                 "user",
                 "user-script"
             ],
-            "time": "2015-02-16 13:06:08"
+            "time": "2015-08-29 16:22:41"
         },
         {
             "name": "keboola/csv",
@@ -883,16 +883,16 @@
         },
         {
             "name": "keboola/php-utils",
-            "version": "0.1.14",
+            "version": "0.1.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-utils.git",
-                "reference": "07d8f3b0ff3245c7d4bd0b14b56956ac3a77013b"
+                "reference": "399c88f800ed5e753edceedd45bc65b8806a31a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-utils/zipball/07d8f3b0ff3245c7d4bd0b14b56956ac3a77013b",
-                "reference": "07d8f3b0ff3245c7d4bd0b14b56956ac3a77013b",
+                "url": "https://api.github.com/repos/keboola/php-utils/zipball/399c88f800ed5e753edceedd45bc65b8806a31a8",
+                "reference": "399c88f800ed5e753edceedd45bc65b8806a31a8",
                 "shasum": ""
             },
             "require": {
@@ -923,7 +923,7 @@
             "keywords": [
                 "utility"
             ],
-            "time": "2015-02-09 10:07:19"
+            "time": "2015-08-29 15:51:13"
         },
         {
             "name": "monolog/monolog",
