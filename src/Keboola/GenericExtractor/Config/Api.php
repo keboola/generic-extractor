@@ -102,7 +102,7 @@ class Api
 				break;
 			case 'url.query':
 				if (empty($api['query'])) {
-					throw new UserException("The query authentication method requires query parameters to be defined in the configuration bucket attributes.");
+					throw new UserException("The query authentication method requires query parameters to be defined in the API configuration.");
 				}
 
 				return new Authentication\Query(new Builder(), $config->getAttributes(), $api['query']);
