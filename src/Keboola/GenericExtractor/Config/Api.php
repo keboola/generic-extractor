@@ -79,7 +79,6 @@ class Api
 	 * - info about what attrs store the Auth keys
 	 * - callback method that generates a signature
 	 * - OR an array of defaults for the client (possibly using the callback ^^)
-	 * - type of the auth method TODO - is that needed?
 	 * - Method that accepts GuzzleClient as parameter and adds the emitter/defaults to it
 	 *
 	 * @param array $api
@@ -142,7 +141,6 @@ class Api
 	 * Return pagination scoller
 	 * @param array $api
 	 * @return Pagination\ScrollerInterface
-	 * @todo refactor Scrollers to use config arrays
 	 */
 	public static function createScroller($api)
 	{

@@ -15,6 +15,7 @@ $temp = new Temp(APP_NAME);
 
 Logger::initLogger(APP_NAME);
 
+// TODO create an Exception handler, register in bootstrap and handle the try/catch there?
 try {
 	$arguments = getopt("d::", ["data::"]);
 	if (!isset($arguments["data"])) {

@@ -33,7 +33,7 @@ class UrlSignature implements SubscriberInterface
 	 */
 	private function addSignature(RequestInterface $request)
 	{
-		$authQuery = call_user_func($this->generator); // TODO use second arg to make query available
+		$authQuery = call_user_func($this->generator);
 		$rQuery = $request->getQuery()->merge($authQuery);
 	}
 

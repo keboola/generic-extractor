@@ -53,7 +53,6 @@ class GenericExtractor extends Extractor
 		$parser = Json::create($config, $this->getLogger(), $this->getTemp(), $this->metadata);
 		$parser->getParser()->setAllowArrayStringMix(true);
 
-		//TODO needs to run before passing cfg to the job?
 		$builder = new Builder();
 
 		$this->metadata['time']['previousStart'] = empty($this->metadata['time']['previousStart']) ? 0 : $this->metadata['time']['previousStart'];
