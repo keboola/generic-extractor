@@ -119,7 +119,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
 		$this->assertEquals([
 			'timeframe' => 'this_24_hours',
-			'filters' => '2015-08-29stringsomething interesting'
+			'filters' => date("Y-m-d") . 'stringsomething interesting'
 		], $params);
 	}
 

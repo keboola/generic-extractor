@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5549b26d3fda7c4b5572b7910d4807af",
+    "hash": "911ea1d26d4f3dc61bb264d34eb67f3d",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -739,16 +739,16 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "dev-master",
+            "version": "0.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "a75e6e00e745c5687902b305a986bbde94db1a9f"
+                "reference": "4314270036e76758c4aac744e8161f3ca3f55d65"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/a75e6e00e745c5687902b305a986bbde94db1a9f",
-                "reference": "a75e6e00e745c5687902b305a986bbde94db1a9f",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/4314270036e76758c4aac744e8161f3ca3f55d65",
+                "reference": "4314270036e76758c4aac744e8161f3ca3f55d65",
                 "shasum": ""
             },
             "require": {
@@ -786,7 +786,7 @@
                 "extractor",
                 "keboola"
             ],
-            "time": "2015-08-26 02:17:26"
+            "time": "2015-08-30 08:24:12"
         },
         {
             "name": "keboola/php-csvtable",
@@ -2475,7 +2475,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "keboola/juicer": 20,
         "codeclimate/php-test-reporter": 20
     },
     "prefer-stable": false,

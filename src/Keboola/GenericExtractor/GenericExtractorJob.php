@@ -97,9 +97,9 @@ class GenericExtractorJob extends RecursiveJob
 	 * Inject $scroller into a child job
 	 * {@inheritdoc}
 	 */
-	protected function createChild(JobConfig $config)
+	protected function createChild(JobConfig $config, array $parentResults)
 	{
-		$job = parent::createChild($config);
+		$job = parent::createChild($config, $parentResults);
 		$scroller = clone $this->scroller;
 		$scroller->reset();
 		$job->setScroller($scroller);
