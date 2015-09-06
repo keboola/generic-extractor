@@ -127,13 +127,19 @@ class Api
 
 		if (filter_var($api['baseUrl'], FILTER_VALIDATE_URL)) {
 			return $api['baseUrl'];
-		} else {
+		} elseif(is_string($api['baseUrl'])) {
+			// For backwards compatibility
 			try {
 				$fn = Utils::json_decode($api['baseUrl']);
 			} catch(JsonDecodeException $e) {
 				throw new UserException("The 'baseUrl' attribute in API configuration is not an URL string, neither a valid JSON containing an user function! Error: " . $e->getMessage(), $e);
 			}
 			return (new Builder())->run($fn, ['attr' => $config->getAttributes()]);
+		} else {
+			return (new Builder())->run(
+				Utils::arrayToObject($api['baseUrl']),
+				['attr' => $config->getAttributes()]
+			);
 		}
 	}
 

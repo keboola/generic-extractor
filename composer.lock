@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "911ea1d26d4f3dc61bb264d34eb67f3d",
+    "hash": "9cfb90d1dc6a9dc53a8d2bb1addedea6",
     "packages": [
         {
             "name": "doctrine/annotations",
-            "version": "v1.2.6",
+            "version": "v1.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/annotations.git",
-                "reference": "f4a91702ca3cd2e568c3736aa031ed00c3752af4"
+                "reference": "f25c8aab83e0c3e976fd7d19875f198ccf2f7535"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/annotations/zipball/f4a91702ca3cd2e568c3736aa031ed00c3752af4",
-                "reference": "f4a91702ca3cd2e568c3736aa031ed00c3752af4",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/f25c8aab83e0c3e976fd7d19875f198ccf2f7535",
+                "reference": "f25c8aab83e0c3e976fd7d19875f198ccf2f7535",
                 "shasum": ""
             },
             "require": {
@@ -72,20 +72,20 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2015-06-17 12:21:22"
+            "time": "2015-08-31 12:32:49"
         },
         {
             "name": "doctrine/cache",
-            "version": "v1.4.1",
+            "version": "v1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "c9eadeb743ac6199f7eec423cb9426bc518b7b03"
+                "reference": "8c434000f420ade76a07c64cbe08ca47e5c101ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/c9eadeb743ac6199f7eec423cb9426bc518b7b03",
-                "reference": "c9eadeb743ac6199f7eec423cb9426bc518b7b03",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/8c434000f420ade76a07c64cbe08ca47e5c101ca",
+                "reference": "8c434000f420ade76a07c64cbe08ca47e5c101ca",
                 "shasum": ""
             },
             "require": {
@@ -142,7 +142,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2015-04-15 00:11:59"
+            "time": "2015-08-31 12:36:41"
         },
         {
             "name": "doctrine/collections",
@@ -212,16 +212,16 @@
         },
         {
             "name": "doctrine/common",
-            "version": "v2.5.0",
+            "version": "v2.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/common.git",
-                "reference": "cd8daf2501e10c63dced7b8b9b905844316ae9d3"
+                "reference": "0009b8f0d4a917aabc971fb089eba80e872f83f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/common/zipball/cd8daf2501e10c63dced7b8b9b905844316ae9d3",
-                "reference": "cd8daf2501e10c63dced7b8b9b905844316ae9d3",
+                "url": "https://api.github.com/repos/doctrine/common/zipball/0009b8f0d4a917aabc971fb089eba80e872f83f9",
+                "reference": "0009b8f0d4a917aabc971fb089eba80e872f83f9",
                 "shasum": ""
             },
             "require": {
@@ -281,7 +281,7 @@
                 "persistence",
                 "spl"
             ],
-            "time": "2015-04-02 19:55:44"
+            "time": "2015-08-31 13:00:22"
         },
         {
             "name": "doctrine/inflector",
@@ -739,16 +739,16 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "0.0.7",
+            "version": "0.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "812a8aab20ae987cf3cd224b1006a98768d67058"
+                "reference": "cbb763352b973b78b6220481f6dc01a63683a7df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/812a8aab20ae987cf3cd224b1006a98768d67058",
-                "reference": "812a8aab20ae987cf3cd224b1006a98768d67058",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/cbb763352b973b78b6220481f6dc01a63683a7df",
+                "reference": "cbb763352b973b78b6220481f6dc01a63683a7df",
                 "shasum": ""
             },
             "require": {
@@ -786,7 +786,7 @@
                 "extractor",
                 "keboola"
             ],
-            "time": "2015-08-30 15:32:50"
+            "time": "2015-09-06 05:48:54"
         },
         {
             "name": "keboola/php-csvtable",
@@ -883,16 +883,16 @@
         },
         {
             "name": "keboola/php-utils",
-            "version": "0.1.15",
+            "version": "0.1.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-utils.git",
-                "reference": "399c88f800ed5e753edceedd45bc65b8806a31a8"
+                "reference": "68b203b2556acaf74d0b0394d32358ede67fcf90"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-utils/zipball/399c88f800ed5e753edceedd45bc65b8806a31a8",
-                "reference": "399c88f800ed5e753edceedd45bc65b8806a31a8",
+                "url": "https://api.github.com/repos/keboola/php-utils/zipball/68b203b2556acaf74d0b0394d32358ede67fcf90",
+                "reference": "68b203b2556acaf74d0b0394d32358ede67fcf90",
                 "shasum": ""
             },
             "require": {
@@ -923,7 +923,7 @@
             "keywords": [
                 "utility"
             ],
-            "time": "2015-08-29 15:51:13"
+            "time": "2015-09-05 18:08:58"
         },
         {
             "name": "monolog/monolog",
