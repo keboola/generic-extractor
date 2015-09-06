@@ -12,7 +12,7 @@
 ## baseUrl
 
 The most important part of configuration, the API url (should end with a `/`)
-- **Must** be either a string or user function (allows custom domains, see examples) stored as a JSON encoded string
+- **Must** be either a string or user function (allows custom domains, see examples)
 
 Example:
 
