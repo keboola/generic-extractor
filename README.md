@@ -119,6 +119,8 @@ Configured in `api.pagination.method`
 					method: offset
 					limitParam: limit # default, can be omitted
 					offsetParam: offset # default, can be omitted
+- **pagination.firstPageParams**(optional)
+	- Whether or not include limit and offset params in the first request (default to `true`)
 
 ### response.param
 
@@ -161,6 +163,8 @@ simple page number increasing 1 by 1
 					limit: 500
 					limitParam: count # this will result in ?page=12&count=500 query parameters
 - **pagination.firstPage**: (optional) `1` by default. Set the first page number.
+- **pagination.firstPageParams**(optional)
+	- Whether or not include limit and page params in the first request (default to `true`)
 
 # Config
 
