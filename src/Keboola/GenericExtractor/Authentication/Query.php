@@ -46,7 +46,9 @@ class Query implements AuthInterface
 			function () use ($q) {
 				$query = [];
 				foreach($q as $key => $value) {
-					$query[$key] = $this->builder->run($value, ['attr' => $this->attrs]);
+					$query[$key] = is_scalar($value)
+						? $value
+						: $this->builder->run($value, ['attr' => $this->attrs]);
 				}
 				return $query;
 			}

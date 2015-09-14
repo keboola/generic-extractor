@@ -17,7 +17,8 @@ class QueryTest extends ExtractorTestCase
 			'paramTwo' => (object) [
 				'function' => 'md5',
 				'args' => [(object) ['attr' => 'second']]
-			]
+			],
+			'paramThree' => 'string'
 		];
 		$attrs = ['first' => 1, 'second' => 'two'];
 
@@ -28,7 +29,7 @@ class QueryTest extends ExtractorTestCase
 		$client->send($request);
 
 		$this->assertEquals(
-			'paramOne=1&paramTwo=' . md5($attrs['second']),
+			'paramOne=1&paramTwo=' . md5($attrs['second']) . '&paramThree=string',
 			(string) $request->getQuery()
 		);
 	}
