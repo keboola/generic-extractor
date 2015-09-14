@@ -31,7 +31,7 @@ class GenericExtractorTest extends ExtractorTestCase
 		$after = $ex->getMetadata();
 
 		$this->assertEquals($meta['json_parser.struct'], $after['json_parser.struct']);
-		$this->assertArrayHasKey('time', $after);
-		$this->assertArrayHasKey('previousStart', $after['time']);
+// 		$this->assertArrayHasKey('time', $after);
+// 		$this->assertArrayHasKey('previousStart', $after['time']);
 	}
 }

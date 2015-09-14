@@ -36,6 +36,10 @@ class GenericExtractor extends Extractor
 	 * @var AuthInterface
 	 */
 	protected $auth;
+	/**
+	 * @var Json
+	 */
+	protected $parser;
 
 	public function run(Config $config)
 	{
@@ -50,13 +54,15 @@ class GenericExtractor extends Extractor
 		// Verbose Logging of all requests
 		$client->getClient()->getEmitter()->attach(new LogRequest);
 
-		$parser = Json::create($config, $this->getLogger(), $this->getTemp(), $this->metadata);
-		$parser->getParser()->setAllowArrayStringMix(true);
+		if (!empty($this->parser) && $this->parser instanceof Json) {
+			$parser = $this->parser;
+		} else {
+			$parser = Json::create($config, $this->getLogger(), $this->getTemp(), $this->metadata);
+			$parser->getParser()->setAllowArrayStringMix(true);
+			$this->parser = $parser;
+		}
 
 		$builder = new Builder();
-
-		$this->metadata['time']['previousStart'] = empty($this->metadata['time']['previousStart']) ? 0 : $this->metadata['time']['previousStart'];
-		$this->metadata['time']['currentStart'] = time();
 
 		foreach($config->getJobs() as $jobConfig) {
 			$job = new GenericExtractorJob($jobConfig, $client, $parser);
@@ -67,9 +73,6 @@ class GenericExtractor extends Extractor
 
 			$job->run();
 		}
-
-		$this->metadata['time']['previousStart'] = $this->metadata['time']['currentStart'];
-		unset($this->metadata['time']['currentStart']);
 
 		$this->metadata = array_replace_recursive($this->metadata, $parser->getMetadata());
 
@@ -127,5 +130,21 @@ class GenericExtractor extends Extractor
 	public function setScroller(ScrollerInterface $scroller)
 	{
 		$this->scroller = $scroller;
+	}
+
+	/**
+	 * @param Json $parser
+	 */
+	public function setParser(Json $parser)
+	{
+		$this->parser = $parser;
+	}
+
+	/**
+	 * @return Json
+	 */
+	public function getParser()
+	{
+		return $this->parser;
 	}
 }
