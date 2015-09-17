@@ -2,7 +2,8 @@
 namespace Keboola\GenericExtractor;
 
 use	Keboola\GenericExtractor\Authentication\Query;
-use	GuzzleHttp\Client;
+use	GuzzleHttp\Client,
+	GuzzleHttp\Exception\ClientException;
 use	Keboola\Code\Builder;
 
 class QueryTest extends ExtractorTestCase
@@ -32,5 +33,31 @@ class QueryTest extends ExtractorTestCase
 			'paramOne=1&paramTwo=' . md5($attrs['second']) . '&paramThree=string',
 			(string) $request->getQuery()
 		);
+	}
+
+	public function testAuthenticateClientQuery()
+	{
+		$client = new Client(['base_url' => 'http://example.com']);
+
+		$builder = new Builder;
+		$auth = new Query($builder, [], ['authParam' => 'secretCodeWow']);
+		$auth->authenticateClient($client);
+
+		$request = $client->createRequest('GET', '/query?param=value');
+		$this->sendRequest($client, $request);
+
+		$this->assertEquals(
+			'param=value&authParam=secretCodeWow',
+			(string) $request->getQuery()
+		);
+	}
+
+	protected function sendRequest($client, $request)
+	{
+		try {
+			return $client->send($request);
+		} catch(ClientException $e) {
+			// this is expected, just need to send the request somewhere!
+		}
 	}
 }

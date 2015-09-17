@@ -46,6 +46,34 @@ class MockExecutionTest extends ExtractorTestCase
 		$this->rmDir('./tests/data/basicAuth/out');
 	}
 
+	public function testMultipleOutputs()
+	{
+		$output = shell_exec('php ./run.php --data=./tests/data/multipleOutputs');
+
+		$this->assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
+
+		$this->assertDirectoryEquals(
+			'./tests/data/multipleOutputs/expected/tables/',
+			'./tests/data/multipleOutputs/out/tables/'
+		);
+
+		$this->rmDir('./tests/data/multipleOutputs/out');
+	}
+
+	public function testMultipleOutputsUserData()
+	{
+		$output = shell_exec('php ./run.php --data=./tests/data/multipleOutputsUserData');
+
+		$this->assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
+
+		$this->assertDirectoryEquals(
+			'./tests/data/multipleOutputsUserData/expected/tables/',
+			'./tests/data/multipleOutputsUserData/out/tables/'
+		);
+
+		$this->rmDir('./tests/data/multipleOutputsUserData/out');
+	}
+
 	protected function rmDir($dirPath)
 	{
 		foreach(
@@ -63,8 +91,15 @@ class MockExecutionTest extends ExtractorTestCase
 
 	protected function assertDirectoryEquals($pathToExpected, $pathToActual)
 	{
-		foreach(new \DirectoryIterator($pathToExpected) as $file) {
-			$this->assertFileEquals($file->getPathname(), $pathToActual . $file->getFilename());
+		foreach(new \RecursiveIteratorIterator(
+			new \RecursiveDirectoryIterator(
+				$pathToExpected,
+				\FilesystemIterator::SKIP_DOTS
+			),
+			\RecursiveIteratorIterator::SELF_FIRST
+		) as $file) {
+			$relPath = str_replace($pathToExpected, '', $file->getPathname());
+			$this->assertFileEquals($file->getPathname(), $pathToActual . $relPath);
 		}
 	}
 }

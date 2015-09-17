@@ -41,6 +41,11 @@ class GenericExtractorJob extends RecursiveJob
 	 * @var Builder
 	 */
 	protected $stringBuilder;
+	/**
+	 * Data to append to the root result
+	 * @var string|array
+	 */
+	protected $userParentId;
 
 	/**
 	 * {@inheritdoc}
@@ -61,7 +66,7 @@ class GenericExtractorJob extends RecursiveJob
 				$this->scroller->reset();
 				break;
 			} else {
-				$data = $this->parse($response);
+				$data = $this->parse($response, $this->userParentId);
 
 				$this->lastResponseHash = $responseHash;
 			}
@@ -131,5 +136,14 @@ class GenericExtractorJob extends RecursiveJob
 	public function setMetadata(array $metadata)
 	{
 		$this->metadata = $metadata;
+	}
+
+	public function setUserParentId($id)
+	{
+		if (!is_array($id)) {
+			throw new UserException("User defined parent ID must be a key:value pair, or multiple such pairs.", 0, null, ["id" => $id]);
+		}
+
+		$this->userParentId = $id;
 	}
 }

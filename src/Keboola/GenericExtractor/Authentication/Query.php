@@ -41,7 +41,7 @@ class Query implements AuthInterface
 	{
 		$sub = new UrlSignature();
 		// Create array of objects instead of arrays from YML
-		$q = (array) json_decode(json_encode($this->query));
+		$q = (array) Utils::arrayToObject($this->query);
 		$sub->setSignatureGenerator(
 			function () use ($q) {
 				$query = [];

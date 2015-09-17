@@ -65,11 +65,18 @@ class GenericExtractor extends Extractor
 		$builder = new Builder();
 
 		foreach($config->getJobs() as $jobConfig) {
+			// FIXME this is rather duplicated in RecursiveJob::createChild()
 			$job = new GenericExtractorJob($jobConfig, $client, $parser);
 			$job->setScroller($this->scroller);
 			$job->setAttributes($config->getAttributes());
 			$job->setMetadata($this->metadata);
 			$job->setBuilder($builder);
+			if (!empty($config->getAttribute('userData'))) {
+				$job->setUserParentId(is_scalar($config->getAttribute('userData'))
+					? ['userData' => $config->getAttribute('userData')]
+					: $config->getAttribute('userData')
+				);
+			}
 
 			$job->run();
 		}

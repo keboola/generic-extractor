@@ -1,0 +1,12 @@
+parameters:
+    api:
+        baseUrl: http://private-53977-extractormock.apiary-mock.com/
+    config:
+        jobs:
+            -
+                endpoint: get
+    iterations:
+        -
+            outputBucket: first
+        -
+            outputBucket: second
