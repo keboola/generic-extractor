@@ -229,7 +229,8 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
 	- **method**: GET (default), POST or FORM
 
 # Iterations
-The `config` part can be run multiple times with some (or all) configuration values being overwritten. For example, you can run the same configuration for multiple accounts.
+The configuration can be run multiple times with some (or all) values in `config` section being overwritten. For example, you can run the same configuration for multiple accounts, overriding values of the authentication settings.
+
 **Warning**: If you use `userData` in iterations, make sure they all contain the same set of keys!
 
 ## Example
