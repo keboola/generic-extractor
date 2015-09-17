@@ -73,6 +73,20 @@ class MockExecutionTest extends ExtractorTestCase
 
 		$this->rmDir('./tests/data/multipleOutputsUserData/out');
 	}
+/*
+	public function testIterationDifferentColumns()
+	{
+		$output = shell_exec('php ./run.php --data=./tests/data/iterationDifferentColumns');
+
+		$this->assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
+
+		$this->assertDirectoryEquals(
+			'./tests/data/iterationDifferentColumns/expected/tables/',
+			'./tests/data/iterationDifferentColumns/out/tables/'
+		);
+
+		$this->rmDir('./tests/data/iterationDifferentColumns/out');
+	}*/
 
 	protected function rmDir($dirPath)
 	{
