@@ -180,6 +180,13 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
 - **outputBucket**: Name of the bucket to store the output data
 - **id**: Optional, if **outputBucket** is set. Otherwise the id is used to generate the output bucket name
 - **debug**: If set to `true`, the extractor will output detailed information about it's run, including all API requests. **Warning**, this may reveal your tokens or other sensitive data in the events in your project! It is intended only to help solving issues with configuration.
+- **userData**: A set of `key:value` pairs that will be added to the `root` of all endpoints' results
+	- Example:
+
+			config:
+				userData:
+					some: tag
+					another: identifier
 
 ## Jobs
 - Columns:
@@ -220,6 +227,33 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
 			- Example: `type!=employee` or `product.value>150`
 			- The filter is whitespace sensitive, therefore `value == 100` will look into `value␣` for a `␣100` value, instead of `value` and `100` as likely desired.
 	- **method**: GET (default), POST or FORM
+
+# Iterations
+The `config` part can be run multiple times with some (or all) configuration values being overwritten. For example, you can run the same configuration for multiple accounts.
+
+## Example
+This way you can download the same data from two different accounts into a single output table, adding the `owner` column to help you recognize which iteration of the config brought in each row in the result.
+
+		api:
+			baseUrl: http://example.com/api
+			authentication:
+				type: basic
+		config:
+			outputBucket: bunchOfResults
+			jobs:
+				-
+					endpoint: data
+		iterations:
+			-
+				username: chose
+				password: potato
+				userData:
+					owner: "Chose's results"
+			-
+				username: joann
+				password: beer
+				userData:
+					owner: "Joann's results"
 
 # User functions
 Can currently be used in query type authentication or endpoint parameters
