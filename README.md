@@ -206,6 +206,7 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
 	- **children**: Array of child jobs that use the jobs' results to iterate
 		- The endpoint must use a placeholder enclosed in `{}`
 		- The placeholder can be prefixed by a number, that refers to higher level of nesting. By default, data from direct parent are used. The direct parent can be referred as `{id}` or `{1:id}`. A "grandparent" result would then be `{2:id}` etc.
+		- Results in the child table will contain column(s) containing parent data used in the placeholder(s), prefixed by **parent_**. For example, if your placeholder is `{ticket_id}`, a column **parent_ticket_id** containing the value of current iteration will be appended to each row.
 		- **placeholders** array must define each placeholder. It must be a set of `key: value` pairs, where **key** is the placeholder (eg `"1:id"`) and the value is a path within the response object - if nested, use `.` as a separator.
 			- Example:
 
