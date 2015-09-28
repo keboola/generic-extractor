@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7eb42437e5f4bbe15bd04cf3e37949c4",
+    "hash": "13c31995f7a9924a3fb807b0eead24d2",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -688,23 +688,23 @@
         },
         {
             "name": "keboola/json-parser",
-            "version": "0.2.4",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-jsonparser.git",
-                "reference": "85aff59ce6104ca6112bcdd9b94d4d13ed4996f4"
+                "reference": "73b20f606bac8939ec26a56a1591363ac8e45a94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-jsonparser/zipball/85aff59ce6104ca6112bcdd9b94d4d13ed4996f4",
-                "reference": "85aff59ce6104ca6112bcdd9b94d4d13ed4996f4",
+                "url": "https://api.github.com/repos/keboola/php-jsonparser/zipball/73b20f606bac8939ec26a56a1591363ac8e45a94",
+                "reference": "73b20f606bac8939ec26a56a1591363ac8e45a94",
                 "shasum": ""
             },
             "require": {
                 "keboola/php-csvtable": "~0.1.0",
                 "keboola/php-temp": "~0.1.0",
                 "keboola/php-utils": "~0.1.2",
-                "monolog/monolog": ">=1.8.0",
+                "monolog/monolog": "~1.8",
                 "php": ">=5.4.0"
             },
             "require-dev": {
@@ -735,27 +735,27 @@
                 "json2csv",
                 "parser"
             ],
-            "time": "2015-08-26 09:41:27"
+            "time": "2015-09-28 06:11:17"
         },
         {
             "name": "keboola/juicer",
-            "version": "0.2.2",
+            "version": "0.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "3182a5f370e44cd983dc9b48590a0eaebf1cdaa6"
+                "reference": "7b8ce0886885bab22fba3700433b4b873fefcd53"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/3182a5f370e44cd983dc9b48590a0eaebf1cdaa6",
-                "reference": "3182a5f370e44cd983dc9b48590a0eaebf1cdaa6",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/7b8ce0886885bab22fba3700433b4b873fefcd53",
+                "reference": "7b8ce0886885bab22fba3700433b4b873fefcd53",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "~4.2.3",
                 "guzzlehttp/retry-subscriber": "~0.1.2",
                 "keboola/filter": "~0.1.0",
-                "keboola/json-parser": "~0.2.0",
+                "keboola/json-parser": "~1.0.0",
                 "keboola/php-csvtable": "~0.1.3",
                 "keboola/php-temp": "~0.1.0",
                 "keboola/php-utils": "~0.1.8",
@@ -786,7 +786,7 @@
                 "extractor",
                 "keboola"
             ],
-            "time": "2015-09-23 20:13:05"
+            "time": "2015-09-27 23:37:23"
         },
         {
             "name": "keboola/php-csvtable",
@@ -1041,20 +1041,20 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v2.7.4",
+            "version": "v2.7.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "1fdf23fe28876844b887b0e1935c9adda43ee645"
+                "reference": "619528a274647cffc1792063c3ea04c4fa8266a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/1fdf23fe28876844b887b0e1935c9adda43ee645",
-                "reference": "1fdf23fe28876844b887b0e1935c9adda43ee645",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/619528a274647cffc1792063c3ea04c4fa8266a0",
+                "reference": "619528a274647cffc1792063c3ea04c4fa8266a0",
                 "shasum": ""
             },
             "require": {
-                "doctrine/common": "~2.3",
+                "doctrine/common": "~2.4",
                 "php": ">=5.3.9",
                 "psr/log": "~1.0",
                 "twig/twig": "~1.20|~2.0"
@@ -1107,9 +1107,9 @@
             },
             "require-dev": {
                 "doctrine/data-fixtures": "1.0.*",
-                "doctrine/dbal": "~2.2",
+                "doctrine/dbal": "~2.4",
                 "doctrine/doctrine-bundle": "~1.2",
-                "doctrine/orm": "~2.2,>=2.2.3",
+                "doctrine/orm": "~2.4,>=2.4.5",
                 "egulias/email-validator": "~1.2",
                 "ircmaxell/password-compat": "~1.0",
                 "monolog/monolog": "~1.11",
@@ -1159,7 +1159,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2015-09-08 14:26:39"
+            "time": "2015-09-25 11:16:52"
         },
         {
             "name": "symfony/yaml",

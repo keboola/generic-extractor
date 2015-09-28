@@ -18,7 +18,7 @@ class GenericExtractorTest extends ExtractorTestCase
 	{
 		Logger::setLogger($this->getLogger('test', true));
 
-		$meta = ['json_parser.struct' => ['tickets.via' => ['channel' => 'string', 'source' => 'object']]];
+		$meta = ['json_parser.struct' => ['tickets.via' => ['channel' => 'scalar', 'source' => 'object']]];
 
 		$cfg = new Config('testApp', 'testCfg', []);
 		$api = Api::create(['baseUrl' => 'http://example.com'], $cfg);
