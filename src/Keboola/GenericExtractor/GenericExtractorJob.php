@@ -10,21 +10,15 @@ use	Keboola\Juicer\Extractor\RecursiveJob,
 	Keboola\Juicer\Exception\UserException;
 use	Keboola\Utils\Utils,
 	Keboola\Utils\Exception\JsonDecodeException;
-use	Keboola\GenericExtractor\Pagination\ScrollerInterface;
 use	Keboola\Code\Builder,
 	Keboola\Code\Exception\UserScriptException;
 
 class GenericExtractorJob extends RecursiveJob
 {
-// 	protected $configName;
 	/**
 	 * @var array
 	 */
 	protected $params;
-	/**
-	 * @var ScrollerInterface
-	 */
-	protected $scroller;
 	/**
 	 * @var array
 	 */
