@@ -156,6 +156,34 @@ class GenericExtractorJobTest extends ExtractorTestCase
 		]);
 	}
 
+	public function testFilterResponse()
+	{
+		$cfg = JobConfig::create([
+			'endpoint' => 'ep',
+			'responseFilter' => 'complexItem'
+		]);
+
+		$job = $this->getJob($cfg);
+
+		$data = [
+			(object) [
+				'simpleItem' => 1,
+				'complexItem' => (object) [
+					'data' => [1,2,3]
+				],
+				'anotherItem' => (object) [
+					'id' => 1,
+					'data' => [4,5,6]
+				]
+			]
+		];
+
+		$filtered = self::callMethod($job, 'filterResponse', [$cfg, $data]);
+
+		$this->assertTrue(is_scalar($filtered[0]->complexItem));
+		$this->assertEquals($data[0]->anotherItem, $filtered[0]->anotherItem);
+	}
+
 	protected function getJob(JobConfig $config)
 	{
 		return new GenericExtractorJob(

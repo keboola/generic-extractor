@@ -60,8 +60,8 @@ class GenericExtractorJob extends RecursiveJob
 				$this->scroller->reset();
 				break;
 			} else {
-				$response = $this->filterResponse($this->config, $response);
 				$data = $this->findDataInResponse($response, $this->config->getConfig());
+				$data = $this->filterResponse($this->config, $data);
 				$this->parse($data, $this->userParentId);
 
 				$this->lastResponseHash = $responseHash;
@@ -111,27 +111,33 @@ class GenericExtractorJob extends RecursiveJob
 	}
 
 	/**
-	 * @fixme needs to be applied on each item in $data, not $response
-	 * so $data has to be obtained outside of parse()
-	 * Solution: Just make parse($data, $parentId) instead of $response,
-	 * move findDataInResponse() from Job::parse to Job::run
+	 * Filters the $data array according to
+	 * $config->getConfig()['responseFilter'] and
+	 * returns the filtered array
+	 *
+	 * @param JobConfig $config
+	 * @param array $data
+	 * @return array
+	 * @todo belongs to a separate class altogether
 	 */
-	protected function filterResponse(JobConfig $config, $response)
+	protected function filterResponse(JobConfig $config, array $data)
 	{
 		if (empty($config->getConfig()['responseFilter'])) {
-			return $response;
+			return $data;
 		} else {
 			$filter = $config->getConfig()['responseFilter'];
 			$filter = is_array($filter) ? $filter : [$filter];
 
-			foreach($filter as $key) {
-				if (!empty($response->{$key})) {
-					$response->{$key} = json_encode($response->{$key});
+			foreach($data as $item) {
+				foreach($filter as $key) {
+					if (!empty($item->{$key})) {
+						$item->{$key} = json_encode($item->{$key});
+					}
 				}
 			}
 		}
 
-		return $response;
+		return $data;
 	}
 
 	/**
