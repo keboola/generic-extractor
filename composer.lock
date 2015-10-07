@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "13c31995f7a9924a3fb807b0eead24d2",
+    "hash": "cfa905bb3fc930e10ee934ea455aa297",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -688,22 +688,22 @@
         },
         {
             "name": "keboola/json-parser",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-jsonparser.git",
-                "reference": "73b20f606bac8939ec26a56a1591363ac8e45a94"
+                "reference": "8d243c5eb6a5d17f6ddef78da43dce7cc4217ee3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-jsonparser/zipball/73b20f606bac8939ec26a56a1591363ac8e45a94",
-                "reference": "73b20f606bac8939ec26a56a1591363ac8e45a94",
+                "url": "https://api.github.com/repos/keboola/php-jsonparser/zipball/8d243c5eb6a5d17f6ddef78da43dce7cc4217ee3",
+                "reference": "8d243c5eb6a5d17f6ddef78da43dce7cc4217ee3",
                 "shasum": ""
             },
             "require": {
                 "keboola/php-csvtable": "~0.1.0",
                 "keboola/php-temp": "~0.1.0",
-                "keboola/php-utils": "~0.1.2",
+                "keboola/php-utils": "~0.1.17",
                 "monolog/monolog": "~1.8",
                 "php": ">=5.4.0"
             },
@@ -735,20 +735,20 @@
                 "json2csv",
                 "parser"
             ],
-            "time": "2015-09-28 06:11:17"
+            "time": "2015-10-03 03:11:48"
         },
         {
             "name": "keboola/juicer",
-            "version": "0.3.2",
+            "version": "0.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "7b8ce0886885bab22fba3700433b4b873fefcd53"
+                "reference": "8ecc6d77c9abf60214c5b0900ec214825537803a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/7b8ce0886885bab22fba3700433b4b873fefcd53",
-                "reference": "7b8ce0886885bab22fba3700433b4b873fefcd53",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/8ecc6d77c9abf60214c5b0900ec214825537803a",
+                "reference": "8ecc6d77c9abf60214c5b0900ec214825537803a",
                 "shasum": ""
             },
             "require": {
@@ -786,7 +786,7 @@
                 "extractor",
                 "keboola"
             ],
-            "time": "2015-09-27 23:37:23"
+            "time": "2015-10-07 02:23:09"
         },
         {
             "name": "keboola/php-csvtable",
@@ -883,16 +883,16 @@
         },
         {
             "name": "keboola/php-utils",
-            "version": "0.1.16",
+            "version": "0.1.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-utils.git",
-                "reference": "68b203b2556acaf74d0b0394d32358ede67fcf90"
+                "reference": "1ff817a37f7d96311cdb86216a9385f069709707"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-utils/zipball/68b203b2556acaf74d0b0394d32358ede67fcf90",
-                "reference": "68b203b2556acaf74d0b0394d32358ede67fcf90",
+                "url": "https://api.github.com/repos/keboola/php-utils/zipball/1ff817a37f7d96311cdb86216a9385f069709707",
+                "reference": "1ff817a37f7d96311cdb86216a9385f069709707",
                 "shasum": ""
             },
             "require": {
@@ -923,7 +923,7 @@
             "keywords": [
                 "utility"
             ],
-            "time": "2015-09-05 18:08:58"
+            "time": "2015-10-03 03:16:21"
         },
         {
             "name": "monolog/monolog",
@@ -1904,16 +1904,16 @@
         },
         {
             "name": "phpunit/phpunit-mock-objects",
-            "version": "2.3.7",
+            "version": "2.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "5e2645ad49d196e020b85598d7c97e482725786a"
+                "reference": "ac8e7a3db35738d56ee9a76e78a4e03d97628983"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/5e2645ad49d196e020b85598d7c97e482725786a",
-                "reference": "5e2645ad49d196e020b85598d7c97e482725786a",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/ac8e7a3db35738d56ee9a76e78a4e03d97628983",
+                "reference": "ac8e7a3db35738d56ee9a76e78a4e03d97628983",
                 "shasum": ""
             },
             "require": {
@@ -1956,7 +1956,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2015-08-19 09:14:08"
+            "time": "2015-10-02 06:51:40"
         },
         {
             "name": "satooshi/php-coveralls",
