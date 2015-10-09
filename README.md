@@ -228,6 +228,40 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
 			- Example: `type!=employee` or `product.value>150`
 			- The filter is whitespace sensitive, therefore `value == 100` will look into `value␣` for a `␣100` value, instead of `value` and `100` as likely desired.
 	- **method**: GET (default), POST or FORM
+	- **responseFilter**: Allows filtering data from API response to leave them from being parsed.
+		- Filtered data will be imported as a JSON encoded string.
+		- Value of this parameter can be either a string containing path to data to be filtered within response data, or an array of such values.
+		- Example:
+
+				{ 'results': [
+					{
+						'id': 1,
+						'data': 'scalar'
+					},
+					{
+						'id': 2
+						'data': { 'object': 'can\'t reall parse this!' }
+					}
+				]}
+
+		- To be able to work with such response, set `"responseFilter": "data"` - it should be a path within each object of the response array, **not** including the key of the response array
+		- To filter values within nested arrays, use `"responseFilter": "data.array[].key"`
+		- Example:
+
+				{ 'results': [
+					{
+						'id': 1,
+						'data': {
+							'array': [
+								{ 'key': 'value' }.
+								{ 'key': { 'another': 'value' }}
+							]
+						}
+					}
+				]}
+
+		- This would be another unparseable object, so the filter above would just convert the `{ 'another': 'value' }` object to a string
+		- To filter an entire array, use `array` as the value for *responseFilter*. To filter each array item individually, use `array[]`.
 
 # Iterations
 The configuration can be run multiple times with some (or all) values in `config` section being overwritten. For example, you can run the same configuration for multiple accounts, overriding values of the authentication settings.

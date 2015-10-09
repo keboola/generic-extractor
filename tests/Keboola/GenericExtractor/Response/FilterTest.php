@@ -259,8 +259,4 @@ class FilterTest extends ExtractorTestCase
 		);
 
 	}
-
-	/* TODO
-	 - nested arrays?
-	*/
 }

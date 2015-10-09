@@ -70,6 +70,10 @@ class Filter
 		return $data;
 	}
 
+	/**
+	 * @param \stdClass $item
+	 * @param string $path
+	 */
 	protected function filterItem($item, $path)
 	{
 		$currentPath = explode($this->delimiter, $path, 2);
