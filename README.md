@@ -262,6 +262,18 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
 
 		- This would be another unparseable object, so the filter above would just convert the `{ 'another': 'value' }` object to a string
 		- To filter an entire array, use `array` as the value for *responseFilter*. To filter each array item individually, use `array[]`.
+	- **responseFilterDelimiter**: Allows changing delimiter if you need nesting in **responseFilter**, for instance if your data contains keys containing `.`, which is the default delimiter.
+		- Example:
+
+				{ 'results': [
+					{
+						'data.stuff': {
+							something: [1,2,3]
+						}
+					}
+				]}
+
+		- Use `'responseFilter': 'data.stuff/something'` together with `'responseFilterDelimiter': '/'` to filter the array in `something`
 
 # Iterations
 The configuration can be run multiple times with some (or all) values in `config` section being overwritten. For example, you can run the same configuration for multiple accounts, overriding values of the authentication settings.
