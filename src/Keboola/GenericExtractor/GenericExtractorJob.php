@@ -2,6 +2,7 @@
 
 namespace Keboola\GenericExtractor;
 
+use	Keboola\GenericExtractor\Response\Filter;
 use	Keboola\Juicer\Extractor\RecursiveJob,
 	Keboola\Juicer\Config\JobConfig,
 	Keboola\Juicer\Common\Logger,
@@ -119,25 +120,12 @@ class GenericExtractorJob extends RecursiveJob
 	 * @param array $data
 	 * @return array
 	 * @todo belongs to a separate class altogether
+	 * @todo allow nesting
 	 */
 	protected function filterResponse(JobConfig $config, array $data)
 	{
-		if (empty($config->getConfig()['responseFilter'])) {
-			return $data;
-		} else {
-			$filter = $config->getConfig()['responseFilter'];
-			$filter = is_array($filter) ? $filter : [$filter];
-
-			foreach($data as $item) {
-				foreach($filter as $key) {
-					if (!empty($item->{$key})) {
-						$item->{$key} = json_encode($item->{$key});
-					}
-				}
-			}
-		}
-
-		return $data;
+		$filter = Filter::create($config);
+		return $filter->run($data);
 	}
 
 	/**
