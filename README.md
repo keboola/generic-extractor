@@ -124,10 +124,27 @@ Configured in `api.pagination.method`
 
 ### response.param
 
-- **TODO**
-- Can be either
-    - a value of a query parameter
-- set where to search for the paging string (getDataFromPath?)
+- **pagination.method**: `response.param`
+- **pagination.responseParam**:
+	- path within response that points to a value used for scrolling
+	- pagination ends if the value is empty
+- **pagination.queryParam**:
+	- request parameter to set to the value from response
+- **pagination.includeParams**: `false`
+	- whether params from job configuration are used in next page request
+- **pagination.scrollRequest**:
+	- can be used to override settings (endpoint, method, ...) of the initial request
+
+			api:
+				pagination:
+					method: response.param
+					responseParam: _scroll_id
+					queryParam: scroll_id
+					scrollRequest:
+						endpoint: _search/scroll
+						method: GET
+						params:
+							scroll: 1m
 
 ### response.url
 

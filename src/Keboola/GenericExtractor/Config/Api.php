@@ -147,6 +147,9 @@ class Api
 	 * Return pagination scoller
 	 * @param array $api
 	 * @return Pagination\ScrollerInterface
+	 * @todo ditch the switch and simply camelize the method
+	 * 	to create the class name, then throw 501 if it doesn't
+	 * 	exist (should be UserException really?)
 	 */
 	public static function createScroller($api)
 	{
@@ -160,7 +163,7 @@ class Api
 				return Pagination\OffsetScroller::create($pagination);
 				break;
 			case 'response.param':
-				throw new ApplicationException("Pagination by param Not yet implemented", 501);
+				return Pagination\ResponseParamScroller::create($pagination);
 				break;
 			case 'response.url':
 				return Pagination\ResponseUrlScroller::create($pagination);
