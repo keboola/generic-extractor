@@ -172,7 +172,10 @@ class Api
 				return Pagination\PageScroller::create($pagination);
 				break;
 			default:
-				throw new UserException("Unknown pagination method '{$pagination['method']}'");
+				$method = is_string($pagination['method'])
+					? $pagination['method']
+					: json_encode($pagination['method']);
+				throw new UserException("Unknown pagination method '{$method}'");
 				break;
 		}
 	}
