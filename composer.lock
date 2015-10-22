@@ -688,16 +688,16 @@
         },
         {
             "name": "keboola/json-parser",
-            "version": "1.0.5",
+            "version": "1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-jsonparser.git",
-                "reference": "d0d98f099c8094fbb72a1bc749fa69c5b90fadff"
+                "reference": "d42faa258be89bd8cb2695b4b70b103d8cfccf23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-jsonparser/zipball/d0d98f099c8094fbb72a1bc749fa69c5b90fadff",
-                "reference": "d0d98f099c8094fbb72a1bc749fa69c5b90fadff",
+                "url": "https://api.github.com/repos/keboola/php-jsonparser/zipball/d42faa258be89bd8cb2695b4b70b103d8cfccf23",
+                "reference": "d42faa258be89bd8cb2695b4b70b103d8cfccf23",
                 "shasum": ""
             },
             "require": {
@@ -735,7 +735,7 @@
                 "json2csv",
                 "parser"
             ],
-            "time": "2015-10-10 10:34:02"
+            "time": "2015-10-21 23:55:49"
         },
         {
             "name": "keboola/juicer",
@@ -1280,12 +1280,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/codeclimate/php-test-reporter.git",
-                "reference": "85b5de950678a25f3e85adb6bc26de7f7f231d18"
+                "reference": "892163d67e3bd9c190d43655acb69657da765c7b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codeclimate/php-test-reporter/zipball/85b5de950678a25f3e85adb6bc26de7f7f231d18",
-                "reference": "85b5de950678a25f3e85adb6bc26de7f7f231d18",
+                "url": "https://api.github.com/repos/codeclimate/php-test-reporter/zipball/892163d67e3bd9c190d43655acb69657da765c7b",
+                "reference": "892163d67e3bd9c190d43655acb69657da765c7b",
                 "shasum": ""
             },
             "require": {
@@ -1304,7 +1304,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.1.x-dev"
+                    "dev-master": "0.2.x-dev"
                 }
             },
             "autoload": {
@@ -1330,7 +1330,7 @@
                 "codeclimate",
                 "coverage"
             ],
-            "time": "2015-09-08 14:22:33"
+            "time": "2015-10-15 14:41:10"
         },
         {
             "name": "doctrine/instantiator",

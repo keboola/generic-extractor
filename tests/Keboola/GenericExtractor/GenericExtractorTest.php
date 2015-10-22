@@ -16,7 +16,9 @@ class GenericExtractorTest extends ExtractorTestCase
 	 */
 	public function testRunMetadataUpdate()
 	{
-		Logger::setLogger($this->getLogger('test', true));
+        $logger = $this->getLogger('test', true);
+
+		Logger::setLogger($logger);
 
 		$meta = ['json_parser.struct' => ['tickets.via' => ['channel' => 'scalar', 'source' => 'object']]];
 
@@ -24,6 +26,7 @@ class GenericExtractorTest extends ExtractorTestCase
 		$api = Api::create(['baseUrl' => 'http://example.com'], $cfg);
 
 		$ex = new GenericExtractor(new Temp);
+		$ex->setLogger($logger);
 		$ex->setApi($api);
 
 		$ex->setMetadata($meta);
