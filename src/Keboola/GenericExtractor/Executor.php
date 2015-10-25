@@ -29,7 +29,7 @@ class Executor
 		$metadata['time']['previousStart'] = empty($metadata['time']['previousStart']) ? 0 : $metadata['time']['previousStart'];
 		$metadata['time']['currentStart'] = time();
 
-		$parsers = [];
+		$results = [];
 		foreach($configs as $config) {
 			// Reinitialize logger depending on debug status
 			if ($config->getAttribute('debug')) {
@@ -45,8 +45,8 @@ class Executor
 
 			$extractor = new GenericExtractor($temp);
 			$extractor->setLogger(Logger::getLogger());
-			if (!empty($parsers[$outputBucket])) {
-				$extractor->setParser($parsers[$outputBucket]);
+			if (!empty($results[$outputBucket])) {
+				$extractor->setParser($results[$outputBucket]['parser']);
 			}
 			$extractor->setApi($api);
 			$extractor->setMetadata($metadata);
@@ -55,13 +55,17 @@ class Executor
 
 			$metadata = $extractor->getMetadata();
 
-			$parsers[$outputBucket] = $extractor->getParser();
+			$results[$outputBucket]['parser'] = $extractor->getParser();
+			$results[$outputBucket]['incremental'] = $config->getAttribute('incrementalOutput');
+
 		}
 
-		foreach($parsers as $bucket => $parser) {
+		foreach($results as $bucket => $result) {
 			$configuration->storeResults(
-				$parser->getResults(),
-				$bucket
+				$result['parser']->getResults(),
+				$bucket,
+				true,
+				$result['incremental']
 			);
 		}
 

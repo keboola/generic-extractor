@@ -10,3 +10,4 @@ parameters:
             outputBucket: first
         -
             outputBucket: second
+            incrementalOutput: true
