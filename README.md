@@ -297,9 +297,8 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
 The configuration can be run multiple times with some (or all) values in `config` section being overwritten. For example, you can run the same configuration for multiple accounts, overriding values of the authentication settings.
 
 **Warning**:
-
-    - If you use `userData` in iterations, make sure they all contain the same set of keys!
-    - Overriding `incrementalOutput` will only use the setting from the **last** iteration that writes to each `outputBucket`
+- If you use `userData` in iterations, make sure they all contain the same set of keys!
+- Overriding `incrementalOutput` will only use the setting from the **last** iteration that writes to each `outputBucket`
 
 ## Example
 This way you can download the same data from two different accounts into a single output table, adding the `owner` column to help you recognize which iteration of the config brought in each row in the result.
