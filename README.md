@@ -16,20 +16,25 @@ The most important part of configuration, the API url (should end with a `/`)
 
 Example:
 
-    `https://connection.keboola.com/v2/`
+    `https://yourDomain.zendesk.com/api/v2/`
 
 -- OR --
 
     {
-        "function": "concat",
-        "args": [
-            "https://",
-            { "attr": "domain" },
-            ".example.com/api/v2/"
-        ]
+        "api": {
+            "function": "concat",
+            "args": [
+                "https://",
+                { "attr": "domain" },
+                ".zendesk.com/api/v2/"
+            ]
+        },
+        "config": {
+            "domain": "yourDomain"
+        }
     }
 
-- for *https://yourDomain.example.com/api/v2/*
+- for *https://yourDomain.zendesk.com/api/v2/*
 - uses `config` part, where attribute **domain** would contain `yourDomain`
 
 ## http.requiredHeaders
