@@ -1,9 +1,9 @@
 <?php
 namespace Keboola\GenericExtractor\Authentication;
 
-use	GuzzleHttp\Client;
 use	Keboola\Juicer\Exception\ApplicationException,
-	Keboola\Juicer\Exception\UserException;
+	Keboola\Juicer\Exception\UserException,
+	Keboola\Juicer\Client\RestClient;
 
 /**
  * Basic HTTP Authentication using name and password
@@ -34,11 +34,11 @@ class Basic implements AuthInterface
 	}
 
 	/**
-	 * @param Client $client
+	 * @param RestClient $client
 	 * @todo Add a possibility to add the option before each request, to allow refresh/signature here?
 	 */
-	public function authenticateClient(Client $client)
+	public function authenticateClient(RestClient $client)
 	{
-		$client->setDefaultOption('auth', [$this->username, $this->password]);
+		$client->getClient()->setDefaultOption('auth', [$this->username, $this->password]);
 	}
 }

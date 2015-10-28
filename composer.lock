@@ -689,16 +689,16 @@
         },
         {
             "name": "keboola/json-parser",
-            "version": "1.0.6",
+            "version": "1.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-jsonparser.git",
-                "reference": "d42faa258be89bd8cb2695b4b70b103d8cfccf23"
+                "reference": "cc37745cab34a6b41af75baae93bc3425b7fadb0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-jsonparser/zipball/d42faa258be89bd8cb2695b4b70b103d8cfccf23",
-                "reference": "d42faa258be89bd8cb2695b4b70b103d8cfccf23",
+                "url": "https://api.github.com/repos/keboola/php-jsonparser/zipball/cc37745cab34a6b41af75baae93bc3425b7fadb0",
+                "reference": "cc37745cab34a6b41af75baae93bc3425b7fadb0",
                 "shasum": ""
             },
             "require": {
@@ -736,20 +736,20 @@
                 "json2csv",
                 "parser"
             ],
-            "time": "2015-10-21 23:55:49"
+            "time": "2015-10-27 19:20:44"
         },
         {
             "name": "keboola/juicer",
-            "version": "0.4.1",
+            "version": "0.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "8673c3e22521e7c8f7c03d0328544fcc8cd21b80"
+                "reference": "6f8ae76ebba9e78dce67855f0d77461cf8065470"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/8673c3e22521e7c8f7c03d0328544fcc8cd21b80",
-                "reference": "8673c3e22521e7c8f7c03d0328544fcc8cd21b80",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/6f8ae76ebba9e78dce67855f0d77461cf8065470",
+                "reference": "6f8ae76ebba9e78dce67855f0d77461cf8065470",
                 "shasum": ""
             },
             "require": {
@@ -787,7 +787,7 @@
                 "extractor",
                 "keboola"
             ],
-            "time": "2015-10-25 03:17:26"
+            "time": "2015-10-27 21:04:55"
         },
         {
             "name": "keboola/php-csvtable",
@@ -1042,16 +1042,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v2.7.5",
+            "version": "v2.7.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "619528a274647cffc1792063c3ea04c4fa8266a0"
+                "reference": "66b2e9662c44d478b69e48278aa54079a006eb42"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/619528a274647cffc1792063c3ea04c4fa8266a0",
-                "reference": "619528a274647cffc1792063c3ea04c4fa8266a0",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/66b2e9662c44d478b69e48278aa54079a006eb42",
+                "reference": "66b2e9662c44d478b69e48278aa54079a006eb42",
                 "shasum": ""
             },
             "require": {
@@ -1114,8 +1114,7 @@
                 "egulias/email-validator": "~1.2",
                 "ircmaxell/password-compat": "~1.0",
                 "monolog/monolog": "~1.11",
-                "ocramius/proxy-manager": "~0.4|~1.0",
-                "symfony/phpunit-bridge": "self.version"
+                "ocramius/proxy-manager": "~0.4|~1.0"
             },
             "type": "library",
             "extra": {
@@ -1160,7 +1159,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2015-09-25 11:16:52"
+            "time": "2015-10-27 19:07:24"
         },
         {
             "name": "symfony/yaml",

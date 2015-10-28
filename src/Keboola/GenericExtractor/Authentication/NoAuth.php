@@ -1,14 +1,14 @@
 <?php
 namespace Keboola\GenericExtractor\Authentication;
 
-use	GuzzleHttp\Client;
+use	Keboola\Juicer\Client\RestClient;
 
 class NoAuth implements AuthInterface
 {
 	/**
-	 * @param Client $client
+	 * @param RestClient $client
 	 */
-	public function authenticateClient(Client $client)
+	public function authenticateClient(RestClient $client)
 	{
 
 	}

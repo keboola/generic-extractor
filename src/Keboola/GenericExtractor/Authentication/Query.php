@@ -1,9 +1,9 @@
 <?php
 namespace Keboola\GenericExtractor\Authentication;
 
-use	GuzzleHttp\Client;
 use	Keboola\Juicer\Exception\ApplicationException,
-	Keboola\Juicer\Exception\UserException;
+	Keboola\Juicer\Exception\UserException,
+	Keboola\Juicer\Client\RestClient;
 use	Keboola\GenericExtractor\Subscriber\UrlSignature,
 	Keboola\Code\Builder;
 use	Keboola\Utils\Utils,
@@ -35,9 +35,9 @@ class Query implements AuthInterface
 	}
 
 	/**
-	 * @param Client $client
+	 * @param RestClient $client
 	 */
-	public function authenticateClient(Client $client)
+	public function authenticateClient(RestClient $client)
 	{
 		$sub = new UrlSignature();
 		// Create array of objects instead of arrays from YML
@@ -53,6 +53,6 @@ class Query implements AuthInterface
 				return $query;
 			}
 		);
-		$client->getEmitter()->attach($sub);
+		$client->getClient()->getEmitter()->attach($sub);
 	}
 }

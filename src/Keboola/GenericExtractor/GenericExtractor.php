@@ -50,7 +50,7 @@ class GenericExtractor extends Extractor
 			]
 		]);
 
-		$this->auth->authenticateClient($client->getClient());
+		$this->auth->authenticateClient($client);
 		// Verbose Logging of all requests
 		$client->getClient()->getEmitter()->attach(new LogRequest);
 

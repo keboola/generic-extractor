@@ -1,9 +1,9 @@
 <?php
 namespace Keboola\GenericExtractor\Authentication;
 
-use	GuzzleHttp\Client;
+use Keboola\Juicer\Client\RestClient;
 
 interface AuthInterface
 {
-	public function authenticateClient(Client $client);
+	public function authenticateClient(RestClient $client);
 }

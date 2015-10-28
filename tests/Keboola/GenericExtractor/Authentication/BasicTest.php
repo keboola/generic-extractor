@@ -3,6 +3,7 @@ namespace Keboola\GenericExtractor;
 
 use	Keboola\GenericExtractor\Authentication\Basic;
 use	GuzzleHttp\Client;
+use Keboola\Juicer\Client\RestClient;
 
 class BasicTest extends ExtractorTestCase
 {
@@ -10,7 +11,7 @@ class BasicTest extends ExtractorTestCase
 	{
 		$client = new Client;
 		$auth = new Basic(['username' => 'test', 'password' => 'pass']);
-		$auth->authenticateClient($client);
+		$auth->authenticateClient(new RestClient($client));
 
 		$this->assertEquals(['test','pass'], $client->getDefaultOption('auth'));
 

@@ -5,6 +5,7 @@ use	Keboola\GenericExtractor\Authentication\Query;
 use	GuzzleHttp\Client,
 	GuzzleHttp\Exception\ClientException;
 use	Keboola\Code\Builder;
+use Keboola\Juicer\Client\RestClient;
 
 class QueryTest extends ExtractorTestCase
 {
@@ -24,7 +25,7 @@ class QueryTest extends ExtractorTestCase
 		$attrs = ['first' => 1, 'second' => 'two'];
 
 		$auth = new Query($builder, $attrs, $definitions);
-		$auth->authenticateClient($client);
+		$auth->authenticateClient(new RestClient($client));
 
 		$request = $client->createRequest('GET', '/');
 		$client->send($request);
@@ -41,7 +42,7 @@ class QueryTest extends ExtractorTestCase
 
 		$builder = new Builder;
 		$auth = new Query($builder, [], ['authParam' => 'secretCodeWow']);
-		$auth->authenticateClient($client);
+		$auth->authenticateClient(new RestClient($client));
 
 		$request = $client->createRequest('GET', '/query?param=value');
 		$this->sendRequest($client, $request);
