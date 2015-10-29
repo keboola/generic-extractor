@@ -1,13 +1,13 @@
 <?php
 namespace Keboola\GenericExtractor;
 
-use	Keboola\GenericExtractor\Config\UserFunction;
+use Keboola\GenericExtractor\Config\UserFunction;
 
 class UserFunctionTest extends ExtractorTestCase
 {
-	public function testBuild()
-	{
-		$functions = [
+    public function testBuild()
+    {
+        $functions = [
             'str' => 'aaa',
             'attribute' => ['attr' => 'attrName'],
             'fn' => [
@@ -16,17 +16,17 @@ class UserFunctionTest extends ExtractorTestCase
                     'hashMe'
                 ]
             ]
-		];
+        ];
 
-		$data = ['attr' => ['attrName' => 'attrValue']];
+        $data = ['attr' => ['attrName' => 'attrValue']];
 
-		self::assertEquals(
+        self::assertEquals(
             [
                 'str' => 'aaa',
                 'attribute' => $data['attr']['attrName'],
                 'fn' => md5($functions['fn']['args'][0])
             ],
             UserFunction::build($functions, $data)
-		);
-	}
+        );
+    }
 }

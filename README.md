@@ -115,7 +115,7 @@ Example:
     - **params**: `array`
     - **method**: `string`: [`GET`|`POST`|`FORM`]
     - **headers**: `array`
-- **authentication.apiRequest**: Desfines how to use the result from login
+- **authentication.apiRequest**: Defines how to use the result from login
     - **headers**: Use values from the response in request headers
         - `[$headerName => $responsePath]`
     - **query**: Use values from the response in request query

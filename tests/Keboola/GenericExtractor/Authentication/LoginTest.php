@@ -1,21 +1,21 @@
 <?php
 namespace Keboola\GenericExtractor;
 
-use	Keboola\GenericExtractor\Authentication\Login;
-use	GuzzleHttp\Client,
-	GuzzleHttp\Exception\ClientException,
+use Keboola\GenericExtractor\Authentication\Login;
+use GuzzleHttp\Client,
+    GuzzleHttp\Exception\ClientException,
     GuzzleHttp\Message\Response,
     GuzzleHttp\Stream\Stream,
     GuzzleHttp\Subscriber\Mock,
     GuzzleHttp\Subscriber\History;
-use	Keboola\Code\Builder;
+use Keboola\Code\Builder;
 use Keboola\Juicer\Client\RestClient;
 
 class LoginTest extends ExtractorTestCase
 {
-	public function testAuthenticateClient()
-	{
-		$guzzle = new Client(['base_url' => 'http://example.com/api']);
+    public function testAuthenticateClient()
+    {
+        $guzzle = new Client(['base_url' => 'http://example.com/api']);
         $guzzle->setDefaultOption('headers', ['X-Test' => '1']);
 
         $mock = new Mock([
@@ -38,9 +38,9 @@ class LoginTest extends ExtractorTestCase
 
         $restClient = new RestClient($guzzle);
 
-		$attrs = ['first' => 1, 'second' => 'two'];
+        $attrs = ['first' => 1, 'second' => 'two'];
 
-		$api = [
+        $api = [
             'authentication' => [
                 'loginRequest' => [
                     'endpoint' => 'login',
@@ -54,16 +54,16 @@ class LoginTest extends ExtractorTestCase
                 ],
                 'expires' => ['response' => 'expiresIn', 'relative' => true]
             ]
-		];
+        ];
 
-		$auth = new Login($attrs, $api);
-		$auth->authenticateClient($restClient);
+        $auth = new Login($attrs, $api);
+        $auth->authenticateClient($restClient);
 
-		$request = $restClient->createRequest(['endpoint' => '/']);
+        $request = $restClient->createRequest(['endpoint' => '/']);
         $restClient->download($request);
         $restClient->download($request);
 
-		// test creation of the login request
+        // test creation of the login request
         self::assertEquals($attrs['second'], $history->getIterator()[0]['request']->getHeader('X-Header'));
         self::assertEquals(json_encode(['par' => $attrs['first']]), (string) $history->getIterator()[0]['request']->getBody());
 
