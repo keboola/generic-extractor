@@ -15,17 +15,18 @@ use Keboola\Utils\Utils,
 
 /**
  * config:
-
- loginRequest:
-    endpoint: string
-    params: array
-    method: GET|POST|FORM
-    headers: array
- apiRequest:
-    headers: array # [$headerName => $responsePath]
-    query: array # same as with headers
- expires: int|array # # of seconds OR ['response' => 'path', 'relative' => false]
-
+ *
+ * loginRequest:
+ *    endpoint: string
+ *    params: array
+ *    method: GET|POST|FORM
+ *    headers: array
+ * apiRequest:
+ *    headers: array # [$headerName => $responsePath]
+ *    query: array # same as with headers
+ * expires: int|array # # of seconds OR ['response' => 'path', 'relative' => false]
+ *
+ * The response MUST be a JSON object containing credentials
  *
  */
 class Login implements AuthInterface
@@ -47,7 +48,11 @@ class Login implements AuthInterface
         $this->auth = $api['authentication'];
     }
 
-    protected function getAuthRequest($config)
+    /**
+     * @param array $config
+     * @return RestRequest
+     */
+    protected function getAuthRequest(array $config)
     {
         if (empty($config['endpoint'])) {
             throw new UserException('Request endpoint must be set for the Login authentication method.');
@@ -92,6 +97,13 @@ class Login implements AuthInterface
         $client->getClient()->getEmitter()->attach($sub);
     }
 
+    /**
+     * Maps data from login result into $type (header/query)
+     *
+     * @param object $response
+     * @param string $type
+     * @return array
+     */
     protected function getResults(\stdClass $response, $type)
     {
         $result = [];
@@ -107,6 +119,10 @@ class Login implements AuthInterface
         return $result;
     }
 
+    /**
+     * @param object $response
+     * @return int
+     */
     protected function getExpiry(\stdclass $response)
     {
         if (!isset($this->auth['expires'])) {
