@@ -125,25 +125,25 @@ Example:
     - If set to an array, it *must* contain `response` key with its value containing the path to expiry time in the response
         - `relative` key sets whether the expiry value is relative to current time. False by default.
 
-        api:
-            authentication:
-                type: "login"
-                loginRequest:
-                    endpoint: "Security/Login"
-                    headers:
-                        Content-Type: "application/json"
-                    method: POST
-                    params:
-                        UserName:
-                            attr: "username"
-                        PassWord:
-                            attr: "password"
-                apiRequest:
-                    headers:
-                        Ticket: Ticket
-        config:
-            username: whoever
-            password: soSecret
+                api:
+                    authentication:
+                        type: "login"
+                        loginRequest:
+                            endpoint: "Security/Login"
+                            headers:
+                                Content-Type: "application/json"
+                            method: POST
+                            params:
+                                UserName:
+                                    attr: "username"
+                                PassWord:
+                                    attr: "password"
+                        apiRequest:
+                            headers:
+                                Ticket: Ticket
+                config:
+                    username: whoever
+                    password: soSecret
 
 # Pagination
 ## Methods
