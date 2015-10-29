@@ -12,13 +12,14 @@ class ExtractorTestCase extends \PHPUnit_Framework_TestCase
 		return $method->invokeArgs($obj, $args);
 	}
 
-// 	protected static function getProperty($obj, $name)
-// 	{
-// 		$class = new \ReflectionClass($obj);
-// 		$property = $class->getProperty($name);
-// 		$property->setAccessible(true);
-// 		return $property->getValue($obj);
-// 	}
+	protected static function getProperty($obj, $name)
+	{
+		$class = new \ReflectionClass($obj);
+		$property = $class->getProperty($name);
+		$property->setAccessible(true);
+		return $property->getValue($obj);
+	}
+
 	protected function getLogger($name = 'test', $null = false)
 	{
 		return new \Monolog\Logger(

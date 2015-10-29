@@ -2,7 +2,8 @@
 
 namespace Keboola\GenericExtractor;
 
-use	Keboola\GenericExtractor\Response\Filter;
+use	Keboola\GenericExtractor\Response\Filter,
+    Keboola\GenericExtractor\Config\UserFunction;
 use	Keboola\Juicer\Extractor\RecursiveJob,
 	Keboola\Juicer\Config\JobConfig,
 	Keboola\Juicer\Common\Logger,
@@ -78,17 +79,14 @@ class GenericExtractorJob extends RecursiveJob
 	 */
 	protected function buildParams(JobConfig $config)
 	{
-		$params = (array) Utils::arrayToObject($config->getParams());
-		try {
-			array_walk($params, function(&$value, $key) {
-				$value = !is_object($value) ? $value : $this->stringBuilder->run($value, [
-					'attr' => $this->attributes,
-					'time' => $this->metadata['time']
-				]);
-			});
-		} catch(UserScriptException $e) {
-			throw new UserException('User script error: ' . $e->getMessage());
-		}
+		$params = UserFunction::build(
+            $config->getParams(),
+            [
+                'attr' => $this->attributes,
+                'time' => $this->metadata['time']
+            ],
+            $this->stringBuilder
+        );
 
 		$config->setParams($params);
 

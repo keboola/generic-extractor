@@ -77,16 +77,16 @@
         },
         {
             "name": "doctrine/cache",
-            "version": "v1.4.2",
+            "version": "v1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "8c434000f420ade76a07c64cbe08ca47e5c101ca"
+                "reference": "eb8a73619af4f1c8711e2ce482f5de3643258a1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/8c434000f420ade76a07c64cbe08ca47e5c101ca",
-                "reference": "8c434000f420ade76a07c64cbe08ca47e5c101ca",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/eb8a73619af4f1c8711e2ce482f5de3643258a1f",
+                "reference": "eb8a73619af4f1c8711e2ce482f5de3643258a1f",
                 "shasum": ""
             },
             "require": {
@@ -107,8 +107,8 @@
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Doctrine\\Common\\Cache\\": "lib/"
+                "psr-4": {
+                    "Doctrine\\Common\\Cache\\": "lib/Doctrine/Common/Cache"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -143,7 +143,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2015-08-31 12:36:41"
+            "time": "2015-10-28 11:27:45"
         },
         {
             "name": "doctrine/collections",
@@ -884,16 +884,16 @@
         },
         {
             "name": "keboola/php-utils",
-            "version": "0.1.18",
+            "version": "0.1.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-utils.git",
-                "reference": "1ff817a37f7d96311cdb86216a9385f069709707"
+                "reference": "37322813d5a4a3d91d20d7bbb9d391dd0fbe28af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-utils/zipball/1ff817a37f7d96311cdb86216a9385f069709707",
-                "reference": "1ff817a37f7d96311cdb86216a9385f069709707",
+                "url": "https://api.github.com/repos/keboola/php-utils/zipball/37322813d5a4a3d91d20d7bbb9d391dd0fbe28af",
+                "reference": "37322813d5a4a3d91d20d7bbb9d391dd0fbe28af",
                 "shasum": ""
             },
             "require": {
@@ -924,7 +924,7 @@
             "keywords": [
                 "utility"
             ],
-            "time": "2015-10-03 03:16:21"
+            "time": "2015-10-29 08:58:48"
         },
         {
             "name": "monolog/monolog",

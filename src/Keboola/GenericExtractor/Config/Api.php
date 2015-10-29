@@ -107,6 +107,9 @@ class Api
 
 				return new Authentication\Query(new Builder(), $config->getAttributes(), $api['query']);
 				break;
+            case 'login':
+                return new Authentication\Login($config->getAttributes(), $api);
+                break;
 			default:
 				throw new UserException("Unknown authorization type '{$api['authentication']['type']}'");
 				break;

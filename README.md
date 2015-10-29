@@ -105,6 +105,46 @@ Example:
 				apiKey: asdf1234
 				secret: qwop1290
 
+### login
+
+- Log into a web service to obtain a token, which is then used for signing requests
+
+- **authentication.type**: `login`
+- **authentication.loginRequest**: Describe the request to log into the service
+    - **endpoint**: `string`
+    - **params**: `array`
+    - **method**: `string`: [`GET`|`POST`|`FORM`]
+    - **headers**: `array`
+- **authentication.apiRequest**: Desfines how to use the result from login
+    - **headers**: Use values from the response in request headers
+        - `[$headerName => $responsePath]`
+    - **query**: Use values from the response in request query
+        - `[$queryParameter => $responsePath]`
+- **authentication.expires**:
+    - If set to an integer, the login action will be performed every `n` seconds, where `n` is the value
+    - If set to an array, it *must* contain `response` key with its value containing the path to expiry time in the response
+        - `relative` key sets whether the expiry value is relative to current time. False by default.
+
+        api:
+            authentication:
+                type: "login"
+                loginRequest:
+                    endpoint: "Security/Login"
+                    headers:
+                        Content-Type: "application/json"
+                    method: POST
+                    params:
+                        UserName:
+                            attr: "username"
+                        PassWord:
+                            attr: "password"
+                apiRequest:
+                    headers:
+                        Ticket: Ticket
+        config:
+            username: whoever
+            password: soSecret
+
 # Pagination
 ## Methods
 Configured in `api.pagination.method`
