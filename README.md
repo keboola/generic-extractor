@@ -266,6 +266,32 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
         - If the response is an array, the whole response is used by default
         - If there's no array within the root, the path to response data **must** be specified in *dataField*
         - Can contain a path to nested value, dot separater (eg `result.results.products`)
+        - `dataField` can also be an object containing `path`, and optionally `objectKey`, described below:
+        - **objectKey**: Converts an object into an array, appending each key from the root level to first child
+            Response such as
+
+                {
+                "results": {
+                    "1": {
+                        "data": "..."
+                    },
+                    "2": {
+                        "data": "..."
+                    }
+                }
+                }
+
+            can be parsed, using each key (`1`, `2` in the example) as a column in the data result. The value of `objectKey` will be the column name to store keys.
+
+            Example:
+
+                {
+                    "dataField": {
+                        "path": "results",
+                        "objectKey": "id"
+                    }
+                }
+
 	- **children**: Array of child jobs that use the jobs' results to iterate
 		- The endpoint must use a placeholder enclosed in `{}`
 		- The placeholder can be prefixed by a number, that refers to higher level of nesting. By default, data from direct parent are used. The direct parent can be referred as `{id}` or `{1:id}`. A "grandparent" result would then be `{2:id}` etc.
