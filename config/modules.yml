@@ -1,0 +1,3 @@
+-
+    # to be copied from a config file coming with the module (from git)
+    class: Keboola\ExGenericModule\QualtricsPreParser

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c312e574c2a52ec74d49e01cd8ef920e",
-    "content-hash": "c31831f85f057dd972549c325cb222e5",
+    "hash": "cd87b6df1896306021fa53dc5af7d8d2",
+    "content-hash": "cb5a5cbd49aeb4614869da7e6f1814e9",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -740,16 +740,16 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "0.4.3",
+            "version": "0.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "c2041657b2bcf23f7cd3bac62ca69df93a809b24"
+                "reference": "6fe151b065f8c93b18836c8a17ea5ffc844766d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/c2041657b2bcf23f7cd3bac62ca69df93a809b24",
-                "reference": "c2041657b2bcf23f7cd3bac62ca69df93a809b24",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/6fe151b065f8c93b18836c8a17ea5ffc844766d2",
+                "reference": "6fe151b065f8c93b18836c8a17ea5ffc844766d2",
                 "shasum": ""
             },
             "require": {
@@ -787,7 +787,7 @@
                 "extractor",
                 "keboola"
             ],
-            "time": "2015-11-04 19:04:34"
+            "time": "2015-11-04 20:04:25"
         },
         {
             "name": "keboola/php-csvtable",

@@ -40,6 +40,11 @@ class GenericExtractor extends Extractor
      * @var Json
      */
     protected $parser;
+    /**
+     * ['response' => ResponseModuleInterface[], ...]
+     * @var array
+     */
+    protected $modules;
 
     public function run(Config $config)
     {
@@ -72,6 +77,7 @@ class GenericExtractor extends Extractor
             $job->setAttributes($config->getAttributes());
             $job->setMetadata($this->metadata);
             $job->setBuilder($builder);
+            $job->setResponseModules($this->modules['response']);
             if (!empty($config->getAttribute('userData'))) {
                 $job->setUserParentId(is_scalar($config->getAttribute('userData'))
                     ? ['userData' => $config->getAttribute('userData')]
@@ -154,5 +160,13 @@ class GenericExtractor extends Extractor
     public function getParser()
     {
         return $this->parser;
+    }
+
+    /**
+     * @param array $modules ['response' => ResponseModuleInterface[]]
+     */
+    public function setModules(array $modules)
+    {
+        $this->modules = $modules;
     }
 }

@@ -3,7 +3,8 @@
 namespace Keboola\GenericExtractor;
 
 use Keboola\GenericExtractor\Response\Filter,
-    Keboola\GenericExtractor\Config\UserFunction;
+    Keboola\GenericExtractor\Config\UserFunction,
+    Keboola\GenericExtractor\Modules\ResponseModuleInterface;
 use Keboola\Juicer\Extractor\RecursiveJob,
     Keboola\Juicer\Config\JobConfig,
     Keboola\Juicer\Common\Logger,
@@ -42,6 +43,10 @@ class GenericExtractorJob extends RecursiveJob
      * @var string|array
      */
     protected $userParentId;
+    /**
+     * @var ResponseModuleInterface[]
+     */
+    protected $responseModules = [];
 
     /**
      * {@inheritdoc}
@@ -62,6 +67,7 @@ class GenericExtractorJob extends RecursiveJob
                 $this->scroller->reset();
                 break;
             } else {
+                // TODO run response plugins here
                 $data = $this->findDataInResponse($response, $this->config->getConfig());
                 $data = $this->filterResponse($this->config, $data);
                 $this->parse($data, $this->userParentId);
@@ -126,6 +132,15 @@ class GenericExtractorJob extends RecursiveJob
         return $filter->run($data);
     }
 
+    protected function runResponseModules($response, JobConfig $jobConfig)
+    {
+        foreach($this->responseModules as $module) {
+            $response = $module->process($response, $jobConfig);
+        }
+
+        return $response;
+    }
+
     /**
      * @param array $attributes
      */
@@ -157,5 +172,10 @@ class GenericExtractorJob extends RecursiveJob
         }
 
         $this->userParentId = $id;
+    }
+
+    public function setResponseModules(array $modules)
+    {
+        $this->responseModules = $modules;
     }
 }

@@ -14,4 +14,15 @@ class Configuration extends BaseConfiguration
         // TODO check if it exists (have some getter fn in parent Configuration)
         return Api::create($this->getYmlConfig()['parameters']['api'], $config);
     }
+
+    /**
+     * @return ModuleInterface[]
+     */
+    public function getModules()
+    {
+        // load from where? Probably shouldn't be part of the config
+        // module should be added by composer in dockerfile,
+        // its configuration probably registered by some post install script
+        // does a post-install script get executed by composer require?
+    }
 }

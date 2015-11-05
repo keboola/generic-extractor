@@ -29,6 +29,8 @@ class Executor
         $metadata['time']['previousStart'] = empty($metadata['time']['previousStart']) ? 0 : $metadata['time']['previousStart'];
         $metadata['time']['currentStart'] = time();
 
+        $modules = $this->loadModules($configuration);
+
         $results = [];
         foreach($configs as $config) {
             // Reinitialize logger depending on debug status
@@ -50,6 +52,7 @@ class Executor
             }
             $extractor->setApi($api);
             $extractor->setMetadata($metadata);
+            $extractor->setModules($modules);
 
             $extractor->run($config);
 
@@ -72,5 +75,14 @@ class Executor
         $metadata['time']['previousStart'] = $metadata['time']['currentStart'];
         unset($metadata['time']['currentStart']);
         $configuration->saveConfigMetadata($metadata);
+    }
+
+    /**
+     * @return array ['response' => ResponseModuleInterface[]]
+     */
+    protected function loadModules(Configuration $configuration)
+    {
+        $modulesCfg = $configuration->getModules();
+        return ['response' => []];
     }
 }
