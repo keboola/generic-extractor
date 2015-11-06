@@ -82,7 +82,7 @@ class Executor
      */
     protected function loadModules(Configuration $configuration)
     {
-        $modulesCfg = $configuration->getModules();
-        return ['response' => []];
+        $modules = $configuration->getModules();
+        return $modules;
     }
 }

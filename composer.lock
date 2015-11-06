@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "cb6dcfd3480c8baebaeb770a56273dc3",
-    "content-hash": "ebf93558e211ac448801dfb06aef83f3",
+    "hash": "1b87f3f5cc19a12473c39d2ffddadc69",
+    "content-hash": "14358a0a738c4a9cf3d16649c5b0b203",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -286,16 +286,16 @@
         },
         {
             "name": "doctrine/inflector",
-            "version": "v1.0.1",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/inflector.git",
-                "reference": "0bcb2e79d8571787f18b7eb036ed3d004908e604"
+                "reference": "90b2128806bfde671b6952ab8bea493942c1fdae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/inflector/zipball/0bcb2e79d8571787f18b7eb036ed3d004908e604",
-                "reference": "0bcb2e79d8571787f18b7eb036ed3d004908e604",
+                "url": "https://api.github.com/repos/doctrine/inflector/zipball/90b2128806bfde671b6952ab8bea493942c1fdae",
+                "reference": "90b2128806bfde671b6952ab8bea493942c1fdae",
                 "shasum": ""
             },
             "require": {
@@ -307,7 +307,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "1.1.x-dev"
                 }
             },
             "autoload": {
@@ -349,7 +349,7 @@
                 "singularize",
                 "string"
             ],
-            "time": "2014-12-20 21:24:13"
+            "time": "2015-11-06 14:35:42"
         },
         {
             "name": "doctrine/lexer",
@@ -648,6 +648,53 @@
             "time": "2014-01-31 14:10:34"
         },
         {
+            "name": "keboola/ex-generic-response-array",
+            "version": "0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/keboola/gex-get-response-array.git",
+                "reference": "7ce25dc317f9199b39bfaa39e756272e6a267d01"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/keboola/gex-get-response-array/zipball/7ce25dc317f9199b39bfaa39e756272e6a267d01",
+                "reference": "7ce25dc317f9199b39bfaa39e756272e6a267d01",
+                "shasum": ""
+            },
+            "require": {
+                "keboola/ex-generic-v2": "~0.2.0",
+                "keboola/php-utils": "~0.1.19",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "codeclimate/php-test-reporter": "dev-master",
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Keboola\\ExGenericModule": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ondrej Vana",
+                    "email": "kachna@keboola.cz"
+                }
+            ],
+            "description": "Fund an array within the response object",
+            "keywords": [
+                "extractor",
+                "generic",
+                "rest"
+            ],
+            "time": "2015-11-06 20:52:31"
+        },
+        {
             "name": "keboola/filter",
             "version": "0.1.0",
             "source": {
@@ -740,16 +787,16 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "0.4.4",
+            "version": "0.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "6fe151b065f8c93b18836c8a17ea5ffc844766d2"
+                "reference": "ccdd4bcb64e32f472de423469d16db789c1e0dfb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/6fe151b065f8c93b18836c8a17ea5ffc844766d2",
-                "reference": "6fe151b065f8c93b18836c8a17ea5ffc844766d2",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/ccdd4bcb64e32f472de423469d16db789c1e0dfb",
+                "reference": "ccdd4bcb64e32f472de423469d16db789c1e0dfb",
                 "shasum": ""
             },
             "require": {
@@ -787,7 +834,7 @@
                 "extractor",
                 "keboola"
             ],
-            "time": "2015-11-04 20:04:25"
+            "time": "2015-11-06 21:13:49"
         },
         {
             "name": "keboola/php-csvtable",
@@ -1213,16 +1260,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.23.0",
+            "version": "v1.23.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "5868cd822fd6cf626d5f805439575f9c323cee2a"
+                "reference": "d9b6333ae8dd2c8e3fd256e127548def0bc614c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/5868cd822fd6cf626d5f805439575f9c323cee2a",
-                "reference": "5868cd822fd6cf626d5f805439575f9c323cee2a",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/d9b6333ae8dd2c8e3fd256e127548def0bc614c6",
+                "reference": "d9b6333ae8dd2c8e3fd256e127548def0bc614c6",
                 "shasum": ""
             },
             "require": {
@@ -1270,7 +1317,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2015-10-29 23:29:01"
+            "time": "2015-11-05 12:49:06"
         }
     ],
     "packages-dev": [

@@ -67,8 +67,8 @@ class GenericExtractorJob extends RecursiveJob
                 $this->scroller->reset();
                 break;
             } else {
-                // TODO run response plugins here
-                $data = $this->findDataInResponse($response, $this->config->getConfig());
+                $data = $this->runResponseModules($response, $this->config);
+//                 $data = $this->findDataInResponse($response, $this->config->getConfig());
                 $data = $this->filterResponse($this->config, $data);
                 $this->parse($data, $this->userParentId);
 
@@ -112,6 +112,7 @@ class GenericExtractorJob extends RecursiveJob
         $job->setMetadata($this->metadata);
         $job->setAttributes($this->attributes);
         $job->setBuilder($this->stringBuilder);
+        $job->setResponseModules($this->responseModules);
         return $job;
     }
 
@@ -123,8 +124,8 @@ class GenericExtractorJob extends RecursiveJob
      * @param JobConfig $config
      * @param array $data
      * @return array
-     * @todo belongs to a separate class altogether
      * @todo allow nesting
+     * @todo turn into a module
      */
     protected function filterResponse(JobConfig $config, array $data)
     {
