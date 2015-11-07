@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1b87f3f5cc19a12473c39d2ffddadc69",
-    "content-hash": "14358a0a738c4a9cf3d16649c5b0b203",
+    "hash": "0264b181c17bae13be1575d0611f0bb9",
+    "content-hash": "81c5183006c403672d716fce3f93d5ab",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -648,21 +648,67 @@
             "time": "2014-01-31 14:10:34"
         },
         {
-            "name": "keboola/ex-generic-response-array",
-            "version": "0.0.1",
+            "name": "keboola/ex-generic-moduleinterface",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/keboola/gex-get-response-array.git",
-                "reference": "7ce25dc317f9199b39bfaa39e756272e6a267d01"
+                "url": "https://github.com/keboola/ex-generic-moduleinterface.git",
+                "reference": "dc0ae2a23b25ee9208138aa837188e6bdc08eca3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/gex-get-response-array/zipball/7ce25dc317f9199b39bfaa39e756272e6a267d01",
-                "reference": "7ce25dc317f9199b39bfaa39e756272e6a267d01",
+                "url": "https://api.github.com/repos/keboola/ex-generic-moduleinterface/zipball/dc0ae2a23b25ee9208138aa837188e6bdc08eca3",
+                "reference": "dc0ae2a23b25ee9208138aa837188e6bdc08eca3",
                 "shasum": ""
             },
             "require": {
-                "keboola/ex-generic-v2": "~0.2.0",
+                "php": ">5.4.0"
+            },
+            "require-dev": {
+                "codeclimate/php-test-reporter": "dev-master",
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Keboola\\GenericExtractor": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ondrej Vana",
+                    "email": "kachna@keboola.cz"
+                }
+            ],
+            "description": "Interfaces for generic extractor modules",
+            "keywords": [
+                "ex-generic",
+                "keboola",
+                "module"
+            ],
+            "time": "2015-11-07 01:40:18"
+        },
+        {
+            "name": "keboola/ex-generic-response-array",
+            "version": "0.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/keboola/gex-get-response-array.git",
+                "reference": "40de19c13864826624956232d0fdde8158a36adf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/keboola/gex-get-response-array/zipball/40de19c13864826624956232d0fdde8158a36adf",
+                "reference": "40de19c13864826624956232d0fdde8158a36adf",
+                "shasum": ""
+            },
+            "require": {
+                "keboola/ex-generic-moduleinterface": "^0.2.0",
+                "keboola/ex-generic-v2": "*",
                 "keboola/php-utils": "~0.1.19",
                 "php": ">=5.4.0"
             },
@@ -692,7 +738,7 @@
                 "generic",
                 "rest"
             ],
-            "time": "2015-11-06 20:52:31"
+            "time": "2015-11-07 01:46:28"
         },
         {
             "name": "keboola/filter",
