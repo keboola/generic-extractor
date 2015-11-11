@@ -44,12 +44,15 @@ class ModuleCommand extends Command
     protected function addModule($path)
     {
         $config = YamlFile::create($path)->getData();
-        $modulesYml = YamlFile::create(ROOT_PATH . '/config/modules.yml', 'w'); // TODO YamlFile should load it if it exists!
+        // TODO check for type&class
+        $modulesYml = YamlFile::create(ROOT_PATH . '/config/modules.yml', 'w');
 
         $modules = $modulesYml->getData();
         $modules[] = $config;
 
         $modulesYml->setData($modules);
         $modulesYml->save();
+
+        return $config['class'];
     }
 }
