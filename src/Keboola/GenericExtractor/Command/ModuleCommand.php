@@ -1,3 +1,5 @@
+<?php
+
 namespace Keboola\GenericExtractor\Command;
 
 use Symfony\Component\Console\Command\Command;
