@@ -64,7 +64,8 @@ Example:
 ### basic
 
 - **authentication.type**: `basic`
-- use **username** and **password** attributes in the config section
+- use **username** and **password** or **#password** attributes in the config section.
+- **password** takes preference over **#password**, if both are set
 
 		api:
 			authentication:
