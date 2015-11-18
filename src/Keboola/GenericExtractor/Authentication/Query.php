@@ -4,8 +4,9 @@ namespace Keboola\GenericExtractor\Authentication;
 use Keboola\Juicer\Exception\ApplicationException,
     Keboola\Juicer\Exception\UserException,
     Keboola\Juicer\Client\RestClient;
-use Keboola\GenericExtractor\Subscriber\UrlSignature,
-    Keboola\Code\Builder;
+use Keboola\GenericExtractor\Subscriber\UrlSignature;
+use Keboola\Code\Builder,
+    Keboola\Code\Exception\UserScriptException;
 use Keboola\Utils\Utils,
     Keboola\Utils\Exception\JsonDecodeException;
 
@@ -45,11 +46,16 @@ class Query implements AuthInterface
         $sub->setSignatureGenerator(
             function () use ($q) {
                 $query = [];
-                foreach($q as $key => $value) {
-                    $query[$key] = is_scalar($value)
-                        ? $value
-                        : $this->builder->run($value, ['attr' => $this->attrs]);
+                try {
+                    foreach($q as $key => $value) {
+                        $query[$key] = is_scalar($value)
+                            ? $value
+                            : $this->builder->run($value, ['attr' => $this->attrs]);
+                    }
+                } catch(UserScriptException $e) {
+                    throw new UserException("Error in query authentication script: " . $e->getMessage());
                 }
+
                 return $query;
             }
         );
