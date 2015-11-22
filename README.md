@@ -86,6 +86,7 @@ Example:
 - **query.sig**: `{"function":"md5","args":[{"function":"concat","args":[{"attr":"apiKey"},{"attr":"secret"},{"function":"time"}]}]}`
     - this will generate a *sig* parameter value from MD5 of merged configuration table attributes *apiKey* and *secret*, followed by current *time()* at the time of the request (time() being the PHP function)
 	- Allowed functions are listed below in the *User functions* section
+	- If you're using any config parameter by using `"attr": "parameterName"`, it has to be identical string to the one in the actual config, uncluding eventual `#` if KBC Docker's encryption is used.
 
 			api:
 				authentication:
@@ -100,11 +101,11 @@ Example:
 								function: concat
 								args:
 									- attr: apiKey
-									- attr: secret
+									- attr: #secret
 									- function: time
 			config:
 				apiKey: asdf1234
-				secret: qwop1290
+				#secret: KBC::ComponentEncrypted==gvrevgrew\grewvgr\ev6\u45bu\65^|VH|^vh==
 
 ### login
 
