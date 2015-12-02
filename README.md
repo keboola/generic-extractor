@@ -164,6 +164,7 @@ Configured in `api.pagination.method`
 			api:
 				pagination:
 					method: offset
+					limit: 1000
 					limitParam: limit # default, can be omitted
 					offsetParam: offset # default, can be omitted
 - **pagination.firstPageParams**(optional)
