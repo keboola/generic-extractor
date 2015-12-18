@@ -156,6 +156,7 @@ Configured in `api.pagination.method`
 - **pagination.method**: `offset`
 - **pagination.limit**: integer
     - If a *limit* is set in configuration's **params** field, it will be overriden by its value
+    - If the API limits the results count to a lower value than this setting, the scrolling will stop after first page, as it stops once the results count is lower than configured count
 - **pagination.limitParam**(optional)
     - sets which query parameter should contain the limit value (default to `limit`)
 - **pagination.offsetParam**(optional)
