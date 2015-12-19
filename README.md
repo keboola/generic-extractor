@@ -232,6 +232,20 @@ simple page number increasing 1 by 1
 - **pagination.firstPageParams**(optional)
 	- Whether or not include limit and page params in the first request (default to `true`)
 
+## Common scrolling parameters
+### nextPageFlag
+
+Looks within responses to find a boolean field determining whether to continue scrolling or not.
+
+Usage:
+```
+pagination:
+   nextPageFlag:
+     field: hasMore #name of the bool field
+     stopOn: false #whether to stop once the value is true or false
+     ifNotSet: false #optional, what value to assume if the field is not present
+```
+
 # Config
 
 ## Metadata
