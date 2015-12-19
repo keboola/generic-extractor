@@ -77,16 +77,16 @@
         },
         {
             "name": "doctrine/cache",
-            "version": "v1.5.2",
+            "version": "1.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "47c7128262da274f590ae6f86eb137a7a64e82af"
+                "reference": "6ecaf07f0dfcc3dd454d0c549c2d16f29a19bffc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/47c7128262da274f590ae6f86eb137a7a64e82af",
-                "reference": "47c7128262da274f590ae6f86eb137a7a64e82af",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/6ecaf07f0dfcc3dd454d0c549c2d16f29a19bffc",
+                "reference": "6ecaf07f0dfcc3dd454d0c549c2d16f29a19bffc",
                 "shasum": ""
             },
             "require": {
@@ -143,7 +143,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2015-12-03 10:50:37"
+            "time": "2015-12-19 01:09:56"
         },
         {
             "name": "doctrine/collections",
@@ -833,16 +833,16 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "0.4.11",
+            "version": "0.4.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "af740056e016035a3ee6608f36dfb7e9d049fb3c"
+                "reference": "2e7b8ed4895e911589f2771588c65905b4212dbd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/af740056e016035a3ee6608f36dfb7e9d049fb3c",
-                "reference": "af740056e016035a3ee6608f36dfb7e9d049fb3c",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/2e7b8ed4895e911589f2771588c65905b4212dbd",
+                "reference": "2e7b8ed4895e911589f2771588c65905b4212dbd",
                 "shasum": ""
             },
             "require": {
@@ -852,7 +852,7 @@
                 "keboola/json-parser": "~1.0.0",
                 "keboola/php-csvtable": "~0.1.3",
                 "keboola/php-temp": "~0.1.0",
-                "keboola/php-utils": "~0.1.8",
+                "keboola/php-utils": "~0.1.20",
                 "monolog/monolog": "~1.15.0",
                 "php": ">=5.5.0",
                 "symfony/yaml": "~2.6.3"
@@ -880,7 +880,7 @@
                 "extractor",
                 "keboola"
             ],
-            "time": "2015-12-09 00:49:01"
+            "time": "2015-12-19 02:22:44"
         },
         {
             "name": "keboola/php-csvtable",
@@ -1503,12 +1503,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/codeclimate/php-test-reporter.git",
-                "reference": "892163d67e3bd9c190d43655acb69657da765c7b"
+                "reference": "02790d733f9eb43d0a5981962c41846092fb387f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codeclimate/php-test-reporter/zipball/892163d67e3bd9c190d43655acb69657da765c7b",
-                "reference": "892163d67e3bd9c190d43655acb69657da765c7b",
+                "url": "https://api.github.com/repos/codeclimate/php-test-reporter/zipball/02790d733f9eb43d0a5981962c41846092fb387f",
+                "reference": "02790d733f9eb43d0a5981962c41846092fb387f",
                 "shasum": ""
             },
             "require": {
@@ -1553,7 +1553,7 @@
                 "codeclimate",
                 "coverage"
             ],
-            "time": "2015-10-15 14:41:10"
+            "time": "2015-12-17 00:52:54"
         },
         {
             "name": "doctrine/instantiator",
@@ -2622,22 +2622,25 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "2.4.0",
+            "version": "2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "32a879f4f35019d78d568db2885d7779ca084a33"
+                "reference": "e4fb41d5d0387d556e2c25534d630b3cce90ea67"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/32a879f4f35019d78d568db2885d7779ca084a33",
-                "reference": "32a879f4f35019d78d568db2885d7779ca084a33",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/e4fb41d5d0387d556e2c25534d630b3cce90ea67",
+                "reference": "e4fb41d5d0387d556e2c25534d630b3cce90ea67",
                 "shasum": ""
             },
             "require": {
                 "ext-tokenizer": "*",
                 "ext-xmlwriter": "*",
                 "php": ">=5.1.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
             },
             "bin": [
                 "scripts/phpcs",
@@ -2692,7 +2695,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2015-11-23 21:30:59"
+            "time": "2015-12-11 00:12:46"
         },
         {
             "name": "symfony/stopwatch",

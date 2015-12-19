@@ -38,7 +38,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         ]);
         $job = $this->getJob($cfg);
 
-        $job->setScroller(new ResponseUrlScroller('nextPage'));
+        $job->setScroller(new ResponseUrlScroller(['urlKey' => 'nextPage']));
 
         $response = new \stdClass();
         $response->nextPage = "http://example.com/api/ep?something=2";
@@ -66,7 +66,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         ]);
         $job = $this->getJob($cfg);
 
-        $job->setScroller(new ResponseUrlScroller('nextPage', true));
+        $job->setScroller(new ResponseUrlScroller(['urlKey' => 'nextPage', 'includeParams' => true]));
 
         $response = new \stdClass();
         $response->nextPage = "http://example.com/api/ep?something=2";
