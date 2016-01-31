@@ -171,7 +171,7 @@ Configured in `api.pagination.method`
 - **pagination.firstPageParams**(optional)
 	- Whether or not include limit and offset params in the first request (default to `true`)
 - **pagination.offsetFromJob**(optional)
-    - Use offset specified in job config for first request
+    - Use offset specified in job config for first request (**false** by default)
 
 ### response.param
 
