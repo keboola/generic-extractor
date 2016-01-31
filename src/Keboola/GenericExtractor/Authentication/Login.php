@@ -18,13 +18,13 @@ use Keboola\Utils\Utils,
  *
  * loginRequest:
  *    endpoint: string
- *    params: array
- *    method: GET|POST|FORM
- *    headers: array
+ *    params: array (optional)
+ *    method: GET|POST|FORM (optional)
+ *    headers: array (optional)
  * apiRequest:
  *    headers: array # [$headerName => $responsePath]
  *    query: array # same as with headers
- * expires: int|array # # of seconds OR ['response' => 'path', 'relative' => false]
+ * expires: int|array # # of seconds OR ['response' => 'path', 'relative' => false] (optional)
  *
  * The response MUST be a JSON object containing credentials
  *

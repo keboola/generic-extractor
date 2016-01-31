@@ -113,7 +113,7 @@ Example:
 
 - **authentication.type**: `login`
 - **authentication.loginRequest**: Describe the request to log into the service
-    - **endpoint**: `string`
+    - **endpoint**: `string` (required)
     - **params**: `array`
     - **method**: `string`: [`GET`|`POST`|`FORM`]
     - **headers**: `array`
@@ -122,7 +122,7 @@ Example:
         - `[$headerName => $responsePath]`
     - **query**: Use values from the response in request query
         - `[$queryParameter => $responsePath]`
-- **authentication.expires**:
+- **authentication.expires** (optional):
     - If set to an integer, the login action will be performed every `n` seconds, where `n` is the value
     - If set to an array, it *must* contain `response` key with its value containing the path to expiry time in the response
         - `relative` key sets whether the expiry value is relative to current time. False by default.
@@ -170,6 +170,8 @@ Configured in `api.pagination.method`
 					offsetParam: offset # default, can be omitted
 - **pagination.firstPageParams**(optional)
 	- Whether or not include limit and offset params in the first request (default to `true`)
+- **pagination.offsetFromJob**(optional)
+    - Use offset specified in job config for first request
 
 ### response.param
 
@@ -252,7 +254,8 @@ pagination:
 - The extractor loads start time of its previous execution into its metadata. This can then be used in user functions as `time: previousStart`.
 - Current execution start is also available at `time: currentStart`.
 - This can be used to create incremental exports with minimal overlap, using for example `[start_time: [time: previousStart], end_time: [time: currentStart]]`
-- Both values are stored as Unix timestamp. `date` function can be used to convert it.
+- It is advised to use both `previousStart` and `currentStart` as since>until pair to ensure no gap and no overlap in data.
+- Both values are stored as Unix timestamp. `date` function can be used to reformat it.
 
 ## Attributes
 Attributes must be configured accordingly to the `api` configuration (eg *auth*, *pagination*, *http.requiredHeaders*). They are under the `config` section of the configuration. (see example below)
