@@ -59,7 +59,7 @@ class Headers
         if (!empty($this->requiredHeaders)) {
             foreach($this->requiredHeaders as $rHeader) {
                 if (empty($configHeaders[$rHeader])) {
-                    throw new UserException("Missing required header {$rHeader} in configuration table attributes!");
+                    throw new UserException("Missing required header {$rHeader} in config.http.headers!");
                 }
             }
         }
