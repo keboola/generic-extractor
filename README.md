@@ -173,6 +173,18 @@ Configured in `api.pagination.method`
 - **pagination.offsetFromJob**(optional)
     - Use offset specified in job config for first request (**false** by default)
 
+            api:
+                pagination:
+                    method: offset
+                    limit: 1000
+                    offsetFromJob: true
+            config:
+                jobs:
+                    -
+                        endpoint: resource
+                        params:
+                            offset: 100 # with offsetFromJob enabled, this is used for the first request
+
 ### response.param
 
 - **pagination.method**: `response.param`
@@ -275,7 +287,7 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
 ## Jobs
 - Columns:
     - **endpoint** (required): The API endpoint
-    - **params**: Query parameters of the api call, JSON encoded
+    - **params**: Query/POST parameters of the api call, JSON encoded
         - Each parameter in the JSON encoded object may either contain a string, eg: `{""start_date"": ""2014-12-26""}`
         - OR contain an user function as described below, for example to load value from parameters:
         - ```
