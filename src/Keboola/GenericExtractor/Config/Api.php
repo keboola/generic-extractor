@@ -44,6 +44,11 @@ class Api
      */
     protected $headers;
 
+    /**
+     * @var array
+     */
+    protected $defaultRequestOptions = [];
+
     public function __construct(array $config)
     {
         if (!empty($config['baseUrl'])) {
@@ -61,6 +66,9 @@ class Api
         if (!empty($config['name'])) {
             $this->setName($config['name']);
         }
+        if (!empty($config['defaultRequestOptions'])) {
+            $this->setDefaultRequestOptions($config['defaultRequestOptions']);
+        }
     }
 
     public static function create(array $api, Config $config)
@@ -70,7 +78,8 @@ class Api
             'auth' => self::createAuth($api, $config),
             'scroller' => self::createScroller($api),
             'headers' => self::createHeaders($api, $config),
-            'name' => self::createName($api)
+            'name' => self::createName($api),
+            'defaultRequestOptions' => self::createDefaultRequestOptions($api)
         ]);
     }
 
@@ -201,6 +210,14 @@ class Api
         return empty($api['name']) ? 'generic' : $api['name'];
     }
 
+    /**
+     * @param array $api
+     */
+    public static function createDefaultRequestOptions($api)
+    {
+        return empty($api['http']['defaultOptions']) ? [] : $api['http']['defaultOptions'];
+    }
+
     public function setName($name)
     {
         $this->name = $name;
@@ -249,5 +266,15 @@ class Api
     public function getHeaders()
     {
         return $this->headers;
+    }
+
+    public function setDefaultRequestOptions(array $options)
+    {
+        $this->defaultRequestOptions = $options;
+    }
+
+    public function getDefaultRequestOptions()
+    {
+        return $this->defaultRequestOptions;
     }
 }

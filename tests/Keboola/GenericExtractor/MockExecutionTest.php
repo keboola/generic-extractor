@@ -73,6 +73,13 @@ class MockExecutionTest extends ExtractorTestCase
 
         $this->rmDir('./tests/data/multipleOutputsUserData/out');
     }
+
+    public function testDefaultRequestOptions()
+    {
+        $output = shell_exec('php ./run.php --data=./tests/data/defaultOptions');
+
+        self::assertRegexp('/GET \/defaultOptions\?param=value/', $output);
+    }
 /*
     public function testIterationDifferentColumns()
     {

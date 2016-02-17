@@ -45,6 +45,10 @@ class GenericExtractor extends Extractor
      * @var array
      */
     protected $modules;
+    /**
+     * @var array
+     */
+    protected $defaultRequestOptions = [];
 
     public function run(Config $config)
     {
@@ -54,6 +58,10 @@ class GenericExtractor extends Extractor
                 'headers' => $this->headers
             ]
         ]);
+
+        if (!empty($this->defaultRequestOptions)) {
+            $client->setDefaultRequestOptions($this->defaultRequestOptions);
+        }
 
         $this->auth->authenticateClient($client);
         // Verbose Logging of all requests
@@ -111,6 +119,7 @@ class GenericExtractor extends Extractor
         $this->setScroller($api->getScroller());
         $this->setHeaders($api->getHeaders()->getHeaders());
         $this->setAppName($api->getName());
+        $this->setDefaultRequestOptions($api->getDefaultRequestOptions());
     }
 
     /**
@@ -168,5 +177,10 @@ class GenericExtractor extends Extractor
     public function setModules(array $modules)
     {
         $this->modules = $modules;
+    }
+
+    public function setDefaultRequestOptions(array $options)
+    {
+        $this->defaultRequestOptions = $options;
     }
 }
