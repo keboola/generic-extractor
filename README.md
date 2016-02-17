@@ -59,6 +59,11 @@ Example:
 - Headers to be sent with all requests from all configurations
 - eg: **http.headers.Accept-Encoding**: `gzip`
 
+## http.defaultOptions
+
+- Define the default request options, that will be included in all requests
+- eg: **http.defaultOptions.params.queryParameter**: `value`
+
 # Authentication
 ## Methods
 ### basic
