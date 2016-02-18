@@ -71,11 +71,11 @@ class Api
         }
     }
 
-    public static function create(array $api, Config $config)
+    public static function create(array $api, Config $config, array $authorization = [])
     {
         return new static([
             'baseUrl' => self::createBaseUrl($api, $config),
-            'auth' => self::createAuth($api, $config),
+            'auth' => self::createAuth($api, $config, $authorization),
             'scroller' => self::createScroller($api),
             'headers' => self::createHeaders($api, $config),
             'name' => self::createName($api),
@@ -94,7 +94,7 @@ class Api
      * @param Config $config
      * @return Authentication\AuthInterface
      */
-    public static function createAuth($api, Config $config)
+    public static function createAuth($api, Config $config, $authorization)
     {
         if (empty($api['authentication']['type'])) {
             Logger::log("DEBUG", "Using NO Auth");
@@ -119,6 +119,8 @@ class Api
             case 'login':
                 return new Authentication\Login($config->getAttributes(), $api);
                 break;
+            case 'oauth10':
+                return new Authentication\OAuth10($authorization);
             default:
                 throw new UserException("Unknown authorization type '{$api['authentication']['type']}'");
                 break;

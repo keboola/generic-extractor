@@ -31,6 +31,8 @@ class Executor
 
         $modules = $this->loadModules($configuration);
 
+        $authorization = $configuration->getAuthorization();
+
         $results = [];
         foreach($configs as $config) {
             // Reinitialize logger depending on debug status
@@ -40,7 +42,7 @@ class Executor
                 Logger::initLogger(APP_NAME);
             }
 
-            $api = $configuration->getApi($config);
+            $api = $configuration->getApi($config, $authorization);
 
             $outputBucket = $config->getAttribute('outputBucket') ?:
                 'ex-api-' . $api->getName() . "-" . $config->getConfigName();

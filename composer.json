@@ -9,7 +9,8 @@
         "keboola/codebuilder": "~0.1.4",
         "keboola/php-utils": "~0.1.19",
         "symfony/console": "^2.6",
-        "keboola/ex-generic-response-array": "^0.0.3"
+        "keboola/ex-generic-response-array": "^0.0.3",
+        "guzzlehttp/oauth-subscriber": "^0.2"
     },
     "require-dev": {
         "phpunit/phpunit": "4.6.*",

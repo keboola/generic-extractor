@@ -12,10 +12,19 @@ use Keboola\Juicer\Config\Configuration as BaseConfiguration,
  */
 class Configuration extends BaseConfiguration
 {
-    public function getApi($config)
+    public function getApi($config, $authorization)
     {
         // TODO check if it exists (have some getter fn in parent Configuration)
-        return Api::create($this->getYmlConfig()['parameters']['api'], $config);
+        return Api::create($this->getYaml('/config.yml', 'parameters', 'api'), $config, $authorization);
+    }
+
+    public function getAuthorization()
+    {
+        try {
+            return $this->getYaml('/config.yml', 'authorization');
+        } catch(\Keboola\Juicer\Exception\NoDataException $e) {
+            return [];
+        }
     }
 
     /**
