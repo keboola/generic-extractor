@@ -13,7 +13,7 @@
         "guzzlehttp/oauth-subscriber": "^0.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.6.*",
+        "phpunit/phpunit": "^5.2",
         "codeclimate/php-test-reporter": "dev-master",
         "squizlabs/php_codesniffer": "2.*"
     },
