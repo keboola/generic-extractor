@@ -16,8 +16,6 @@ install:
 - composer install --dev --no-scripts
 script:
 - php vendor/bin/phpunit --coverage-clover build/logs/clover.xml --whitelist=src/
-after_script:
-- vendor/bin/test-reporter
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 - ./vendor/bin/test-reporter --stdout > codeclimate.json
