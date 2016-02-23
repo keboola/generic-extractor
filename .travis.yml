@@ -15,7 +15,7 @@ notifications:
 install:
 - composer install --dev --no-scripts
 script:
-- phpunit --coverage-clover build/logs/clover.xml
+- phpunit --coverage-clover build/logs/clover.xml --whitelist=src/
 after_script:
 - vendor/bin/test-reporter
 after_success:
