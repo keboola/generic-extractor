@@ -18,7 +18,3 @@ after_success:
 - bash <(curl -s https://codecov.io/bash)
 - ./vendor/bin/test-reporter --stdout > codeclimate.json
 - "curl -X POST -d @codeclimate.json -H 'Content-Type: application/json' -H 'User-Agent: Code Climate (PHP Test Reporter v0.1.1)' https://codeclimate.com/test_reports"
-addons:
-  code_climate:
-    repo_token:
-      secure: MsQUWSBgCzE3WLhBYyMfPGLe9TREn/M9TAItXIEY9MNOXFG3sJFk7z7mCnQfqCsJwtG7WAI6Ye4tLuO7Bs5GZgo5+ZfGiEWOb9kYgTpgjseHVwU2z1Tm7RP6fFh7kCf4O1ZEYRi/ocYuGhfxKtMau5LM3Z1tNA1e8kClsv1hs/Qwu7x0CxiqlPOenAuIUqcfL3ub3eETLiN3C5Jgo5pbzV3axYpxRylmg1UfgbFKxNOneSYRzoCYZCUEqmlLDwRowdQ990MAjG0iFP0qGn4DisCuFp/PtgSH44MeZMFpUSM1a+LgtELypkVWf3jX8r9ykZFR3ToZpD0//Yk5+vdvVKGd+gnrIA6P72NTkDMi3gEgDDrl9m2wW7GwJUveH+28OepDxS4g8UPcrMuACCV+BdwU8WWzq2SDgK206vANcHfc78oSOb7b8auybzehMG9qbQSAojihV0j18WmU1OVA786w7VqL/+FH9lCfNAx+n0DMoarMhmbOEo3E8emhzWewVUL4DRu8LhuAQkOKNgbU0ZKtWPYe9bj1LRfSAmHxkwTsXHy3DbWhrwygOJ936T1QVZfgv0rzmcQkIUJrnpvTHrdNZ+MuWX4OxWvFNs6xHNZNc7mlYayVlohV8ovGXaw1YR6xt3ZtJUgT+aRkchQqa3iXsCMsVZUmHYFJITBpAEc=
