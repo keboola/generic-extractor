@@ -1,4 +1,0 @@
-
-Warning: simplexml_load_file(): I/O warning : failed to load external entity "/Users/martinhalamicek/Development/projects/generic-extractor/build/logs/clover.xml" in /Users/martinhalamicek/Development/projects/generic-extractor/vendor/satooshi/php-coveralls/src/Satooshi/Bundle/CoverallsV1Bundle/Api/Jobs.php on line 53
-
-Catchable fatal error: Argument 1 passed to Satooshi\Bundle\CoverallsV1Bundle\Collector\CloverXmlCoverageCollector::collect() must be an instance of SimpleXMLElement, boolean given, called in /Users/martinhalamicek/Development/projects/generic-extractor/vendor/satooshi/php-coveralls/src/Satooshi/Bundle/CoverallsV1Bundle/Api/Jobs.php on line 55 and defined in /Users/martinhalamicek/Development/projects/generic-extractor/vendor/satooshi/php-coveralls/src/Satooshi/Bundle/CoverallsV1Bundle/Collector/CloverXmlCoverageCollector.php on line 32
