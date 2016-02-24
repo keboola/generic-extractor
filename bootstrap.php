@@ -21,7 +21,7 @@ set_error_handler(
 );
 
 
-// date_default_timezone_set('Europe/Prague');
+date_default_timezone_set('Europe/Prague');
 
 if (file_exists(__DIR__ . '/config.php')) {
     require_once __DIR__ . '/config.php';

@@ -4,3 +4,4 @@ vendor/
 build/
 .kdev4
 *.kdev4
+composer.phar
