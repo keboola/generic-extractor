@@ -353,6 +353,7 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
 			- Can contain a value consisting of a name of a field from the parent's response, logical operator and a value to compare against. Supported operators are "**==**", "**<**", "**>**", "**<=**", "**>=**", "**!=**"
 			- Example: `type!=employee` or `product.value>150`
 			- The filter is whitespace sensitive, therefore `value == 100` will look into `value␣` for a `␣100` value, instead of `value` and `100` as likely desired.
+			- Further documentation can be found at https://github.com/keboola/php-filter
 	- **method**: GET (default), POST or FORM
 	- **responseFilter**: Allows filtering data from API response to leave them from being parsed.
 		- Filtered data will be imported as a JSON encoded string.
