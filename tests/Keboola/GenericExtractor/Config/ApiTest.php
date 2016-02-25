@@ -20,4 +20,28 @@ class ApiTest extends ExtractorTestCase
     }
 
     // TODO JSON, array (and object?)
+
+    public function testCreateAuthQuery()
+    {
+        $config = new Config('testApp', 'testCfg', []);
+        $config->setAttributes(['key' => 'val']);
+
+        // Deprecated way
+        $api = [
+            'authentication' => [
+                'type' => 'url.query'
+            ],
+            'query' => [
+                'param' => [
+                    'attr' => 'key'
+                ]
+            ]
+        ];
+
+        $queryAuth = Api::createAuth($api, $config, []);
+
+        self::assertEquals($api['query'], self::getProperty($queryAuth, 'query'));
+        self::assertEquals($config->getAttributes(), self::getProperty($queryAuth, 'attrs'));
+        self::assertInstanceOf('\Keboola\GenericExtractor\Authentication\Query', $queryAuth);
+    }
 }

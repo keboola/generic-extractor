@@ -92,9 +92,10 @@ class Api
      *
      * @param array $api
      * @param Config $config
+     * @param array $authorization
      * @return Authentication\AuthInterface
      */
-    public static function createAuth($api, Config $config, $authorization)
+    public static function createAuth($api, Config $config, array $authorization)
     {
         if (empty($api['authentication']['type'])) {
             Logger::log("DEBUG", "Using NO Auth");
@@ -109,6 +110,7 @@ class Api
             case 'bearer':
                 throw new ApplicationException("The bearer method is not implemented yet");
                 break;
+//             case 'query':
             case 'url.query':
                 if (empty($api['query'])) {
                     throw new UserException("The query authentication method requires query parameters to be defined in the API configuration.");
