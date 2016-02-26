@@ -73,6 +73,7 @@ class GenericExtractor extends Extractor
             $parser = Json::create($config, $this->getLogger(), $this->getTemp(), $this->metadata);
             $parser->getParser()->getStruct()->setAutoUpgradeToArray(true);
             $parser->getParser()->setCacheMemoryLimit('2M');
+            $parser->getParser()->getAnalyzer()->setNestedArrayAsJson(true);
             $this->parser = $parser;
         }
 
