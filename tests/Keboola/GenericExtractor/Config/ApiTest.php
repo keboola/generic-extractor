@@ -67,4 +67,27 @@ class ApiTest extends ExtractorTestCase
         self::assertEquals($config->getAttributes(), self::getProperty($queryAuth, 'attrs'));
         self::assertInstanceOf('\Keboola\GenericExtractor\Authentication\Query', $queryAuth);
     }
+
+    public function testCreateAuthOAuth20Bearer()
+    {
+        $config = new Config('testApp', 'testCfg', []);
+        $config->setAttributes(['key' => 'val']);
+
+        $api = [
+            'authentication' => [
+                'type' => 'oauth20'
+            ]
+        ];
+
+        $authorization = [
+            'oauth_api' => [
+                'credentials' => [
+                    '#token' => 'asdf'
+                ]
+            ]
+        ];
+
+        $oauth = Api::createAuth($api, $config, $authorization);
+        self::assertEquals($authorization['oauth_api']['credentials']['#token'], self::getProperty($oauth, 'token'));
+    }
 }
