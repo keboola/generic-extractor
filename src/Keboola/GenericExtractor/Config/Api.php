@@ -124,6 +124,8 @@ class Api
                 break;
             case 'oauth10':
                 return new Authentication\OAuth10($authorization);
+            case 'oauth20':
+                return new Authentication\OAuth20($authorization);
             default:
                 throw new UserException("Unknown authorization type '{$api['authentication']['type']}'");
                 break;

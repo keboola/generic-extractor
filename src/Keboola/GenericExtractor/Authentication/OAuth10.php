@@ -9,9 +9,6 @@ use Keboola\Utils\Utils;
 
 /**
  * OAuth 1.0 implementation
- * @todo use guzzle's own oauth method
- * @todo load 'authorization' from config
- *  - through Config\Api?
  */
 class OAuth10 implements AuthInterface
 {
@@ -35,14 +32,14 @@ class OAuth10 implements AuthInterface
     public function __construct(array $authorization)
     {
         if (empty($authorization['oauth_api']['credentials'])) {
-            throw new ApplicationException("OAuth API credentials not supplied in config");
+            throw new UserException("OAuth API credentials not supplied in config");
         }
 
         $oauthApiDetails = $authorization['oauth_api']['credentials'];
 
         foreach(['#data', 'appKey', '#appSecret'] as $key) {
             if (empty($oauthApiDetails[$key])) {
-                throw new ApplicationException("Missing '{$key}' for OAuth 1.0 authorization");
+                throw new UserException("Missing '{$key}' for OAuth 1.0 authorization");
             }
         }
 
