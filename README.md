@@ -79,16 +79,16 @@ Example:
 			username: whoever
 			password: soSecret
 
-### url.query
+### query
 
 - Supports signature function as a value
 - Values should be described in `api` section
 - Example bucket attributes:
 
-- **authentication.type**: `url.query`
-- **query.apiKey**: `{"attr": "apiKey"}`
+- **authentication.type**: `query`
+- **authentication.query.apiKey**: `{"attr": "apiKey"}`
     - this will look for the *apiKey* query parameter value in the config attribute named *apiKey*
-- **query.sig**: `{"function":"md5","args":[{"function":"concat","args":[{"attr":"apiKey"},{"attr":"secret"},{"function":"time"}]}]}`
+- **authentication.query.sig**: `{"function":"md5","args":[{"function":"concat","args":[{"attr":"apiKey"},{"attr":"secret"},{"function":"time"}]}]}`
     - this will generate a *sig* parameter value from MD5 of merged configuration table attributes *apiKey* and *secret*, followed by current *time()* at the time of the request (time() being the PHP function)
 	- Allowed functions are listed below in the *User functions* section
 	- If you're using any config parameter by using `"attr": "parameterName"`, it has to be identical string to the one in the actual config, uncluding eventual `#` if KBC Docker's encryption is used.

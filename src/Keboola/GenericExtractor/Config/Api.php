@@ -110,13 +110,14 @@ class Api
             case 'bearer':
                 throw new ApplicationException("The bearer method is not implemented yet");
                 break;
-//             case 'query':
+            case 'query':
             case 'url.query':
-                if (empty($api['query'])) {
+                if (empty($api['authentication']['query']) && empty($api['query'])) {
                     throw new UserException("The query authentication method requires query parameters to be defined in the API configuration.");
                 }
 
-                return new Authentication\Query(new Builder(), $config->getAttributes(), $api['query']);
+                $query = empty($api['authentication']['query']) ? $api['query'] : $api['authentication']['query'];
+                return new Authentication\Query(new Builder(), $config->getAttributes(), $query);
                 break;
             case 'login':
                 return new Authentication\Login($config->getAttributes(), $api);
