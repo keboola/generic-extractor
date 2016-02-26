@@ -82,6 +82,13 @@ class MockExecutionTest extends ExtractorTestCase
 
         $this->rmDir('./tests/data/defaultOptions/out');
     }
+
+    public function testEmptyCfg()
+    {
+        $result = exec('php ./run.php --data=./tests/data/emptyCfg 2>&1', $output, $retval);
+
+        self::assertEquals(1, $retval);
+    }
 /*
     public function testIterationDifferentColumns()
     {
