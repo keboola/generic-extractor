@@ -1,0 +1,25 @@
+authorization:
+    oauth_api:
+        credentials:
+            '#data': '{"status": "ok","access_token": "token"}'
+parameters:
+    api:
+        baseUrl: http://private-53977-extractormock.apiary-mock.com/
+        authentication:
+            type: oauth20
+            format: json
+            #headers:
+                #Authorization:
+                    #function: concat
+                    #args:
+                        #- 'Bearer '
+                        #-
+                            #authorization:
+                                #data: 'access_token'
+            query: ... #TODO
+    config:
+        outputBucket: getPost
+        jobs:
+            -
+                endpoint: oauth20
+                dataType: oauth20
