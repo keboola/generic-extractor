@@ -11,14 +11,16 @@ use Keboola\Utils\Utils;
 /**
  * Might better be able to work with ANY type of auth, and tweak the request accordingly
  */
-class UrlSignature extends AbstractSignature implements SubscriberInterface
+class HeaderSignature extends AbstractSignature implements SubscriberInterface
 {
     /**
      * @param RequestInterface $request
      */
     protected function addSignature(RequestInterface $request)
     {
-        $authQuery = call_user_func($this->generator);
-        $rQuery = $request->getQuery()->merge($authQuery);
+        $authHeaders = call_user_func($this->generator);
+        foreach($authHeaders as $key => $header) {
+            $request->setHeader($key, $header);
+        }
     }
 }

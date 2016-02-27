@@ -2,7 +2,8 @@
 namespace Keboola\GenericExtractor;
 
 use Keboola\GenericExtractor\Config\Api;
-use Keboola\Juicer\Config\Config;
+use Keboola\Juicer\Config\Config,
+    Keboola\Juicer\Filesystem\YamlFile;
 
 class ApiTest extends ExtractorTestCase
 {
@@ -16,7 +17,7 @@ class ApiTest extends ExtractorTestCase
             $config
         );
 
-        $this->assertEquals($string, $url);
+        self::assertEquals($string, $url);
     }
 
     // TODO JSON, array (and object?)
@@ -73,13 +74,12 @@ class ApiTest extends ExtractorTestCase
         $ymlConfig = YamlFile::create(ROOT_PATH . '/tests/data/oauth20bearer/config.yml');
 
         $config = new Config('testApp', 'testCfg', []);
-        $config->setAttributes(['key' => 'val']);
 
-        $api = $ymlConfig->get('parameters', 'api', 'authentication');
+        $api = $ymlConfig->get('parameters', 'api');
 
         $authorization = $ymlConfig->get('authorization');
 
         $oauth = Api::createAuth($api, $config, $authorization);
-//         self::assertEquals($authorization['oauth_api']['credentials']['#token'], self::getProperty($oauth, 'token'));
+        self::assertInstanceOf('\Keboola\GenericExtractor\Authentication\OAuth20', $oauth);
     }
 }

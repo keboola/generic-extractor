@@ -9,6 +9,8 @@ use GuzzleHttp\Client,
     GuzzleHttp\Subscriber\History;
 use Keboola\Juicer\Client\RestClient;
 use Keboola\Juicer\Filesystem\YamlFile;
+use Keboola\Code\Builder,
+    Keboola\Code\Exception\UserScriptException;
 
 class OAuth20Test extends ExtractorTestCase
 {
@@ -16,16 +18,20 @@ class OAuth20Test extends ExtractorTestCase
     {
         $config = YamlFile::create(ROOT_PATH . '/tests/data/oauth20bearer/config.yml');
 
-        $client = new Client;
+        $client = new Client(['base_url' => 'http://example.com']);
         $client->setDefaultOption('headers', ['X-Test' => 'test']);
         $restClient = new RestClient($client);
         $auth = new OAuth20(
             $config->get('authorization'),
-            $config->get('parameters', 'api', 'authentication')
+            $config->get('parameters', 'api', 'authentication'),
+            new Builder
         );
         $auth->authenticateClient($restClient);
 
-//         self::assertEquals('Bearer testToken', $client->getDefaultOption('headers')['Authorization']);
-//         self::assertArrayHasKey('X-Test', $client->getDefaultOption('headers'));
+        $request = $client->createRequest('GET', '/');
+        $client->send($request);
+
+        self::assertEquals('Bearer testToken', $request->getHeader('Authorization'));
+        self::assertEquals('test', $request->getHeader('X-Test'));
     }
 }

@@ -16,8 +16,7 @@ parameters:
                     args:
                         - 'Bearer '
                         -
-                            authorization:
-                                data: 'access_token'
+                            authorization: data.access_token
     config:
         outputBucket: getPost
         jobs:

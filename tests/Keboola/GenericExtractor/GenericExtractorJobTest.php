@@ -25,7 +25,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         $job = $this->getJob($cfg);
 
         $req = self::callMethod($job, 'firstPage', [$cfg]);
-        $this->assertEquals('ep', $req->getEndpoint());
+        self::assertEquals('ep', $req->getEndpoint());
     }
 
     public function testNextPage()
@@ -50,7 +50,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
             $response->results
         ]);
 
-        $this->assertEquals('http://example.com/api/ep?something=2', $req->getEndpoint());
+        self::assertEquals('http://example.com/api/ep?something=2', $req->getEndpoint());
     }
 
     /**
@@ -78,7 +78,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
             $response->results
         ]);
 
-        $this->assertEquals('http://example.com/api/ep?something=2', $req->getEndpoint());
+        self::assertEquals('http://example.com/api/ep?something=2', $req->getEndpoint());
     }
 
     public function testBuildParams()
@@ -117,7 +117,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
             $cfg
         ]);
 
-        $this->assertEquals([
+        self::assertEquals([
             'timeframe' => 'this_24_hours',
             'filters' => date("Y-m-d") . 'stringsomething interesting'
         ], $params);
@@ -180,8 +180,8 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
         $filtered = self::callMethod($job, 'filterResponse', [$cfg, $data]);
 
-        $this->assertTrue(is_scalar($filtered[0]->complexItem));
-        $this->assertEquals($data[0]->anotherItem, $filtered[0]->anotherItem);
+        self::assertTrue(is_scalar($filtered[0]->complexItem));
+        self::assertEquals($data[0]->anotherItem, $filtered[0]->anotherItem);
     }
 
     protected function getJob(JobConfig $config)

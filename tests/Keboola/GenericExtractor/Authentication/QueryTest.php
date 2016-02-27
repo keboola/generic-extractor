@@ -30,7 +30,7 @@ class QueryTest extends ExtractorTestCase
         $request = $client->createRequest('GET', '/');
         $client->send($request);
 
-        $this->assertEquals(
+        self::assertEquals(
             'paramOne=1&paramTwo=' . md5($attrs['second']) . '&paramThree=string',
             (string) $request->getQuery()
         );
@@ -47,7 +47,7 @@ class QueryTest extends ExtractorTestCase
         $request = $client->createRequest('GET', '/query?param=value');
         $this->sendRequest($client, $request);
 
-        $this->assertEquals(
+        self::assertEquals(
             'param=value&authParam=secretCodeWow',
             (string) $request->getQuery()
         );

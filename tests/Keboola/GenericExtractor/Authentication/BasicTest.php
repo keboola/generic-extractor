@@ -13,16 +13,16 @@ class BasicTest extends ExtractorTestCase
         $auth = new Basic(['username' => 'test', 'password' => 'pass']);
         $auth->authenticateClient(new RestClient($client));
 
-        $this->assertEquals(['test','pass'], $client->getDefaultOption('auth'));
+        self::assertEquals(['test','pass'], $client->getDefaultOption('auth'));
 
         $request = $client->createRequest('GET', '/');
-        $this->assertArrayHasKey('Authorization', $request->getHeaders());
-        $this->assertEquals(['Basic dGVzdDpwYXNz'], $request->getHeaders()['Authorization']);
+        self::assertArrayHasKey('Authorization', $request->getHeaders());
+        self::assertEquals(['Basic dGVzdDpwYXNz'], $request->getHeaders()['Authorization']);
 
         $hashClient = new Client();
         $auth = new Basic(['username' => 'test', '#password' => 'pass']);
         $auth->authenticateClient(new RestClient($hashClient));
 
-        $this->assertEquals(['test','pass'], $hashClient->getDefaultOption('auth'));
+        self::assertEquals(['test','pass'], $hashClient->getDefaultOption('auth'));
     }
 }

@@ -26,7 +26,7 @@ class OAuth10Test extends ExtractorTestCase
         ]);
         $auth->authenticateClient($restClient);
 
-        $this->assertEquals('oauth', $client->getDefaultOption('auth'));
+        self::assertEquals('oauth', $client->getDefaultOption('auth'));
 
         $request = $restClient->createRequest(['endpoint' => '/']);
 

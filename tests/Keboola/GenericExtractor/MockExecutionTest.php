@@ -8,9 +8,9 @@ class MockExecutionTest extends ExtractorTestCase
         // copy the config replacing URL from env_var? TODO
         $output = shell_exec('php ./run.php --data=./tests/data/responseUrlScroll');
 
-        $this->assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
+        self::assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
 
-        $this->assertDirectoryEquals(
+        self::assertDirectoryEquals(
             './tests/data/responseUrlScroll/expected/tables/',
             './tests/data/responseUrlScroll/out/tables/'
         );
@@ -22,9 +22,9 @@ class MockExecutionTest extends ExtractorTestCase
     {
         $output = shell_exec('php ./run.php --data=./tests/data/getPost');
 
-        $this->assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
+        self::assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
 
-        $this->assertDirectoryEquals(
+        self::assertDirectoryEquals(
             './tests/data/getPost/expected/tables/',
             './tests/data/getPost/out/tables/'
         );
@@ -36,9 +36,9 @@ class MockExecutionTest extends ExtractorTestCase
     {
         $output = shell_exec('php ./run.php --data=./tests/data/basicAuth');
 
-        $this->assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
+        self::assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
 
-        $this->assertDirectoryEquals(
+        self::assertDirectoryEquals(
             './tests/data/basicAuth/expected/tables/',
             './tests/data/basicAuth/out/tables/'
         );
@@ -50,9 +50,9 @@ class MockExecutionTest extends ExtractorTestCase
     {
         $output = shell_exec('php ./run.php --data=./tests/data/multipleOutputs');
 
-        $this->assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
+        self::assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
 
-        $this->assertDirectoryEquals(
+        self::assertDirectoryEquals(
             './tests/data/multipleOutputs/expected/tables/',
             './tests/data/multipleOutputs/out/tables/'
         );
@@ -64,9 +64,9 @@ class MockExecutionTest extends ExtractorTestCase
     {
         $output = shell_exec('php ./run.php --data=./tests/data/multipleOutputsUserData');
 
-        $this->assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
+        self::assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
 
-        $this->assertDirectoryEquals(
+        self::assertDirectoryEquals(
             './tests/data/multipleOutputsUserData/expected/tables/',
             './tests/data/multipleOutputsUserData/out/tables/'
         );
@@ -94,9 +94,9 @@ class MockExecutionTest extends ExtractorTestCase
     {
         $output = shell_exec('php ./run.php --data=./tests/data/iterationDifferentColumns');
 
-        $this->assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
+        self::assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
 
-        $this->assertDirectoryEquals(
+        self::assertDirectoryEquals(
             './tests/data/iterationDifferentColumns/expected/tables/',
             './tests/data/iterationDifferentColumns/out/tables/'
         );
@@ -129,7 +129,7 @@ class MockExecutionTest extends ExtractorTestCase
             \RecursiveIteratorIterator::SELF_FIRST
         ) as $file) {
             $relPath = str_replace($pathToExpected, '', $file->getPathname());
-            $this->assertFileEquals($file->getPathname(), $pathToActual . $relPath);
+            self::assertFileEquals($file->getPathname(), $pathToActual . $relPath);
         }
     }
 }
