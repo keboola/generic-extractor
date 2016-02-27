@@ -29,7 +29,7 @@ use Keboola\Code\Builder,
  *  'some': '...'
  * }
  * ```
- * accessed by `authorization: { data: access_token }` & `format: json`
+ * accessed by `authorization: { data.access_token }` & `format: json`
  */
 class OAuth20 implements AuthInterface
 {

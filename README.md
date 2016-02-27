@@ -173,8 +173,33 @@ Example minimum `config.yml`:
                     '#appSecret': 'asdf'
         parameters:
             api:
-            authentication:
-                type: oauth10
+                authentication:
+                    type: oauth10
+
+### oauth20
+
+Uses [User functions](#user-functions) to use tokens in headers or query. Instead of `attr` or `time` parameters, you should use `authorization` to access the OAuth data. If the data is a raw token string, use `authorization: data` to access it. If it's a JSON string, use `authentication.format: json` and access its values isong the `.` annotation, like in example below (`authorization: data.access_token`).
+
+- **authentication.type**: `oauth20`
+
+Example config for **Bearer** token use:
+
+        authorization:
+            oauth_api:
+                credentials:
+                    '#data': '{"status": "ok","access_token": "testToken"}'
+        parameters:
+            api:
+                authentication:
+                    type: oauth20
+                    format: json
+                    headers:
+                        Authorization:
+                            function: concat
+                            args:
+                                - 'Bearer '
+                                -
+                                    authorization: data.access_token
 
 # Pagination
 ## Methods
