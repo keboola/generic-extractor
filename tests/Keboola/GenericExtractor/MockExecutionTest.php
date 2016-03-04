@@ -83,6 +83,18 @@ class MockExecutionTest extends ExtractorTestCase
         $this->rmDir('./tests/data/defaultOptions/out');
     }
 
+    public function testDefaultBucket()
+    {
+        $result = exec('php ./run.php --data=./tests/data/defaultBucket 2>&1', $output, $retval);
+
+        self::assertDirectoryEquals(
+            './tests/data/defaultBucket/expected/tables/',
+            './tests/data/defaultBucket/out/tables/'
+        );
+
+        $this->rmDir('./tests/data/defaultBucket/out');
+    }
+
     public function testEmptyCfg()
     {
         $result = exec('php ./run.php --data=./tests/data/emptyCfg 2>&1', $output, $retval);

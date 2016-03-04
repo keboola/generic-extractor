@@ -1,0 +1,5 @@
+time:
+    previousStart: 1457078392
+json_parser.struct:
+    db: { key: scalar }
+json_parser.structVersion: !!float 2

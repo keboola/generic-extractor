@@ -44,8 +44,13 @@ class Executor
 
             $api = $configuration->getApi($config, $authorization);
 
-            $outputBucket = $config->getAttribute('outputBucket') ?:
-                'ex-api-' . $api->getName() . "-" . $config->getConfigName();
+            if (!empty($config->getAttribute('outputBucket'))) {
+                $outputBucket = $config->getAttribute('outputBucket');
+            } elseif (!empty($config->getConfigName())) {
+                $outputBucket = 'ex-api-' . $api->getName() . "-" . $config->getConfigName();
+            } else {
+                $outputBucket = "__kbc_default";
+            }
 
             $extractor = new GenericExtractor($temp);
             $extractor->setLogger(Logger::getLogger());
@@ -68,7 +73,7 @@ class Executor
         foreach($results as $bucket => $result) {
             $configuration->storeResults(
                 $result['parser']->getResults(),
-                $bucket,
+                $bucket == "__kbc_default" ? null : $bucket,
                 true,
                 $result['incremental']
             );
