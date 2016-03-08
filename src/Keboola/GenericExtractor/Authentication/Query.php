@@ -44,13 +44,15 @@ class Query implements AuthInterface
         // Create array of objects instead of arrays from YML
         $q = (array) Utils::arrayToObject($this->query);
         $sub->setSignatureGenerator(
-            function () use ($q) {
+            function (array $requestInfo = []) use ($q) {
+                $params = array_merge($requestInfo, ['attr' => $this->attrs]);
+                
                 $query = [];
                 try {
                     foreach($q as $key => $value) {
                         $query[$key] = is_scalar($value)
                             ? $value
-                            : $this->builder->run($value, ['attr' => $this->attrs]);
+                            : $this->builder->run($value, $params);
                     }
                 } catch(UserScriptException $e) {
                     throw new UserException("Error in query authentication script: " . $e->getMessage());

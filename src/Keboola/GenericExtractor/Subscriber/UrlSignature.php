@@ -18,7 +18,16 @@ class UrlSignature extends AbstractSignature implements SubscriberInterface
      */
     protected function addSignature(RequestInterface $request)
     {
-        $authQuery = call_user_func($this->generator);
+        $query = [];
+        foreach($request->getQuery() as $param => $val) {
+            $query[$param] = $val;
+        }
+        $requestInfo = [
+            'url' => $request->getUrl(),
+            'path' => $request->getPath()
+        ];
+
+        $authQuery = call_user_func($this->generator, ['query' => $query, 'request' => $requestInfo]);
         $rQuery = $request->getQuery()->merge($authQuery);
     }
 }

@@ -53,6 +53,50 @@ class QueryTest extends ExtractorTestCase
         );
     }
 
+    public function testRequestInfo()
+    {
+        $client = new Client(['base_url' => 'http://example.com']);
+
+        $builder = new Builder;
+
+        $urlTokenParam = (object) [
+            'function' => 'concat',
+            'args' => [
+                (object) ['request' => 'url'],
+                (object) ['attr' => 'token'],
+                (object) ['query' => 'param']
+            ]
+        ];
+
+        $definitions = [
+            'urlTokenParamHash' => (object) [
+                'function' => 'md5',
+                'args' => [
+                    $urlTokenParam
+                ]
+            ],
+            'urlTokenParam' => $urlTokenParam
+        ];
+        $attrs = [
+            'token' => 'asdf1234'
+        ];
+
+        $auth = new Query($builder, $attrs, $definitions);
+        $auth->authenticateClient(new RestClient($client));
+
+        $request = $client->createRequest('GET', '/query?param=value');
+        $originalUrl = $request->getUrl();
+
+        $this->sendRequest($client, $request);
+
+        self::assertEquals(
+            'param=value&urlTokenParamHash=' .
+                md5($originalUrl . $attrs['token'] . 'value') .
+                '&urlTokenParam=' . urlencode($originalUrl) . $attrs['token'] . 'value',
+            (string) $request->getQuery()
+        );
+    }
+
     protected function sendRequest($client, $request)
     {
         try {
