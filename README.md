@@ -218,6 +218,7 @@ Example config for **Bearer** token use:
                                     authorization: data.access_token
 
 Example for **MAC** authentication:
+- Assumes the user token is in the OAuth data JSON in `access_token` key, and MAC secret is in the same JSON in `mac_secret` key.
 
         authorization:
             oauth_api:
