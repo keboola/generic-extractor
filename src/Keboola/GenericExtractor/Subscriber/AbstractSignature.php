@@ -41,4 +41,31 @@ abstract class AbstractSignature
     {
         $this->generator = $generator;
     }
+
+    /**
+     * @param RequestInterface $request
+     * @return array ['query' => ..., 'request' => ...]
+     */
+    protected function getRequestAndQuery(RequestInterface $request)
+    {
+        $query = [];
+        foreach($request->getQuery() as $param => $val) {
+            $query[$param] = $val;
+        }
+        $requestInfo = [
+            'url' => $request->getUrl(),
+            'path' => $request->getPath(),
+            'queryString' => (string) $request->getQuery(),
+            'method' => $request->getMethod(),
+            'hostname' => $request->getHost(),
+            'port' => $request->getPort(),
+            'resource' => $request->getResource()
+            // if needed, ksorted query string can come here
+        ];
+
+        return [
+            'query' => $query,
+            'request' => $requestInfo
+        ];
+    }
 }

@@ -6,7 +6,7 @@
         "php": ">=5.5",
         "symfony/yaml": "~2.6.3",
         "keboola/juicer": "~0.4.4",
-        "keboola/codebuilder": "~0.1.4",
+        "keboola/codebuilder": "~0.2.0",
         "keboola/php-utils": "~0.1.19",
         "symfony/console": "^2.6",
         "keboola/ex-generic-response-array": "^0.0.3",

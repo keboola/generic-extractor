@@ -1,0 +1,77 @@
+authorization:
+    oauth_api:
+        credentials:
+            '#data': '{"status": "ok","access_token": "testToken", "mac_secret": "iAreSoSecret123"}'
+            appKey: clId
+            '#appSecret': clScrt
+parameters:
+    api:
+        baseUrl: http://private-53977-extractormock.apiary-mock.com/
+        authentication:
+            type: oauth20
+            format: json
+            headers:
+                Authorization:
+                    function: concat
+                    args:
+                        - 'MAC id="'
+                        -
+                            authorization: data.access_token
+                        - '", ts="'
+                        -
+                            authorization: timestamp
+                        - '", nonce="'
+                        -
+                            authorization: nonce
+                        - '", mac="'
+                        -
+                            function: md5
+                            args:
+                                -
+                                    function: hash_hmac
+                                    args:
+                                        - sha256
+                                        -
+                                            function: implode
+                                            args:
+                                                - "\n"
+                                                -
+                                                    -
+                                                        authorization: timestamp
+                                                    -
+                                                        authorization: nonce
+                                                    -
+                                                        request: method
+                                                    -
+                                                        request: resource
+                                                    -
+                                                        request: hostname
+                                                    -
+                                                        request: port
+                                                    - "\n"
+                                        -
+                                            authorization: data.mac_secret
+                        - '"'
+                # For debug purposes
+                Test:
+                    function: implode
+                    args:
+                        - "\n"
+                        -
+                            -
+                                authorization: timestamp
+                            -
+                                authorization: nonce
+                            -
+                                request: method
+                            -
+                                request: resource
+                            -
+                                request: hostname
+                            -
+                                request: port
+    config:
+        jobs:
+            -
+                endpoint: oauth20
+                dataType: oauth20

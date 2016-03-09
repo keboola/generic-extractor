@@ -2,8 +2,7 @@
 namespace Keboola\GenericExtractor;
 
 use Keboola\GenericExtractor\Authentication\Query;
-use GuzzleHttp\Client,
-    GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Client;
 use Keboola\Code\Builder;
 use Keboola\Juicer\Client\RestClient;
 
@@ -95,14 +94,5 @@ class QueryTest extends ExtractorTestCase
                 '&urlTokenParam=' . urlencode($originalUrl) . $attrs['token'] . 'value',
             (string) $request->getQuery()
         );
-    }
-
-    protected function sendRequest($client, $request)
-    {
-        try {
-            return $client->send($request);
-        } catch(ClientException $e) {
-            // this is expected, just need to send the request somewhere!
-        }
     }
 }

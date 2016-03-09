@@ -18,7 +18,7 @@ class HeaderSignature extends AbstractSignature implements SubscriberInterface
      */
     protected function addSignature(RequestInterface $request)
     {
-        $authHeaders = call_user_func($this->generator);
+        $authHeaders = call_user_func($this->generator, $this->getRequestAndQuery($request));
         foreach($authHeaders as $key => $header) {
             $request->setHeader($key, $header);
         }

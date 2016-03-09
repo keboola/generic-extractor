@@ -44,9 +44,10 @@ class Query implements AuthInterface
         // Create array of objects instead of arrays from YML
         $q = (array) Utils::arrayToObject($this->query);
         $sub->setSignatureGenerator(
-            function (array $requestInfo = []) use ($q) {
+            function (array $requestInfo = []) use ($q)
+            {
                 $params = array_merge($requestInfo, ['attr' => $this->attrs]);
-                
+
                 $query = [];
                 try {
                     foreach($q as $key => $value) {

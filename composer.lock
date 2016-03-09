@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "18f392e3562d2e17bb3f3233a80d6c70",
-    "content-hash": "13a0fbee117ac010278847c2c7ee12c2",
+    "hash": "c6a27445c2818228e01d2972eb7a34c6",
+    "content-hash": "3b423df993481a069ccce873b4e7ed10",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -226,24 +226,24 @@
         },
         {
             "name": "keboola/codebuilder",
-            "version": "0.1.6",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-codebuilder.git",
-                "reference": "018bf513ff821f3260587914e6c0dd34d431e9ac"
+                "reference": "611ae4bb816336fc5e42173e6e55d77865ec2a88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-codebuilder/zipball/018bf513ff821f3260587914e6c0dd34d431e9ac",
-                "reference": "018bf513ff821f3260587914e6c0dd34d431e9ac",
+                "url": "https://api.github.com/repos/keboola/php-codebuilder/zipball/611ae4bb816336fc5e42173e6e55d77865ec2a88",
+                "reference": "611ae4bb816336fc5e42173e6e55d77865ec2a88",
                 "shasum": ""
             },
             "require": {
                 "keboola/php-utils": "~0.1.10",
-                "php": ">=5.4.0"
+                "php": ">=5.6.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "3.7.*"
+                "phpunit/phpunit": "^5.2"
             },
             "type": "library",
             "autoload": {
@@ -267,7 +267,7 @@
                 "user",
                 "user-script"
             ],
-            "time": "2015-08-29 16:22:41"
+            "time": "2016-03-09 02:01:06"
         },
         {
             "name": "keboola/csv",

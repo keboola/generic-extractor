@@ -2,6 +2,9 @@
 namespace Keboola\GenericExtractor;
 
 use Keboola\Juicer\Common\Logger;
+use GuzzleHttp\Client,
+    GuzzleHttp\Exception\ClientException,
+    GuzzleHttp\Message\RequestInterface;
 
 class ExtractorTestCase extends \PHPUnit_Framework_TestCase
 {
@@ -33,5 +36,14 @@ class ExtractorTestCase extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         Logger::initLogger('ex-generic_test');
+    }
+
+    protected static function sendRequest(Client $client, RequestInterface $request)
+    {
+        try {
+            return $client->send($request);
+        } catch(ClientException $e) {
+            // this is expected, just need to send the request somewhere!
+        }
     }
 }

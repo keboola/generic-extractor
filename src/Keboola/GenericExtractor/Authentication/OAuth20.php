@@ -130,7 +130,9 @@ class OAuth20 implements AuthInterface
     {
         // Move to authenticateClient TODO
         $authorization = [
-            'clientId' => $this->clientId
+            'clientId' => $this->clientId,
+            'nonce' => substr(sha1(uniqid()), 0, 16),
+            'timestamp' => time()
         ];
 
         if (!is_scalar($this->data)) {
@@ -145,7 +147,10 @@ class OAuth20 implements AuthInterface
         // Create array of objects instead of arrays from YML
         $q = (array) Utils::arrayToObject($definitions);
         $subscriber->setSignatureGenerator(
-            function () use ($q, $authorization) {
+            function (array $requestInfo = []) use ($q, $authorization)
+            {
+                $params = array_merge($requestInfo, ['authorization' => $authorization]);
+
                 $result = [];
                 try {
                     foreach($q as $key => $value) {
@@ -153,9 +158,7 @@ class OAuth20 implements AuthInterface
                             ? $value
                             : $this->builder->run(
                                 $value,
-                                [
-                                    'authorization' => $authorization
-                                ]
+                                $params
                             );
                     }
                 } catch(UserScriptException $e) {
