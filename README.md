@@ -194,6 +194,8 @@ Example minimum `config.yml`:
 
 Uses [User functions](#user-functions) to use tokens in headers or query. Instead of `attr` or `time` parameters, you should use `authorization` to access the OAuth data. If the data is a raw token string, use `authorization: data` to access it. If it's a JSON string, use `authentication.format: json` and access its values isong the `.` annotation, like in example below (`authorization: data.access_token`).
 
+The **query** and **request** information can also be used just like in the `querry` authentication method.
+
 - **authentication.type**: `oauth20`
 
 Example config for **Bearer** token use:
@@ -214,6 +216,63 @@ Example config for **Bearer** token use:
                                 - 'Bearer '
                                 -
                                     authorization: data.access_token
+
+Example for **MAC** authentication:
+
+        authorization:
+            oauth_api:
+                credentials:
+                    '#data': '{"status": "ok","access_token": "testToken", "mac_secret": "iAreSoSecret123"}'
+                    appKey: clId
+                    '#appSecret': clScrt
+        parameters:
+            api:
+                baseUrl: http://private-53977-extractormock.apiary-mock.com/
+                authentication:
+                    type: oauth20
+                    format: json
+                    headers:
+                        Authorization:
+                            function: concat
+                            args:
+                                - 'MAC id="'
+                                -
+                                    authorization: data.access_token
+                                - '", ts="'
+                                -
+                                    authorization: timestamp
+                                - '", nonce="'
+                                -
+                                    authorization: nonce
+                                - '", mac="'
+                                -
+                                    function: md5
+                                    args:
+                                        -
+                                            function: hash_hmac
+                                            args:
+                                                - sha256
+                                                -
+                                                    function: implode
+                                                    args:
+                                                        - "\n"
+                                                        -
+                                                            -
+                                                                authorization: timestamp
+                                                            -
+                                                                authorization: nonce
+                                                            -
+                                                                request: method
+                                                            -
+                                                                request: resource
+                                                            -
+                                                                request: hostname
+                                                            -
+                                                                request: port
+                                                            - "\n"
+                                                -
+                                                    authorization: data.mac_secret
+
 
 # Pagination
 ## Methods
