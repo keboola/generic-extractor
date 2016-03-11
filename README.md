@@ -343,6 +343,8 @@ Configured in `api.pagination.method`
 - **pagination.urlKey**: `next_page`
     - path within response object that points to the URL
     - if value of that key is empty, pagination ends
+- **pagination.paramIsQuery**: `false`
+    - Enable if the response only contains a query string to use with the same endpoint
 - **pagination.includeParams**: `false`
 	- whether or not to add "params" from the configuration to the URL's query from response
 	- if enabled and the next page URL has the same query parameters as the "params" field, values from the "params" are used
