@@ -376,6 +376,91 @@ simple page number increasing 1 by 1
 - **pagination.firstPageParams**(optional)
 	- Whether or not include limit and page params in the first request (default to `true`)
 
+### cursor
+Looks within the response **data** for an ID which is then used as a parameter for scrolling.
+
+The intention is to look for identifiers within data and in the next request, use a parameter asking for IDs higher than the highest found (or the opposite, lower than the lowest using the `reverse` parameter)
+
+- **pagination.method**: `cursor`
+- **pagination.idKey**: (required)
+    - Path within response **data** (ie the array which is parsed into CSV) containing an identifier of each object,
+    which is then used in the next request's query
+- **pagination.param**: (required)
+    - Parameter name in which to pass the value in the next request
+- **pagination.increment**: (optional) integer
+    - A number by which to increment the highest(/lowest) found value.
+    - Can be a negative number, ie if the lowest ID in *data* is `10`, and `increment` is set to `-1`, the next request parameter value will be `9`
+- **pagination.reverse**: (optional) bool, `false` by default
+    - If set to true, the scroller will look for the **lowest** number instead of the **highest**(default)
+
+- Example:
+
+        pagination:
+            method: cursor
+            idKey: id
+            param: max_id
+            increment: -1 # subtract 1 from the last ID
+            reverse: true # look for the **lowest** ID instead of highest
+
+- Data:
+
+        {
+            "results": [
+                {"id": 11},
+                {"id": 12}
+            ]
+        }
+
+- Request:
+
+        http://api.example.com/resource?max_id=10
+
+### multiple
+Allows setting scrollers per endpoint.
+
+- **pagination.method**: `multiple`
+- **pagination.default**: (optional)
+    - Set a **default** scroller to use, if none is specified for the endpoint (if not set, no scrolling is used)
+- **pagination.scrollers**: (required)
+    - An object where each item represents one of the supported scrollers with their respective configuration
+    - The key of each item is then used as identifier for the scroller and must be used in the `scroller` parameter of a job
+
+- Example configuration:
+
+```
+pagination:
+    method: multiple
+    #default: param_next_results # NoScroller if not defined
+    scrollers:
+        param_next_cursor: # Uses response.param next_cursor for Twitter https://dev.twitter.com/rest/reference/get/followers/list
+            method: response.param
+            # settings of response.param scroller for listing followers etc
+        param_next_results: # Uses response.param
+            method: response.param
+            # settings of such scroller
+        cursor_timeline: # Uses cursor scroller for timelines
+            method: cursor
+            idKey: id
+            param: max_id
+            reverse: true
+            increment: -1
+```
+
+```
+jobs:
+  -
+    endpoint: statuses/user_timeline
+    scroller: cursor_timeline
+  -
+    endpoint: search
+    scroller: param_next_results
+    params:
+      q: ...(twitter search query)
+```
+
+## ScrollerFactory
+A scroller factory class has been added to create a scroller from config
+
 ## Common scrolling parameters
 ### nextPageFlag
 
