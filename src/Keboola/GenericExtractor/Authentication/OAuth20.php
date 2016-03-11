@@ -131,7 +131,7 @@ class OAuth20 implements AuthInterface
         // Move to authenticateClient TODO
         $authorization = [
             'clientId' => $this->clientId,
-            'nonce' => substr(sha1(uniqid()), 0, 16),
+            'nonce' => substr(sha1(uniqid(microtime(), true)), 0, 16),
             'timestamp' => time()
         ];
 

@@ -7,7 +7,7 @@ use Keboola\GenericExtractor\Authentication\AuthInterface,
 use Keboola\Juicer\Exception\ApplicationException,
     Keboola\Juicer\Exception\UserException,
     Keboola\Juicer\Pagination\ScrollerInterface,
-    Keboola\Juicer\Pagination,
+    Keboola\Juicer\Pagination\ScrollerFactory,
     Keboola\Juicer\Config\Config,
     Keboola\Juicer\Common\Logger;
 use Keboola\Code\Builder;
@@ -165,37 +165,17 @@ class Api
     /**
      * Return pagination scoller
      * @param array $api
-     * @return Pagination\ScrollerInterface
+     * @return ScrollerInterface
      * @todo ditch the switch and simply camelize the method
      *     to create the class name, then throw 501 if it doesn't
      *     exist (should be UserException really?)
      */
     public static function createScroller($api)
     {
-        if (empty($api['pagination']) || empty($api['pagination']['method'])) {
-            return Pagination\NoScroller::create([]);
-        }
-        $pagination = $api['pagination'];
-
-        switch ($pagination['method']) {
-            case 'offset':
-                return Pagination\OffsetScroller::create($pagination);
-                break;
-            case 'response.param':
-                return Pagination\ResponseParamScroller::create($pagination);
-                break;
-            case 'response.url':
-                return Pagination\ResponseUrlScroller::create($pagination);
-                break;
-            case 'pagenum':
-                return Pagination\PageScroller::create($pagination);
-                break;
-            default:
-                $method = is_string($pagination['method'])
-                    ? $pagination['method']
-                    : json_encode($pagination['method']);
-                throw new UserException("Unknown pagination method '{$method}'");
-                break;
+        if (empty($api['pagination'])) {
+            return ScrollerFactory::getScroller([]);
+        } else {
+            return ScrollerFactory::getScroller($api['pagination']);
         }
     }
 

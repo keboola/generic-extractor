@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c6a27445c2818228e01d2972eb7a34c6",
-    "content-hash": "3b423df993481a069ccce873b4e7ed10",
+    "hash": "25a68b879e7ed23bdecbfbb8b202a0a2",
+    "content-hash": "50c15cb17ff55e41852a538419c426cb",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -486,16 +486,16 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "0.4.19",
+            "version": "0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "33e0d99f924a2826edaa7cf9efca8b117defc6df"
+                "reference": "9001ace40c2450ed01492db253cfafd65341029d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/33e0d99f924a2826edaa7cf9efca8b117defc6df",
-                "reference": "33e0d99f924a2826edaa7cf9efca8b117defc6df",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/9001ace40c2450ed01492db253cfafd65341029d",
+                "reference": "9001ace40c2450ed01492db253cfafd65341029d",
                 "shasum": ""
             },
             "require": {
@@ -512,7 +512,7 @@
             },
             "require-dev": {
                 "codeclimate/php-test-reporter": "dev-master",
-                "phpunit/phpunit": "3.7.*"
+                "phpunit/phpunit": "^5.2"
             },
             "type": "library",
             "autoload": {
@@ -533,7 +533,7 @@
                 "extractor",
                 "keboola"
             ],
-            "time": "2016-03-04 06:15:08"
+            "time": "2016-03-11 00:14:59"
         },
         {
             "name": "keboola/php-csvtable",
@@ -895,7 +895,7 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.1.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
