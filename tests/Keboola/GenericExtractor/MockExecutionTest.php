@@ -101,6 +101,19 @@ class MockExecutionTest extends ExtractorTestCase
 
         self::assertEquals(1, $retval);
     }
+
+    public function testJobUserData()
+    {
+        $result = exec('php ./run.php --data=./tests/data/jobUserData 2>&1', $output, $retval);
+
+        self::assertDirectoryEquals(
+            './tests/data/jobUserData/expected/tables/',
+            './tests/data/jobUserData/out/tables/'
+        );
+
+        $this->rmDir('./tests/data/jobUserData/out');
+
+    }
 /*
     public function testIterationDifferentColumns()
     {

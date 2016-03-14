@@ -40,7 +40,7 @@ class GenericExtractorJob extends RecursiveJob
     protected $stringBuilder;
     /**
      * Data to append to the root result
-     * @var string|array
+     * @var array
      */
     protected $userParentId;
     /**
@@ -57,6 +57,8 @@ class GenericExtractorJob extends RecursiveJob
     {
         $this->buildParams($this->config);
 
+        $parentId = $this->getParentId();
+
         $request = $this->firstPage($this->config);
         while ($request !== false) {
             $response = $this->download($request);
@@ -70,12 +72,42 @@ class GenericExtractorJob extends RecursiveJob
                 $data = $this->runResponseModules($response, $this->config);
 //                 $data = $this->findDataInResponse($response, $this->config->getConfig());
                 $data = $this->filterResponse($this->config, $data);
-                $this->parse($data, $this->userParentId);
+                $this->parse($data, $parentId);
 
                 $this->lastResponseHash = $responseHash;
             }
 
             $request = $this->nextPage($this->config, $response, $data);
+        }
+    }
+
+    /**
+     * @return null|array
+     */
+    protected function getParentId()
+    {
+        if (!empty($this->config->getConfig()['userData']) || !empty($this->userParentId)) {
+            if (!empty($this->config->getConfig()['userData'])) {
+                if (!is_array($this->config->getConfig()['userData'])) {
+                    $jobUserData = ['job_parent_id' => $this->config->getConfig()['userData']];
+                } else {
+                    $jobUserData = $this->config->getConfig()['userData'];
+                }
+            } else {
+                $jobUserData = [];
+            }
+
+            if (!empty($this->userParentId)) {
+                $parentId = array_merge($this->userParentId, $jobUserData);
+            } else {
+                $parentId = $jobUserData;
+            }
+
+            if (empty($parentId)) {
+                return null;
+            } else {
+                return $parentId;
+            }
         }
     }
 

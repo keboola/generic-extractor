@@ -458,9 +458,6 @@ jobs:
       q: ...(twitter search query)
 ```
 
-## ScrollerFactory
-A scroller factory class has been added to create a scroller from config
-
 ## Common scrolling parameters
 ### nextPageFlag
 
