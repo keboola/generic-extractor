@@ -435,16 +435,16 @@
         },
         {
             "name": "keboola/json-parser",
-            "version": "1.0.10",
+            "version": "1.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-jsonparser.git",
-                "reference": "ce8845902a0c2827c9e56742f5a5861ddc16ef22"
+                "reference": "5f437e51130e02ce4d660f4db2f9c566f0095c96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-jsonparser/zipball/ce8845902a0c2827c9e56742f5a5861ddc16ef22",
-                "reference": "ce8845902a0c2827c9e56742f5a5861ddc16ef22",
+                "url": "https://api.github.com/repos/keboola/php-jsonparser/zipball/5f437e51130e02ce4d660f4db2f9c566f0095c96",
+                "reference": "5f437e51130e02ce4d660f4db2f9c566f0095c96",
                 "shasum": ""
             },
             "require": {
@@ -456,7 +456,7 @@
             },
             "require-dev": {
                 "codeclimate/php-test-reporter": "dev-master",
-                "phpunit/phpunit": "3.7.*"
+                "phpunit/phpunit": "^5.2"
             },
             "type": "library",
             "autoload": {
@@ -482,7 +482,7 @@
                 "json2csv",
                 "parser"
             ],
-            "time": "2016-01-24 22:15:30"
+            "time": "2016-03-17 03:53:26"
         },
         {
             "name": "keboola/juicer",
@@ -1010,12 +1010,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/codeclimate/php-test-reporter.git",
-                "reference": "9ec2098c9e9839840176c46d9cdab3a57c26ca1c"
+                "reference": "a026a4bc86867129e760b95dca44b8cd10819333"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codeclimate/php-test-reporter/zipball/9ec2098c9e9839840176c46d9cdab3a57c26ca1c",
-                "reference": "9ec2098c9e9839840176c46d9cdab3a57c26ca1c",
+                "url": "https://api.github.com/repos/codeclimate/php-test-reporter/zipball/a026a4bc86867129e760b95dca44b8cd10819333",
+                "reference": "a026a4bc86867129e760b95dca44b8cd10819333",
                 "shasum": ""
             },
             "require": {
@@ -1060,7 +1060,7 @@
                 "codeclimate",
                 "coverage"
             ],
-            "time": "2016-02-16 14:58:21"
+            "time": "2016-03-11 15:58:25"
         },
         {
             "name": "doctrine/instantiator",
@@ -1607,16 +1607,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "5.2.10",
+            "version": "5.2.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "37fa29b17b87a3e9f0a4d77c42f0aac5183b84d1"
+                "reference": "6f0948bab32270352f97d1913d82a49338dcb0da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/37fa29b17b87a3e9f0a4d77c42f0aac5183b84d1",
-                "reference": "37fa29b17b87a3e9f0a4d77c42f0aac5183b84d1",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/6f0948bab32270352f97d1913d82a49338dcb0da",
+                "reference": "6f0948bab32270352f97d1913d82a49338dcb0da",
                 "shasum": ""
             },
             "require": {
@@ -1677,7 +1677,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-03-03 08:52:58"
+            "time": "2016-03-15 05:59:58"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
