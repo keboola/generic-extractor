@@ -1,0 +1,14 @@
+parameters:
+    api:
+        baseUrl: http://private-53977-extractormock.apiary-mock.com/
+    config:
+        userData:
+            current_date:
+                function: date
+                args:
+                    - Y-m-d
+                    -
+                        time: currentStart
+        jobs:
+            -
+                endpoint: get

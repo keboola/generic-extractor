@@ -106,7 +106,14 @@ class GenericExtractorJob extends RecursiveJob
             if (empty($parentId)) {
                 return null;
             } else {
-                return $parentId;
+                return UserFunction::build(
+                    $parentId,
+                    [
+                        'attr' => $this->attributes,
+                        'time' => $this->metadata['time']
+                    ],
+                    $this->stringBuilder
+                );
             }
         }
     }
