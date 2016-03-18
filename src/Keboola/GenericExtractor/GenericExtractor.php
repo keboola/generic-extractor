@@ -12,7 +12,8 @@ use Keboola\Juicer\Extractor\Extractor,
 use Keboola\GenericExtractor\GenericExtractorJob,
     Keboola\GenericExtractor\Authentication\AuthInterface,
     Keboola\GenericExtractor\Config\Api,
-    Keboola\GenericExtractor\Subscriber\LogRequest;
+    Keboola\GenericExtractor\Subscriber\LogRequest,
+    Keboola\GenericExtractor\Config\UserFunction;
 use Keboola\Code\Builder;
 use Keboola\Utils\Utils;
 
@@ -55,7 +56,7 @@ class GenericExtractor extends Extractor
         $client = RestClient::create([
             'base_url' => $this->baseUrl,
             'defaults' => [
-                'headers' => $this->headers
+                'headers' => UserFunction::build($this->headers, ['attr' => $config->getAttributes()])
             ]
         ]);
 
