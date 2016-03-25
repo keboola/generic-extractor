@@ -93,7 +93,7 @@ class Api
      * @param array $api
      * @param Config $config
      * @param array $authorization
-     * @return Authentication\AuthInterface
+     * @return AuthInterface
      */
     public static function createAuth($api, Config $config, array $authorization)
     {
@@ -126,6 +126,8 @@ class Api
                 return new Authentication\OAuth10($authorization);
             case 'oauth20':
                 return new Authentication\OAuth20($authorization, $api['authentication'], new Builder());
+            case 'oauth20.login':
+                return new Authentication\OAuth20Login($authorization, $api['authentication']);
             default:
                 throw new UserException("Unknown authorization type '{$api['authentication']['type']}'");
                 break;
