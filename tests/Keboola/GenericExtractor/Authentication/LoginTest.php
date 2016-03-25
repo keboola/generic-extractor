@@ -70,8 +70,8 @@ class LoginTest extends ExtractorTestCase
         // test signature of the api request
         self::assertEquals(1234, $history->getIterator()[1]['request']->getHeader('X-Test-Auth'));
         self::assertEquals('qToken=4321', (string) $history->getIterator()[1]['request']->getQuery());
-        self::assertEquals(1234, $history->getIterator()[1]['request']->getHeader('X-Test-Auth'));
-        self::assertEquals('qToken=4321', (string) $history->getIterator()[1]['request']->getQuery());
+        self::assertEquals(1234, $history->getIterator()[2]['request']->getHeader('X-Test-Auth'));
+        self::assertEquals('qToken=4321', (string) $history->getIterator()[2]['request']->getQuery());
 
         $expiry = self::getProperty(
             $restClient->getClient()->getEmitter()->listeners('before')[0][0],
