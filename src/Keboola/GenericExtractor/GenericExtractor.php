@@ -5,7 +5,7 @@ namespace Keboola\GenericExtractor;
 use Keboola\Juicer\Extractor\Extractor,
     Keboola\Juicer\Config\Config,
     Keboola\Juicer\Client\RestClient,
-    Keboola\Juicer\Parser\Json,
+    Keboola\Juicer\Parser\JsonMap,
     Keboola\Juicer\Pagination\ScrollerInterface,
     Keboola\Juicer\Exception\ApplicationException;
 // use GuzzleHttp\Client;
@@ -68,13 +68,10 @@ class GenericExtractor extends Extractor
         // Verbose Logging of all requests
         $client->getClient()->getEmitter()->attach(new LogRequest);
 
-        if (!empty($this->parser) && $this->parser instanceof Json) {
+        if (!empty($this->parser) && $this->parser instanceof JsonMap) {
             $parser = $this->parser;
         } else {
-            $parser = Json::create($config, $this->getLogger(), $this->getTemp(), $this->metadata);
-            $parser->getParser()->getStruct()->setAutoUpgradeToArray(true);
-            $parser->getParser()->setCacheMemoryLimit('2M');
-            $parser->getParser()->getAnalyzer()->setNestedArrayAsJson(true);
+            $parser = JsonMap::create($config);
             $this->parser = $parser;
         }
 
@@ -97,8 +94,6 @@ class GenericExtractor extends Extractor
 
             $job->run();
         }
-
-        $this->metadata = array_replace_recursive($this->metadata, $parser->getMetadata());
 
         return $parser->getResults();
     }
