@@ -71,7 +71,6 @@ class Executor
         }
 
         foreach($results as $bucket => $result) {
-var_dump($result['parser']);
             $configuration->storeResults(
                 $result['parser']->getResults(),
                 $bucket == "__kbc_default" ? null : $bucket,
