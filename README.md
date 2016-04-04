@@ -494,7 +494,12 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
 				userData:
 					some: tag
 					another: identifier
-- **incrementalOutput**: Whether or not to write the result incrementally
+- **incrementalOutput**: (boolean) Whether or not to write the result incrementally
+    - Example:
+    ```yaml
+    config:
+        incrementalOutput: true
+    ```
 
 ## Jobs
 - Columns:
