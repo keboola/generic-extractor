@@ -302,16 +302,16 @@
         },
         {
             "name": "keboola/csvmap",
-            "version": "0.0.6",
+            "version": "0.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-csvmap.git",
-                "reference": "5a00220097713bd91766462470021ed20084119a"
+                "reference": "198af965b67c56f8c0486038cf415e6a408084a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-csvmap/zipball/5a00220097713bd91766462470021ed20084119a",
-                "reference": "5a00220097713bd91766462470021ed20084119a",
+                "url": "https://api.github.com/repos/keboola/php-csvmap/zipball/198af965b67c56f8c0486038cf415e6a408084a4",
+                "reference": "198af965b67c56f8c0486038cf415e6a408084a4",
                 "shasum": ""
             },
             "require": {
@@ -345,7 +345,7 @@
                 "flatten",
                 "object"
             ],
-            "time": "2016-04-01 05:37:59"
+            "time": "2016-04-05 21:01:01"
         },
         {
             "name": "keboola/ex-generic-moduleinterface",
@@ -533,22 +533,22 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "0.5.6",
+            "version": "0.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "d8ad24a4fcdad6c5cf779a8484b6cdb038cad299"
+                "reference": "c09c01ced14c21ccd12f01224358f5f9a870a845"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/d8ad24a4fcdad6c5cf779a8484b6cdb038cad299",
-                "reference": "d8ad24a4fcdad6c5cf779a8484b6cdb038cad299",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/c09c01ced14c21ccd12f01224358f5f9a870a845",
+                "reference": "c09c01ced14c21ccd12f01224358f5f9a870a845",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "~4.2.3",
                 "guzzlehttp/retry-subscriber": "~0.1.2",
-                "keboola/csvmap": "~0.0.1",
+                "keboola/csvmap": "~0.0.7",
                 "keboola/filter": "~0.1.0",
                 "keboola/json-parser": "~1.0.0",
                 "keboola/php-csvtable": "~0.1.6",
@@ -581,7 +581,7 @@
                 "extractor",
                 "keboola"
             ],
-            "time": "2016-04-01 05:18:16"
+            "time": "2016-04-05 03:26:30"
         },
         {
             "name": "keboola/php-csvtable",
@@ -2407,19 +2407,20 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "2.5.1",
+            "version": "2.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "6731851d6aaf1d0d6c58feff1065227b7fda3ba8"
+                "reference": "1bcdf03b068a530ac1962ce671dead356eeba43b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/6731851d6aaf1d0d6c58feff1065227b7fda3ba8",
-                "reference": "6731851d6aaf1d0d6c58feff1065227b7fda3ba8",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/1bcdf03b068a530ac1962ce671dead356eeba43b",
+                "reference": "1bcdf03b068a530ac1962ce671dead356eeba43b",
                 "shasum": ""
             },
             "require": {
+                "ext-simplexml": "*",
                 "ext-tokenizer": "*",
                 "ext-xmlwriter": "*",
                 "php": ">=5.1.2"
@@ -2480,7 +2481,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2016-01-19 23:39:10"
+            "time": "2016-04-03 22:58:34"
         },
         {
             "name": "symfony/config",
