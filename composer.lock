@@ -302,16 +302,16 @@
         },
         {
             "name": "keboola/csvmap",
-            "version": "0.0.8",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-csvmap.git",
-                "reference": "198af965b67c56f8c0486038cf415e6a408084a4"
+                "reference": "e426e1b37b7190756b24899165d45b955d21db84"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-csvmap/zipball/198af965b67c56f8c0486038cf415e6a408084a4",
-                "reference": "198af965b67c56f8c0486038cf415e6a408084a4",
+                "url": "https://api.github.com/repos/keboola/php-csvmap/zipball/e426e1b37b7190756b24899165d45b955d21db84",
+                "reference": "e426e1b37b7190756b24899165d45b955d21db84",
                 "shasum": ""
             },
             "require": {
@@ -345,7 +345,7 @@
                 "flatten",
                 "object"
             ],
-            "time": "2016-04-05 21:01:01"
+            "time": "2016-04-05 22:11:37"
         },
         {
             "name": "keboola/ex-generic-moduleinterface",
@@ -533,22 +533,22 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "0.5.7",
+            "version": "0.5.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "c09c01ced14c21ccd12f01224358f5f9a870a845"
+                "reference": "75980f1728c866751284b7c7eb985e5c6ccf4df3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/c09c01ced14c21ccd12f01224358f5f9a870a845",
-                "reference": "c09c01ced14c21ccd12f01224358f5f9a870a845",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/75980f1728c866751284b7c7eb985e5c6ccf4df3",
+                "reference": "75980f1728c866751284b7c7eb985e5c6ccf4df3",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "~4.2.3",
                 "guzzlehttp/retry-subscriber": "~0.1.2",
-                "keboola/csvmap": "~0.0.7",
+                "keboola/csvmap": "~0.1.0",
                 "keboola/filter": "~0.1.0",
                 "keboola/json-parser": "~1.0.0",
                 "keboola/php-csvtable": "~0.1.6",
@@ -581,7 +581,7 @@
                 "extractor",
                 "keboola"
             ],
-            "time": "2016-04-05 03:26:30"
+            "time": "2016-04-05 23:11:54"
         },
         {
             "name": "keboola/php-csvtable",
