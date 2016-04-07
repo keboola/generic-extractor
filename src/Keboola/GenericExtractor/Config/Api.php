@@ -127,7 +127,7 @@ class Api
             case 'oauth20':
                 return new Authentication\OAuth20($authorization, $api['authentication'], new Builder());
             case 'oauth20.login':
-                return new Authentication\OAuth20Login($authorization, $api['authentication']);
+                return new Authentication\OAuth20Login($authorization, $api);
             default:
                 throw new UserException("Unknown authorization type '{$api['authentication']['type']}'");
                 break;

@@ -82,4 +82,18 @@ class ApiTest extends ExtractorTestCase
         $oauth = Api::createAuth($api, $config, $authorization);
         self::assertInstanceOf('\Keboola\GenericExtractor\Authentication\OAuth20', $oauth);
     }
+    
+    public function testCreateOauth2Login()
+    {
+        $ymlConfig = YamlFile::create(ROOT_PATH . '/tests/data/oauth20login/config.yml');
+
+        $config = new Config('testApp', 'testCfg', []);
+
+        $api = $ymlConfig->get('parameters', 'api');
+
+        $authorization = $ymlConfig->get('authorization');
+
+        $oauth = Api::createAuth($api, $config, $authorization);
+        self::assertInstanceOf('\Keboola\GenericExtractor\Authentication\OAuth20Login', $oauth);
+    }
 }
