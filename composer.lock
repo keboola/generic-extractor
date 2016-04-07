@@ -533,16 +533,16 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "0.5.8",
+            "version": "0.5.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "75980f1728c866751284b7c7eb985e5c6ccf4df3"
+                "reference": "dfba6f2ebd6849881f526aacebc92d8dfe854d03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/75980f1728c866751284b7c7eb985e5c6ccf4df3",
-                "reference": "75980f1728c866751284b7c7eb985e5c6ccf4df3",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/dfba6f2ebd6849881f526aacebc92d8dfe854d03",
+                "reference": "dfba6f2ebd6849881f526aacebc92d8dfe854d03",
                 "shasum": ""
             },
             "require": {
@@ -581,7 +581,7 @@
                 "extractor",
                 "keboola"
             ],
-            "time": "2016-04-05 23:11:54"
+            "time": "2016-04-07 08:35:57"
         },
         {
             "name": "keboola/php-csvtable",
@@ -1706,16 +1706,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "5.3.0",
+            "version": "5.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "dd3001822b2df8f5add266020e3d2fd3c5db3ae9"
+                "reference": "34a3acb401ae79deb37bc6e5f5ec3d325b369b4c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/dd3001822b2df8f5add266020e3d2fd3c5db3ae9",
-                "reference": "dd3001822b2df8f5add266020e3d2fd3c5db3ae9",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/34a3acb401ae79deb37bc6e5f5ec3d325b369b4c",
+                "reference": "34a3acb401ae79deb37bc6e5f5ec3d325b369b4c",
                 "shasum": ""
             },
             "require": {
@@ -1730,7 +1730,7 @@
                 "phpunit/php-code-coverage": "^3.3.0",
                 "phpunit/php-file-iterator": "~1.4",
                 "phpunit/php-text-template": "~1.2",
-                "phpunit/php-timer": ">=1.0.6",
+                "phpunit/php-timer": "^1.0.6",
                 "phpunit/phpunit-mock-objects": "^3.1",
                 "sebastian/comparator": "~1.1",
                 "sebastian/diff": "~1.2",
@@ -1777,7 +1777,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-03-31 21:35:50"
+            "time": "2016-04-07 07:04:34"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
