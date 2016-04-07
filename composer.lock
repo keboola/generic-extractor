@@ -302,16 +302,16 @@
         },
         {
             "name": "keboola/csvmap",
-            "version": "0.1.0",
+            "version": "0.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-csvmap.git",
-                "reference": "e426e1b37b7190756b24899165d45b955d21db84"
+                "reference": "fd65b549300d0dae46f0d0c02a397c0e47b6d401"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-csvmap/zipball/e426e1b37b7190756b24899165d45b955d21db84",
-                "reference": "e426e1b37b7190756b24899165d45b955d21db84",
+                "url": "https://api.github.com/repos/keboola/php-csvmap/zipball/fd65b549300d0dae46f0d0c02a397c0e47b6d401",
+                "reference": "fd65b549300d0dae46f0d0c02a397c0e47b6d401",
                 "shasum": ""
             },
             "require": {
@@ -345,7 +345,7 @@
                 "flatten",
                 "object"
             ],
-            "time": "2016-04-05 22:11:37"
+            "time": "2016-04-07 05:32:02"
         },
         {
             "name": "keboola/ex-generic-moduleinterface",
