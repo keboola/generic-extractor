@@ -1,11 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "25a68b879e7ed23bdecbfbb8b202a0a2",
-    "content-hash": "50c15cb17ff55e41852a538419c426cb",
+    "hash": "f36401c27255370f9341dfab07b60bb4",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -302,16 +301,16 @@
         },
         {
             "name": "keboola/csvmap",
-            "version": "0.1.3",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-csvmap.git",
-                "reference": "fd65b549300d0dae46f0d0c02a397c0e47b6d401"
+                "reference": "33bc7b6bb2f935da0916de3f0d3a361fb87027bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-csvmap/zipball/fd65b549300d0dae46f0d0c02a397c0e47b6d401",
-                "reference": "fd65b549300d0dae46f0d0c02a397c0e47b6d401",
+                "url": "https://api.github.com/repos/keboola/php-csvmap/zipball/33bc7b6bb2f935da0916de3f0d3a361fb87027bd",
+                "reference": "33bc7b6bb2f935da0916de3f0d3a361fb87027bd",
                 "shasum": ""
             },
             "require": {
@@ -345,7 +344,7 @@
                 "flatten",
                 "object"
             ],
-            "time": "2016-04-07 05:32:02"
+            "time": "2016-04-12 12:01:51"
         },
         {
             "name": "keboola/ex-generic-moduleinterface",
@@ -533,22 +532,22 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "0.5.9",
+            "version": "0.5.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "dfba6f2ebd6849881f526aacebc92d8dfe854d03"
+                "reference": "4bbe5fd19116cd0ce95d49b33500dde52411e324"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/dfba6f2ebd6849881f526aacebc92d8dfe854d03",
-                "reference": "dfba6f2ebd6849881f526aacebc92d8dfe854d03",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/4bbe5fd19116cd0ce95d49b33500dde52411e324",
+                "reference": "4bbe5fd19116cd0ce95d49b33500dde52411e324",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "~4.2.3",
                 "guzzlehttp/retry-subscriber": "~0.1.2",
-                "keboola/csvmap": "~0.1.0",
+                "keboola/csvmap": "^0.2",
                 "keboola/filter": "~0.1.0",
                 "keboola/json-parser": "~1.0.0",
                 "keboola/php-csvtable": "~0.1.6",
@@ -581,7 +580,7 @@
                 "extractor",
                 "keboola"
             ],
-            "time": "2016-04-07 08:35:57"
+            "time": "2016-04-12 12:06:56"
         },
         {
             "name": "keboola/php-csvtable",
@@ -1465,16 +1464,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "3.3.0",
+            "version": "3.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "fe33716763b604ade4cb442c0794f5bd5ad73004"
+                "reference": "2431befdd451fac43fbcde94d1a92fb3b8b68f86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/fe33716763b604ade4cb442c0794f5bd5ad73004",
-                "reference": "fe33716763b604ade4cb442c0794f5bd5ad73004",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/2431befdd451fac43fbcde94d1a92fb3b8b68f86",
+                "reference": "2431befdd451fac43fbcde94d1a92fb3b8b68f86",
                 "shasum": ""
             },
             "require": {
@@ -1492,7 +1491,7 @@
             },
             "suggest": {
                 "ext-dom": "*",
-                "ext-xdebug": ">=2.2.1",
+                "ext-xdebug": ">=2.4.0",
                 "ext-xmlwriter": "*"
             },
             "type": "library",
@@ -1524,7 +1523,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-03-03 08:49:08"
+            "time": "2016-04-08 08:14:53"
         },
         {
             "name": "phpunit/php-file-iterator",
