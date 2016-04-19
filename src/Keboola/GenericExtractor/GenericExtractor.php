@@ -6,9 +6,9 @@ use Keboola\Juicer\Extractor\Extractor,
     Keboola\Juicer\Config\Config,
     Keboola\Juicer\Client\RestClient,
     Keboola\Juicer\Parser\Json,
+    Keboola\Juicer\Parser\ParserInterface,
     Keboola\Juicer\Pagination\ScrollerInterface,
     Keboola\Juicer\Exception\ApplicationException;
-// use GuzzleHttp\Client;
 use Keboola\GenericExtractor\GenericExtractorJob,
     Keboola\GenericExtractor\Authentication\AuthInterface,
     Keboola\GenericExtractor\Config\Api,
@@ -68,21 +68,13 @@ class GenericExtractor extends Extractor
         // Verbose Logging of all requests
         $client->getClient()->getEmitter()->attach(new LogRequest);
 
-        if (!empty($this->parser) && $this->parser instanceof Json) {
-            $parser = $this->parser;
-        } else {
-            $parser = Json::create($config, $this->getLogger(), $this->getTemp(), $this->metadata);
-            $parser->getParser()->getStruct()->setAutoUpgradeToArray(true);
-            $parser->getParser()->setCacheMemoryLimit('2M');
-            $parser->getParser()->getAnalyzer()->setNestedArrayAsJson(true);
-            $this->parser = $parser;
-        }
+        $this->initParser($config);
 
         $builder = new Builder();
 
         foreach($config->getJobs() as $jobConfig) {
             // FIXME this is rather duplicated in RecursiveJob::createChild()
-            $job = new GenericExtractorJob($jobConfig, $client, $parser);
+            $job = new GenericExtractorJob($jobConfig, $client, $this->parser);
             $job->setScroller($this->scroller);
             $job->setAttributes($config->getAttributes());
             $job->setMetadata($this->metadata);
@@ -98,9 +90,9 @@ class GenericExtractor extends Extractor
             $job->run();
         }
 
-        $this->metadata = array_replace_recursive($this->metadata, $parser->getMetadata());
+        $this->metadata = array_replace_recursive($this->metadata, $this->parser->getMetadata());
 
-        return $parser->getResults();
+        return $this->parser->getResults();
     }
 
     /**
@@ -158,18 +150,37 @@ class GenericExtractor extends Extractor
     }
 
     /**
-     * @param Json $parser
+     * @param ParserInterface $parser
      */
-    public function setParser(Json $parser)
+    public function setParser(ParserInterface $parser)
     {
         $this->parser = $parser;
     }
 
     /**
-     * @return Json
+     * @return ParserInterface
      */
     public function getParser()
     {
+        return $this->parser;
+    }
+
+    /**
+     * @param Config $config
+     * @return ParserInterface
+     */
+    protected function initParser(Config $config) 
+    {
+        if (!empty($this->parser) && $this->parser instanceof ParserInterface) {
+            $parser = $this->parser;
+        } else {
+            $parser = Json::create($config, $this->getLogger(), $this->getTemp(), $this->metadata);
+            $parser->getParser()->getStruct()->setAutoUpgradeToArray(true);
+            $parser->getParser()->setCacheMemoryLimit('2M');
+            $parser->getParser()->getAnalyzer()->setNestedArrayAsJson(true);
+            $this->parser = $parser;
+        }
+        
         return $this->parser;
     }
 
