@@ -6,6 +6,7 @@ use Keboola\Juicer\Extractor\Extractor,
     Keboola\Juicer\Config\Config,
     Keboola\Juicer\Client\RestClient,
     Keboola\Juicer\Parser\Json,
+    Keboola\Juicer\Parser\JsonMap,
     Keboola\Juicer\Parser\ParserInterface,
     Keboola\Juicer\Pagination\ScrollerInterface,
     Keboola\Juicer\Exception\ApplicationException;
@@ -90,7 +91,9 @@ class GenericExtractor extends Extractor
             $job->run();
         }
 
-        $this->metadata = array_replace_recursive($this->metadata, $this->parser->getMetadata());
+        if ($this->parser instanceof Json) {
+            $this->metadata = array_replace_recursive($this->metadata, $this->parser->getMetadata());
+        }
 
         return $this->parser->getResults();
     }
@@ -169,18 +172,22 @@ class GenericExtractor extends Extractor
      * @param Config $config
      * @return ParserInterface
      */
-    protected function initParser(Config $config) 
+    protected function initParser(Config $config)
     {
         if (!empty($this->parser) && $this->parser instanceof ParserInterface) {
-            $parser = $this->parser;
-        } else {
+            return $this->parser;
+        }
+
+       if (empty($config->getAttribute('mappings'))) {
             $parser = Json::create($config, $this->getLogger(), $this->getTemp(), $this->metadata);
             $parser->getParser()->getStruct()->setAutoUpgradeToArray(true);
             $parser->getParser()->setCacheMemoryLimit('2M');
             $parser->getParser()->getAnalyzer()->setNestedArrayAsJson(true);
             $this->parser = $parser;
+        } else {
+            $this->parser = JsonMap::create($config);
         }
-        
+
         return $this->parser;
     }
 

@@ -129,6 +129,25 @@ class MockExecutionTest extends ExtractorTestCase
 
         $this->rmDir('./tests/data/dynamicUserData/out');
     }
+
+    public function testJsonMap()
+    {
+        $output = shell_exec('php ./run.php --data=./tests/data/jsonMap');
+
+        self::assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
+
+        self::assertDirectoryEquals(
+            './tests/data/jsonMap/expected/tables/',
+            './tests/data/jsonMap/out/tables/'
+        );
+
+        $this->rmDir('./tests/data/jsonMap/out');
+    }
+
+    public function testJsonMapError()
+    {
+
+    }
 /*
     public function testIterationDifferentColumns()
     {

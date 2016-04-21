@@ -1,0 +1,18 @@
+parameters:
+    api:
+        baseUrl: http://private-53977-extractormock.apiary-mock.com/
+    config:
+        incrementalOutput: true
+        mappings:
+            get:
+                id:
+                    mapping:
+                        destination: id
+                        primaryKey: true
+                status:
+                    mapping:
+                        destination: st
+        jobs:
+            -
+                endpoint: basic
+                dataType: get
