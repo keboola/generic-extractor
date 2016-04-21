@@ -43,16 +43,16 @@ Example:
 - Should be an array, eg: `App-Key,X-User-Email`
 - **http.headers.{Header-Name}** attribute in config section (eg: `http.headers.App-Key`)
 
-		api:
-			http:
-				requiredHeaders:
-					- App-Key
-					- X-User-Email
-		config:
-			http:
-				headers:
-					App-Key: asdf1234
-					X-User-Email: some@email.com
+        api:
+            http:
+                requiredHeaders:
+                    - App-Key
+                    - X-User-Email
+        config:
+            http:
+                headers:
+                    App-Key: asdf1234
+                    X-User-Email: some@email.com
 
 ## http.headers.{Header-Name}
 
@@ -72,12 +72,12 @@ Example:
 - use **username** and **password** or **#password** attributes in the config section.
 - **password** takes preference over **#password**, if both are set
 
-		api:
-			authentication:
-				type: basic
-		config:
-			username: whoever
-			password: soSecret
+        api:
+            authentication:
+                type: basic
+        config:
+            username: whoever
+            password: soSecret
 
 ### query
 
@@ -90,27 +90,27 @@ Example:
     - this will look for the *apiKey* query parameter value in the config attribute named *apiKey*
 - **authentication.query.sig**: `{"function":"md5","args":[{"function":"concat","args":[{"attr":"apiKey"},{"attr":"secret"},{"function":"time"}]}]}`
     - this will generate a *sig* parameter value from MD5 of merged configuration table attributes *apiKey* and *secret*, followed by current *time()* at the time of the request (time() being the PHP function)
-	- Allowed functions are listed below in the *User functions* section
-	- If you're using any config parameter by using `"attr": "parameterName"`, it has to be identical string to the one in the actual config, including eventual `#` if KBC Docker's encryption is used.
+    - Allowed functions are listed below in the *User functions* section
+    - If you're using any config parameter by using `"attr": "parameterName"`, it has to be identical string to the one in the actual config, including eventual `#` if KBC Docker's encryption is used.
 
-			api:
-				authentication:
-					type: url.query
-				query:
-					apiKey:
-						attr: apiKey # will assign "asdf1234" to the 'apiKey' query parameter
-					sig:
-						function: md5 # will assign result of md5($apiKey.$secret.time()) to 'sig' query parameter
-						args:
-							-
-								function: concat
-								args:
-									- attr: apiKey
-									- attr: #secret
-									- function: time
-			config:
-				apiKey: asdf1234
-				#secret: KBC::ComponentEncrypted==gvrevgrew\grewvgr\ev6\u45bu\65^|VH|^vh==
+            api:
+                authentication:
+                    type: url.query
+                query:
+                    apiKey:
+                        attr: apiKey # will assign "asdf1234" to the 'apiKey' query parameter
+                    sig:
+                        function: md5 # will assign result of md5($apiKey.$secret.time()) to 'sig' query parameter
+                        args:
+                            -
+                                function: concat
+                                args:
+                                    - attr: apiKey
+                                    - attr: #secret
+                                    - function: time
+            config:
+                apiKey: asdf1234
+                #secret: KBC::ComponentEncrypted==gvrevgrew\grewvgr\ev6\u45bu\65^|VH|^vh==
 
     - Data available for building the signature:
         - **attr**: An attribute from `config` (first level only)
@@ -290,14 +290,14 @@ Configured in `api.pagination.method`
 - **pagination.offsetParam**(optional)
     - sets which query parameter should contain the offset value (default to `offset`)
 
-			api:
-				pagination:
-					method: offset
-					limit: 1000
-					limitParam: limit # default, can be omitted
-					offsetParam: offset # default, can be omitted
+            api:
+                pagination:
+                    method: offset
+                    limit: 1000
+                    limitParam: limit # default, can be omitted
+                    offsetParam: offset # default, can be omitted
 - **pagination.firstPageParams**(optional)
-	- Whether or not include limit and offset params in the first request (default to `true`)
+    - Whether or not include limit and offset params in the first request (default to `true`)
 - **pagination.offsetFromJob**(optional)
     - Use offset specified in job config for first request (**false** by default)
 
@@ -317,25 +317,25 @@ Configured in `api.pagination.method`
 
 - **pagination.method**: `response.param`
 - **pagination.responseParam**:
-	- path within response that points to a value used for scrolling
-	- pagination ends if the value is empty
+    - path within response that points to a value used for scrolling
+    - pagination ends if the value is empty
 - **pagination.queryParam**:
-	- request parameter to set to the value from response
+    - request parameter to set to the value from response
 - **pagination.includeParams**: `false`
-	- whether params from job configuration are used in next page request
+    - whether params from job configuration are used in next page request
 - **pagination.scrollRequest**:
-	- can be used to override settings (endpoint, method, ...) of the initial request
+    - can be used to override settings (endpoint, method, ...) of the initial request
 
-			api:
-				pagination:
-					method: response.param
-					responseParam: _scroll_id
-					queryParam: scroll_id
-					scrollRequest:
-						endpoint: _search/scroll
-						method: GET
-						params:
-							scroll: 1m
+            api:
+                pagination:
+                    method: response.param
+                    responseParam: _scroll_id
+                    queryParam: scroll_id
+                    scrollRequest:
+                        endpoint: _search/scroll
+                        method: GET
+                        params:
+                            scroll: 1m
 
 ### response.url
 
@@ -346,14 +346,14 @@ Configured in `api.pagination.method`
 - **pagination.paramIsQuery**: `false`
     - Enable if the response only contains a query string to use with the same endpoint
 - **pagination.includeParams**: `false`
-	- whether or not to add "params" from the configuration to the URL's query from response
-	- if enabled and the next page URL has the same query parameters as the "params" field, values from the "params" are used
+    - whether or not to add "params" from the configuration to the URL's query from response
+    - if enabled and the next page URL has the same query parameters as the "params" field, values from the "params" are used
 
-			api:
-				pagination:
-					method: response.url
-					urlKey: nextPage
-					includeParams: true
+            api:
+                pagination:
+                    method: response.url
+                    urlKey: nextPage
+                    includeParams: true
 
 ### pagenum
 simple page number increasing 1 by 1
@@ -366,15 +366,15 @@ simple page number increasing 1 by 1
 - **pagination.limitParam**:(optional)
     - query parameter name to use for *limit*
 
-			api:
-				pagination:
-					method: pagenum
-					pageParam: page
-					limit: 500
-					limitParam: count # this will result in ?page=12&count=500 query parameters
+            api:
+                pagination:
+                    method: pagenum
+                    pageParam: page
+                    limit: 500
+                    limitParam: count # this will result in ?page=12&count=500 query parameters
 - **pagination.firstPage**: (optional) `1` by default. Set the first page number.
 - **pagination.firstPageParams**(optional)
-	- Whether or not include limit and page params in the first request (default to `true`)
+    - Whether or not include limit and page params in the first request (default to `true`)
 
 ### cursor
 Looks within the response **data** for an ID which is then used as a parameter for scrolling.
@@ -488,12 +488,12 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
 - **id**: Optional, if **outputBucket** is set. Otherwise the id is used to generate the output bucket name
 - **debug**: If set to `true`, the extractor will output detailed information about it's run, including all API requests. **Warning**, this may reveal your tokens or other sensitive data in the events in your project! It is intended only to help solving issues with configuration.
 - **userData**: A set of `key:value` pairs that will be added to the `root` of all endpoints' results
-	- Example:
+    - Example:
 
-			config:
-				userData:
-					some: tag
-					another: identifier
+            config:
+                userData:
+                    some: tag
+                    another: identifier
 - **incrementalOutput**: (boolean) Whether or not to write the result incrementally
     - Example:
     ```yaml
@@ -517,78 +517,78 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
         - If there's no array within the root, the path to response data **must** be specified in *dataField*
         - Can contain a path to nested value, dot separater (eg `result.results.products`)
         - `dataField` can also be an object containing `path`
-	- **children**: Array of child jobs that use the jobs' results to iterate
-		- The endpoint must use a placeholder enclosed in `{}`
-		- The placeholder can be prefixed by a number, that refers to higher level of nesting. By default, data from direct parent are used. The direct parent can be referred as `{id}` or `{1:id}`. A "grandparent" result would then be `{2:id}` etc.
-		- Results in the child table will contain column(s) containing parent data used in the placeholder(s), prefixed by **parent_**. For example, if your placeholder is `{ticket_id}`, a column **parent_ticket_id** containing the value of current iteration will be appended to each row.
-		- **placeholders** array must define each placeholder. It must be a set of `key: value` pairs, where **key** is the placeholder (eg `"1:id"`) and the value is a path within the response object - if nested, use `.` as a separator.
-			- Example:
+    - **children**: Array of child jobs that use the jobs' results to iterate
+        - The endpoint must use a placeholder enclosed in `{}`
+        - The placeholder can be prefixed by a number, that refers to higher level of nesting. By default, data from direct parent are used. The direct parent can be referred as `{id}` or `{1:id}`. A "grandparent" result would then be `{2:id}` etc.
+        - Results in the child table will contain column(s) containing parent data used in the placeholder(s), prefixed by **parent_**. For example, if your placeholder is `{ticket_id}`, a column **parent_ticket_id** containing the value of current iteration will be appended to each row.
+        - **placeholders** array must define each placeholder. It must be a set of `key: value` pairs, where **key** is the placeholder (eg `"1:id"`) and the value is a path within the response object - if nested, use `.` as a separator.
+            - Example:
 
-					endpoint: tickets.json
-					children:
-						-
-							endpoint: tickets/{id}/comments.json
-							placeholders:
-								id: id # the ticket id is in the `id` field
-							children:
-								-
-									endpoint: tickets/{2:ticket_id}/comments/{comment_id}/details.json
-									placeholders:
-										comment_id: id # the comment id is also in the id field of the comments response
-										"2:ticket_id": id # uses the id from tickets.json - 2 levels up
+                    endpoint: tickets.json
+                    children:
+                        -
+                            endpoint: tickets/{id}/comments.json
+                            placeholders:
+                                id: id # the ticket id is in the `id` field
+                            children:
+                                -
+                                    endpoint: tickets/{2:ticket_id}/comments/{comment_id}/details.json
+                                    placeholders:
+                                        comment_id: id # the comment id is also in the id field of the comments response
+                                        "2:ticket_id": id # uses the id from tickets.json - 2 levels up
 
-		- **recursionFilter**:
-			- Can contain a value consisting of a name of a field from the parent's response, logical operator and a value to compare against. Supported operators are "**==**", "**<**", "**>**", "**<=**", "**>=**", "**!=**"
-			- Example: `type!=employee` or `product.value>150`
-			- The filter is whitespace sensitive, therefore `value == 100` will look into `value␣` for a `␣100` value, instead of `value` and `100` as likely desired.
-			- Further documentation can be found at https://github.com/keboola/php-filter
-	- **method**: GET (default), POST or FORM
-	- **responseFilter**: Allows filtering data from API response to leave them from being parsed.
-		- Filtered data will be imported as a JSON encoded string.
-		- Value of this parameter can be either a string containing path to data to be filtered within response data, or an array of such values.
-		- Example:
+        - **recursionFilter**:
+            - Can contain a value consisting of a name of a field from the parent's response, logical operator and a value to compare against. Supported operators are "**==**", "**<**", "**>**", "**<=**", "**>=**", "**!=**"
+            - Example: `type!=employee` or `product.value>150`
+            - The filter is whitespace sensitive, therefore `value == 100` will look into `value␣` for a `␣100` value, instead of `value` and `100` as likely desired.
+            - Further documentation can be found at https://github.com/keboola/php-filter
+    - **method**: GET (default), POST or FORM
+    - **responseFilter**: Allows filtering data from API response to leave them from being parsed.
+        - Filtered data will be imported as a JSON encoded string.
+        - Value of this parameter can be either a string containing path to data to be filtered within response data, or an array of such values.
+        - Example:
 
-				{ 'results': [
-					{
-						'id': 1,
-						'data': 'scalar'
-					},
-					{
-						'id': 2
-						'data': { 'object': 'can\'t reall parse this!' }
-					}
-				]}
+                { 'results': [
+                    {
+                        'id': 1,
+                        'data': 'scalar'
+                    },
+                    {
+                        'id': 2
+                        'data': { 'object': 'can\'t reall parse this!' }
+                    }
+                ]}
 
-		- To be able to work with such response, set `"responseFilter": "data"` - it should be a path within each object of the response array, **not** including the key of the response array
-		- To filter values within nested arrays, use `"responseFilter": "data.array[].key"`
-		- Example:
+        - To be able to work with such response, set `"responseFilter": "data"` - it should be a path within each object of the response array, **not** including the key of the response array
+        - To filter values within nested arrays, use `"responseFilter": "data.array[].key"`
+        - Example:
 
-				{ 'results': [
-					{
-						'id': 1,
-						'data': {
-							'array': [
-								{ 'key': 'value' }.
-								{ 'key': { 'another': 'value' }}
-							]
-						}
-					}
-				]}
+                { 'results': [
+                    {
+                        'id': 1,
+                        'data': {
+                            'array': [
+                                { 'key': 'value' }.
+                                { 'key': { 'another': 'value' }}
+                            ]
+                        }
+                    }
+                ]}
 
-		- This would be another unparseable object, so the filter above would just convert the `{ 'another': 'value' }` object to a string
-		- To filter an entire array, use `array` as the value for *responseFilter*. To filter each array item individually, use `array[]`.
-	- **responseFilterDelimiter**: Allows changing delimiter if you need nesting in **responseFilter**, for instance if your data contains keys containing `.`, which is the default delimiter.
-		- Example:
+        - This would be another unparseable object, so the filter above would just convert the `{ 'another': 'value' }` object to a string
+        - To filter an entire array, use `array` as the value for *responseFilter*. To filter each array item individually, use `array[]`.
+    - **responseFilterDelimiter**: Allows changing delimiter if you need nesting in **responseFilter**, for instance if your data contains keys containing `.`, which is the default delimiter.
+        - Example:
 
-				{ 'results': [
-					{
-						'data.stuff': {
-							something: [1,2,3]
-						}
-					}
-				]}
+                { 'results': [
+                    {
+                        'data.stuff': {
+                            something: [1,2,3]
+                        }
+                    }
+                ]}
 
-		- Use `'responseFilter': 'data.stuff/something'` together with `'responseFilterDelimiter': '/'` to filter the array in `something`
+        - Use `'responseFilter': 'data.stuff/something'` together with `'responseFilterDelimiter': '/'` to filter the array in `something`
 
 # Iterations
 The configuration can be run multiple times with some (or all) values in `config` section being overwritten. For example, you can run the same configuration for multiple accounts, overriding values of the authentication settings.
@@ -600,26 +600,26 @@ The configuration can be run multiple times with some (or all) values in `config
 ## Example
 This way you can download the same data from two different accounts into a single output table, adding the `owner` column to help you recognize which iteration of the config brought in each row in the result.
 
-		api:
-			baseUrl: http://example.com/api
-			authentication:
-				type: basic
-		config:
-			outputBucket: bunchOfResults
-			jobs:
-				-
-					endpoint: data
-		iterations:
-			-
-				username: chose
-				password: potato
-				userData:
-					owner: "Chose's results"
-			-
-				username: joann
-				password: beer
-				userData:
-					owner: "Joann's results"
+        api:
+            baseUrl: http://example.com/api
+            authentication:
+                type: basic
+        config:
+            outputBucket: bunchOfResults
+            jobs:
+                -
+                    endpoint: data
+        iterations:
+            -
+                username: chose
+                password: potato
+                userData:
+                    owner: "Chose's results"
+            -
+                username: joann
+                password: beer
+                userData:
+                    owner: "Joann's results"
 
 # User functions
 Can currently be used in query type authentication or endpoint parameters
@@ -645,20 +645,20 @@ The function must be specified in a YML format, which may contain one of the fol
     - Example (this will return current date in this format: `2014-12-08+09:38`:
 
         ```
-		"function": "date",
-		"args":
-			- "Y-m-d+H:i"
+        "function": "date",
+        "args":
+            - "Y-m-d+H:i"
         ```
 
     - Example with a nested function (will return a date in the same format from 3 days ago):
 
         ```
-		"function": "date",
-		"args":
-			- "Y-m-d+H:i",
-			-
-				"function": "strtotime",
-				"args": ["3 days ago"]
+        "function": "date",
+        "args":
+            - "Y-m-d+H:i",
+            -
+                "function": "strtotime",
+                "args": ["3 days ago"]
         ```
 
 - **Config Attribute**: `"attr": "attributeName"` or `"attr": "nested.attribute.name"`
@@ -667,47 +667,47 @@ The function must be specified in a YML format, which may contain one of the fol
 
 # Example configuration
 
-		parameters:
-			api:
-				baseUrl: '{"function":"concat","args":["https://",{"attr":"domain"},".zendesk.com/api/v2/"]}'
-				authentication:
-					type: basic
-				pagination:
-					method: response.url
-				name: zendesk
-			config:
-				id: test_docker
-				domain: yours
-				username: you@wish.com/token
-				password: ohIdkSrsly
-				jobs:
-					-
-						endpoint: exports/tickets.json
-						params:
-							start_time:
-								time: previousStart
-							end_time:
-								function: strtotime
-								args:
-									- 2015-07-20 00:00
-						dataType: tickets_export
-						dataField: ''
-		                children:
-		                    -
-		                        endpoint: tickets/{id}/comments.json
-		                        recursionFilter: "status!=Deleted"
-		                        dataType: comments
-		                        placeholders:
-		                            # placeholder: path in data
-		                            id: id
-					-
-						endpoint: users.json
-						params: {}
-						dataType: users
-						dataField: ''
-					-
-						endpoint: tickets.json
-						params: {}
-						dataType: tickets
-						dataField: ''
+        parameters:
+            api:
+                baseUrl: '{"function":"concat","args":["https://",{"attr":"domain"},".zendesk.com/api/v2/"]}'
+                authentication:
+                    type: basic
+                pagination:
+                    method: response.url
+                name: zendesk
+            config:
+                id: test_docker
+                domain: yours
+                username: you@wish.com/token
+                password: ohIdkSrsly
+                jobs:
+                    -
+                        endpoint: exports/tickets.json
+                        params:
+                            start_time:
+                                time: previousStart
+                            end_time:
+                                function: strtotime
+                                args:
+                                    - 2015-07-20 00:00
+                        dataType: tickets_export
+                        dataField: ''
+                        children:
+                            -
+                                endpoint: tickets/{id}/comments.json
+                                recursionFilter: "status!=Deleted"
+                                dataType: comments
+                                placeholders:
+                                    # placeholder: path in data
+                                    id: id
+                    -
+                        endpoint: users.json
+                        params: {}
+                        dataType: users
+                        dataField: ''
+                    -
+                        endpoint: tickets.json
+                        params: {}
+                        dataType: tickets
+                        dataField: ''
 
