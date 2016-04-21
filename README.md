@@ -590,6 +590,38 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
 
         - Use `'responseFilter': 'data.stuff/something'` together with `'responseFilterDelimiter': '/'` to filter the array in `something`
 
+## Mappings
+`mappings` attribute can be used to force the extractor to map the response into columns in a CSV file as described in the [JSON to CSV Mapper documentation](https://github.com/keboola/php-csvmap).
+Each property in the `mappings` object must follow the mapper settings, where the key is the `dataType` of a `job`. Note that if a `dataType` is not set, it is generated from the endpoint and might be confusing if ommited.
+
+### Example
+
+```
+{
+  "mappings": {
+    "get": {
+      "id": {
+        "mapping": {
+          "destination": "id",
+          "primaryKey": true
+        }
+      },
+      "status": {
+        "mapping": {
+          "destination": "st"
+        }
+      }
+    }
+  },
+  "jobs": [
+    {
+      "endpoint": "basic",
+      "dataType": "get"
+    }
+  ]
+}
+```
+
 # Iterations
 The configuration can be run multiple times with some (or all) values in `config` section being overwritten. For example, you can run the same configuration for multiple accounts, overriding values of the authentication settings.
 
