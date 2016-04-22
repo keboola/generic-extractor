@@ -271,16 +271,16 @@
         },
         {
             "name": "keboola/csv",
-            "version": "1.1.3",
+            "version": "1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-csv.git",
-                "reference": "113735ad9f4f7e0ef5545ebfb5fcd62528035841"
+                "reference": "d7e257096c42eab09b54b7b46a905ca953a8eb6f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-csv/zipball/113735ad9f4f7e0ef5545ebfb5fcd62528035841",
-                "reference": "113735ad9f4f7e0ef5545ebfb5fcd62528035841",
+                "url": "https://api.github.com/repos/keboola/php-csv/zipball/d7e257096c42eab09b54b7b46a905ca953a8eb6f",
+                "reference": "d7e257096c42eab09b54b7b46a905ca953a8eb6f",
                 "shasum": ""
             },
             "require-dev": {
@@ -298,23 +298,24 @@
             ],
             "description": "Keboola CSV reader and writer",
             "homepage": "http://keboola.com",
-            "time": "2014-01-31 14:10:34"
+            "time": "2016-04-21 20:46:22"
         },
         {
             "name": "keboola/csvmap",
-            "version": "0.2.0",
+            "version": "0.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-csvmap.git",
-                "reference": "33bc7b6bb2f935da0916de3f0d3a361fb87027bd"
+                "reference": "5ed1be3e3e21eb9037ba150e2ac08ef7cc62f3e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-csvmap/zipball/33bc7b6bb2f935da0916de3f0d3a361fb87027bd",
-                "reference": "33bc7b6bb2f935da0916de3f0d3a361fb87027bd",
+                "url": "https://api.github.com/repos/keboola/php-csvmap/zipball/5ed1be3e3e21eb9037ba150e2ac08ef7cc62f3e2",
+                "reference": "5ed1be3e3e21eb9037ba150e2ac08ef7cc62f3e2",
                 "shasum": ""
             },
             "require": {
+                "keboola/csv": "~1.1.4",
                 "keboola/php-csvtable": "~0.1.6",
                 "keboola/php-utils": "~0.1.20",
                 "php": ">=5.6.0"
@@ -345,7 +346,7 @@
                 "flatten",
                 "object"
             ],
-            "time": "2016-04-12 12:01:51"
+            "time": "2016-04-21 22:57:20"
         },
         {
             "name": "keboola/ex-generic-moduleinterface",
@@ -533,16 +534,16 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "0.6.0",
+            "version": "0.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "f3ba2075ac34df41952c447d465ef862697d0a23"
+                "reference": "76e0e4bba997df78ca9250fe4fb2bf5c4e6f58cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/f3ba2075ac34df41952c447d465ef862697d0a23",
-                "reference": "f3ba2075ac34df41952c447d465ef862697d0a23",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/76e0e4bba997df78ca9250fe4fb2bf5c4e6f58cc",
+                "reference": "76e0e4bba997df78ca9250fe4fb2bf5c4e6f58cc",
                 "shasum": ""
             },
             "require": {
@@ -581,7 +582,7 @@
                 "extractor",
                 "keboola"
             ],
-            "time": "2016-04-21 04:37:59"
+            "time": "2016-04-21 22:42:20"
         },
         {
             "name": "keboola/php-csvtable",
