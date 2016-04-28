@@ -96,18 +96,18 @@ Example:
             api:
                 authentication:
                     type: url.query
-                query:
-                    apiKey:
-                        attr: apiKey # will assign "asdf1234" to the 'apiKey' query parameter
-                    sig:
-                        function: md5 # will assign result of md5($apiKey.$secret.time()) to 'sig' query parameter
-                        args:
-                            -
-                                function: concat
-                                args:
-                                    - attr: apiKey
-                                    - attr: #secret
-                                    - function: time
+                    query:
+                        apiKey:
+                            attr: apiKey # will assign "asdf1234" to the 'apiKey' query parameter
+                        sig:
+                            function: md5 # will assign result of md5($apiKey.$secret.time()) to 'sig' query parameter
+                            args:
+                                -
+                                    function: concat
+                                    args:
+                                        - attr: apiKey
+                                        - attr: #secret
+                                        - function: time
             config:
                 apiKey: asdf1234
                 #secret: KBC::ComponentEncrypted==gvrevgrew\grewvgr\ev6\u45bu\65^|VH|^vh==
