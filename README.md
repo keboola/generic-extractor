@@ -594,6 +594,8 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
 `mappings` attribute can be used to force the extractor to map the response into columns in a CSV file as described in the [JSON to CSV Mapper documentation](https://github.com/keboola/php-csvmap).
 Each property in the `mappings` object must follow the mapper settings, where the key is the `dataType` of a `job`. Note that if a `dataType` is not set, it is generated from the endpoint and might be confusing if ommited.
 
+If there's no mapping for a `dataType`, the standard JSON parser processes the result.
+
 In a recursive job, the placeholer prepended by `parent_` is available as `type: user` to link the child to a parent. See example below:
 
 Jobs:

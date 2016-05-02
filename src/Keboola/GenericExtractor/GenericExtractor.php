@@ -92,6 +92,7 @@ class GenericExtractor extends Extractor
         }
 
         if ($this->parser instanceof Json) {
+            // FIXME fallback from JsonMap
             $this->metadata = array_replace_recursive($this->metadata, $this->parser->getMetadata());
         }
 
@@ -178,14 +179,15 @@ class GenericExtractor extends Extractor
             return $this->parser;
         }
 
-       if (empty($config->getAttribute('mappings'))) {
-            $parser = Json::create($config, $this->getLogger(), $this->getTemp(), $this->metadata);
-            $parser->getParser()->getStruct()->setAutoUpgradeToArray(true);
-            $parser->getParser()->setCacheMemoryLimit('2M');
-            $parser->getParser()->getAnalyzer()->setNestedArrayAsJson(true);
+        $parser = Json::create($config, $this->getLogger(), $this->getTemp(), $this->metadata);
+        $parser->getParser()->getStruct()->setAutoUpgradeToArray(true);
+        $parser->getParser()->setCacheMemoryLimit('2M');
+        $parser->getParser()->getAnalyzer()->setNestedArrayAsJson(true);
+
+        if (empty($config->getAttribute('mappings'))) {
             $this->parser = $parser;
         } else {
-            $this->parser = JsonMap::create($config);
+            $this->parser = JsonMap::create($config, $parser);
         }
 
         return $this->parser;
