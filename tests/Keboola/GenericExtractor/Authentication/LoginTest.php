@@ -18,11 +18,13 @@ class LoginTest extends ExtractorTestCase
         $guzzle = new Client(['base_url' => 'http://example.com/api']);
         $guzzle->setDefaultOption('headers', ['X-Test' => '1']);
 
+        $expiresIn = 5000;
+        $expires = time() + $expiresIn;
         $mock = new Mock([
             new Response(200, [], Stream::factory(json_encode((object) [ // auth
                 'headerToken' => 1234,
                 'queryToken' => 4321,
-                'expiresIn' => 5
+                'expiresIn' => $expiresIn,
             ]))),
             new Response(200, [], Stream::factory(json_encode((object) [ // api call
                 'data' => [1,2,3]
@@ -77,6 +79,7 @@ class LoginTest extends ExtractorTestCase
             $restClient->getClient()->getEmitter()->listeners('before')[0][0],
             'expires'
         );
-        self::assertEquals(time() + 5, $expiry);
+        self::assertGreaterThan($expires - 2, $expiry);
+        self::assertLessThan($expires + 2, $expiry);
     }
 }
