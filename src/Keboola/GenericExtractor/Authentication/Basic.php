@@ -22,14 +22,14 @@ class Basic implements AuthInterface
 
     public function __construct(array $config)
     {
-        if (empty($config['username'])) {
+        if (empty($config['username']) && empty($config['#username'])) {
             throw new UserException("Missing required 'username' attribute in config");
         }
         if (empty($config['password']) && empty($config['#password'])) {
             throw new UserException("Missing required 'password' attribute in config");
         }
 
-        $this->username = $config['username'];
+        $this->username = empty($config['username']) ? $config['#username'] : $config['username'];
         $this->password = empty($config['password']) ? $config['#password'] : $config['password'];
     }
 

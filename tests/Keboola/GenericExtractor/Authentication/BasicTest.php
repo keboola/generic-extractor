@@ -7,10 +7,15 @@ use Keboola\Juicer\Client\RestClient;
 
 class BasicTest extends ExtractorTestCase
 {
-    public function testAuthenticateClient()
+
+    /**
+     * @param array $credentials
+     * @dataProvider credentialsProvider
+     */
+    public function testAuthenticateClient($credentials)
     {
         $client = new Client;
-        $auth = new Basic(['username' => 'test', 'password' => 'pass']);
+        $auth = new Basic($credentials);
         $auth->authenticateClient(new RestClient($client));
 
         self::assertEquals(['test','pass'], $client->getDefaultOption('auth'));
@@ -18,11 +23,17 @@ class BasicTest extends ExtractorTestCase
         $request = $client->createRequest('GET', '/');
         self::assertArrayHasKey('Authorization', $request->getHeaders());
         self::assertEquals(['Basic dGVzdDpwYXNz'], $request->getHeaders()['Authorization']);
+    }
 
-        $hashClient = new Client();
-        $auth = new Basic(['username' => 'test', '#password' => 'pass']);
-        $auth->authenticateClient(new RestClient($hashClient));
-
-        self::assertEquals(['test','pass'], $hashClient->getDefaultOption('auth'));
+    public static function credentialsProvider()
+    {
+        return [
+            [
+                ['username' => 'test', 'password' => 'pass']
+            ],
+            [
+                ['#username' => 'test', '#password' => 'pass']
+            ]
+        ];
     }
 }
