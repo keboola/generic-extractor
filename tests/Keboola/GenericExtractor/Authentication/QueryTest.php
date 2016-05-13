@@ -2,7 +2,10 @@
 namespace Keboola\GenericExtractor;
 
 use Keboola\GenericExtractor\Authentication\Query;
-use GuzzleHttp\Client;
+use GuzzleHttp\Client,
+    GuzzleHttp\Message\Response,
+    GuzzleHttp\Stream\Stream,
+    GuzzleHttp\Subscriber\Mock;
 use Keboola\Code\Builder;
 use Keboola\Juicer\Client\RestClient;
 
@@ -41,10 +44,18 @@ class QueryTest extends ExtractorTestCase
 
         $builder = new Builder;
         $auth = new Query($builder, [], ['authParam' => 'secretCodeWow']);
-        $auth->authenticateClient(new RestClient($client));
+        $restClient = new RestClient($client);
+        $auth->authenticateClient($restClient);
+
+        $mock = new Mock([
+            new Response(200, [], Stream::factory(json_encode((object) [
+                'data' => [1,2,3]
+            ])))
+        ]);
+        $client->getEmitter()->attach($mock);
 
         $request = $client->createRequest('GET', '/query?param=value');
-        $this->sendRequest($client, $request);
+        $client->send($request);
 
         self::assertEquals(
             'param=value&authParam=secretCodeWow',
@@ -82,6 +93,13 @@ class QueryTest extends ExtractorTestCase
 
         $auth = new Query($builder, $attrs, $definitions);
         $auth->authenticateClient(new RestClient($client));
+
+        $mock = new Mock([
+            new Response(200, [], Stream::factory(json_encode((object) [
+                'data' => [1,2,3]
+            ])))
+        ]);
+        $client->getEmitter()->attach($mock);
 
         $request = $client->createRequest('GET', '/query?param=value');
         $originalUrl = $request->getUrl();
