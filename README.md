@@ -537,6 +537,24 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
                                         comment_id: id # the comment id is also in the id field of the comments response
                                         "2:ticket_id": id # uses the id from tickets.json - 2 levels up
 
+            - You can also use an user function on the value from a parent using an object as the placeholder value
+            - That object MUST contain a 'path' key that would be the value of the placeholer, and a function. To access the value in the function arguments, use `{"placeholder": "value"}`
+                - Example:
+
+                        {
+                            "placeholders": {
+                                "1:id": {
+                                    "path": "id",
+                                    "function": "urlencode",
+                                    "args": [
+                                        {
+                                            "placeholder": "value"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+
         - **recursionFilter**:
             - Can contain a value consisting of a name of a field from the parent's response, logical operator and a value to compare against. Supported operators are "**==**", "**<**", "**>**", "**<=**", "**>=**", "**!=**"
             - Example: `type!=employee` or `product.value>150`
