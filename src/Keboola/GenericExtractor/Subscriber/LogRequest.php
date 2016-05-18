@@ -3,7 +3,7 @@
 namespace Keboola\GenericExtractor\Subscriber;
 
 use GuzzleHttp\Event\BeforeEvent;
-// use GuzzleHttp\Event\RequestEvents;
+use GuzzleHttp\Event\RequestEvents;
 use GuzzleHttp\Event\SubscriberInterface;
 use Keboola\Juicer\Common\Logger;
 
@@ -14,7 +14,7 @@ class LogRequest implements SubscriberInterface
 {
     public function getEvents()
     {
-        return ['before' => ['onBefore', -1]];
+        return ['before' => ['onBefore', RequestEvents::LATE]];
     }
 
     public function onBefore(BeforeEvent $event)
