@@ -26,4 +26,22 @@ class UrlSignatureTest extends ExtractorTestCase
 
         $this->assertEquals('tokenValue', $request->getQuery()->get('token'));
     }
+
+    public function testKeepSignature()
+    {
+        $request = new Request('GET', '/endpoint?token=originalValue');
+        $transaction = new Transaction(new Client(), $request);
+        $event = new BeforeEvent($transaction);
+
+        $subscriber = new UrlSignature();
+        $subscriber->setSignatureGenerator(
+            function() {
+                return ['token' => 'tokenValue'];
+            }
+        );
+
+        $subscriber->onBefore($event);
+
+        $this->assertEquals('originalValue', $request->getQuery()->get('token'));
+    }
 }
