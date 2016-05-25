@@ -8,7 +8,7 @@ use Keboola\Juicer\Extractor\Extractor,
     Keboola\Juicer\Parser\JsonMap,
     Keboola\Juicer\Pagination\ScrollerInterface,
     Keboola\Juicer\Exception\ApplicationException;
-// use GuzzleHttp\Client;
+use GuzzleHttp\Client;
 use Keboola\GenericExtractor\GenericExtractorJob,
     Keboola\GenericExtractor\Authentication\AuthInterface,
     Keboola\GenericExtractor\Config\Api,
@@ -53,12 +53,14 @@ class GenericExtractor extends Extractor
 
     public function run(Config $config)
     {
-        $client = RestClient::create([
+        $guzzle = new Client([
             'base_url' => $this->baseUrl,
             'defaults' => [
                 'headers' => UserFunction::build($this->headers, ['attr' => $config->getAttributes()])
             ]
         ]);
+        $guzzle->getEmitter()->attach(RestClient::getBackoff(11));
+        $client = new RestClient($guzzle);
 
         if (!empty($this->defaultRequestOptions)) {
             $client->setDefaultRequestOptions($this->defaultRequestOptions);
