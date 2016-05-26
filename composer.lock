@@ -396,16 +396,16 @@
         },
         {
             "name": "keboola/ex-generic-moduleinterface",
-            "version": "0.2.0",
+            "version": "0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/ex-generic-moduleinterface.git",
-                "reference": "dc0ae2a23b25ee9208138aa837188e6bdc08eca3"
+                "reference": "b4df85ea699a1152dcab5175d1f538f10427765a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/ex-generic-moduleinterface/zipball/dc0ae2a23b25ee9208138aa837188e6bdc08eca3",
-                "reference": "dc0ae2a23b25ee9208138aa837188e6bdc08eca3",
+                "url": "https://api.github.com/repos/keboola/ex-generic-moduleinterface/zipball/b4df85ea699a1152dcab5175d1f538f10427765a",
+                "reference": "b4df85ea699a1152dcab5175d1f538f10427765a",
                 "shasum": ""
             },
             "require": {
@@ -437,7 +437,7 @@
                 "keboola",
                 "module"
             ],
-            "time": "2015-11-07 01:40:18"
+            "time": "2016-05-25 12:44:58"
         },
         {
             "name": "keboola/ex-generic-response-array",
@@ -580,16 +580,16 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "0.6.6",
+            "version": "0.6.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "449631377cf4a697a9cfa4add06ba15997232537"
+                "reference": "5ebec5684865406fdff6d787e3cd4c4ea7210117"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/449631377cf4a697a9cfa4add06ba15997232537",
-                "reference": "449631377cf4a697a9cfa4add06ba15997232537",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/5ebec5684865406fdff6d787e3cd4c4ea7210117",
+                "reference": "5ebec5684865406fdff6d787e3cd4c4ea7210117",
                 "shasum": ""
             },
             "require": {
@@ -629,7 +629,7 @@
                 "extractor",
                 "keboola"
             ],
-            "time": "2016-05-18 05:51:21"
+            "time": "2016-05-26 09:13:04"
         },
         {
             "name": "keboola/php-csvtable",
@@ -1557,16 +1557,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "3.3.1",
+            "version": "3.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "2431befdd451fac43fbcde94d1a92fb3b8b68f86"
+                "reference": "4862dac433cbdb4438b593fa7f79e07559ba157e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/2431befdd451fac43fbcde94d1a92fb3b8b68f86",
-                "reference": "2431befdd451fac43fbcde94d1a92fb3b8b68f86",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/4862dac433cbdb4438b593fa7f79e07559ba157e",
+                "reference": "4862dac433cbdb4438b593fa7f79e07559ba157e",
                 "shasum": ""
             },
             "require": {
@@ -1616,7 +1616,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-04-08 08:14:53"
+            "time": "2016-05-25 06:48:21"
         },
         {
             "name": "phpunit/php-file-iterator",
