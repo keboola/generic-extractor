@@ -113,24 +113,8 @@ class OAuth20 implements AuthInterface
             ]
         ];
 
-        foreach($subscribers as $subscriber) {
-            if (empty($subscriber['definitions'])) {
-                continue;
-            }
-
-            $this->addGenerator($subscriber['subscriber'], $subscriber['definitions']);
-            $client->getClient()->getEmitter()->attach($subscriber['subscriber']);
-        }
-    }
-
-    /**
-     * @param array|object $definitions
-     */
-    protected function addGenerator($subscriber, $definitions)
-    {
-        // Move to authenticateClient TODO
         $authorization = [
-            'clientId' => $this->clientId,
+            'clientId' => $this->clientId, // FIXME is in data already
             'nonce' => substr(sha1(uniqid(microtime(), true)), 0, 16),
             'timestamp' => time()
         ];
@@ -144,6 +128,21 @@ class OAuth20 implements AuthInterface
             $authorization['data'] = $this->data;
         }
 
+        foreach($subscribers as $subscriber) {
+            if (empty($subscriber['definitions'])) {
+                continue;
+            }
+
+            $this->addGenerator($subscriber['subscriber'], $subscriber['definitions'], $authorization);
+            $client->getClient()->getEmitter()->attach($subscriber['subscriber']);
+        }
+    }
+
+    /**
+     * @param array|object $definitions
+     */
+    protected function addGenerator($subscriber, $definitions, $authorization)
+    {
         // Create array of objects instead of arrays from YML
         $q = (array) Utils::arrayToObject($definitions);
         $subscriber->setSignatureGenerator(
