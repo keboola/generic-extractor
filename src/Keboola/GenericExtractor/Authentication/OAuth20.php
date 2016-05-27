@@ -114,7 +114,7 @@ class OAuth20 implements AuthInterface
         ];
 
         $authorization = [
-            'clientId' => $this->clientId, // FIXME is in data already
+            'clientId' => $this->clientId,
             'nonce' => substr(sha1(uniqid(microtime(), true)), 0, 16),
             'timestamp' => time()
         ];
