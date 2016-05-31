@@ -43,8 +43,68 @@ class GenericExtractorJobTest extends ExtractorTestCase
                     'endpoint' => 'ep'
                 ]),
                 null
+            ],
+            [
+                JobConfig::create([
+                    'endpoint' => 'ep',
+                    'userData' => 'v'
+                ]),
+                [
+                    'job_parent_id' => 'v'
+                ]
+            ],
+            [
+                JobConfig::create([
+                    'endpoint' => 'ep',
+                    'userData' => [
+                        'hash' => [
+                            'function' => 'md5',
+                            'args' => [
+                                'a'
+                            ]
+                        ]
+                    ]
+                ]),
+                [
+                    'hash' => md5('a')
+                ]
             ]
         ];
+    }
+
+    public function testUserParentId()
+    {
+        $value = ['parent' => 'val'];
+        $job = $this->getJob(JobConfig::create([
+            'endpoint' => 'ep'
+        ]));
+        $job->setUserParentId($value);
+
+        self::assertEquals($value, self::callMethod($job, 'getParentId', []));
+    }
+
+    public function testUserParentIdMerge()
+    {
+        $job = $this->getJob(JobConfig::create([
+            'endpoint' => 'ep',
+            'userData' => [
+                'cfg' => 'cfgVal',
+                'both' => 'cfgVal'
+            ]
+        ]));
+        $job->setUserParentId([
+            'inj' => 'injVal',
+            'both' => 'injVal'
+        ]);
+
+        self::assertEquals(
+            [
+                'cfg' => 'cfgVal',
+                'both' => 'cfgVal',
+                'inj' => 'injVal'
+            ],
+            self::callMethod($job, 'getParentId', [])
+        );
     }
 
     public function testFirstPage()

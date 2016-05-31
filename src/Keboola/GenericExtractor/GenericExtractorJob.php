@@ -133,36 +133,37 @@ class GenericExtractorJob extends RecursiveJob
      */
     protected function getParentId()
     {
-        if (!empty($this->config->getConfig()['userData']) || !empty($this->userParentId)) {
-            if (!empty($this->config->getConfig()['userData'])) {
-                if (!is_array($this->config->getConfig()['userData'])) {
-                    $jobUserData = ['job_parent_id' => $this->config->getConfig()['userData']];
-                } else {
-                    $jobUserData = $this->config->getConfig()['userData'];
-                }
+        if (!empty($this->config->getConfig()['userData'])) {
+            if (!is_array($this->config->getConfig()['userData'])) {
+                $jobUserData = ['job_parent_id' => $this->config->getConfig()['userData']];
             } else {
-                $jobUserData = [];
+                $jobUserData = $this->config->getConfig()['userData'];
             }
-
-            if (!empty($this->userParentId)) {
-                $parentId = array_merge($this->userParentId, $jobUserData);
-            } else {
-                $parentId = $jobUserData;
-            }
-
-            if (empty($parentId)) {
-                return null;
-            } else {
-                return UserFunction::build(
-                    $parentId,
-                    [
-                        'attr' => $this->attributes,
-                        'time' => $this->metadata['time']
-                    ],
-                    $this->stringBuilder
-                );
-            }
+        } else {
+            $jobUserData = [];
         }
+
+        if (!empty($this->userParentId)) {
+            $jobUserData += $this->userParentId;
+        }
+
+        if (empty($jobUserData)) {
+            return null;
+        }
+
+        return UserFunction::build(
+            $jobUserData,
+            [
+                'attr' => $this->getAttributes(),
+                'time' => $this->metadata['time'] ?: []
+            ],
+            $this->stringBuilder
+        );
+    }
+
+    protected function getAttributes()
+    {
+        return $this->attributes ?: [];
     }
 
     /**
