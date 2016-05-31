@@ -176,8 +176,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     public function testBuildParams()
     {
-        $cfg = JobConfig::create([
-            'endpoint' => 'ep',
+        $cfg = new JobConfig(1, [
             'params' => Utils::json_decode('{
                 "timeframe": "this_24_hours",
                 "filters": {
@@ -223,8 +222,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
     public function testBuildParamsException()
     {
 
-        $cfg = JobConfig::create([
-            'endpoint' => 'ep',
+        $cfg = new JobConfig(1, [
             'params' => Utils::json_decode('{
                 "filters": {
                     "function": "date"
@@ -251,8 +249,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     public function testFilterResponse()
     {
-        $cfg = JobConfig::create([
-            'endpoint' => 'ep',
+        $cfg = new JobConfig(1, [
             'responseFilter' => 'complexItem'
         ]);
 
@@ -285,7 +282,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
         $parser = Json::create(
             new Config('ex-generic-test', 'test', []),
-            $this->getLogger(),
+            $this->getLogger('test', true),
             new Temp()
         );
 
