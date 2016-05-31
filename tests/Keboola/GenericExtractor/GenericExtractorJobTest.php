@@ -277,6 +277,34 @@ class GenericExtractorJobTest extends ExtractorTestCase
         self::assertEquals($data[0]->anotherItem, $filtered[0]->anotherItem);
     }
 
+    public function testRun()
+    {
+        $jobConfig = JobConfig::create([
+            'endpoint' => 'ep'
+        ]);
+
+        $parser = Json::create(
+            new Config('ex-generic-test', 'test', []),
+            $this->getLogger(),
+            new Temp()
+        );
+
+        $job = $this->getMock('\Keboola\GenericExtractor\GenericExtractorJob', ['download'], [
+            $jobConfig,
+            RestClient::create([]),
+            $parser
+        ]);
+
+        $job->method('download')->willReturn([
+            (object) ['result' => 'data']
+        ]);
+
+        $job->run();
+
+        self::assertCount(1, $parser->getResults());
+        self::assertContainsOnlyInstancesOf('\Keboola\CsvTable\Table', $parser->getResults());
+    }
+
     protected function getJob(JobConfig $config)
     {
         return new GenericExtractorJob(
