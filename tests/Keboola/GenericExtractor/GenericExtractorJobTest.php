@@ -14,6 +14,39 @@ use Keboola\Code\Builder;
 
 class GenericExtractorJobTest extends ExtractorTestCase
 {
+    /**
+     * @dataProvider parentIdProvider
+     */
+    public function testGetParentId($cfg, $expected)
+    {
+        $job = $this->getJob($cfg);
+
+        self::assertEquals($expected, self::callMethod($job, 'getParentId', []));
+    }
+
+    public function parentIdProvider()
+    {
+        return [
+            [
+                JobConfig::create([
+                    'endpoint' => 'ep',
+                    'userData' => [
+                        'k' => 'v'
+                    ]
+                ]),
+                [
+                    'k' => 'v'
+                ]
+            ],
+            [
+                JobConfig::create([
+                    'endpoint' => 'ep'
+                ]),
+                null
+            ]
+        ];
+    }
+
     public function testFirstPage()
     {
         $cfg = JobConfig::create([

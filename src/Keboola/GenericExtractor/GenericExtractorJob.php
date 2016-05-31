@@ -10,7 +10,9 @@ use Keboola\Juicer\Extractor\RecursiveJob,
     Keboola\Juicer\Common\Logger,
     Keboola\Juicer\Client\RequestInterface,
     Keboola\Juicer\Exception\ApplicationException,
-    Keboola\Juicer\Exception\UserException;
+    Keboola\Juicer\Exception\UserException,
+    Keboola\Juicer\Pagination\ScrollerInterface,
+    Keboola\Juicer\Pagination\NoScroller;
 use Keboola\Utils\Utils,
     Keboola\Utils\Exception\JsonDecodeException;
 use Keboola\Code\Builder,
@@ -70,7 +72,6 @@ class GenericExtractorJob extends RecursiveJob
                 break;
             } else {
                 $data = $this->runResponseModules($response, $this->config);
-//                 $data = $this->findDataInResponse($response, $this->config->getConfig());
                 $data = $this->filterResponse($this->config, $data);
                 $this->parse($data, $parentId);
 
@@ -79,6 +80,52 @@ class GenericExtractorJob extends RecursiveJob
 
             $request = $this->nextPage($this->config, $response, $data);
         }
+    }
+
+    /**
+     * Create subsequent requests for pagination (usually based on $response from previous request)
+     * Return a download request OR false if no next page exists
+     *
+     * @param JobConfig $config
+     * @param mixed $response
+     * @param array|null $data
+     * @return RequestInterface | false
+     */
+    protected function nextPage(JobConfig $config, $response, $data)
+    {
+        return $this->getScroller()->getNextRequest($this->client, $config, $response, $data);
+    }
+
+    /**
+     * Create the first download request.
+     * Return a download request
+     *
+     * @param JobConfig $config
+     * @return RequestInterface | false
+     */
+    protected function firstPage(JobConfig $config)
+    {
+        return $this->getScroller()->getFirstRequest($this->client, $config);
+    }
+
+    /**
+     * @return ScrollerInterface
+     */
+    protected function getScroller()
+    {
+        if (empty($this->scroller)) {
+            $this->scroller = new NoScroller;
+        }
+
+        return $this->scroller;
+    }
+
+    /**
+     * @param ScrollerInterface $scroller
+     */
+    public function setScroller(ScrollerInterface $scroller)
+    {
+        $this->scroller = $scroller;
     }
 
     /**
