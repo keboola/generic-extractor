@@ -144,7 +144,7 @@ class GenericExtractorJob extends RecursiveJob
         }
 
         if (!empty($this->userParentId)) {
-            $jobUserData += $this->userParentId;
+            $jobUserData = array_merge($this->userParentId, $jobUserData);
         }
 
         if (empty($jobUserData)) {
