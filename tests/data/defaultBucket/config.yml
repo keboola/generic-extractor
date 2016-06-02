@@ -2,7 +2,7 @@ parameters:
     api:
         baseUrl: http://private-53977-extractormock.apiary-mock.com/
     config:
-        debug: 1
+        #debug: 1
         jobs:
             -
                 endpoint: defaultBucket

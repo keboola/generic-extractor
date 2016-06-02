@@ -121,7 +121,10 @@ class GenericExtractorJobTest extends ExtractorTestCase
         self::assertEquals('ep', $req->getEndpoint());
     }
 
-    public function testNextPage()
+    /**
+     * @dataProvider nextPageProvider
+     */
+    public function testNextPage($config, $expectedParams)
     {
         $cfg = new JobConfig(1, [
             'endpoint' => 'ep',
@@ -131,7 +134,9 @@ class GenericExtractorJobTest extends ExtractorTestCase
         ]);
         $job = $this->getJob($cfg);
 
-        $job->setScroller(new ResponseUrlScroller(['urlKey' => 'nextPage']));
+        self::callMethod($job, 'buildParams', [$cfg]);
+
+        $job->setScroller(new ResponseUrlScroller($config));
 
         $response = new \stdClass();
         $response->nextPage = "http://example.com/api/ep?something=2";
@@ -143,35 +148,16 @@ class GenericExtractorJobTest extends ExtractorTestCase
             $response->results
         ]);
 
-        self::assertEquals('http://example.com/api/ep?something=2', $req->getEndpoint());
+        self::assertEquals($response->nextPage, $req->getEndpoint());
+        self::assertEquals($expectedParams, $req->getParams());
     }
 
-    /**
-     * doesn't work because params are set in run!
-     */
-    public function testNextPageWithParam()
+    public function nextPageProvider()
     {
-        $cfg = new JobConfig(1, [
-            'endpoint' => 'ep',
-            'params' => [
-                'first' => 1
-            ]
-        ]);
-        $job = $this->getJob($cfg);
-
-        $job->setScroller(new ResponseUrlScroller(['urlKey' => 'nextPage', 'includeParams' => true]));
-
-        $response = new \stdClass();
-        $response->nextPage = "http://example.com/api/ep?something=2";
-        $response->results = [1, 2];
-
-        $req = self::callMethod($job, 'nextPage', [
-            $cfg,
-            $response,
-            $response->results
-        ]);
-
-        self::assertEquals('http://example.com/api/ep?something=2', $req->getEndpoint());
+        return [
+            [['urlKey' => 'nextPage', 'includeParams' => true], ['first' => 1]],
+            [['urlKey' => 'nextPage'], []]
+        ];
     }
 
     public function testBuildParams()
@@ -302,6 +288,10 @@ class GenericExtractorJobTest extends ExtractorTestCase
         self::assertContainsOnlyInstancesOf('\Keboola\CsvTable\Table', $parser->getResults());
     }
 
+    /**
+     * @param JobConfig $config
+     * @return GenericExtractorJob
+     */
     protected function getJob(JobConfig $config)
     {
         return new GenericExtractorJob(
