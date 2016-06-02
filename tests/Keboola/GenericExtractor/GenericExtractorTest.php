@@ -20,7 +20,14 @@ class GenericExtractorTest extends ExtractorTestCase
 
         Logger::setLogger($logger);
 
-        $meta = ['json_parser.struct' => ['tickets.via' => ['channel' => 'scalar', 'source' => 'object']]];
+        $meta = [
+            'json_parser.struct' => [
+                'tickets.via' => ['channel' => 'scalar', 'source' => 'object']
+            ],
+            'time' => [
+                'previousStart' => 123
+            ]
+        ];
 
         $cfg = new Config('testApp', 'testCfg', []);
         $api = Api::create(['baseUrl' => 'http://example.com'], $cfg);
@@ -34,7 +41,16 @@ class GenericExtractorTest extends ExtractorTestCase
         $after = $ex->getMetadata();
 
         self::assertEquals($meta['json_parser.struct'], $after['json_parser.struct']);
-//         self::assertArrayHasKey('time', $after);
-//         self::assertArrayHasKey('previousStart', $after['time']);
+        self::assertArrayHasKey('time', $after);
+    }
+
+    public function testGetParser()
+    {
+        $temp = new Temp;
+        $parser = Json::create(new Config('testApp', 'testCfg', []), $this->getLogger(), $temp);
+
+        $extractor = new GenericExtractor($temp);
+        $extractor->setParser($parser);
+        self::assertEquals($parser, $extractor->getParser());
     }
 }

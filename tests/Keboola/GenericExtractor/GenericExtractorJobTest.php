@@ -28,7 +28,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
     {
         return [
             [
-                JobConfig::create([
+                new JobConfig(1, [
                     'endpoint' => 'ep',
                     'userData' => [
                         'k' => 'v'
@@ -39,13 +39,13 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 ]
             ],
             [
-                JobConfig::create([
+                new JobConfig(1, [
                     'endpoint' => 'ep'
                 ]),
                 null
             ],
             [
-                JobConfig::create([
+                new JobConfig(1, [
                     'endpoint' => 'ep',
                     'userData' => 'v'
                 ]),
@@ -54,7 +54,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 ]
             ],
             [
-                JobConfig::create([
+                new JobConfig(1, [
                     'endpoint' => 'ep',
                     'userData' => [
                         'hash' => [
@@ -75,7 +75,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
     public function testUserParentId()
     {
         $value = ['parent' => 'val'];
-        $job = $this->getJob(JobConfig::create([
+        $job = $this->getJob(new JobConfig(1, [
             'endpoint' => 'ep'
         ]));
         $job->setUserParentId($value);
@@ -85,7 +85,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     public function testUserParentIdMerge()
     {
-        $job = $this->getJob(JobConfig::create([
+        $job = $this->getJob(new JobConfig(1, [
             'endpoint' => 'ep',
             'userData' => [
                 'cfg' => 'cfgVal',
@@ -109,7 +109,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     public function testFirstPage()
     {
-        $cfg = JobConfig::create([
+        $cfg = new JobConfig(1, [
             'endpoint' => 'ep',
             'params' => [
                 'first' => 1
@@ -123,7 +123,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     public function testNextPage()
     {
-        $cfg = JobConfig::create([
+        $cfg = new JobConfig(1, [
             'endpoint' => 'ep',
             'params' => [
                 'first' => 1
@@ -151,7 +151,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
      */
     public function testNextPageWithParam()
     {
-        $cfg = JobConfig::create([
+        $cfg = new JobConfig(1, [
             'endpoint' => 'ep',
             'params' => [
                 'first' => 1
@@ -242,7 +242,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         ]);
         $job->setBuilder(new Builder());
 
-        $params = self::callMethod($job, 'buildParams', [
+        self::callMethod($job, 'buildParams', [
             $cfg
         ]);
     }
@@ -276,7 +276,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     public function testRun()
     {
-        $jobConfig = JobConfig::create([
+        $jobConfig = new JobConfig(1, [
             'endpoint' => 'ep'
         ]);
 

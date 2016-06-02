@@ -74,21 +74,7 @@ class GenericExtractor extends Extractor
         $builder = new Builder();
 
         foreach($config->getJobs() as $jobConfig) {
-            // FIXME this is rather duplicated in RecursiveJob::createChild()
-            $job = new GenericExtractorJob($jobConfig, $client, $this->parser);
-            $job->setScroller($this->scroller);
-            $job->setAttributes($config->getAttributes());
-            $job->setMetadata($this->metadata);
-            $job->setBuilder($builder);
-            $job->setResponseModules($this->modules['response']);
-            if (!empty($config->getAttribute('userData'))) {
-                $job->setUserParentId(is_scalar($config->getAttribute('userData'))
-                    ? ['userData' => $config->getAttribute('userData')]
-                    : $config->getAttribute('userData')
-                );
-            }
-
-            $job->run();
+            $this->runJob($jobConfig, $client, $config,$builder);
         }
 
         if ($this->parser instanceof Json) {
@@ -97,6 +83,31 @@ class GenericExtractor extends Extractor
         }
 
         return $this->parser->getResults();
+    }
+
+    /**
+     * @param JobConfig $jobConfig
+     * @param RestClient $client
+     * @param Config $config
+     * @param Builder $builder
+     */
+    protected function runJob($jobConfig, $client, $config, $builder)
+    {
+        // FIXME this is rather duplicated in RecursiveJob::createChild()
+        $job = new GenericExtractorJob($jobConfig, $client, $this->parser);
+        $job->setScroller($this->scroller);
+        $job->setAttributes($config->getAttributes());
+        $job->setMetadata($this->metadata);
+        $job->setBuilder($builder);
+        $job->setResponseModules($this->modules['response']);
+        if (!empty($config->getAttribute('userData'))) {
+            $job->setUserParentId(is_scalar($config->getAttribute('userData'))
+                ? ['userData' => $config->getAttribute('userData')]
+                : $config->getAttribute('userData')
+            );
+        }
+
+        $job->run();
     }
 
     /**
