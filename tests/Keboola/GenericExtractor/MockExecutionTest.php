@@ -8,7 +8,7 @@ class MockExecutionTest extends ExtractorTestCase
      */
     public function testRun($configDir)
     {
-        $result = exec("php ./run.php --data=./tests/data/{$configDir} 2>&1", $output, $retval);
+        exec("php ./run.php --data=./tests/data/{$configDir} 2>&1", $output, $retval);
 
         self::assertDirectoryEquals(
             "./tests/data/{$configDir}/expected/tables/",
