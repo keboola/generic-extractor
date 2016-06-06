@@ -49,6 +49,11 @@ class Api
      */
     protected $defaultRequestOptions = [];
 
+    /**
+     * @var array
+     */
+    protected $retryConfig = [];
+
     public function __construct(array $config)
     {
         if (!empty($config['baseUrl'])) {
@@ -69,6 +74,9 @@ class Api
         if (!empty($config['defaultRequestOptions'])) {
             $this->setDefaultRequestOptions($config['defaultRequestOptions']);
         }
+        if (!empty($config['retryConfig'])) {
+            $this->setRetryConfig($config['retryConfig']);
+        }
     }
 
     public static function create(array $api, Config $config, array $authorization = [])
@@ -79,8 +87,15 @@ class Api
             'scroller' => self::createScroller($api),
             'headers' => self::createHeaders($api, $config),
             'name' => self::createName($api),
-            'defaultRequestOptions' => self::createDefaultRequestOptions($api)
+            'defaultRequestOptions' => self::createDefaultRequestOptions($api),
+            'retryConfig' => self::createRetryConfig($api)
         ]);
+    }
+
+    public static function createRetryConfig(array $api)
+    {
+        return !empty($api['retryConfig']) && is_array($api['retryConfig'])
+            ? $api['retryConfig'] : [];
     }
 
     /**
@@ -265,5 +280,15 @@ class Api
     public function getDefaultRequestOptions()
     {
         return $this->defaultRequestOptions;
+    }
+
+    public function setRetryConfig(array $config)
+    {
+        $this->retryConfig = $config;
+    }
+
+    public function getRetryConfig()
+    {
+        return $this->retryConfig;
     }
 }

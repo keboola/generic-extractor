@@ -51,15 +51,22 @@ class GenericExtractor extends Extractor
      * @var array
      */
     protected $defaultRequestOptions = [];
+    /**
+     * @var array
+     */
+    protected $retryConfig = [];
 
     public function run(Config $config)
     {
-        $client = RestClient::create([
-            'base_url' => $this->baseUrl,
-            'defaults' => [
-                'headers' => UserFunction::build($this->headers, ['attr' => $config->getAttributes()])
-            ]
-        ]);
+        $client = RestClient::create(
+            [
+                'base_url' => $this->baseUrl,
+                'defaults' => [
+                    'headers' => UserFunction::build($this->headers, ['attr' => $config->getAttributes()])
+                ]
+            ],
+            $this->retryConfig
+        );
 
         if (!empty($this->defaultRequestOptions)) {
             $client->setDefaultRequestOptions($this->defaultRequestOptions);
@@ -82,7 +89,7 @@ class GenericExtractor extends Extractor
             $this->metadata = array_replace_recursive($this->metadata, $this->parser->getMetadata());
         }
 
-        return $this->parser->getResults();
+//         return $this->parser->getResults();
     }
 
     /**
@@ -129,6 +136,12 @@ class GenericExtractor extends Extractor
         $this->setHeaders($api->getHeaders()->getHeaders());
         $this->setAppName($api->getName());
         $this->setDefaultRequestOptions($api->getDefaultRequestOptions());
+        $this->setRetryConfig($api->getRetryConfig());
+    }
+
+    public function setRetryConfig(array $config)
+    {
+        $this->retryConfig = $config;
     }
 
     /**

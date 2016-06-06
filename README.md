@@ -37,6 +37,17 @@ Example:
 - for *https://yourDomain.zendesk.com/api/v2/*
 - uses `config` part, where attribute **domain** would contain `yourDomain`
 
+## retryConfig
+
+Set the retry limit, rate limit reset header and HTTP codes to retry if the API returns an error
+
+- **retryConfig.headerName**: (string) `Retry-After`
+    - Name of the header with information when can we access the API again
+- **retryConfig.*httpCodes*: (array) `[500, 502, 503, 504, 408, 420, 429]`
+    - HTTP codes on which to retry
+- **retryConfig.maxRetries**: (int) `10`
+    - Maximum retry attempts (useful for exponential backoff, if the limit reset header is not present)
+
 ## http.requiredHeaders
 
 - Headers required to be set in the config section

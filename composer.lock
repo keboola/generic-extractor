@@ -529,16 +529,16 @@
         },
         {
             "name": "keboola/json-parser",
-            "version": "1.0.11",
+            "version": "1.0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-jsonparser.git",
-                "reference": "5f437e51130e02ce4d660f4db2f9c566f0095c96"
+                "reference": "d92ceb45ba00551cd2dee782dcbafbbd218ef558"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-jsonparser/zipball/5f437e51130e02ce4d660f4db2f9c566f0095c96",
-                "reference": "5f437e51130e02ce4d660f4db2f9c566f0095c96",
+                "url": "https://api.github.com/repos/keboola/php-jsonparser/zipball/d92ceb45ba00551cd2dee782dcbafbbd218ef558",
+                "reference": "d92ceb45ba00551cd2dee782dcbafbbd218ef558",
                 "shasum": ""
             },
             "require": {
@@ -576,7 +576,7 @@
                 "json2csv",
                 "parser"
             ],
-            "time": "2016-03-17 03:53:26"
+            "time": "2016-06-06 10:39:21"
         },
         {
             "name": "keboola/juicer",

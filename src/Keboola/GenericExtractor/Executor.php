@@ -71,6 +71,7 @@ class Executor
         }
 
         foreach($results as $bucket => $result) {
+            Logger::log('debug', "Processing results for {$bucket}.");
             $configuration->storeResults(
                 $result['parser']->getResults(),
                 $bucket == "__kbc_default" ? null : $bucket,
