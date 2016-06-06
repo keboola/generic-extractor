@@ -272,15 +272,20 @@ class GenericExtractorJobTest extends ExtractorTestCase
             new Temp()
         );
 
-        $job = $this->getMock('\Keboola\GenericExtractor\GenericExtractorJob', ['download'], [
-            $jobConfig,
-            RestClient::create([]),
-            $parser
-        ]);
+        $job = $this->getMockBuilder('\Keboola\GenericExtractor\GenericExtractorJob')
+            ->setMethods(['download'])
+            ->setConstructorArgs([
+                $jobConfig,
+                RestClient::create([]),
+                $parser
+            ])
+            ->getMock();
 
-        $job->method('download')->willReturn([
-            (object) ['result' => 'data']
-        ]);
+        $job->expects($this->once())
+            ->method('download')
+            ->willReturn([
+                (object) ['result' => 'data']
+            ]);
 
         $job->run();
 
