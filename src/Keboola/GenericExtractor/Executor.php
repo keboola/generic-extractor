@@ -2,6 +2,8 @@
 
 namespace Keboola\GenericExtractor;
 
+use Doctrine\Common\Cache\FilesystemCache;
+use GuzzleHttp\Subscriber\Cache\CacheStorage;
 use Keboola\GenericExtractor\Config\Configuration,
     Keboola\GenericExtractor\GenericExtractor;
 use Keboola\Temp\Temp;
@@ -10,6 +12,25 @@ use Keboola\Juicer\Common\Logger,
 
 class Executor
 {
+    /**
+     * @param Configuration $config
+     * @return CacheStorage|null
+     */
+    private function initCacheStorage(Configuration $config)
+    {
+        $cacheConfig = $config->getCache();
+
+        if (!$cacheConfig) {
+            return null;
+        }
+
+        return new CacheStorage(
+            new FilesystemCache($config->getDataDir() . '/cache'),
+            null,
+            !empty($cacheConfig['ttl']) ? (int) $cacheConfig['ttl'] : Configuration::CACHE_TTL
+        );
+    }
+
     public function run()
     {
         $temp = new Temp(APP_NAME);
@@ -32,6 +53,7 @@ class Executor
         $modules = $this->loadModules($configuration);
 
         $authorization = $configuration->getAuthorization();
+        $cacheStorage = $this->initCacheStorage($configuration);
 
         $results = [];
         foreach($configs as $config) {
@@ -54,6 +76,11 @@ class Executor
 
             $extractor = new GenericExtractor($temp);
             $extractor->setLogger(Logger::getLogger());
+
+            if ($cacheStorage) {
+                $extractor->enableCache($cacheStorage);
+            }
+
             if (!empty($results[$outputBucket])) {
                 $extractor->setParser($results[$outputBucket]['parser']);
             }
