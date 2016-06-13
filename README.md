@@ -3,9 +3,10 @@
 
 # Basics
 
-- The extractor configuration has 2 parts - `api` and `config`
+- The extractor configuration has 3 parts - `api`, `config` and `cache`
 - The `api` section defines the API behavior such as authentication method, pagination, API's base URI etc
 - The `config` section should contain actual authentication information (tokens etc), as well as individual endpoints in the `jobs` section
+- The `cache` section enables private transparent proxy cache for caching HTTP responses
 
 # API Definition
 
@@ -826,3 +827,43 @@ The function must be specified in a YML format, which may contain one of the fol
                         dataType: tickets
                         dataField: ''
 
+
+# Cache
+
+Use private proxy cache for HTTP responses.
+This is useful for local jobs configuration development.
+
+### Enabling cache:
+```
+        parameters:
+            api:
+                ...
+            config:
+                ...
+            cache: true
+```
+- Caches only responses with one of [`200`, `203`, `300`, `301`, `410`] HTTP Status codes
+- Cache *TTL*
+    - Count time from `Cache-Control` and `Expires` reponse headers.
+    - If counted value is `null`, extractor will use own default value (30 days)
+    - Default `ttl` value can be overridden by custom config value (time in seconds)
+
+```
+        parameters:
+            api:
+                ...
+            config:
+                ...
+            cache:
+                ttl: 3600
+```
+
+# Local development
+
+Best way to create and test new configurations is run extractor in docker container:
+
+    docker-compose run --rm extractor
+
+Running tests:
+
+    docker-compose run --rm tests
