@@ -1,0 +1,10 @@
+parameters:
+    api:
+        baseUrl: http://www.timeapi.org/
+    config:
+        outputBucket: getPost
+        jobs:
+            -
+                endpoint: utc/now.json
+                dataType: get
+                dataField: dateString

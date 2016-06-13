@@ -1,0 +1,13 @@
+parameters:
+    cache:
+      ttl: 7200
+    api:
+        baseUrl: http://www.timeapi.org/
+    config:
+#        debug: true
+        outputBucket: getPost
+        jobs:
+            -
+                endpoint: utc/now.json
+                dataType: get
+                dataField: dateString

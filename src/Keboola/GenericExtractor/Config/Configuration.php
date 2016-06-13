@@ -5,30 +5,62 @@ namespace Keboola\GenericExtractor\Config;
 use Keboola\Juicer\Config\Configuration as BaseConfiguration,
     Keboola\Juicer\Filesystem\YamlFile,
     Keboola\Juicer\Exception\FileNotFoundException,
-    Keboola\Juicer\Exception\ApplicationException;
+    Keboola\Juicer\Exception\ApplicationException,
+    Keboola\Juicer\Exception\NoDataException;
 
 /**
  * {@inheritdoc}
  */
 class Configuration extends BaseConfiguration
 {
+    const CACHE_TTL = 604800;
+
+    /**
+     * @return array
+     */
+    public function getCache()
+    {
+        try {
+            return $this->getYaml('/config.yml', 'parameters', 'cache');
+        } catch(NoDataException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataDir()
+    {
+        return $this->dataDir;
+    }
+
+    /**
+     * @param $config
+     * @param $authorization
+     * @return Api
+     */
     public function getApi($config, $authorization)
     {
         // TODO check if it exists (have some getter fn in parent Configuration)
         return Api::create($this->getYaml('/config.yml', 'parameters', 'api'), $config, $authorization);
     }
 
+    /**
+     * @return array
+     */
     public function getAuthorization()
     {
         try {
             return $this->getYaml('/config.yml', 'authorization');
-        } catch(\Keboola\Juicer\Exception\NoDataException $e) {
+        } catch(NoDataException $e) {
             return [];
         }
     }
 
     /**
-     * @return ModuleInterface[]
+     * @return $modules
+     * @throws ApplicationException
      * @todo 'tis flawed - the path shouldn't be hardcoded for tests
      */
     public function getModules()
@@ -65,6 +97,11 @@ class Configuration extends BaseConfiguration
         return $modules;
     }
 
+    /**
+     * @param $config
+     * @return array
+     * @throws ApplicationException
+     */
     protected function createModule($config)
     {
         if (empty($config['type'])) {

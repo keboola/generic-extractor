@@ -2,6 +2,9 @@
 
 namespace Keboola\GenericExtractor;
 
+use GuzzleHttp\Message\RequestInterface;
+use GuzzleHttp\Subscriber\Cache\CacheStorage;
+use GuzzleHttp\Subscriber\Cache\CacheSubscriber;
 use Keboola\Juicer\Extractor\Extractor,
     Keboola\Juicer\Config\Config,
     Keboola\Juicer\Client\RestClient,
@@ -56,6 +59,21 @@ class GenericExtractor extends Extractor
      */
     protected $retryConfig = [];
 
+    /**
+     * @var CacheStorage
+     */
+    protected $cache;
+
+    /**
+     * @param CacheStorage $cache
+     * @return $this
+     */
+    public function enableCache(CacheStorage $cache)
+    {
+        $this->cache = $cache;
+        return $this;
+    }
+
     public function run(Config $config)
     {
         $client = RestClient::create(
@@ -75,6 +93,19 @@ class GenericExtractor extends Extractor
         $this->auth->authenticateClient($client);
         // Verbose Logging of all requests
         $client->getClient()->getEmitter()->attach(new LogRequest);
+
+        if ($this->cache) {
+            CacheSubscriber::attach(
+                $client->getClient(),
+                [
+                    'storage' => $this->cache,
+                    'validate' => false,
+                    'can_cache' => function (RequestInterface $requestInterface) {
+                        return true;
+                    }
+                ]
+            );
+        }
 
         $this->initParser($config);
 
