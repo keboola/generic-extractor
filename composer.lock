@@ -611,16 +611,16 @@
         },
         {
             "name": "keboola/filter",
-            "version": "0.1.2",
+            "version": "0.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-filter.git",
-                "reference": "8e0f9d043a9e6341080396efeddb800a73b12b17"
+                "reference": "dc8e05e555f30b5e5bdc6cd8a00e0d0eab8656a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-filter/zipball/8e0f9d043a9e6341080396efeddb800a73b12b17",
-                "reference": "8e0f9d043a9e6341080396efeddb800a73b12b17",
+                "url": "https://api.github.com/repos/keboola/php-filter/zipball/dc8e05e555f30b5e5bdc6cd8a00e0d0eab8656a9",
+                "reference": "dc8e05e555f30b5e5bdc6cd8a00e0d0eab8656a9",
                 "shasum": ""
             },
             "require": {
@@ -648,7 +648,7 @@
                 }
             ],
             "description": "Simple comparison filter",
-            "time": "2016-06-16 13:28:30"
+            "time": "2016-06-16 14:00:08"
         },
         {
             "name": "keboola/json-parser",
