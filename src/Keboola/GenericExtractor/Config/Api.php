@@ -170,12 +170,12 @@ class Api
             } catch(JsonDecodeException $e) {
                 throw new UserException("The 'baseUrl' attribute in API configuration is not an URL string, neither a valid JSON containing an user function! Error: " . $e->getMessage(), $e);
             }
-            return (new Builder())->run($fn, ['attr' => $config->getAttributes()]);
+            return UserFunction::build([$fn], ['attr' => $config->getAttributes()])[0];
         } else {
-            return (new Builder())->run(
-                Utils::arrayToObject($api['baseUrl']),
+            return UserFunction::build(
+                [$api['baseUrl']],
                 ['attr' => $config->getAttributes()]
-            );
+            )[0];
         }
     }
 

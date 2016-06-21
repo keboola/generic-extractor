@@ -20,6 +20,47 @@ class ApiTest extends ExtractorTestCase
         self::assertEquals($string, $url);
     }
 
+    public function testCreateBaseUrlFunction()
+    {
+        $config = new Config('testApp', 'testCfg', []);
+        $config->setAttributes(['domain' => 'keboola']);
+        $fn = [
+            'function' => 'concat',
+            'args' => [
+                'https://',
+                (object) ['attr' => 'domain'],
+                '.example.com/'
+            ]
+        ];
+
+        $url = Api::createBaseUrl(
+            ['baseUrl' => $fn],
+            $config
+        );
+
+        self::assertEquals('https://keboola.example.com/', $url);
+    }
+
+    /**
+     * @expectedException Keboola\Juicer\Exception\UserException
+     */
+    public function testCreateBaseUrlFunctionError()
+    {
+        $config = new Config('testApp', 'testCfg', []);
+        $fn = [
+            'function' => 'concat',
+            'args' => [
+                'https://keboola.com/',
+                (object) ['attr' => 'path']
+            ]
+        ];
+
+        $url = Api::createBaseUrl(
+            ['baseUrl' => $fn],
+            $config
+        );
+    }
+
     // TODO JSON, array (and object?)
 
     public function testCreateAuthQueryDeprecated()
@@ -82,7 +123,7 @@ class ApiTest extends ExtractorTestCase
         $oauth = Api::createAuth($api, $config, $authorization);
         self::assertInstanceOf('\Keboola\GenericExtractor\Authentication\OAuth20', $oauth);
     }
-    
+
     public function testCreateOauth2Login()
     {
         $ymlConfig = YamlFile::create(ROOT_PATH . '/tests/data/oauth20login/config.yml');
