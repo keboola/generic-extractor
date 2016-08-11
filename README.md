@@ -752,6 +752,7 @@ Can currently be used in query type authentication or endpoint parameters
 - `sprintf`: [See PHP documentation](http://php.net/manual/en/function.sprintf.php)
 - `concat`: Concatenate its arguments into a single string
 - `implode`: Concatenate an array from the second argument, using glue string from the first arg
+- `ifempty`: Return first argument if is not empty, otherwise return second argument
 
 ## Syntax
 The function must be specified in a YML format, which may contain one of the following 4 objects:
