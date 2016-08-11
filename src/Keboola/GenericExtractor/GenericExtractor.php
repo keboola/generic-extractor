@@ -5,6 +5,7 @@ namespace Keboola\GenericExtractor;
 use GuzzleHttp\Message\RequestInterface;
 use GuzzleHttp\Subscriber\Cache\CacheStorage;
 use GuzzleHttp\Subscriber\Cache\CacheSubscriber;
+use Keboola\GenericExtractor\Config\JuicerRest;
 use Keboola\Juicer\Extractor\Extractor,
     Keboola\Juicer\Config\Config,
     Keboola\Juicer\Client\RestClient,
@@ -83,7 +84,7 @@ class GenericExtractor extends Extractor
                     'headers' => UserFunction::build($this->headers, ['attr' => $config->getAttributes()])
                 ]
             ],
-            $this->retryConfig
+            JuicerRest::convertRetry($this->retryConfig)
         );
 
         if (!empty($this->defaultRequestOptions)) {

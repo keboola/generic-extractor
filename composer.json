@@ -5,14 +5,14 @@
     "require": {
         "php": ">=5.5",
         "symfony/yaml": "~2.6.3",
-        "keboola/juicer": "^0.8.0",
+        "keboola/juicer": "^0.9.0",
         "keboola/codebuilder": "~0.2.0",
         "keboola/php-utils": "~0.1.19",
         "symfony/console": "^2.6",
         "keboola/ex-generic-response-array": "^0.0.3",
         "guzzlehttp/oauth-subscriber": "^0.2",
-        "guzzlehttp/cache-subscriber": "dev-master#aaab195"
-
+        "guzzlehttp/cache-subscriber": "dev-master#aaab195",
+        "guzzlehttp/retry-subscriber": "dev-master#270393c"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.2",

@@ -46,6 +46,8 @@ Set the retry limit, rate limit reset header and HTTP codes to retry if the API 
     - Name of the header with information when can we access the API again
 - **retryConfig.*httpCodes*: (array) `[500, 502, 503, 504, 408, 420, 429]`
     - HTTP codes on which to retry
+- **retryConfig.*curlCodes*: (array) `[6, 7, 28, 35, 52]`
+    - CURL error codes on which to retry
 - **retryConfig.maxRetries**: (int) `10`
     - Maximum retry attempts (useful for exponential backoff, if the limit reset header is not present)
 
