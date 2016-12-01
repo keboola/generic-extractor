@@ -7,7 +7,7 @@ class CacheTest extends ExtractorTestCase
 {
 	public function testCacheTTL()
 	{
-		$filePath = './tests/data/requestCacheTTL/out/tables/getPost/get';
+		$filePath = './tests/data/requestCacheTTL/out/tables/getPost.get';
 
 		// first execution
 		$output = shell_exec('php ./run.php --data=./tests/data/requestCacheTTL');
@@ -73,7 +73,7 @@ class CacheTest extends ExtractorTestCase
 
 	public function testCache()
 	{
-		$filePath = './tests/data/requestCache/out/tables/getPost/get';
+		$filePath = './tests/data/requestCache/out/tables/getPost.get';
 
 		// first execution
 		$output = shell_exec('php ./run.php --data=./tests/data/requestCache');
@@ -118,7 +118,7 @@ class CacheTest extends ExtractorTestCase
 
 	public function testNoCache()
 	{
-		$filePath = './tests/data/noCache/out/tables/getPost/get';
+		$filePath = './tests/data/noCache/out/tables/getPost.get';
 
 		// first execution
 		$output = shell_exec('php ./run.php --data=./tests/data/noCache');

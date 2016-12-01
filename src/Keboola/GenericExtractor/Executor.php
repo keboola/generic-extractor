@@ -9,6 +9,8 @@ use Keboola\GenericExtractor\Config\Configuration,
 use Keboola\Temp\Temp;
 use Keboola\Juicer\Common\Logger,
     Keboola\Juicer\Exception\UserException;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 
 class Executor
 {
@@ -105,6 +107,23 @@ class Executor
                 true,
                 $result['incremental']
             );
+
+            // move files and flatten file structure
+            $folderFinder = new Finder();
+            $fs = new Filesystem();
+            $folders = $folderFinder->directories()->in($arguments['data'] . "/out/tables")->depth(0);
+            foreach ($folders as $folder) {
+                //$files = $finder->files()->in($folder->getPathname())->depth(0);
+                $filesFinder = new Finder();
+                $files = $filesFinder->files()->in($folder->getPathname())->depth(0);
+                foreach ($files as $file) {
+                    $destination = $arguments['data'] . "/out/tables/" . basename($folder->getPathname()) . "." . basename($file->getPathname());
+                    // maybe move will be better?
+                    $fs->copy($file->getPathname(), $destination);
+                    $fs->remove($file);
+                }
+            }
+            $fs->remove($folders);
         }
 
         $metadata['time']['previousStart'] = $metadata['time']['currentStart'];
