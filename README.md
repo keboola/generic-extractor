@@ -21,6 +21,7 @@ Example:
 
 -- OR --
 
+```
     {
         "api": {
             "function": "concat",
@@ -34,6 +35,7 @@ Example:
             "domain": "yourDomain"
         }
     }
+```
 
 - for *https://yourDomain.zendesk.com/api/v2/*
 - uses `config` part, where attribute **domain** would contain `yourDomain`
@@ -57,16 +59,26 @@ Set the retry limit, rate limit reset header and HTTP codes to retry if the API 
 - Should be an array, eg: `App-Key,X-User-Email`
 - **http.headers.{Header-Name}** attribute in config section (eg: `http.headers.App-Key`)
 
-        api:
-            http:
-                requiredHeaders:
-                    - App-Key
-                    - X-User-Email
-        config:
-            http:
-                headers:
-                    App-Key: asdf1234
-                    X-User-Email: some@email.com
+    ```
+    {
+        "api": {
+            "http": {
+                "requiredHeaders": [
+                    "App-Key",
+                    "X-User-Email"
+                ]
+            }
+        },
+        "config": {
+            "http": {
+                "headers": {
+                    "App-Key": "asdf1234",
+                    "X-User-Email": "some@email.com"
+                }
+            }
+        }
+    }
+    ```
 
 ## http.headers.{Header-Name}
 
@@ -86,12 +98,19 @@ Set the retry limit, rate limit reset header and HTTP codes to retry if the API 
 - use **username** and **password** or **#password** attributes in the config section.
 - **password** takes preference over **#password**, if both are set
 
-        api:
-            authentication:
-                type: basic
-        config:
-            username: whoever
-            password: soSecret
+    ```
+    {
+        "api": {
+            "authentication": {
+                "type": "basic"
+            }
+        },
+        "config": {
+            "username": "whoever",
+            "password": "soSecret"
+        }
+    }
+    ```
 
 ### query
 
@@ -102,43 +121,82 @@ Set the retry limit, rate limit reset header and HTTP codes to retry if the API 
 - **authentication.type**: `query`
 - **authentication.query.apiKey**: `{"attr": "apiKey"}`
     - this will look for the *apiKey* query parameter value in the config attribute named *apiKey*
-- **authentication.query.sig**: `{"function":"md5","args":[{"function":"concat","args":[{"attr":"apiKey"},{"attr":"secret"},{"function":"time"}]}]}`
+- **authentication.query.sig**: 
+    ```
+    {
+        "function": "md5",
+        "args": [
+            {
+                "function": "concat",
+                "args": [
+                    {
+                        "attr": "apiKey"
+                    },
+                    {
+                        "attr": "secret"
+                    },
+                    {
+                        "function": "time"
+                    }
+                ]
+            }
+        ]
+    }
+    ```   
     - this will generate a *sig* parameter value from MD5 of merged configuration table attributes *apiKey* and *secret*, followed by current *time()* at the time of the request (time() being the PHP function)
     - Allowed functions are listed below in the *User functions* section
     - If you're using any config parameter by using `"attr": "parameterName"`, it has to be identical string to the one in the actual config, including eventual `#` if KBC Docker's encryption is used.
 
-            api:
-                authentication:
-                    type: url.query
-                    query:
-                        apiKey:
-                            attr: apiKey # will assign "asdf1234" to the 'apiKey' query parameter
-                        sig:
-                            function: md5 # will assign result of md5($apiKey.$secret.time()) to 'sig' query parameter
-                            args:
-                                -
-                                    function: concat
-                                    args:
-                                        - attr: apiKey
-                                        - attr: #secret
-                                        - function: time
-            config:
-                apiKey: asdf1234
-                #secret: KBC::ComponentEncrypted==gvrevgrew\grewvgr\ev6\u45bu\65^|VH|^vh==
+        ```
+        {
+            "api": {
+                "authentication": {
+                    "type": "url.query",
+                    "query": {
+                        "apiKey": {
+                            "attr": "apiKey"
+                        },
+                        "sig": {
+                            "function": "md5",
+                            "args": [
+                                {
+                                    "function": "concat",
+                                    "args": [
+                                        {
+                                            "attr": "apiKey"
+                                        },
+                                        {
+                                            "attr": null
+                                        },
+                                        {
+                                            "function": "time"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "config": {
+                "apiKey": "asdf1234"
+            }
+        }
+        ```
 
-    - Data available for building the signature:
-        - **attr**: An attribute from `config` (first level only)
-        - **query**: A value from a query parameter
-            - Ex.: `{ "query": "par1" }` will return `val1` if the query contains `?par1=val1`
-        - **request**: Information about the request
-            - Available information:
-                - `url`
-                - `path`
-                - `queryString`
-                - `method`
-                - `hostname`
-                - `port`
-                - `resource`
+- Data available for building the signature:
+    - **attr**: An attribute from `config` (first level only)
+    - **query**: A value from a query parameter
+        - Ex.: `{ "query": "par1" }` will return `val1` if the query contains `?par1=val1`
+    - **request**: Information about the request
+        - Available information:
+            - `url`
+            - `path`
+            - `queryString`
+            - `method`
+            - `hostname`
+            - `port`
+            - `resource`
 
 ### login
 
@@ -160,25 +218,39 @@ Set the retry limit, rate limit reset header and HTTP codes to retry if the API 
     - If set to an array, it *must* contain `response` key with its value containing the path to expiry time in the response
         - `relative` key sets whether the expiry value is relative to current time. False by default.
 
-                api:
-                    authentication:
-                        type: "login"
-                        loginRequest:
-                            endpoint: "Security/Login"
-                            headers:
-                                Content-Type: "application/json"
-                            method: POST
-                            params:
-                                UserName:
-                                    attr: "username"
-                                PassWord:
-                                    attr: "password"
-                        apiRequest:
-                            headers:
-                                Ticket: Ticket
-                config:
-                    username: whoever
-                    password: soSecret
+            ```
+            {
+                "api": {
+                    "authentication": {
+                        "type": "login",
+                        "loginRequest": {
+                            "endpoint": "Security/Login",
+                            "headers": {
+                                "Content-Type": "application/json"
+                            },
+                            "method": "POST",
+                            "params": {
+                                "UserName": {
+                                    "attr": "username"
+                                },
+                                "PassWord": {
+                                    "attr": "password"
+                                }
+                            }
+                        },
+                        "apiRequest": {
+                            "headers": {
+                                "Ticket": "Ticket"
+                            }
+                        }
+                    }
+                },
+                "config": {
+                    "username": "whoever",
+                    "password": "soSecret"
+                }
+            }
+            ```
 
 ### oauth10
 
@@ -191,18 +263,28 @@ Use [Keboola Docker and OAuth API integration](https://github.com/keboola/docker
 
 - **authentication.type**: `oauth10`
 
-Example minimum `config.yml`:
+Example minimum `config.json`:
 
-        authorization:
-            oauth_api:
-                credentials:
-                    '#data': '{"oauth_token":"userToken","oauth_token_secret":"tokenSecret"}'
-                    appKey: 1234
-                    '#appSecret': 'asdf'
-        parameters:
-            api:
-                authentication:
-                    type: oauth10
+```
+{
+    "authorization": {
+        "oauth_api": {
+            "credentials": {
+                "#data": "{\"oauth_token\":\"userToken\",\"oauth_token_secret\":\"tokenSecret\"}",
+                "appKey": 1234,
+                "#appSecret": "asdf"
+            }
+        }
+    },
+    "parameters": {
+        "api": {
+            "authentication": {
+                "type": "oauth10"
+            }
+        }
+    }
+}
+```
 
 ### oauth20
 
@@ -214,80 +296,123 @@ The **query** and **request** information can also be used just like in the `que
 
 Example config for **Bearer** token use:
 
-        authorization:
-            oauth_api:
-                credentials:
-                    '#data': '{"status": "ok","access_token": "testToken"}'
-        parameters:
-            api:
-                authentication:
-                    type: oauth20
-                    format: json
-                    headers:
-                        Authorization:
-                            function: concat
-                            args:
-                                - 'Bearer '
-                                -
-                                    authorization: data.access_token
+```
+{
+    "authorization": {
+        "oauth_api": {
+            "credentials": {
+                "#data": "{\"status\": \"ok\",\"access_token\": \"testToken\"}"
+            }
+        }
+    },
+    "parameters": {
+        "api": {
+            "authentication": {
+                "type": "oauth20",
+                "format": "json",
+                "headers": {
+                    "Authorization": {
+                        "function": "concat",
+                        "args": [
+                            "Bearer ",
+                            {
+                                "authorization": "data.access_token"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}
+```
 
 Example for **MAC** authentication:
 - Assumes the user token is in the OAuth data JSON in `access_token` key, and MAC secret is in the same JSON in `mac_secret` key.
 
-        authorization:
-            oauth_api:
-                credentials:
-                    '#data': '{"status": "ok","access_token": "testToken", "mac_secret": "iAreSoSecret123"}'
-                    appKey: clId
-                    '#appSecret': clScrt
-        parameters:
-            api:
-                baseUrl: http://private-53977-extractormock.apiary-mock.com/
-                authentication:
-                    type: oauth20
-                    format: json
-                    headers:
-                        Authorization:
-                            function: concat
-                            args:
-                                - 'MAC id="'
-                                -
-                                    authorization: data.access_token
-                                - '", ts="'
-                                -
-                                    authorization: timestamp
-                                - '", nonce="'
-                                -
-                                    authorization: nonce
-                                - '", mac="'
-                                -
-                                    function: md5
-                                    args:
-                                        -
-                                            function: hash_hmac
-                                            args:
-                                                - sha256
-                                                -
-                                                    function: implode
-                                                    args:
-                                                        - "\n"
-                                                        -
-                                                            -
-                                                                authorization: timestamp
-                                                            -
-                                                                authorization: nonce
-                                                            -
-                                                                request: method
-                                                            -
-                                                                request: resource
-                                                            -
-                                                                request: hostname
-                                                            -
-                                                                request: port
-                                                            - "\n"
-                                                -
-                                                    authorization: data.mac_secret
-
+```
+{
+    "authorization": {
+        "oauth_api": {
+            "credentials": {
+                "#data": "{\"status\": \"ok\",\"access_token\": \"testToken\", \"mac_secret\": \"iAreSoSecret123\"}",
+                "appKey": "clId",
+                "#appSecret": "clScrt"
+            }
+        }
+    },
+    "parameters": {
+        "api": {
+            "baseUrl": "http://private-53977-extractormock.apiary-mock.com/",
+            "authentication": {
+                "type": "oauth20",
+                "format": "json",
+                "headers": {
+                    "Authorization": {
+                        "function": "concat",
+                        "args": [
+                            "MAC id=\"",
+                            {
+                                "authorization": "data.access_token"
+                            },
+                            "\", ts=\"",
+                            {
+                                "authorization": "timestamp"
+                            },
+                            "\", nonce=\"",
+                            {
+                                "authorization": "nonce"
+                            },
+                            "\", mac=\"",
+                            {
+                                "function": "md5",
+                                "args": [
+                                    {
+                                        "function": "hash_hmac",
+                                        "args": [
+                                            "sha256",
+                                            {
+                                                "function": "implode",
+                                                "args": [
+                                                    "\n",
+                                                    [
+                                                        {
+                                                            "authorization": "timestamp"
+                                                        },
+                                                        {
+                                                            "authorization": "nonce"
+                                                        },
+                                                        {
+                                                            "request": "method"
+                                                        },
+                                                        {
+                                                            "request": "resource"
+                                                        },
+                                                        {
+                                                            "request": "hostname"
+                                                        },
+                                                        {
+                                                            "request": "port"
+                                                        },
+                                                        "\n"
+                                                    ]
+                                                ]
+                                            },
+                                            {
+                                                "authorization": "data.mac_secret"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}
+```   
 
 # Pagination
 ## Methods
@@ -310,6 +435,7 @@ Configured in `api.pagination.method`
                     limit: 1000
                     limitParam: limit # default, can be omitted
                     offsetParam: offset # default, can be omitted
+
 - **pagination.firstPageParams**(optional)
     - Whether or not include limit and offset params in the first request (default to `true`)
 - **pagination.offsetFromJob**(optional)
