@@ -432,7 +432,6 @@ Configured in `api.pagination.method`
     - sets which query parameter should contain the offset value (default to `offset`)
         
         ```
-        {
             "api": {
                 "pagination": {
                     "method": "offset",
@@ -441,7 +440,6 @@ Configured in `api.pagination.method`
                     "offsetParam": "offset"
                 }
             }
-        }
         ``` 
 
 - **pagination.firstPageParams**(optional)
@@ -485,7 +483,6 @@ Configured in `api.pagination.method`
     - can be used to override settings (endpoint, method, ...) of the initial request
 
     ```
-    {
         "api": {
             "pagination": {
                 "method": "response.param",
@@ -500,7 +497,6 @@ Configured in `api.pagination.method`
                 }
             }
         }
-    }
     ```
 
 ### response.url
@@ -516,7 +512,6 @@ Configured in `api.pagination.method`
     - if enabled and the next page URL has the same query parameters as the "params" field, values from the "params" are used
 
     ```
-    {
         "api": {
             "pagination": {
                 "method": "response.url",
@@ -524,7 +519,6 @@ Configured in `api.pagination.method`
                 "includeParams": true
             }
         }
-    }
     ```
 
 ### pagenum
@@ -539,7 +533,6 @@ simple page number increasing 1 by 1
     - query parameter name to use for *limit*
 
     ```
-    {
         "api": {
             "pagination": {
                 "method": "pagenum",
@@ -548,7 +541,6 @@ simple page number increasing 1 by 1
                 "limitParam": "count"
             }
         }
-    }
     ```
 
 - **pagination.firstPage**: (optional) `1` by default. Set the first page number.
@@ -574,7 +566,6 @@ The intention is to look for identifiers within data and in the next request, us
 
 - Example:
     ```
-    {
         "pagination": {
             "method": "cursor",
             "idKey": "id",
@@ -582,17 +573,14 @@ The intention is to look for identifiers within data and in the next request, us
             "increment": -1,
             "reverse": true
         }
-    }
     ```
 
 - Data:
     ```
-    {
         "results": [
             {"id": 11},
             {"id": 12}
         ]
-    }
     ```
 
 - Request:
@@ -613,7 +601,6 @@ Allows setting scrollers per endpoint.
 - Example configuration:
 
 ```
-{
     "pagination": {
         "method": "multiple",
         "scrollers": {
@@ -632,11 +619,9 @@ Allows setting scrollers per endpoint.
             }
         }
     }
-}
 ```
 
 ```
-{
     "jobs": [
         {
             "endpoint": "statuses/user_timeline",
@@ -650,7 +635,6 @@ Allows setting scrollers per endpoint.
             }
         }
     ]
-}
 ```
 
 ## Common scrolling parameters
@@ -660,7 +644,6 @@ Looks within responses to find a boolean field determining whether to continue s
 
 Usage:
 ```
-{
     "pagination": {
         "nextPageFlag": {
             "field": "hasMore",
@@ -668,7 +651,6 @@ Usage:
             "ifNotSet": false
         }
     }
-}
 ```
 
 # Config
@@ -689,12 +671,10 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
 - **userData**: A set of `key:value` pairs that will be added to the `root` of all endpoints' results
     - Example:
     ```
-    {
-        "config": {
-            "userData": {
-                "some": "tag",
-                "another": "identifier"
-            }
+    "config": {
+        "userData": {
+            "some": "tag",
+            "another": "identifier"
         }
     }
     ```
@@ -702,10 +682,8 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
 - **incrementalOutput**: (boolean) Whether or not to write the result incrementally
     - Example:
     ```
-    {
-        "config": {
-            "incrementalOutput": true
-        }
+    "config": {
+        "incrementalOutput": true
     }
     ```
 
@@ -716,21 +694,19 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
         - Each parameter in the JSON encoded object may either contain a string, eg: `{""start_date"": ""2014-12-26""}`
         - OR contain an user function as described below, for example to load value from parameters:
         ```
-        {
-            "start_date": {
-                "function": "date",
-                "args": [
-                    "Y-m-d+H:i",
-                    {
-                        "function": "strtotime",
-                        "args": [
-                            {
-                                "attr": "job.1.success"
-                            }
-                        ]
-                    }
-                ]
-            }
+        "start_date": {
+            "function": "date",
+            "args": [
+                "Y-m-d+H:i",
+                {
+                    "function": "strtotime",
+                    "args": [
+                        {
+                            "attr": "job.1.success"
+                        }
+                    ]
+                }
+            ]
         }
         ```    
     - **dataType**: Type of data returned by the endpoint. It also describes a table name, where the results will be stored
@@ -747,45 +723,42 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
         - **placeholders** array must define each placeholder. It must be a set of `key: value` pairs, where **key** is the placeholder (eg `"1:id"`) and the value is a path within the response object - if nested, use `.` as a separator.
             - Example:
             ```
-            {
-                "endpoint": "tickets.json",
-                "children": [
-                    {
-                        "endpoint": "tickets/{id}/comments.json",
-                        "placeholders": {
-                            "id": "id"
-                        },
-                        "children": [
-                            {
-                                "endpoint": "tickets/{2:ticket_id}/comments/{comment_id}/details.json",
-                                "placeholders": {
-                                    "comment_id": "id",
-                                    "2:ticket_id": "id"
-                                }
+            "endpoint": "tickets.json",
+            "children": [
+                {
+                    "endpoint": "tickets/{id}/comments.json",
+                    "placeholders": {
+                        "id": "id"
+                    },
+                    "children": [
+                        {
+                            "endpoint": "tickets/{2:ticket_id}/comments/{comment_id}/details.json",
+                            "placeholders": {
+                                "comment_id": "id",
+                                "2:ticket_id": "id"
                             }
-                        ]
-                    }
-                ]
-            }
+                        }
+                    ]
+                }
+            ]
             ```
 
             - You can also use an user function on the value from a parent using an object as the placeholder value
             - That object MUST contain a 'path' key that would be the value of the placeholer, and a function. To access the value in the function arguments, use `{"placeholder": "value"}`
                 - Example:
-
-                        {
-                            "placeholders": {
-                                "1:id": {
-                                    "path": "id",
-                                    "function": "urlencode",
-                                    "args": [
-                                        {
-                                            "placeholder": "value"
-                                        }
-                                    ]
-                                }
+                ```
+                "placeholders": {
+                    "1:id": {
+                        "path": "id",
+                        "function": "urlencode",
+                        "args": [
+                            {
+                                "placeholder": "value"
                             }
-                        }
+                        ]
+                    }
+                }
+                ```
 
         - **recursionFilter**:
             - Can contain a value consisting of a name of a field from the parent's response, logical operator and a value to compare against. Supported operators are "**==**", "**<**", "**>**", "**<=**", "**>=**", "**!=**"
@@ -798,41 +771,37 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
         - Value of this parameter can be either a string containing path to data to be filtered within response data, or an array of such values.
         - Example:
         ```
-        {
-            "results": [
-                {
-                    "id": 1,
-                    "data": "scalar"
-                },
-                {
-                    "id": 2,
-                    "data": {"object": "can't really parse this!"}
-                }
-            ]
-        }
+        "results": [
+            {
+                "id": 1,
+                "data": "scalar"
+            },
+            {
+                "id": 2,
+                "data": {"object": "can't really parse this!"}
+            }
+        ]
         ```  
 
         - To be able to work with such response, set `"responseFilter": "data"` - it should be a path within each object of the response array, **not** including the key of the response array
         - To filter values within nested arrays, use `"responseFilter": "data.array[].key"`
         - Example:
         ```
-        {
-            "results": [
-                {
-                    "id": 1,
-                    "data": {
-                        "array": [
-                            {
-                                "key": "value"
-                            },
-                            {
-                                "key": {"another": "value"}
-                            }
-                        ]
-                    }
+        "results": [
+            {
+                "id": 1,
+                "data": {
+                    "array": [
+                        {
+                            "key": "value"
+                        },
+                        {
+                            "key": {"another": "value"}
+                        }
+                    ]
                 }
-            ]
-        }
+            }
+        ]
         ```
 
         - This would be another unparseable object, so the filter above would just convert the `{ 'another': 'value' }` object to a string
@@ -840,15 +809,13 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
     - **responseFilterDelimiter**: Allows changing delimiter if you need nesting in **responseFilter**, for instance if your data contains keys containing `.`, which is the default delimiter.
         - Example:
         ```
-        {
-            "results": [
-                {
-                    "data.stuff": {
-                        "something": [1,2,3]
-                    }
+        "results": [
+            {
+                "data.stuff": {
+                    "something": [1,2,3]
                 }
-            ]
-        }
+            }
+        ]
         ```
 
         - Use `'responseFilter': 'data.stuff/something'` together with `'responseFilterDelimiter': '/'` to filter the array in `something`
@@ -863,28 +830,25 @@ In a recursive job, the placeholer prepended by `parent_` is available as `type:
 
 Jobs:
 ```
+"jobs": [
 {
-  "jobs": [
+    "endpoint": "orgs/keboola/repos",
+    "dataType": "repos",
+    "children": [
     {
-      "endpoint": "orgs/keboola/repos",
-      "dataType": "repos",
-      "children": [
-        {
-          "endpoint": "repos/keboola/{1:name}/issues",
-          "placeholders": {
-            "1:name": "name"
-          },
-          "dataType": "issues"
-        }
-      ]
+        "endpoint": "repos/keboola/{1:name}/issues",
+        "placeholders": {
+        "1:name": "name"
+        },
+        "dataType": "issues"
     }
-  ]
+    ]
 }
+]
 ```
 
 Mappings (of the child):
 ```
-{
   "mappings": {
     "issues": {
       "parent_name": {
@@ -907,14 +871,12 @@ Mappings (of the child):
       }
     }
   }
-}
 ```
 The `parent_name` is the `parent_` prefix together with the value of placeholder `1:name`.
 
 ### Example
 
 ```
-{
   "mappings": {
     "get": {
       "id": {
@@ -936,7 +898,6 @@ The `parent_name` is the `parent_` prefix together with the value of placeholder
       "dataType": "get"
     }
   ]
-}
 ```
 
 # Iterations
@@ -1113,12 +1074,10 @@ This is useful for local jobs configuration development.
 
 ### Enabling cache:
 ```
-{
-    "parameters": {
-        "api": "...",
-        "config": "...",
-        "cache": true
-    }
+"parameters": {
+    "api": "...",
+    "config": "...",
+    "cache": true
 }
 ```
 - Caches only responses with one of [`200`, `203`, `300`, `301`, `410`] HTTP Status codes
@@ -1127,13 +1086,11 @@ This is useful for local jobs configuration development.
     - If counted value is `null`, extractor will use own default value (30 days)
     - Default `ttl` value can be overridden by custom config value (time in seconds)
 ```
-{
-    "parameters": {
-        "api": "...",
-        "config": "...",
-        "cache": {
-            "ttl": 3600
-        }
+"parameters": {
+    "api": "...",
+    "config": "...",
+    "cache": {
+        "ttl": 3600
     }
 }
 ```
