@@ -119,8 +119,7 @@ class Executor
                 foreach ($files as $file) {
                     $destination = $arguments['data'] . "/out/tables/" . basename($folder->getPathname()) . "." . basename($file->getPathname());
                     // maybe move will be better?
-                    $fs->copy($file->getPathname(), $destination);
-                    $fs->remove($file);
+                    $fs->rename($file->getPathname(), $destination);
                 }
             }
             $fs->remove($folders);
