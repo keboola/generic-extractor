@@ -1,0 +1,147 @@
+FORMAT: 1A
+
+# ExtractorMock
+
+Polls is a simple API allowing consumers to view polls and vote in them.
+
+# Group API
+
+## Get [/get]
+
+### GET data [GET]
++ Response 201 (application/json)
+
+        [
+            {
+                "id": "321",
+                "status": "get"
+            },
+            {
+                "id": "girlfriend",
+                "status": "imaginary"
+            }
+        ]
+        
+## Post [/post]
+
+### POST data [POST]
++ Request (application/json)
+            
+    + Body
+    
+            {
+                "parameter": "value"
+            }
+
++ Response 201 (application/json)
+
+        [
+            {
+                "id": "123",
+                "status": "post"
+            },
+            {
+                "id": "potato",
+                "status": "mashed"
+            }
+        ]
+        
+## Scroll - response URL [/scroll]
+
+### First page [GET]
++ Response 201 (application/json)
+
+        {
+            "data": [
+                {
+                    "id": "1.0",
+                    "status": "first"
+                },
+                {
+                    "id": "1.1",
+                    "status": "page"
+                }
+            ],
+            "next": "/scroll/next"
+        }
+        
+
+### Next page [GET /scroll/next]
++ Response 201 (application/json)
+
+        {
+            "data": [
+                {
+                    "id": "2.0",
+                    "status": "next"
+                },
+                {
+                    "id": "2.1",
+                    "status": "page"
+                }
+            ],
+            "next": "/scroll/last"
+        }
+        
+### Last page [GET /scroll/last]
++ Response 201 (application/json)
+
+        {
+            "data": [
+                {
+                    "id": "3.0",
+                    "status": "last"
+                },
+                {
+                    "id": "3.1",
+                    "status": "page"
+                }
+            ],
+            "next": ""
+        }
+        
+
+## Basic Auth [/basic]
+User/Pw = test:test
+
+### GET data [GET]
+
++ Request
+
+    + Headers
+
+            Authorization: Basic dGVzdDp0ZXN0
+
++ Response 201 (application/json)
+
+        [
+            {
+                "id": "1",
+                "status": "basic"
+            }
+        ]
+        
+## Default options [/defaultOptions{?param}]
+
+### GET data [GET]
+
++ Parameters
+    
+    + param (string, required) - Default test value
+        + Default: `value`
+
++ Response 200 (application/json)
+
+        []
+
+## Default bucket [/defaultBucket]
+
+### GET [GET]
+
++ Response 200
+
+        [{
+            "key": "value"
+        }]
+        
+

@@ -242,7 +242,7 @@ Example for **MAC** authentication:
                     '#appSecret': clScrt
         parameters:
             api:
-                baseUrl: http://private-53977-extractormock.apiary-mock.com/
+                baseUrl: http://private-74f7c-extractormock.apiary-mock.com
                 authentication:
                     type: oauth20
                     format: json

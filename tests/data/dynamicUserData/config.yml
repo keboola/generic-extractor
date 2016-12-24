@@ -1,6 +1,6 @@
 parameters:
     api:
-        baseUrl: http://private-53977-extractormock.apiary-mock.com/
+        baseUrl: http://private-74f7c-extractormock.apiary-mock.com
     config:
         userData:
             current_date:
