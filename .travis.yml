@@ -4,7 +4,7 @@ services:
   - docker
 before_script:
   - docker-compose build extractor
-script: docker-compose run --rm --entrypoint sh -e CODECLIMATE_REPO_TOKEN extractor /code/Tests/run.sh
+script: docker-compose run --rm --entrypoint sh -e CODECLIMATE_REPO_TOKEN extractor /code/tests/run.sh
 after_success:
   - docker images
 deploy:
