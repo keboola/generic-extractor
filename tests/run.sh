@@ -3,7 +3,9 @@ set -e
 
 pecl config-set php_ini /usr/local/etc/php.ini \
 	&& yes | pecl install xdebug \
-	&& echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
+	&& echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini
+
+composer install --dev
 
 echo "Starting tests" >&1
 php --version \
