@@ -11,7 +11,8 @@ deploy:
   provider: script
   skip_cleanup: true
   script: ./deploy.sh
-#  on:
+  on:
+    all_branches: true
 #    tags: true
 notifications:
   slack:
