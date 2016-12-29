@@ -1,16 +1,20 @@
-extractor:
-  build: .
-  volumes:
-    - .:/code
-  working_dir: /code
-  entrypoint: "php ./run.php --data=./data"
-  tty: true
-  stdin_open: true
-tests:
-  build: .
-  volumes:
-    - .:/code
-  working_dir: /code
-  entrypoint: "./phpunit.sh"
-  tty: true
-  stdin_open: true
+version: '2'
+
+services:
+  extractor:
+    build: .
+    image: keboola/generic-extractor
+    volumes:
+      - .:/home
+    working_dir: /home
+    entrypoint: "php ./run.php --data=./data"
+    tty: true
+    stdin_open: true
+  tests:
+    build: .
+    volumes:
+      - .:/home
+    working_dir: /home
+    entrypoint: "./phpunit.sh"
+    tty: true
+    stdin_open: true
