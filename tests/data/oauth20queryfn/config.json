@@ -1,0 +1,28 @@
+{
+  "authorization": {
+    "oauth_api": {
+      "credentials": {
+        "#data": "{\"status\": \"ok\",\"access_token\": \"token\"}"
+      }
+    }
+  },
+  "parameters": {
+    "api": {
+      "baseUrl": "http://private-74f7c-extractormock.apiary-mock.com",
+      "authentication": {
+        "type": "oauth20",
+        "format": "json",
+        "query": "..."
+      }
+    },
+    "config": {
+      "outputBucket": "getPost",
+      "jobs": [
+        {
+          "endpoint": "oauth20",
+          "dataType": "oauth20"
+        }
+      ]
+    }
+  }
+}

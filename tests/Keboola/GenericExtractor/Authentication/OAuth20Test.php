@@ -8,6 +8,7 @@ use GuzzleHttp\Client,
     GuzzleHttp\Subscriber\Mock,
     GuzzleHttp\Subscriber\History;
 use Keboola\Juicer\Client\RestClient;
+use Keboola\Juicer\Filesystem\JsonFile;
 use Keboola\Juicer\Filesystem\YamlFile;
 use Keboola\Code\Builder,
     Keboola\Code\Exception\UserScriptException;
@@ -16,7 +17,7 @@ class OAuth20Test extends ExtractorTestCase
 {
     public function testAuthenticateClientJson()
     {
-        $config = YamlFile::create(ROOT_PATH . '/tests/data/oauth20bearer/config.yml');
+        $config = JsonFile::create(ROOT_PATH . '/tests/data/oauth20bearer/config.json');
 
         // FIXME base_url from cfg
         $client = new Client(['base_url' => 'http://example.com']);
@@ -38,7 +39,7 @@ class OAuth20Test extends ExtractorTestCase
 
     public function testMACAuth()
     {
-        $config = YamlFile::create(ROOT_PATH . '/tests/data/oauth20mac/config.yml');
+        $config = JsonFile::create(ROOT_PATH . '/tests/data/oauth20mac/config.json');
 
         // FIXME base_url from cfg
         $client = new Client(['base_url' => 'http://example.com']);

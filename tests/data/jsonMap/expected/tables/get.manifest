@@ -1,3 +1,1 @@
-incremental: true
-primary_key:
-    - id
+{"incremental":true,"primary_key":["id"]}

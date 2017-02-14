@@ -1,9 +1,0 @@
-parameters:
-    api:
-        baseUrl: http://private-74f7c-extractormock.apiary-mock.com
-    config:
-        #debug: 1
-        jobs:
-            -
-                endpoint: defaultBucket
-                dataType: db

@@ -1,5 +1,0 @@
-time:
-    previousStart: 1457992654
-json_parser.struct:
-    get: { id: scalar, status: scalar }
-json_parser.structVersion: !!float 2

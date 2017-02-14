@@ -2,6 +2,7 @@
 namespace Keboola\GenericExtractor;
 
 use Keboola\GenericExtractor\Config\Configuration;
+use Keboola\Juicer\Filesystem\JsonFile;
 use Keboola\Temp\Temp;
 use Keboola\Juicer\Filesystem\YamlFile;
 
@@ -28,7 +29,7 @@ class ConfigurationTest extends ExtractorTestCase
 
         $modules = $configuration->getModules();
 
-        $modulesCfg = YamlFile::create(ROOT_PATH . '/config/modules.yml')->getData();
+        $modulesCfg = JsonFile::create(ROOT_PATH . '/config/modules.json')->getData();
 
         foreach($modulesCfg as $moduleCfg) {
             self::assertInstanceOf($moduleCfg['class'], $modules[$moduleCfg['type']][$moduleCfg['level']]);

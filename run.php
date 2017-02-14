@@ -14,8 +14,6 @@ function userError(UserException $e) {
     exit(1);
 }
 
-
-// TODO create an Exception handler, register in bootstrap and handle the try/catch there?
 try {
     $executor = new Executor;
     $executor->run();
