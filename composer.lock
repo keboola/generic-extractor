@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "9e312b17e391f1226bd6e1c21c0b3c8b",
+    "content-hash": "a290f6fc6e109dbabb88ee3ddffb83d5",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -697,16 +697,16 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "dev-json-config",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "caa3f97ea4aa5e365d156e6885d764f0a27b5dbf"
+                "reference": "ffd75274d1378931bbe74320bedf02d9ac8b1a89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/caa3f97ea4aa5e365d156e6885d764f0a27b5dbf",
-                "reference": "caa3f97ea4aa5e365d156e6885d764f0a27b5dbf",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/ffd75274d1378931bbe74320bedf02d9ac8b1a89",
+                "reference": "ffd75274d1378931bbe74320bedf02d9ac8b1a89",
                 "shasum": ""
             },
             "require": {
@@ -746,7 +746,7 @@
                 "extractor",
                 "keboola"
             ],
-            "time": "2017-02-14 14:23:48"
+            "time": "2017-02-14T14:28:43+00:00"
         },
         {
             "name": "keboola/php-csvtable",
@@ -1492,7 +1492,7 @@
                 "codeclimate",
                 "coverage"
             ],
-            "time": "2016-09-22T16:57:58+00:00"
+            "time": "2016-09-22 16:57:58"
         },
         {
             "name": "doctrine/instantiator",
@@ -3257,7 +3257,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "keboola/juicer": 20,
         "guzzlehttp/cache-subscriber": 20,
         "guzzlehttp/retry-subscriber": 20,
         "codeclimate/php-test-reporter": 20
