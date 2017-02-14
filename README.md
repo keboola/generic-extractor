@@ -1101,7 +1101,7 @@ Best way to create and test new configurations is run extractor in docker contai
 
 ## Prerequisites
 
-- Clone this repository `git clone git@github.com:keboola/generic-extractor.git`
+- Clone this repository `git clone https://github.com/keboola/generic-extractor.git`
 - Switch to extractor directory `cd generic-extractor`
 - Build container `docker-compose build`
 - Install dependencies locally `docker-compose run --rm extractor composer install`
