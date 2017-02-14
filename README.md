@@ -1109,6 +1109,12 @@ Best way to create and test new configurations is run extractor in docker contai
 
 ## Execution
 - Create `config.yml` in `data` folder
+  - Sample configuration which downloads list of Keboola Developers from githhub `data/config.yml`:
+  ```
+  parameters:
+      api: {  baseUrl: 'https://api.github.com', http: { Accept: application/json, Content-Type: application/json;charset=UTF-8 } }
+      config: { debug: true, jobs: [{ endpoint: /orgs/keboola/members, dataType: members}] }
+    ```
 - Run extraction `docker-compose run --rm extractor`
 - You will find extracted data in folder `data/out`
 - Repeat:)
