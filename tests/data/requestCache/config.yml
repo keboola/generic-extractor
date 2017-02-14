@@ -2,12 +2,12 @@ parameters:
     cache:
       ttl: 7200
     api:
-        baseUrl: http://www.timeapi.org/
+        baseUrl: http://time.jsontest.com/
+        http: { Accept: application/json, Content-Type: application/json;charset=UTF-8 }
     config:
-#        debug: true
         outputBucket: getPost
         jobs:
             -
-                endpoint: utc/now.json
+                endpoint: /
                 dataType: get
-                dataField: dateString
+                dataField: .

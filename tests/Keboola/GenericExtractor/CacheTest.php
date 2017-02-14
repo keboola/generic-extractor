@@ -17,13 +17,13 @@ class CacheTest extends ExtractorTestCase
 		$this->assertFileExists($filePath);
 
 		$csv = new CsvFile($filePath);
-		$this->assertEquals(1, $csv->getColumnsCount());
+		$this->assertEquals(3, $csv->getColumnsCount());
 
 		$csv->next();
 		$data = $csv->current();
 		unset($csv);
 
-		$firstDateTime = new \DateTime($data[0]);
+		$firstDateTime = (int) $data[1];
 		$this->rmDir('./tests/data/requestCacheTTL/out');
 
 		sleep(3);
@@ -36,14 +36,14 @@ class CacheTest extends ExtractorTestCase
 		$this->assertFileExists($filePath);
 
 		$csv = new CsvFile($filePath);
-		$this->assertEquals(1, $csv->getColumnsCount());
+		$this->assertEquals(3, $csv->getColumnsCount());
 
 		$csv->next();
 		$data = $csv->current();
 		unset($csv);
 
-		$secondDateTime = new \DateTime($data[0]);
-		$this->assertTrue($firstDateTime->getTimestamp() === $secondDateTime->getTimestamp());
+		$secondDateTime = (int) $data[1];
+		$this->assertTrue($firstDateTime === $secondDateTime);
 
 		$this->rmDir('./tests/data/requestCacheTTL/out');
 
@@ -57,13 +57,13 @@ class CacheTest extends ExtractorTestCase
 		$this->assertFileExists($filePath);
 
 		$csv = new CsvFile($filePath);
-		$this->assertEquals(1, $csv->getColumnsCount());
+		$this->assertEquals(3, $csv->getColumnsCount());
 
 		$csv->next();
 		$data = $csv->current();
 		unset($csv);
 
-		$thirdDateTime = new \DateTime($data[0]);
+		$thirdDateTime = (int) $data[1];
 		$this->assertTrue($secondDateTime < $thirdDateTime);
 
 		$this->rmDir('./tests/data/requestCacheTTL/out');
@@ -83,13 +83,13 @@ class CacheTest extends ExtractorTestCase
 		$this->assertFileExists($filePath);
 
 		$csv = new CsvFile($filePath);
-		$this->assertEquals(1, $csv->getColumnsCount());
+		$this->assertEquals(3, $csv->getColumnsCount());
 
 		$csv->next();
 		$data = $csv->current();
 		unset($csv);
 
-		$firstDateTime = new \DateTime($data[0]);
+		$firstDateTime = (int) $data[1];
 		$this->rmDir('./tests/data/requestCache/out');
 
 		sleep(3);
@@ -102,14 +102,14 @@ class CacheTest extends ExtractorTestCase
 		$this->assertFileExists($filePath);
 
 		$csv = new CsvFile($filePath);
-		$this->assertEquals(1, $csv->getColumnsCount());
+		$this->assertEquals(3, $csv->getColumnsCount());
 
 		$csv->next();
 		$data = $csv->current();
 		unset($csv);
 
-		$secondDateTime = new \DateTime($data[0]);
-		$this->assertTrue($firstDateTime->getTimestamp() === $secondDateTime->getTimestamp());
+		$secondDateTime = (int) $data[1];
+		$this->assertTrue($firstDateTime === $secondDateTime);
 
 		$this->rmDir('./tests/data/requestCache/out');
 
@@ -128,13 +128,13 @@ class CacheTest extends ExtractorTestCase
 		$this->assertFileExists($filePath);
 
 		$csv = new CsvFile($filePath);
-		$this->assertEquals(1, $csv->getColumnsCount());
+		$this->assertEquals(3, $csv->getColumnsCount());
 
 		$csv->next();
 		$data = $csv->current();
 		unset($csv);
 
-		$firstDateTime = new \DateTime($data[0]);
+		$firstDateTime = (int) $data[1];
 		$this->rmDir('./tests/data/noCache/out');
 
 		sleep(3);
@@ -147,13 +147,13 @@ class CacheTest extends ExtractorTestCase
 		$this->assertFileExists($filePath);
 
 		$csv = new CsvFile($filePath);
-		$this->assertEquals(1, $csv->getColumnsCount());
+		$this->assertEquals(3, $csv->getColumnsCount());
 
 		$csv->next();
 		$data = $csv->current();
 		unset($csv);
 
-		$secondDateTime = new \DateTime($data[0]);
+		$secondDateTime = (int) $data[1];
 
 		$this->assertTrue($firstDateTime < $secondDateTime);
 

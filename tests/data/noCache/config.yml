@@ -1,10 +1,11 @@
 parameters:
     api:
-        baseUrl: http://www.timeapi.org/
+        baseUrl: http://time.jsontest.com/
+        http: { Accept: application/json, Content-Type: application/json;charset=UTF-8 }
     config:
         outputBucket: getPost
         jobs:
             -
-                endpoint: utc/now.json
+                endpoint: /
                 dataType: get
-                dataField: dateString
+                dataField: .
