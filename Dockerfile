@@ -18,4 +18,4 @@ COPY php.ini /usr/local/etc/php/
 
 RUN composer install --no-interaction
 
-ENTRYPOINT php ./run.php --data=/data
+CMD php ./run.php --data=/data

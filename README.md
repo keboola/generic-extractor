@@ -1097,11 +1097,23 @@ This is useful for local jobs configuration development.
 
 # Local development
 
-Best way to create and test new configurations is run extractor in docker container:
-```
-docker-compose run --rm extractor
-```   
-Running tests:
+Best way to create and test new configurations is run extractor in docker container.
+
+## Prerequisites
+
+- Clone this repository `git clone git@github.com:keboola/generic-extractor.git`
+- Switch to extractor directory `cd generic-extractor`
+- Build container `docker-compose build`
+- Install dependencies locally `docker-compose run --rm extractor composer install`
+- Create data folder for configuration `mkdir data`
+
+## Execution
+- Create `config.yml` in `data` folder
+- Run extraction `docker-compose run --rm extractor`
+- You will find extracted data in folder `data/out`
+- Repeat:)
+
+# Running tests:
 ```
 docker-compose run --rm tests
-```   
+``` 

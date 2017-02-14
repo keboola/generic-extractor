@@ -7,7 +7,7 @@ services:
     volumes:
       - .:/home
     working_dir: /home
-    entrypoint: "php ./run.php --data=./data"
+    command: "php ./run.php --data=./data"
     tty: true
     stdin_open: true
   tests:
@@ -15,6 +15,6 @@ services:
     volumes:
       - .:/home
     working_dir: /home
-    entrypoint: "./phpunit.sh"
+    command: "./phpunit.sh"
     tty: true
     stdin_open: true
