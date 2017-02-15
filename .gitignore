@@ -6,4 +6,5 @@ build/
 *.kdev4
 composer.phar
 codeclimate.json
+.tmp
 

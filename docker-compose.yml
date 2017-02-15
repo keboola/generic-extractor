@@ -6,6 +6,7 @@ services:
     image: keboola/generic-extractor
     volumes:
       - .:/home
+      - .tmp:/tmp
     working_dir: /home
     command: "php ./run.php --data=./data"
     tty: true
