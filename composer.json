@@ -5,7 +5,7 @@
     "require": {
         "php": ">=5.5",
         "symfony/yaml": "~2.6.3",
-        "keboola/juicer": "^0.9.0",
+        "keboola/juicer": "^1.0",
         "keboola/codebuilder": "~0.2.0",
         "keboola/php-utils": "~0.1.19",
         "symfony/console": "^2.6",

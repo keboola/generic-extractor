@@ -1,0 +1,24 @@
+{
+  "parameters": {
+    "cache": {
+      "ttl": 7200
+    },
+    "api": {
+      "baseUrl": "http://time.jsontest.com/",
+      "http": {
+        "Accept": "application/json",
+        "Content-Type": "application/json;charset=UTF-8"
+      }
+    },
+    "config": {
+      "outputBucket": "getPost",
+      "jobs": [
+        {
+          "endpoint": "/",
+          "dataType": "get",
+          "dataField": "."
+        }
+      ]
+    }
+  }
+}

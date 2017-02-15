@@ -7,6 +7,7 @@ use Keboola\Juicer\Config\Configuration as BaseConfiguration,
     Keboola\Juicer\Exception\FileNotFoundException,
     Keboola\Juicer\Exception\ApplicationException,
     Keboola\Juicer\Exception\NoDataException;
+use Keboola\Juicer\Filesystem\JsonFile;
 
 /**
  * {@inheritdoc}
@@ -21,7 +22,7 @@ class Configuration extends BaseConfiguration
     public function getCache()
     {
         try {
-            return $this->getYaml('/config.yml', 'parameters', 'cache');
+            return $this->getJSON('/config.json', 'parameters', 'cache');
         } catch(NoDataException $e) {
             return [];
         }
@@ -43,7 +44,7 @@ class Configuration extends BaseConfiguration
     public function getApi($config, $authorization)
     {
         // TODO check if it exists (have some getter fn in parent Configuration)
-        return Api::create($this->getYaml('/config.yml', 'parameters', 'api'), $config, $authorization);
+        return Api::create($this->getJSON('/config.json', 'parameters', 'api'), $config, $authorization);
     }
 
     /**
@@ -52,7 +53,7 @@ class Configuration extends BaseConfiguration
     public function getAuthorization()
     {
         try {
-            return $this->getYaml('/config.yml', 'authorization');
+            return $this->getJSON('/config.json', 'authorization');
         } catch(NoDataException $e) {
             return [];
         }
@@ -68,7 +69,7 @@ class Configuration extends BaseConfiguration
         $modules = ['response' => []];
 
         try {
-            $modulesCfg = YamlFile::create(ROOT_PATH . '/config/modules.yml')->getData();
+            $modulesCfg = JsonFile::create(ROOT_PATH . '/config/modules.json')->getData();
         } catch(FileNotFoundException $e) {
             $modulesCfg = [];
         }

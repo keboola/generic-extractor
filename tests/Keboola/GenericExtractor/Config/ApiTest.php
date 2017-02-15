@@ -4,6 +4,7 @@ namespace Keboola\GenericExtractor;
 use Keboola\GenericExtractor\Config\Api;
 use Keboola\Juicer\Config\Config,
     Keboola\Juicer\Filesystem\YamlFile;
+use Keboola\Juicer\Filesystem\JsonFile;
 
 class ApiTest extends ExtractorTestCase
 {
@@ -112,13 +113,13 @@ class ApiTest extends ExtractorTestCase
 
     public function testCreateAuthOAuth20Bearer()
     {
-        $ymlConfig = YamlFile::create(ROOT_PATH . '/tests/data/oauth20bearer/config.yml');
+        $jsonConfig = JsonFile::create(ROOT_PATH . '/tests/data/oauth20bearer/config.json');
 
         $config = new Config('testApp', 'testCfg', []);
 
-        $api = $ymlConfig->get('parameters', 'api');
+        $api = $jsonConfig->get('parameters', 'api');
 
-        $authorization = $ymlConfig->get('authorization');
+        $authorization = $jsonConfig->get('authorization');
 
         $oauth = Api::createAuth($api, $config, $authorization);
         self::assertInstanceOf('\Keboola\GenericExtractor\Authentication\OAuth20', $oauth);
@@ -126,13 +127,13 @@ class ApiTest extends ExtractorTestCase
 
     public function testCreateOauth2Login()
     {
-        $ymlConfig = YamlFile::create(ROOT_PATH . '/tests/data/oauth20login/config.yml');
+        $jsonConfig = JsonFile::create(ROOT_PATH . '/tests/data/oauth20login/config.json');
 
         $config = new Config('testApp', 'testCfg', []);
 
-        $api = $ymlConfig->get('parameters', 'api');
+        $api = $jsonConfig->get('parameters', 'api');
 
-        $authorization = $ymlConfig->get('authorization');
+        $authorization = $jsonConfig->get('authorization');
 
         $oauth = Api::createAuth($api, $config, $authorization);
         self::assertInstanceOf('\Keboola\GenericExtractor\Authentication\OAuth20Login', $oauth);

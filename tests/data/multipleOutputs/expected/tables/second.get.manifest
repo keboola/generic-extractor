@@ -1,2 +1,1 @@
-destination: in.c-second.get
-incremental: true
+{"destination":"in.c-second.get","incremental":true}
