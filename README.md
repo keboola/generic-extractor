@@ -963,7 +963,7 @@ Can currently be used in query type authentication or endpoint parameters
 - `ifempty`: Return first argument if is not empty, otherwise return second argument
 
 ## Syntax
-The function must be specified in a YML format, which may contain one of the following 4 objects:
+The function must be specified in JSON format, which may contain one of the following 4 objects:
 
 - **String**: `"something"`
 - **Function**: One of the allowed functions above
@@ -1108,8 +1108,9 @@ Best way to create and test new configurations is run extractor in docker contai
 - Create data folder for configuration `mkdir data`
 
 ## Execution
-- Create `config.yml` in `data` folder
-  - Sample configuration which downloads list of Keboola Developers from githhub `data/config.json`:
+- Create `config.json` in `data` folder
+
+  Sample configuration which downloads list of Keboola Developers from githhub `data/config.json`:
   ```json
   {
     "parameters": {
@@ -1134,7 +1135,7 @@ Best way to create and test new configurations is run extractor in docker contai
     ```
 - Run extraction `docker-compose run --rm extractor`
 - You will find extracted data in folder `data/out`
-- Repeat:)
+- Repeat :)
 
 # Running tests:
 ```
