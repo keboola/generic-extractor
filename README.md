@@ -1135,6 +1135,7 @@ Best way to create and test new configurations is run extractor in docker contai
     ```
 - Run extraction `docker-compose run --rm extractor`
 - You will find extracted data in folder `data/out`
+- Clear `data/out` by running `docker-compose run --rm extractor rm -rf /data/out`
 - Repeat :)
 
 # Running tests:
