@@ -11,7 +11,7 @@ run_example() {
    	EXAMPLE_NAME=$1
 	rm -rf examples/$1/out/*
 	mkdir -p examples/$1/out/tables/
-	docker-compose -f docker-compose-mock.yml run -e "KBC_EXAMPLE_NAME=$EXAMPLE_NAME" extractor
+	docker-compose run -e "KBC_EXAMPLE_NAME=$EXAMPLE_NAME" extractor
 	if diff --brief --recursive examples/$EXAMPLE_NAME/out/tables/ examples/$EXAMPLE_NAME/_sample_out/ ; then
 		printf "Example $EXAMPLE_NAME successfull.\n"
 	else
@@ -21,7 +21,7 @@ run_example() {
 }
 
 # Start mock server
-docker-compose -f docker-compose-mock.yml build --force-rm --pull
+docker-compose build --force-rm --pull
 
 # Run examples
 run_example "001-simple-job"
