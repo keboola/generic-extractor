@@ -1,0 +1,20 @@
+{
+    "members": {
+        "active": [
+            {
+                "id": 123,
+                "name": "John Doe"
+            },
+            {
+                "id": 234,
+                "name": "Jane Doe"
+            }
+        ],
+        "inactive": [
+            {
+                "id": 345,
+                "name": "Jimmy Doe"
+            }
+        ]
+    }
+}
