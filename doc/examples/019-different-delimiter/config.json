@@ -1,0 +1,19 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/019-different-delimiter/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataField": "members",
+                    "responseFilter": "secondary.address",
+                    "responseFilterDelimiter": "#"
+                }                
+            ]
+        }
+    }
+}
