@@ -1,0 +1,16 @@
+{
+    "member": {
+        "history": [
+            {
+                "id": 123,
+                "name": "John Doe",
+                "version": 2
+            },
+            {
+                "id": 123,
+                "name": "Jonh Doe",
+                "version": 1
+            }
+        ]
+    }
+}
