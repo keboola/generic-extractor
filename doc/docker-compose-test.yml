@@ -2,17 +2,14 @@ version: '2'
 
 services:
   extractor:
-    build: .
     image: keboola/generic-extractor
     volumes:
-      - .:/home
-      - .tmp:/tmp
-      - ./../mock-server/samples/:/samples/
+      - ./examples/:/examples/
     working_dir: /home
     command: 
       - /bin/sh 
       - -c
       #- "sleep 10000"
-      - "php /home/run.php --data=/samples/$$KBC_SAMPLES_DIR"
+      - "php /home/run.php --data=/examples/$$KBC_EXAMPLE_NAME"
     tty: true
     stdin_open: true
