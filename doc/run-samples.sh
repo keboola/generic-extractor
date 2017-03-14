@@ -9,41 +9,42 @@ run_example() {
     	printf "\nRunning example $1\n"
    	fi
    	EXAMPLE_NAME=$1
-	rm -f ../mock-server/samples/$1/out/tables/*
-	docker-compose -f docker-compose-test.yml run -e "KBC_SAMPLES_DIR=$EXAMPLE_NAME" extractor
-	if diff --brief --recursive ../mock-server/samples/$EXAMPLE_NAME/out/tables/ ../mock-server/samples/$EXAMPLE_NAME/_sample_out/ ; then
+	rm -rf examples/$1/out/*
+	mkdir -p examples/$1/out/tables/
+	docker-compose -f docker-compose-mock.yml run -e "KBC_EXAMPLE_NAME=$EXAMPLE_NAME" extractor
+	if diff --brief --recursive examples/$EXAMPLE_NAME/out/tables/ examples/$EXAMPLE_NAME/_sample_out/ ; then
 		printf "Example $EXAMPLE_NAME successfull.\n"
 	else
 		printf "Example $EXAMPLE_NAME failed.\n"
-		diff --recursive ../mock-server/samples/$EXAMPLE_NAME/out/tables/ ../mock-server/samples/$EXAMPLE_NAME/_sample_out/
+		diff --recursive examples/$EXAMPLE_NAME/out/tables/ examples/$EXAMPLE_NAME/_sample_out/
 	fi
 }
 
 # Start mock server
-# docker-compose -f docker-compose-mock.yml up -d
+docker-compose -f docker-compose-mock.yml build --force-rm --pull
 
-# Run example
-run_example "1-simple-job"
-run_example "2-array-in-object"
-run_example "3-multiple-arrays-in-object"
-run_example "4-array-in-nested-object"
-run_example "5-two-arrays-in-nested-object"
-run_example "6-simple-object"
-run_example "7-nested-object"
-run_example "8-single-object-in-array"
-run_example "9-nested-array"
-run_example "10-object-with-nested-array"
-run_example "11-object-with-nested-object"
-run_example "12-deeply-nested-object"
-run_example "13-skip-flatten"
-run_example "14-skip-flatten-nested"
-run_example "15-skip-boolean"
-run_example "16-inconsistent-object"
-run_example "17-upgrading-array"
-run_example "18-multiple-filters"
-run_example "19-different-delimiter"
-run_example "20-setting-delimiter-complex"
+# Run examples
+run_example "001-simple-job"
+run_example "002-array-in-object"
+run_example "003-multiple-arrays-in-object"
+run_example "004-array-in-nested-object"
+run_example "005-two-arrays-in-nested-object"
+run_example "006-simple-object"
+run_example "007-nested-object"
+run_example "008-single-object-in-array"
+run_example "009-nested-array"
+run_example "010-object-with-nested-array"
+run_example "011-object-with-nested-object"
+run_example "012-deeply-nested-object"
+run_example "013-skip-flatten"
+run_example "014-skip-flatten-nested"
+run_example "015-skip-boolean"
+run_example "016-inconsistent-object"
+run_example "017-upgrading-array"
+run_example "018-multiple-filters"
+run_example "019-different-delimiter"
+run_example "020-setting-delimiter-complex"
 
 # Stop mock server
-printf "\nAll examples successfull."
-# docker stop mock-server
+printf "\nAll examples successfull.\n"
+docker stop mock-server
