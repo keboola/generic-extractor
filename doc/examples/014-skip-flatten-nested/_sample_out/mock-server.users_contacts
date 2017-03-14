@@ -1,0 +1,5 @@
+"type","properties","primary","JSON_parentId"
+"address","{""street"":""Elm Street"",""city"":""New York""}","","users_0b9650e0f68b0c6738843d5b4ff0a961"
+"email","{""address"":""john.doe@example.com""}","1","users_0b9650e0f68b0c6738843d5b4ff0a961"
+"address","{""street"":""Bates Street"",""city"":""Chicago"",""state"":""USA""}","","users_cf76fb6794380244946d2bc4fa3aa04a"
+"phone","{""number"":""123 456 789""}","1","users_cf76fb6794380244946d2bc4fa3aa04a"

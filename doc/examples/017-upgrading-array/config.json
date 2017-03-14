@@ -1,0 +1,17 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/017-upgrading-array/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataField": "members"
+                }                
+            ]
+        }
+    }
+}
