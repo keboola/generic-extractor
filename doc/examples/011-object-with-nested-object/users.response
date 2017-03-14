@@ -1,0 +1,21 @@
+{
+    "members": [
+        {
+            "id": 123,
+            "name": "John Doe",
+            "address": {
+                "street": "Elm Street",
+                "city": "New York"
+            }
+        },
+        {
+            "id": 234,
+            "name": "Jane Doe",
+            "address": {
+                "street": "Bates Street",
+                "city": "Chicago",
+                "state": "USA"
+            }
+        }
+    ]
+}

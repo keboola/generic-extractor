@@ -1,0 +1,16 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/012-deeply-nested-object/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users"
+                }                
+            ]
+        }
+    }
+}
