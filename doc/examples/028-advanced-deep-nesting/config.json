@@ -1,0 +1,68 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/028-advanced-deep-nesting/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "children": [
+                        {
+                            "endpoint": "user/{1:user-id}",
+                            "dataField": ".",
+                            "dataType": "user-detail",
+                            "placeholders": {
+                                "1:user-id": "id"
+                            },
+                            "children": [
+                                {
+                                    "endpoint": "user/{2:user-id}/orders",
+                                    "dataType": "orders",
+                                    "placeholders": {
+                                        "2:user-id": "id"
+                                    },
+                                    "children": [
+                                        {
+                                            "endpoint": "user/{3:user-id}/order/{1:order-id}",
+                                            "dataType": "order-detail",
+                                            "dataField": ".",
+                                            "placeholders": {
+                                                "3:user-id": "id",
+                                                "1:order-id": "id"
+                                            },
+                                            "children": [
+                                                {
+                                                    "endpoint": "user/{4:user-id}/order/{2:order-id}/items",
+                                                    "dataType": "order-items",
+                                                    "placeholders": {
+                                                        "4:user-id": "id",
+                                                        "2:order-id": "id"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "endpoint": "user/{5:user-id}/order/{3:order-id}/item/{1:item-id}",
+                                                            "dataType": "item-detail",
+                                                            "dataField": ".",
+                                                            "placeholders": {
+                                                                "5:user-id": "id",
+                                                                "3:order-id": "id",
+                                                                "1:item-id": "id"
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

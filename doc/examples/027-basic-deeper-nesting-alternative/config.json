@@ -1,0 +1,42 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/026-basic-deeper-nesting/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "children": [
+                        {
+                            "endpoint": "user/{user-id}",
+                            "dataField": ".",
+                            "dataType": "user-detail",
+                            "placeholders": {
+                                "user-id": "userId"
+                            },
+                            "children": [
+                                {
+                                    "endpoint": "user/{user-id}/orders",
+                                    "dataType": "orders",
+                                    "children": [
+                                        {
+                                            "endpoint": "user/{user-id}/order/{order-id}",
+                                            "dataType": "order-detail",
+                                            "dataField": ".",
+                                            "placeholders": {
+                                                "order-id": "orderId"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
