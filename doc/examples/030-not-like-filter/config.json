@@ -1,0 +1,27 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/029-simple-filter/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "children": [
+                        {
+                            "endpoint": "user/{user-id}",
+                            "dataField": ".",
+                            "recursionFilter": "type!~%min%",
+                            "dataType": "user-detail",
+                            "placeholders": {
+                                "user-id": "id"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

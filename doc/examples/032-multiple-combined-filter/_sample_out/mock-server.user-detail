@@ -1,0 +1,4 @@
+"id","name","userRole","userType","description","parent_id"
+"123","John Doe","parent","admin","Father John","123"
+"234","Jane Doe","parent","administrator","Mother Jane","234"
+"345","Jimmy Doe","child","user","Sonny Jimmy","345"
