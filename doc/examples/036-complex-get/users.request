@@ -1,0 +1,1 @@
+GET /036-complex-get/users?filter%5Bfield%5D=type&filter%5Boperator%5D=equal&filter%5Bvalue%5D=active&return%5Bfields%5D%5B0%5D=id&return%5Bfields%5D%5B1%5D=name

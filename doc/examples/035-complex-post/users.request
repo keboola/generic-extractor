@@ -1,0 +1,3 @@
+POST /035-complex-post/getUsers
+
+{"filter":{"type":"active"},"return":{"fields":["id","name"]}}

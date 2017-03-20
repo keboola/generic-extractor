@@ -1,0 +1,25 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/033-job-parameters/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "params": {
+                        "type": "active"
+                    }
+                },
+                {
+                    "endpoint": "users",
+                    "params": {
+                        "type": "inactive"
+                    }
+                }
+            ]            
+        }
+    }
+}
