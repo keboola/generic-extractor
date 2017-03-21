@@ -59,7 +59,11 @@ docker-compose build --force-rm --pull
 # run_example "033-job-parameters"
 # run_example "034-post-request"
 # run_example "035-complex-post"
-run_example "036-complex-get"
+# run_example "036-complex-get"
+# run_example "037-retry-header"
+# run_example "038-default-headers"
+# run_example "039-default-parameters"
+# run_example "040-required-headers"
 
 # Stop mock server
 printf "\nAll examples successfull.\n"

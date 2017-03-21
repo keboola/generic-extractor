@@ -1,0 +1,26 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/039-default-parameters/",
+            "http": {
+                "defaultOptions": {
+                    "params": {
+                        "account": 123
+                    }
+                }
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users"
+                },
+                {
+                    "endpoint": "items"
+                }                
+            ]
+        }
+    }
+}
