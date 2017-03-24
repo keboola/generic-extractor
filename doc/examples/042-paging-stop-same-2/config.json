@@ -1,7 +1,7 @@
 {
     "parameters": {
         "api": {
-            "baseUrl": "http://mock-server:80/041-paging-stop-same/",
+            "baseUrl": "http://mock-server:80/042-paging-stop-same-2/",
             "pagination": {
                 "method": "offset",
                 "limit": "2"

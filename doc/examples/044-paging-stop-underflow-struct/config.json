@@ -10,9 +10,9 @@
         "config": {
             "debug": true,
             "outputBucket": "mock-server",
-            "dataField": "users.items",
             "jobs": [
                 {
+                    "dataField": "results.users.items",
                     "endpoint": "users"
                 }
             ]

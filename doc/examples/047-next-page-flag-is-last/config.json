@@ -1,11 +1,12 @@
 {
     "parameters": {
         "api": {
-            "baseUrl": "http://mock-server:80/045-next-page-flag-has-more/",
+            "baseUrl": "http://mock-server:80/047-next-page-flag-is-last/",
             "pagination": {
                 "nextPageFlag": {
-                    "field": "results.isLast",
-                    "stopOn": "false"
+                    "field": "isLast",
+                    "stopOn": true,
+                    "ifNotSet": false
                 },
                 "method": "offset",
                 "limit": "2"

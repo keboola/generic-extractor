@@ -4,8 +4,8 @@
             "baseUrl": "http://mock-server:80/045-next-page-flag-has-more/",
             "pagination": {
                 "nextPageFlag": {
-                    "field": "results.hasMore",
-                    "stopOn": "false"
+                    "field": "hasMore",
+                    "stopOn": false
                 },
                 "method": "offset",
                 "limit": "2"
@@ -16,7 +16,8 @@
             "outputBucket": "mock-server",
             "jobs": [
                 {
-                    "endpoint": "users"
+                    "endpoint": "users",
+                    "dataField": "items"
                 }
             ]
         }
