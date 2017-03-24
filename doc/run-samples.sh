@@ -71,6 +71,7 @@ docker-compose build --force-rm --pull
 # run_example "045-next-page-flag-has-more"
 # run_example "046-next-page-flag-has-more-2"
 # run_example "047-next-page-flag-is-last"
+run_example "048-force-stop"
 
 # Stop mock server
 printf "\nAll examples successfull.\n"

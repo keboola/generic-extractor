@@ -1,0 +1,24 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/048-force-stop/",
+            "pagination": {
+                "forceStop": {
+                    "pages": 2,
+                    "volume": 69
+                },
+                "method": "offset",
+                "limit": "2"
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users"
+                }
+            ]
+        }
+    }
+}
