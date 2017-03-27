@@ -1,0 +1,19 @@
+{
+    "items": [
+        {
+            "id": 123567,
+            "userId": 234,
+            "totalPrice": "$45"
+        },
+        {
+            "id": 234567,
+            "userId": 345,
+            "totalPrice": "$865"
+        },
+        {
+            "id": 345566,
+            "userId": 234,
+            "totalPrice": "$914"
+        }
+    ]
+}

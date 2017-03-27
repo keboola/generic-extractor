@@ -1,0 +1,23 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/049-pagination-offset-rename/",
+            "pagination": {
+                "method": "offset",
+                "limitParam": "count",
+                "offsetParam": "skip",
+                "limit": "2"
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataField": "items"
+                }
+            ]
+        }
+    }
+}

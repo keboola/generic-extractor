@@ -1,0 +1,20 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/051-pagination-pagenum-basic/",
+            "pagination": {
+                "method": "pagenum"
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataField": "items"
+                }
+            ]
+        }
+    }
+}

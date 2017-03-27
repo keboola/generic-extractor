@@ -1,0 +1,35 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/050-pagination-offset-override/",
+            "pagination": {
+                "method": "offset",
+                "limitParam": "count",
+                "offsetParam": "skip",
+                "offsetFromJob": true,
+                "limit": "20"
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataField": "items",
+                    "params": {
+                        "count": 5,
+                        "skip": 2
+                    }
+                },
+                {
+                    "endpoint": "orders",
+                    "dataField": "items",
+                    "params": {
+                        "count": 10
+                    }
+                }
+            ]            
+        }
+    }
+}
