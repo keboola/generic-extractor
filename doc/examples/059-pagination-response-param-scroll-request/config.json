@@ -1,7 +1,7 @@
 {
     "parameters": {
         "api": {
-            "baseUrl": "http://mock-server:80/058-pagination-response-param-scroll-request/",
+            "baseUrl": "http://mock-server:80/059-pagination-response-param-scroll-request/",
             "pagination": {
                 "method": "response.param",
                 "responseParam": "scroll.token",

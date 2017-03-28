@@ -1,0 +1,16 @@
+{
+    "items": [
+        {
+            "name": "John Doe",
+            "fields": {
+                "id": 123
+            }
+        },
+        {
+            "name": "Jane Doe",
+            "fields": {
+                "id": 234
+            }
+        }
+    ]
+}
