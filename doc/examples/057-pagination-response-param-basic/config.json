@@ -1,0 +1,22 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/057-pagination-response-param-basic/",
+            "pagination": {
+                "method": "response.param",
+                "responseParam": "scrolling.next_page",
+                "queryParam": "page"
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataField": "items"
+                }
+            ]
+        }
+    }
+}

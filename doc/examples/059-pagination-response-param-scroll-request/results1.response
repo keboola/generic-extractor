@@ -1,0 +1,15 @@
+{
+    "items": [
+        {
+            "id": 123,
+            "name": "John Doe"
+        },
+        {
+            "id": 234,
+            "name": "Jane Doe"
+        }
+    ],
+    "scroll": {
+        "token": "4015e9ce43edfb0668ddaa973ebc7e87"
+    }
+}

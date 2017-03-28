@@ -1,0 +1,32 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/058-pagination-response-param-scroll-request/",
+            "pagination": {
+                "method": "response.param",
+                "responseParam": "scroll.token",
+                "queryParam": "scrollToken",
+                "scrollRequest": {
+                    "endpoint": "results",
+                    "method": "GET"
+                }
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "search",
+                    "method": "POST",
+                    "dataField": "items",
+                    "dataType": "users",
+                    "params": {
+                        "object": "users",
+                        "orderBy": "id"
+                    }
+                }
+            ]
+        }
+    }
+}

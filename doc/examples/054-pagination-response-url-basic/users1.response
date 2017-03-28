@@ -1,0 +1,15 @@
+{
+    "items": [
+        {
+            "id": 123,
+            "name": "John Doe"
+        },
+        {
+            "id": 234,
+            "name": "Jane Doe"
+        }
+    ],
+    "links": {
+        "next": "/054-pagination-response-url-basic/users?page=2"
+    }
+}
