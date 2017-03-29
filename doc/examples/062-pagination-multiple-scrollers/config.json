@@ -1,0 +1,33 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/062-pagination-multiple-scrollers/",
+            "pagination": {
+                "method": "multiple",
+                "scrollers": {
+                    "list_scroller": {
+                        "method": "offset",
+                        "limit": "2"
+                    },
+                    "search_scroller": {
+                        "method": "pagenum"
+                    }
+                },
+                "default": "list_scroller"
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users"
+                },
+                {
+                    "endpoint": "search",
+                    "scroller": "search_scroller"
+                }
+            ]
+        }
+    }
+}

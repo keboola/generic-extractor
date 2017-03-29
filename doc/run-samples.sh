@@ -80,11 +80,12 @@ docker-compose build --force-rm --pull
 # run_example "054-pagination-response-url-basic"
 # run_example "055-pagination-response-url-params"
 # run_example "056-pagination-response-url-params-override"
-# run_example "057-pagination-response-param-basic"
+# run_example "057-pagination-response-param-basic"	
 # run_example "058-pagination-response-param-override"
 # run_example "059-pagination-response-param-scroll-request"
 # run_example "060-pagination-cursor-basic"
 # run_example "061-pagination-cursor-reverse"
+run_example "062-pagination-multiple-scrollers"
 
 # Stop mock server
 printf "\nAll examples successfull.\n"
