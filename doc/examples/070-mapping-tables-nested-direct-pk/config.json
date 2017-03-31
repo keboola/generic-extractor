@@ -1,7 +1,7 @@
 {
     "parameters": {
         "api": {
-            "baseUrl": "http://mock-server:80/067-mapping-tables-complex/"
+            "baseUrl": "http://mock-server:80/067-mapping-tables-nested/"
         },
         "config": {
             "debug": true,
@@ -30,6 +30,10 @@
                     "contacts": {
                         "type": "table",
                         "destination": "user-contact",
+                        "parentKey": {
+                            "primaryKey": true,
+                            "destination": "userId"
+                        },
                         "tableMapping": {
                             "email": {
                                 "type": "column",

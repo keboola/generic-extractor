@@ -1,7 +1,7 @@
 {
     "parameters": {
         "api": {
-            "baseUrl": "http://mock-server:80/067-mapping-tables-complex/"
+            "baseUrl": "http://mock-server:80/067-mapping-tables-nested/"
         },
         "config": {
             "debug": true,
@@ -39,7 +39,7 @@
                             "phone": {
                                 "type": "column",
                                 "mapping": {
-                                    "destination": "phone"
+                                    "destination": "tel"
                                 }
                             },
                             "addresses": {
