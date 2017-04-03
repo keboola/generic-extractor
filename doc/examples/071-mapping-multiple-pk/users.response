@@ -1,0 +1,16 @@
+[
+    {
+        "firstName": "John",
+        "lastName": "Doe",
+        "interests": [
+            "girls", "cars", "flowers"
+        ]
+    },
+    {
+        "firstName": "Jane",
+        "lastName": "Doe",
+        "interests": [
+            "boys", "cars", "flowers"
+        ]
+    }
+]

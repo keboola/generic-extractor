@@ -1,0 +1,40 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/063-mapping-automatic/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users"
+                }
+            ],
+            "mappings": {
+                "users": {
+                    "name": {
+                        "mapping": {
+                            "destination": "name"
+                        }
+                    },
+                    "id": {
+                        "type": "column",
+                        "mapping": {
+                            "destination": "id",
+                            "primaryKey": true
+                        }
+                    },
+                    "interests": {
+                        "type": "column",
+                        "mapping": {
+                            "destination": "interests"
+                        },
+                        "forceType": true
+                    }
+                }
+            }
+        }
+    }
+}
