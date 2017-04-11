@@ -96,7 +96,11 @@ docker-compose build --force-rm --pull
 # run_example "070-mapping-tables-nested-direct-pk"
 # run_example "071-mapping-multiple-pk"
 # run_example "072-mapping-pk-disable"
-run_example "073-mapping-forceType"
+# run_example "073-mapping-forceType"
+# run_example "074-http-headers"
+# run_example "075-incremental-output"
+run_example "076-user-data"
+
 
 # Stop mock server
 printf "\nAll examples successfull.\n"
