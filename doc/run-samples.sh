@@ -99,8 +99,15 @@ docker-compose build --force-rm --pull
 # run_example "073-mapping-forceType"
 # run_example "074-http-headers"
 # run_example "075-incremental-output"
-run_example "076-user-data"
-
+# run_example "076-user-data"
+# run_example "077-query-auth"
+# run_example "078-basic-auth"
+# run_example "079-login-auth-headers"
+# run_example "080-login-auth-query"
+# run_example "081-login-auth-headers-query-override"
+# run_example "082-login-auth-expires"
+# run_example "083-login-auth-expires-date"
+run_example "084-login-auth-expires-seconds"
 
 # Stop mock server
 printf "\nAll examples successfull.\n"
