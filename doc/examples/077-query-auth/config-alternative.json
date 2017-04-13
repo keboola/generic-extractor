@@ -1,0 +1,23 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/077-query-auth/",
+            "http": {
+                "defaultOptions": {
+                    "params": {
+                        "api-token": "2267709"
+                    }
+                }
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users"
+                }
+            ]
+        }
+    }
+}

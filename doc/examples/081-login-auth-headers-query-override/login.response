@@ -1,0 +1,7 @@
+{
+    "authorization": {
+        "token": "987654",
+        "secretKey": "a1b2c3d435f6",
+        "accountId": "abc"
+    }
+}

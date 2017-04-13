@@ -1,0 +1,3 @@
+POST /080-login-auth-query/login/form
+
+username=JohnDoe&password=TopSecret
