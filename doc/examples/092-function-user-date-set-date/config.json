@@ -1,0 +1,26 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/092-function-user-date-set-date/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users"
+                }
+            ],
+            "userData": {
+                "extractDate": {
+                    "function": "date",
+                    "args": [
+                        "Y-m-d H:i:s:u",
+                        1492674974
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/094-function-config-headers/"
+        },
+        "config": {
+            "http": {
+                "headers": {
+                    "X-Api-Auth": {
+                        "function": "concat",
+                        "args": [
+                            {
+                                "attr": "#username"
+                            },
+                            ":",
+                            {
+                                "attr": "#password"
+                            }
+                        ]
+                    }
+                }
+            },
+            "#username": "JohnDoe",
+            "#password": "TopSecret",
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users"
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/095-function-nested/",
+            "http": {
+                "headers": {
+                    "X-Api-Auth": {
+                        "function": "base64_encode",
+                        "args": [
+                            {
+                                "function": "concat",
+                                "args": [
+                                    {
+                                        "attr": "#username"
+                                    },
+                                    ":",
+                                    {
+                                        "attr": "#password"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        "config": {
+            "#username": "JohnDoe",
+            "#password": "TopSecret",
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users"
+                }
+            ]
+        }
+    }
+}
