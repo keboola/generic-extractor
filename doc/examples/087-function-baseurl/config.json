@@ -1,0 +1,27 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": {
+                "function": "concat",
+                "args": [
+                    "http://",
+                    {
+                        "attr": "server"
+                    },
+                    "/087-function-baseurl/"
+                ]
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "server": "mock-server:80",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users"
+                }
+            ]
+        }
+    }
+}

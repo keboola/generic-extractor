@@ -1,0 +1,26 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": {
+                "function": "sprintf",
+                "args": [
+                    "http://%s/087-function-baseurl/",
+                    {
+                        "attr": "server"
+                    }                    
+                ]
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "server": "mock-server:80",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users"
+                }
+            ]
+        }
+    }
+}

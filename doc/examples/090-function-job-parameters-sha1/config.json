@@ -1,0 +1,29 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/090-function-job-parameters-sha1/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "tokenValue": "NotSoSecret",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users",
+                    "method": "POST",
+                    "params": {
+                        "token": {
+                            "function": "sha1",
+                            "args": [
+                                {
+                                    "attr": "tokenValue"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

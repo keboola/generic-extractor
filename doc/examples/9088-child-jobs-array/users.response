@@ -1,0 +1,21 @@
+{
+    "members": {
+        "count": "2",
+        "items": [
+            {
+                "name": "John Doe",
+                "user-info": {
+                    "id": 123,
+                    "active": true
+                }
+            },
+            {
+                "name": "Jane Doe",
+                "user-info": {
+                    "id": 234,
+                    "active": false
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/085-function-job-placeholders/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users",
+                    "children": [
+                        {
+                            "endpoint": "user/{user-id}",
+                            "dataField": ".",
+                            "dataType": "user-detail",
+                            "placeholders": {
+                                "user-id": {
+                                    "path": "id",
+                                    "function": "sprintf",
+                                    "args": [
+                                        "%'.05d",
+                                        {
+                                            "placeholder": "value"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
