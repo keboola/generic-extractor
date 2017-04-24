@@ -1,0 +1,51 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/111-templates-example/",
+            "authentication": {
+                "type": "login",
+                "loginRequest": {
+                    "endpoint": "token",
+                    "headers": {
+                        "Authorization": {
+                            "function": "base64_encode",
+                            "args": [
+                                "JohnDoe:TopSecret"
+                            ]
+                        }
+                    }
+                },
+                "apiRequest": {
+                    "headers": {
+                        "X-Api-Auth": "auth.token"
+                    }
+                }
+            },
+            "http": {
+                "defaultOptions": {
+                    "params": {
+                        "accountId": 123
+                    }
+                }
+            }
+        },
+        "config": {
+            "debug": true,
+            "incrementalOutput": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users",
+                    "params": {
+                        "type": "active"
+                    }
+                },
+                {
+                    "endpoint": "orders",
+                    "dataType": "orders"
+                }
+            ]
+        }
+    }
+}
