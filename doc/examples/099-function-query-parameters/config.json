@@ -1,0 +1,36 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/099-function-query-parameters/",
+            "authentication": {
+                "type": "query",
+                "query": {
+                    "tokenHash": {
+                        "function": "hash_hmac",
+                        "args": [
+                            "sha256",
+                            {
+                                "attr": "#api-key"
+                            },
+                            {
+                                "attr": "#secret-key"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        "config": {
+            "#api-key": "12345abcd5678efgh90ijk",
+            "#secret-key": "TeaPot",
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users"
+                }
+            ]
+        }
+    }
+}

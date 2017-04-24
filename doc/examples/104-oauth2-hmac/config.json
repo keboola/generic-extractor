@@ -1,0 +1,91 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/104-oauth2-hmac/",
+            "authentication": {
+                "type": "oauth20",
+                "format": "json",
+                "headers": {
+                    "Authorization": {
+                        "function": "concat",
+                        "args": [
+                            "MAC id=\"",
+                            {
+                                "authorization": "data.access_token"
+                            },
+                            "\", ts=\"",
+                            {
+                                "authorization": "timestamp"
+                            },
+                            "\", nonce=\"",
+                            {
+                                "authorization": "nonce"
+                            },
+                            "\", mac=\"",
+                            {
+                                "function": "md5",
+                                "args": [
+                                    {
+                                        "function": "hash_hmac",
+                                        "args": [
+                                            "sha256",
+                                            {
+                                                "function": "implode",
+                                                "args": [
+                                                    "\n",
+                                                    [
+                                                        {
+                                                            "authorization": "timestamp"
+                                                        },
+                                                        {
+                                                            "authorization": "nonce"
+                                                        },
+                                                        {
+                                                            "request": "method"
+                                                        },
+                                                        {
+                                                            "request": "resource"
+                                                        },
+                                                        {
+                                                            "request": "hostname"
+                                                        },
+                                                        {
+                                                            "request": "port"
+                                                        },
+                                                        "\n"
+                                                    ]
+                                                ]
+                                            },
+                                            {
+                                                "authorization": "data.mac_secret"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users"
+                }
+            ]
+        }
+    },
+    "authorization": {
+        "oauth_api": {
+            "credentials": {
+                "#data": "{\"status\": \"ok\",\"access_token\": \"testToken\", \"mac_secret\": \"iAreSoSecret123\"}",
+                "appKey": "clientId",
+                "#appSecret": "clientSecret"
+            }
+        }
+    }
+}

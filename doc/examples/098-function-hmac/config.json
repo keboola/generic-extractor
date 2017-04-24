@@ -1,0 +1,33 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/098-function-hmac/"
+        },
+        "config": {
+            "#api-key": "12345abcd5678efgh90ijk",
+            "#secret-key": "TeaPot",
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users",
+                    "params": {
+                        "tokenHash": {
+                            "function": "hash_hmac",
+                            "args": [
+                                "sha256",
+                                {
+                                    "attr": "#api-key"
+                                },
+                                {
+                                    "attr": "#secret-key"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

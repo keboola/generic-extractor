@@ -1,0 +1,31 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/097-function-ifempty/"
+        },
+        "config": {
+            "debug": true,
+            "columns": "",
+            "outputBucket": "mock-server",
+            "incrementalOutput": false,
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users",
+                    "method": "GET",
+                    "params": {
+                        "showColumns": {
+                            "function": "ifempty",
+                            "args": [
+                                {
+                                    "attr": "columns"
+                                },
+                                "all"
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
