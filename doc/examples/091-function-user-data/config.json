@@ -1,0 +1,38 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/091-function-user-data/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users"
+                },
+                {
+                    "endpoint": "orders",
+                    "dataType": "orders"
+                }
+            ],
+            "userData": {
+                "currentDate": {
+                    "function": "date",
+                    "args": [
+                        "Y-m-d H:i:s:u"
+                    ]
+                },
+                "extractDate": {
+                    "function": "date",
+                    "args": [
+                        "Y-m-d H:i:s:u",
+                        {
+                            "time": "currentStart"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

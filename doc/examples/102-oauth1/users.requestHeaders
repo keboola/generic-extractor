@@ -1,0 +1,1 @@
+Authorization: OAuth oauth_consumer_key="1234", oauth_nonce="72469d96572dabb4d0ea02b057ea4f246d722b72", oauth_signature="zl0y5CyySCPj8IqODV3Egjqgg6Q%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1492904452", oauth_token="userToken", oauth_version="1.0"

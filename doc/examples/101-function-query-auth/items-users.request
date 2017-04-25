@@ -1,0 +1,1 @@
+GET /101-function-query-auth/items?type=users&apiToken=1234abcd567efg890hij&signature=d8221ab22e2a04e0a3a0b8818115864dd9b4bce4

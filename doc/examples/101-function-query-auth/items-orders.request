@@ -1,0 +1,1 @@
+GET /101-function-query-auth/items?type=orders&apiToken=1234abcd567efg890hij&signature=71875541aafb104f19db96dfb019406dfe68a627

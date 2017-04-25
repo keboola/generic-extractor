@@ -1,0 +1,57 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/101-function-query-auth/",
+            "authentication": {
+                "type": "query",
+                "query": {
+                    "apiToken": {
+                        "attr": "#token"
+                    },
+                    "signature": {
+                        "function": "sha1",
+                        "args": [
+                            {
+                                "function": "concat",
+                                "args": [
+                                    {
+                                        "attr": "#token"
+                                    },
+                                    {
+                                        "query": "type"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "apiRequest": {
+                    "headers": {
+                        "X-Api-Token": "token"
+                    }
+                }
+            }
+        },
+        "config": {            
+            "#token": "1234abcd567efg890hij",
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "items",
+                    "dataType": "users",
+                    "params": {
+                        "type": "users"
+                    }
+                },
+                {
+                    "endpoint": "items",
+                    "dataType": "orders",
+                    "params": {
+                        "type": "orders"
+                    }
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,44 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/110-incremental-relative/"
+        },
+        "config": {
+            "debug": true,
+            "incrementalOutput": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users",
+                    "params": {
+                        "from": {
+                            "function": "date",
+                            "args": [
+                                "Y-m-d",
+                                {
+                                    "function": "strtotime",
+                                    "args": [
+                                        "-1 day",
+                                        {
+                                            "time": "currentStart"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        "to": {
+                            "function": "date",
+                            "args": [
+                                "Y-m-d",
+                                {
+                                    "time": "currentStart"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

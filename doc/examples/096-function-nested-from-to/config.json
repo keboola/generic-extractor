@@ -1,0 +1,43 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/096-function-nested-from-to/"
+        },
+        "config": {
+            "debug": true,
+            "startDate": "2017-10-04",
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "orders",
+                    "dataType": "orders",
+                    "params": {
+                        "from": {
+                            "attr": "startDate"
+                        },
+                        "to": {
+                            "function": "date",
+                            "args": [
+                                "Y-m-d",
+                                {
+                                    "function": "strtotime",
+                                    "args": [
+                                        "+7 days",
+                                        {
+                                            "function": "strtotime",
+                                            "args": [
+                                                {
+                                                    "attr": "startDate"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

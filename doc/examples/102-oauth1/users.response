@@ -1,0 +1,12 @@
+[
+    {
+        "id": 3,
+        "name": "John Doe",
+        "company": "Acme Anvil 24h Service"
+    },
+    {
+        "id": 234,
+        "name": "Jane Doe",
+        "company": "Acme Anvil Research & Development"
+    }
+]

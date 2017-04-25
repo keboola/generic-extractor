@@ -1,0 +1,69 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/111-templates-example/",
+            "authentication": {
+                "type": "login",
+                "loginRequest": {
+                    "endpoint": "token",
+                    "headers": {
+                        "Authorization": {
+                            "function": "base64_encode",
+                            "args": [
+                                {
+                                    "function": "concat",
+                                    "args": [
+                                        {
+                                            "attr": "username"
+                                        },
+                                        ":",
+                                        {
+                                            "attr": "#password"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "apiRequest": {
+                    "headers": {
+                        "X-Api-Auth": "auth.token"
+                    }
+                }
+            }
+        },
+        "config": {
+            "debug": true,
+            "incrementalOutput": true,
+            "username": "JohnDoe",
+            "#password": "TopSecret",
+            "accountId": 123,
+            "userType": "active",
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users",
+                    "params": {
+                        "accountId": {
+                            "attr": "accountId"
+                        },
+                        "type": {
+                            "attr": "userType"
+                        }
+                    }                    
+                },
+                {
+                    "endpoint": "orders",
+                    "dataType": "orders",
+                    "params": {
+                        "accountId": {
+                            "attr": "accountId"
+                        }                        
+                    }
+                }
+            ]
+        }
+    }
+}

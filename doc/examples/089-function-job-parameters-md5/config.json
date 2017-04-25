@@ -1,0 +1,29 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/089-function-job-parameters-md5/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "tokenValue": "NotSoSecret",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users",
+                    "method": "POST",
+                    "params": {
+                        "token": {
+                            "function": "md5",
+                            "args": [
+                                {
+                                    "attr": "tokenValue"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

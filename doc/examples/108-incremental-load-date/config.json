@@ -1,0 +1,29 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/108-incremental-load-date/"
+        },
+        "config": {
+            "debug": true,
+            "incrementalOutput": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users",
+                    "params": {
+                        "modified_since": {
+                            "function": "date",
+                            "args": [
+                                "Y-m-d H:i:s",
+                                {
+                                    "time": "previousStart"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

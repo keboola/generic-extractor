@@ -1,0 +1,29 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/102-oauth1/",
+            "authentication": {
+                "type": "oauth10"
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users"
+                }
+            ]
+        }
+    },
+    "authorization": {
+        "oauth_api": {
+            "credentials": {
+                "#data": "{\"oauth_token\":\"userToken\",\"oauth_token_secret\":\"tokenSecret\"}",
+                "appKey": 1234,
+                "#appSecret": "TopSecret"
+            }
+        }
+    }    
+}

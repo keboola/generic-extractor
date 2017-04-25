@@ -1,0 +1,45 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/105-oauth2-login/",
+            "authentication": {
+                "type": "oauth20.login",
+                "loginRequest": {
+                    "endpoint": "token",
+                    "headers": {
+                        "X-Refresh-Token": {
+                            "user": "refresh_token"
+                        },
+                        "X-App-Key": {
+                            "consumer": "client_id"
+                        }
+                    }
+                },
+                "apiRequest": {
+                    "headers": {
+                        "X-Access-Token": "credentials.access_token"
+                    }
+                }
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users"
+                }
+            ]
+        }
+    },
+    "authorization": {
+        "oauth_api": {
+            "credentials": {
+                "#data": "{\"status\": \"ok\",\"refresh_token\": \"1234abcd5678efgh\"}",
+                "appKey": "someId",
+                "#appSecret": "clientSecret"
+            }
+        }
+    }
+}
