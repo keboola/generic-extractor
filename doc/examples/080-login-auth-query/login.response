@@ -1,0 +1,12 @@
+{
+	"authentication": [
+		{
+			"secret": "a1b2c3d435f6"
+		},
+		{
+			"token": {
+				"id": 123
+			}
+		}
+	]
+}

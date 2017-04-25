@@ -1,0 +1,45 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/071-mapping-multiple-pk/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users"
+                }
+            ],
+            "mappings": {
+                "users": {
+                    "firstName": {
+                        "mapping": {
+                            "destination": "first_name",
+                            "primaryKey": true
+                        }
+                    },
+                    "lastName": {
+                        "mapping": {
+                            "destination": "last_name",
+                            "primaryKey": true
+                        }
+                    },
+                    "interests": {
+                        "type": "table",
+                        "destination": "interests",
+                        "tableMapping": {
+                            "": {
+                                "type": "column",
+                                "mapping": {
+                                    "destination": "interest"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }    
+    }
+}

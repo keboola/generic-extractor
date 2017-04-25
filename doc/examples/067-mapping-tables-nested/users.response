@@ -1,0 +1,36 @@
+[
+    {
+        "id": 123,
+        "name": "John Doe",
+        "contacts": {
+            "email": "john.doe@example.com",
+            "phone": "987345765",
+            "addresses": [
+                {
+                    "street": "Blossom Avenue",
+                    "country": "United Kingdom"
+                },
+                {
+                    "street": "Whiteheaven Mansions",
+                    "city": "London",
+                    "country": "United Kingdom"
+                }
+            ]
+        }
+    },
+    {
+        "id": 234,
+        "name": "Jane Doe",
+        "contacts": {
+            "email": "jane.doe@example.com",
+            "skype": "jane.doe",
+            "addresses": [
+                {
+                    "street": "Whiteheaven Mansions",
+                    "city": "London",
+                    "country": "United Kingdom"
+                }
+            ]
+        }
+    }
+]

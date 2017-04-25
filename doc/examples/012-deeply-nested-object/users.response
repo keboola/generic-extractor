@@ -1,0 +1,46 @@
+{
+    "members": [
+        {
+            "id": 123,
+            "name": "John Doe",
+            "contacts": [
+                {
+                    "type": "address",
+                    "properties": {
+                        "street": "Elm Street",
+                        "city": "New York"
+                    }
+                },
+                {
+                    "type": "email",
+                    "primary": true,
+                    "properties": {
+                        "address": "john.doe@example.com"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 234,
+            "name": "Jane Doe",
+            "contacts": [
+                {
+                    "type": "address",
+                    "primary": false,
+                    "properties": {
+                        "street": "Bates Street",
+                        "city": "Chicago",
+                        "state": "USA"
+                    }
+                },
+                {
+                    "type": "phone",
+                    "primary": true,
+                    "properties": {
+                        "number": "123 456 789"
+                    }
+                }
+            ]
+        }
+    ]
+}

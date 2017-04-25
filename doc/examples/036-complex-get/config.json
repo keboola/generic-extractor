@@ -1,0 +1,26 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/036-complex-get/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "params": {
+                        "filter": {
+                            "field": "type",
+                            "operator": "equal",
+                            "value": "active"
+                        },
+                        "return": {
+                            "fields": ["id", "name"]
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

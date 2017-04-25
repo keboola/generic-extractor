@@ -1,0 +1,28 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/061-pagination-cursor-reverse/",
+            "pagination": {
+                "method": "cursor",
+                "idKey": "id",
+                "param": "startWith",
+                "increment": -1,
+                "reverse": true
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataField": "items",
+                    "params": {
+                        "startWith": "last",
+                        "account": "123"
+                    }
+                }
+            ]
+        }
+    }
+}

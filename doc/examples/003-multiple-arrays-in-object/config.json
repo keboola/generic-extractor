@@ -1,0 +1,17 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/003-multiple-arrays-in-object/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataField": "users"
+                }
+            ]
+        }
+    }
+}

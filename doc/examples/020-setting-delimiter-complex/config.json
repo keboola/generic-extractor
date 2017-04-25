@@ -1,0 +1,19 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/020-setting-delimiter-complex/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataField": "members",
+                    "responseFilter": ["secondary.address#tags", "primary.address#tags"],
+                    "responseFilterDelimiter": "#"
+                }                
+            ]
+        }
+    }
+}

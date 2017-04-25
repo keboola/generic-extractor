@@ -1,0 +1,25 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/045-next-page-flag-has-more/",
+            "pagination": {
+                "nextPageFlag": {
+                    "field": "hasMore",
+                    "stopOn": false
+                },
+                "method": "offset",
+                "limit": "2"
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataField": "items"
+                }
+            ]
+        }
+    }
+}

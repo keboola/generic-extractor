@@ -1,0 +1,27 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/024-child-job-deeply-nested-id/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataField": "active-users.items",
+                    "children": [
+                        {
+                            "endpoint": "user/{user-id}",
+                            "dataField": ".",
+                            "dataType": "user-detail",
+                            "placeholders": {
+                                "user-id": "user-info.id"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

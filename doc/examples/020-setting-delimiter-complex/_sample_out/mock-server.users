@@ -1,0 +1,3 @@
+"id","name","primary_address_street","primary_address_city","primary_address_tags","primary_address_state","secondary_address_street","secondary_address_city","secondary_address_tags","secondary_address_state"
+"123","John Doe","Elm Street","New York","","","Cemetery Ridge","New York","[""work"",""usaddress""]",""
+"234","Jane Doe"," Blossom Avenue","","[""home""]","U.K.","1313 Webfoot Walk","Duckburg","","Calisota"

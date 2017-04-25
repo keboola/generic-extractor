@@ -1,0 +1,56 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/081-login-auth-headers-query-override/",
+            "http": {
+                "defaultOptions": {
+                    "headers": {
+                        "X-Mode": "development",
+                        "X-Account-Id": 123
+                    },
+                    "params": {
+                        "debug": "1",
+                        "orderBy": "default",
+                        "secretKey": "123"
+                    }
+                }
+            },
+            "authentication": {
+                "type": "login",
+                "loginRequest": {
+                    "endpoint": "login",
+                    "method": "POST",
+                    "params": {
+                        "username": "JohnDoe",
+                        "password": "TopSecret"
+                    }
+                },
+                "apiRequest": {
+                    "query": {
+                        "apiToken": "authorization.token",
+                        "secretKey": "authorization.secretKey",
+                        "customerId": "authorization.accountId"
+                    },
+                    "headers": {
+                        "X-SecretKey": "authorization.secretKey",
+                        "X-Account-Id": "authorization.accountId"
+                    }
+                }
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "params": {
+                        "orderBy": "userName",
+                        "secretKey": "none",
+                        "customerId": "234"
+                    }
+                }
+            ]
+        }
+    }
+}

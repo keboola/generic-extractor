@@ -1,0 +1,13 @@
+{
+    "hasMore": true,
+    "items": [
+        {
+            "id": 123,
+            "name": "John Doe"
+        },
+        {
+            "id": 234,
+            "name": "Jane Doe"
+        }
+    ]
+}

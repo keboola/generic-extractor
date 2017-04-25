@@ -1,0 +1,17 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/007-nested-object/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataField": "user"
+                }
+            ]
+        }
+    }
+}

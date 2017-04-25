@@ -1,0 +1,5 @@
+"type","properties_street","properties_city","properties_address","properties_state","properties_number","primary","JSON_parentId"
+"address","Elm Street","New York","","","","","users_8505d6585e28c00d461ba64f085d1055"
+"email","","","john.doe@example.com","","","1","users_8505d6585e28c00d461ba64f085d1055"
+"address","Bates Street","Chicago","","USA","","","users_ec8c48efecb10334072f03a860113ea2"
+"phone","","","","","123 456 789","1","users_ec8c48efecb10334072f03a860113ea2"

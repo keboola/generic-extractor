@@ -1,0 +1,17 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/010-object-with-nested-array/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataField": "members"
+                }                
+            ]
+        }
+    }
+}

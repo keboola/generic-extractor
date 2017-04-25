@@ -1,0 +1,27 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/058-pagination-response-param-override/",
+            "pagination": {
+                "method": "response.param",
+                "responseParam": "scrolling.next_page",
+                "includeParams": true,
+                "queryParam": "page"
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataField": "items",
+                    "params": {
+                        "page": "start",
+                        "orderBy": "id"
+                    }
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/072-mapping-pk-disable/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users"
+                }
+            ],
+            "mappings": {
+                "users": {
+                    "id": {
+                        "type": "column",
+                        "mapping": {
+                            "destination": "id"
+                        }
+                    },
+                    "name": {
+                        "type": "column",
+                        "mapping": {
+                            "destination": "name"
+                        }
+                    },
+                    "favoriteColors": {
+                        "type": "column",
+                        "mapping": {
+                            "destination": "colors"
+                        }
+                    },
+                    "children": {
+                        "type": "table",
+                        "destination": "users",
+                        "parentKey": {
+                            "disable": true
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/060-pagination-cursor-basic/",
+            "pagination": {
+                "method": "cursor",
+                "idKey": "fields.id",
+                "param": "continueAfter"
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataField": "items"
+                }
+            ]
+        }
+    }
+}

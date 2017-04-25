@@ -1,0 +1,26 @@
+[
+    {
+        "id": 123,
+        "name": "John Doe",
+        "role": "parent",
+        "type": "admin"
+    },
+    {
+        "id": 234,
+        "name": "Jane Doe",
+        "role": "parent",
+        "type": "administrator"
+    },
+    {
+    	"id": 345,
+    	"name": "Jimmy Doe",
+    	"role": "child",
+    	"type": "user"
+    },
+    {
+    	"id": 456,
+    	"name": "Janet Doe",
+    	"role": "child",
+    	"type": "user"
+    }
+]

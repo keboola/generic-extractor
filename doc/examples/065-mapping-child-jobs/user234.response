@@ -1,0 +1,12 @@
+{
+    "id": 234,
+    "name": "Jane Doe",
+    "address": {
+        "city": "St Mary Mead",
+        "country": "UK",
+        "street": "High Street"
+    },
+    "interests": [
+        "boys", "cars", "flowers"
+    ]
+}

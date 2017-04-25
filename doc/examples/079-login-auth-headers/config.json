@@ -1,0 +1,32 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/079-login-auth-headers/",
+            "authentication": {
+                "type": "login",
+                "loginRequest": {
+                    "endpoint": "login",
+                    "method": "GET",
+                    "headers": {
+                        "X-Login": "JohnDoe",
+                        "X-Password": "TopSecret"
+                    }
+                },
+                "apiRequest": {
+                    "headers": {
+                        "X-ApiToken": "authorization.token"
+                    }
+                }
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users"
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "members": [
+        {
+            "id": 123,
+            "name": "John Doe",
+            "primary.address": {
+                "street": "Elm Street",
+                "city": "New York",
+                "tags": []
+            },
+            "secondary.address": {
+                "street": "Cemetery Ridge",
+                "city": "New York",
+                "tags": ["work", "usaddress"]
+            }            
+        },
+        {
+            "id": 234,
+            "name": "Jane Doe",
+            "primary.address": {
+                "street": " Blossom Avenue",
+                "state": "U.K.",
+                "tags": ["home"]
+            },
+            "secondary.address": {
+                "street": "1313 Webfoot Walk",
+                "city": "Duckburg",
+                "state": "Calisota"
+            }
+        }
+    ]
+}

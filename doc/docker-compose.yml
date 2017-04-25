@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+  mock-server:
+    container_name: mock-server
+    image: quay.io/keboola/ex-generic-mock-server 
+    tty: true
+    stdin_open: true
+    ports:
+      - "8888:80"
+    volumes:
+        - ./examples:/examples/
+    environment:
+        - KBC_EXAMPLES_DIR=/examples/
+
+  extractor:
+    image: keboola/generic-extractor
+    volumes:
+      - ./examples/:/examples/
+    working_dir: /home
+    command:
+      - /bin/sh 
+      - -c
+      #- "sleep 10000"
+      - "php /home/run.php --data=/examples/$$KBC_EXAMPLE_NAME"
+    tty: true
+    stdin_open: true
+    links: 
+      - mock-server

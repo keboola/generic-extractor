@@ -1,0 +1,21 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/040-required-headers/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "http": {
+                "headers": {
+                    "X-AppKey": "ThisIsSecret"
+                }
+            },
+            "jobs": [
+                {
+                    "endpoint": "users"
+                }
+            ]
+        }
+    }
+}

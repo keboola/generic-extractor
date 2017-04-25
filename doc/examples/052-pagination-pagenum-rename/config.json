@@ -1,0 +1,23 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/052-pagination-pagenum-rename/",
+            "pagination": {
+                "method": "pagenum",
+                "limit": 2,
+                "limitParam": "count",
+                "pageParam": "set"
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataField": "items"
+                }
+            ]
+        }
+    }
+}

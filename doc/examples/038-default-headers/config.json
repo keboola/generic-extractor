@@ -1,0 +1,22 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/038-default-headers/",
+            "http": {
+                "headers": {
+                    "Accept": "application/json",
+                    "Accept-Encoding": "gzip"
+                }
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users"
+                }
+            ]
+        }
+    }
+}

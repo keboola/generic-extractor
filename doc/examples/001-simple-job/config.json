@@ -1,0 +1,16 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/001-simple-job/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users"
+                }
+            ]
+        }
+    }
+}

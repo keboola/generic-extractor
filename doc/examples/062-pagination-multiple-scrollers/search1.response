@@ -1,0 +1,16 @@
+{
+    "posts": [
+        {
+            "id": 987,
+            "title": "Why do we yawn"
+        },
+        {
+            "id": 876,
+            "title": "Why do cats purr"
+        },
+        {
+            "id": 543,
+            "title": "Why do dogs eat grass"
+        }
+    ]
+}

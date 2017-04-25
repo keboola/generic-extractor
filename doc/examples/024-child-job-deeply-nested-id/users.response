@@ -1,0 +1,33 @@
+{    
+    "active-users": {
+        "items": [
+            {
+                "name": "John Doe",
+                "user-info": {
+                    "id": 123,
+                    "active": true
+                }
+            },
+            {
+                "name": "Jane Doe",
+                "user-info": {
+                    "id": 234,
+                    "active": true
+                }
+            }
+        ],
+        "description": "Active Users"
+    },
+    "inactive-users": {
+        "items": [
+            {
+                "name": "Jimmy Doe",
+                "user-info": {
+                    "id": 345,
+                    "active": false
+                }
+            }
+        ],
+        "description": "Inactive Users"
+    }
+}

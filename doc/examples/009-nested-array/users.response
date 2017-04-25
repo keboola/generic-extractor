@@ -1,0 +1,26 @@
+{
+    "members": [
+        {
+            "type": "active",
+            "items": [
+                {
+                    "id": 123,
+                    "name": "John Doe"
+                },
+                {
+                    "id": 234,
+                    "name": "Jane Doe"
+                }
+            ]
+        },
+        {
+            "type": "inactive",
+            "items": [
+                {
+                    "id": 345,
+                    "name": "Jimmy Doe"
+                }
+            ]
+        }
+    ]
+}

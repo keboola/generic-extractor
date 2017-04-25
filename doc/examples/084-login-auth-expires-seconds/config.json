@@ -1,0 +1,39 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/084-login-auth-expires-timestamp/",
+            "authentication": {
+                "type": "login",
+                "loginRequest": {
+                    "endpoint": "login",
+                    "method": "GET",
+                    "headers": {
+                        "X-Login": "JohnDoe",
+                        "X-Password": "TopSecret"
+                    }
+                },
+                "apiRequest": {
+                    "headers": {
+                        "X-ApiToken": "authorization.token"
+                    }
+                },
+                "expires": {
+                    "response": "authorization.expires",
+                    "relative": true
+                }
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users"
+                },
+                {
+                    "endpoint": "orders"
+                }                
+            ]
+        }
+    }
+}

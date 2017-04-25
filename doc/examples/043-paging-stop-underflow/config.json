@@ -1,0 +1,20 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/043-paging-stop-underflow/",
+            "pagination": {
+                "method": "offset",
+                "limit": "2"
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users"
+                }
+            ]
+        }
+    }
+}

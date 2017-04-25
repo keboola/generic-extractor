@@ -1,0 +1,23 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/037-retry-header/",
+            "retryConfig": {
+                "http": {
+                    "retryHeader": "X-RetryAfter",
+                    "codes": [500, 502, 503, 504, 408, 202]
+                },
+                "maxRetries": 3
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users"
+                }
+            ]
+        }
+    }
+}

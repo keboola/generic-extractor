@@ -1,0 +1,35 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/080-login-auth-query/",
+            "authentication": {
+                "type": "login",
+                "loginRequest": {
+                    "endpoint": "login/form",
+                    "method": "FORM",
+                    "params": {
+                        "username": "JohnDoe",
+                        "password": "TopSecret"
+                    }
+                },
+                "apiRequest": {
+                    "query": {
+                        "secretKey": "authentication.0.secret",
+                        "tokenId": "authentication.1.token.id"
+                    }
+                }
+            }
+        },
+        "config": {
+            "debug": true,
+            "#username": "JohnDoe",
+            "#password": "secret",
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users"
+                }
+            ]
+        }
+    }
+}

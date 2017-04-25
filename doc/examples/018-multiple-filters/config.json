@@ -1,0 +1,21 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/018-multiple-filters/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataField": "members",
+                    "responseFilter": [
+                        "contacts[].properties",
+                        "tags"
+                    ]
+                }
+            ]
+        }
+    }
+}

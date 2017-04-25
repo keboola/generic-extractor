@@ -1,0 +1,28 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/053-pagination-pagenum-override/",
+            "pagination": {
+                "method": "pagenum",
+                "limit": 200,
+                "limitParam": "count",
+                "pageParam": "set",
+                "firstPage": 0,
+                "firstPageParams": false
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataField": "items",
+                    "params": {
+                        "count": 2
+                    }
+                }
+            ]
+        }
+    }
+}

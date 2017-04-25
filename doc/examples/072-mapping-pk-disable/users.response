@@ -1,0 +1,29 @@
+[
+    {
+        "id": 123,
+        "name": "John Doe",
+        "children": [
+            {
+                "id": 1234,
+                "name": "Jenny Doe",
+                "favoriteColors": "blue,pink"
+            },
+            {
+                "id": 1235,
+                "name": "Jimmy Doe",
+                "favoriteColors": "red,green,blue"
+            }
+        ]
+    },
+    {
+        "id": 234,
+        "name": "Jane Doe",
+        "children": [
+            {
+                "id": 2345,
+                "name": "Janet Doe",
+                "favoriteColors": "black"
+            }
+        ]
+    }
+]

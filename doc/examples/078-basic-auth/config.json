@@ -1,0 +1,21 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/078-basic-auth/",
+            "authentication": {
+                "type": "basic"
+            }
+        },
+        "config": {
+            "debug": true,
+            "#username": "JohnDoe",
+            "#password": "secret",
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users"
+                }
+            ]
+        }
+    }
+}

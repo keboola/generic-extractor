@@ -1,0 +1,57 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/065-mapping-child-jobs/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users",
+                    "children": [
+                        {
+                            "endpoint": "user/{user-id}",
+                            "dataType": "user-detail",
+                            "dataField": ".",
+                            "placeholders": {
+                                "user-id": "id"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "mappings": {
+                "users": {
+                    "name": {
+                        "type": "column",
+                        "mapping": {
+                            "destination": "name"
+                        }
+                    },
+                    "id": {
+                        "type": "column",
+                        "mapping": {
+                            "destination": "id"
+                        }
+                    }
+                },
+                "user-detail": {
+                    "address.country": {
+                        "type": "column",
+                        "mapping": {
+                            "destination": "country"
+                        }
+                    },
+                    "parent_id": {
+                        "type": "user",
+                        "mapping": {
+                            "destination": "user_id"
+                        }
+                    }
+                }
+            }
+        }    
+    }
+}

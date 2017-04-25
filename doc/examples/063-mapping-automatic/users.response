@@ -1,0 +1,25 @@
+[
+    {
+        "id": 123,
+        "name": "John Doe",
+        "address": {
+            "street": "Blossom Avenue",
+            "country": "United Kingdom"
+        },
+        "interests": [
+            "girls", "cars", "flowers"
+        ]
+    },
+    {
+        "id": 234,
+        "name": "Jane Doe",
+        "address": {
+            "street": "Whiteheaven Mansions",
+            "city": "London",
+            "country": "United Kingdom"
+        },
+        "interests": [
+            "boys", "cars", "flowers"
+        ]
+    }
+]

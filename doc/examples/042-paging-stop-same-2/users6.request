@@ -1,0 +1,1 @@
+GET /042-paging-stop-same-2/users?limit=2&offset=6
