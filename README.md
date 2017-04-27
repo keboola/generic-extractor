@@ -3,6 +3,8 @@
 
 # Basics
 
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/)
+
 - The extractor configuration has 3 parts - `api`, `config` and `cache`
 - The `api` section defines the API behavior such as authentication method, pagination, API's base URI etc
 - The `config` section should contain actual authentication information (tokens etc), as well as individual endpoints in the `jobs` section
@@ -10,7 +12,11 @@
 
 # API Definition
 
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/)
+
 ## baseUrl
+
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/#base-url)
 
 The most important part of configuration, the API url (should end with a `/`)
 - **Must** be either a string or user function (allows custom domains, see examples)
@@ -44,6 +50,8 @@ https://yourDomain.zendesk.com/api/v2/
 
 ## retryConfig
 
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/#retry-configuration)
+
 Set the retry limit, rate limit reset header and HTTP codes to retry if the API returns an error
 
 - **retryConfig.headerName**: (string) `Retry-After`
@@ -56,6 +64,8 @@ Set the retry limit, rate limit reset header and HTTP codes to retry if the API 
     - Maximum retry attempts (useful for exponential backoff, if the limit reset header is not present)
 
 ## http.requiredHeaders
+
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/#required-headers)
 
 - Headers required to be set in the config section
 - Should be an array, eg: `App-Key,X-User-Email`
@@ -84,17 +94,26 @@ Set the retry limit, rate limit reset header and HTTP codes to retry if the API 
 
 ## http.headers.{Header-Name}
 
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/#required-headers)
+
 - Headers to be sent with all requests from all configurations
 - eg: **http.headers.Accept-Encoding**: `gzip`
 
 ## http.defaultOptions
 
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/#required-headers)
+
 - Define the default request options, that will be included in all requests
 - eg: **http.defaultOptions.params.queryParameter**: `value`
 
 # Authentication
+
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/#authentication)
+
 ## Methods
 ### basic
+
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/authentication/basic/)
 
 - **authentication.type**: `basic`
 - use **username** and **password** or **#password** attributes in the config section.
@@ -115,6 +134,8 @@ Set the retry limit, rate limit reset header and HTTP codes to retry if the API 
     ```
 
 ### query
+
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/authentication/query/)
 
 - Supports signature function as a value
 - Values should be described in `api` section
@@ -202,6 +223,8 @@ Set the retry limit, rate limit reset header and HTTP codes to retry if the API 
 
 ### login
 
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/authentication/login/)
+
 - Log into a web service to obtain a token, which is then used for signing requests
 
 - **authentication.type**: `login`
@@ -256,6 +279,8 @@ Set the retry limit, rate limit reset header and HTTP codes to retry if the API 
 
 ### oauth10
 
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/authentication/oauth10/)
+
 - Use OAuth 1.0 tokens
 - Using OAuth in ex-generic-v2 in KBC currently requires the application to be registered under the API's component ID and cannot be configured in Generic extractor itself
 
@@ -289,6 +314,8 @@ Example minimum `config.json`:
 ```
 
 ### oauth20
+
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/authentication/oauth20/)
 
 Uses [User functions](#user-functions) to use tokens in headers or query. Instead of `attr` or `time` parameters, you should use `authorization` to access the OAuth data. If the data is a raw token string, use `authorization: data` to access it. If it's a JSON string, use `authentication.format: json` and access its values isong the `.` annotation, like in example below (`authorization: data.access_token`).
 
@@ -417,10 +444,17 @@ Example for **MAC** authentication:
 ```
 
 # Pagination
+
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/pagination/)
+
 ## Methods
 Configured in `api.pagination.method`
 
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/pagination/#choosing-paging-strategy)
+
 ### offset
+
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/pagination/offset/)
 
 - **pagination.method**: `offset`
 - **pagination.limit**: integer
@@ -471,6 +505,8 @@ Configured in `api.pagination.method`
 
 ### response.param
 
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/pagination/response-param/)
+
 - **pagination.method**: `response.param`
 - **pagination.responseParam**:
     - path within response that points to a value used for scrolling
@@ -501,6 +537,8 @@ Configured in `api.pagination.method`
 
 ### response.url
 
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/pagination/response-url/)
+
 - **pagination.method**: `response.url`
 - **pagination.urlKey**: `next_page`
     - path within response object that points to the URL
@@ -522,6 +560,9 @@ Configured in `api.pagination.method`
     ```
 
 ### pagenum
+
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/pagination/pagenum/)
+
 simple page number increasing 1 by 1
 
 - **pagination.method**: `pagenum`
@@ -548,6 +589,9 @@ simple page number increasing 1 by 1
     - Whether or not include limit and page params in the first request (default to `true`)
 
 ### cursor
+
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/pagination/cursor/)
+
 Looks within the response **data** for an ID which is then used as a parameter for scrolling.
 
 The intention is to look for identifiers within data and in the next request, use a parameter asking for IDs higher than the highest found (or the opposite, lower than the lowest using the `reverse` parameter)
@@ -589,6 +633,9 @@ The intention is to look for identifiers within data and in the next request, us
     ```
 
 ### multiple
+
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/pagination/multiple/)
+
 Allows setting scrollers per endpoint.
 
 - **pagination.method**: `multiple`
@@ -640,6 +687,8 @@ Allows setting scrollers per endpoint.
 ## Common scrolling parameters
 ### nextPageFlag
 
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/pagination/#stopping-strategy)
+
 Looks within responses to find a boolean field determining whether to continue scrolling or not.
 
 Usage:
@@ -662,7 +711,12 @@ Usage:
 - It is advised to use both `previousStart` and `currentStart` as since>until pair to ensure no gap and no overlap in data.
 - Both values are stored as Unix timestamp. `date` function can be used to reformat it.
 
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/functions/#parameters-context)
+
 ## Attributes
+
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/config/)
+
 Attributes must be configured accordingly to the `api` configuration (eg *auth*, *pagination*, *http.requiredHeaders*). They are under the `config` section of the configuration. (see example below)
 
 - **outputBucket**: Name of the bucket to store the output data
@@ -688,6 +742,9 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
     ```
 
 ## Jobs
+
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/config/jobs/)
+
 - Columns:
     - **endpoint** (required): The API endpoint
     - **params**: Query/POST parameters of the api call, JSON encoded
@@ -821,6 +878,9 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
         - Use `'responseFilter': 'data.stuff/something'` together with `'responseFilterDelimiter': '/'` to filter the array in `something`
 
 ## Mappings
+
+Noved to [new docs](https://developers.keboola.com/extend/generic-extractor/config/mappings/)
+
 `mappings` attribute can be used to force the extractor to map the response into columns in a CSV file as described in the [JSON to CSV Mapper documentation](https://github.com/keboola/php-csvmap).
 Each property in the `mappings` object must follow the mapper settings, where the key is the `dataType` of a `job`. Note that if a `dataType` is not set, it is generated from the endpoint and might be confusing if ommited.
 
@@ -948,7 +1008,11 @@ This way you can download the same data from two different accounts into a singl
 # User functions
 Can currently be used in query type authentication or endpoint parameters
 
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/functions/)
+
 ## Allowed functions
+
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/functions/#supported-functions)
 
 - `md5`: Generate a md5 key from its argument value
 - `sha1`: Generate a sha1 key from its argument value
@@ -963,6 +1027,9 @@ Can currently be used in query type authentication or endpoint parameters
 - `ifempty`: Return first argument if is not empty, otherwise return second argument
 
 ## Syntax
+
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/functions/#function-contexts)
+
 The function must be specified in JSON format, which may contain one of the following 4 objects:
 
 - **String**: `"something"`
@@ -994,6 +1061,9 @@ The function must be specified in JSON format, which may contain one of the foll
 - **Query parameter**: **TODO**
 
 # Example configuration
+
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/running/#running-examples)
+
 ```
 {
     "parameters": {
@@ -1096,6 +1166,8 @@ This is useful for local jobs configuration development.
 ```
 
 # Local development
+
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/running/#running-locally)
 
 Best way to create and test new configurations is run extractor in docker container.
 
