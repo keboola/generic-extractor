@@ -1,0 +1,35 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/112-iterations-params/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "ge-tutorial",
+            "userData": {
+                "account": {
+                    "attr": "accountId"
+                }
+            },
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users",
+                    "params": {
+                        "account_id": {
+                            "attr": "accountId"
+                        }
+                    }
+                }
+            ]
+        },
+        "iterations": [
+            {
+                "accountId": 345
+            },
+            {
+                "accountId": 456
+            }
+        ]
+    }
+}

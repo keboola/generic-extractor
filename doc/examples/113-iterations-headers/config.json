@@ -1,0 +1,40 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/113-iterations-headers/",
+            "authentication": {
+                "type": "basic"
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "ge-tutorial",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users"
+                }
+            ]
+        },
+        "iterations": [
+            {
+                "http": {
+                    "headers": {
+                        "X-Api-Token": "1234abcd"
+                    }
+                },
+                "username": "JohnDoe",
+                "#password": "TopSecret"
+            },
+            {
+                "http": {
+                    "headers": {
+                        "X-Api-Token": "zyxv9876"
+                    }
+                },
+                "username": "DoeJohn",
+                "#password": "EvenMoreSecret"
+            }
+        ]
+    }
+}

@@ -135,6 +135,8 @@ run_example "108-incremental-load-date"
 # run_example "109-incremental-load-from-to" # -> This is not testable, because it uses currentStart
 # run_example "110-incremental-relative" # -> This is not testable, because it uses currentStart
 run_example "111-templates-example"
+run_example "112-iterations-params"
+run_example "113-iterations-headers"
 
 # Stop mock server
 printf "\nAll examples successfull.\n"
