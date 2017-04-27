@@ -1,6 +1,6 @@
 # Extractor configuration
 
-## Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/running/#running-locally)
+## Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/)
 
 ---
 
