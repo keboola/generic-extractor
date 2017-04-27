@@ -133,7 +133,7 @@ run_example "106-child-jobs-array"
 run_example "107-incremental-load"
 run_example "108-incremental-load-date"
 # run_example "109-incremental-load-from-to" # -> This is not testable, because it uses currentStart
-run_example "110-incremental-relative" # -> This is not testable, because it uses currentStart
+# run_example "110-incremental-relative" # -> This is not testable, because it uses currentStart
 run_example "111-templates-example"
 
 # Stop mock server
