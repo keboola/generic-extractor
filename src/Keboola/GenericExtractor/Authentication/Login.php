@@ -122,7 +122,7 @@ class Login implements AuthInterface
 
     /**
      * @param \stdclass $response
-     * @return int
+     * @return int|null
      * @throws UserException
      */
     protected function getExpiry(\stdclass $response)

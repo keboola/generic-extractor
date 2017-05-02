@@ -85,7 +85,7 @@ class GenericExtractorJob extends RecursiveJob
      * @param JobConfig $config
      * @param mixed $response
      * @param array|null $data
-     * @return RequestInterface | false
+     * @return RequestInterface|false
      */
     protected function nextPage(JobConfig $config, $response, $data)
     {
@@ -97,7 +97,7 @@ class GenericExtractorJob extends RecursiveJob
      * Return a download request
      *
      * @param JobConfig $config
-     * @return RequestInterface | false
+     * @return RequestInterface|false
      */
     protected function firstPage(JobConfig $config)
     {

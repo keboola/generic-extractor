@@ -41,7 +41,7 @@ class GenericExtractor extends Extractor
      */
     protected $auth;
     /**
-     * @var Json
+     * @var ParserInterface
      */
     protected $parser;
     /**
