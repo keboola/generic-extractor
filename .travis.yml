@@ -1,10 +1,11 @@
-sudo: required
 language: bash
 services:
   - docker
 before_script:
-  - docker-compose build extractor
-script: docker-compose run --rm --entrypoint sh -e CODECLIMATE_REPO_TOKEN extractor /home/tests/run.sh
+  - docker-compose build extractor  
+script: 
+  - docker-compose run --rm extractor ./vendor/bin/phpcs --standard=psr2 --ignore=vendor -n .
+  - docker-compose run --rm --entrypoint sh -e CODECLIMATE_REPO_TOKEN extractor /home/tests/run.sh
 after_success:
   - docker images
 deploy:

@@ -5,9 +5,6 @@ namespace Keboola\GenericExtractor\Subscriber;
 use GuzzleHttp\Event\BeforeEvent;
 use GuzzleHttp\Event\RequestEvents;
 use GuzzleHttp\Event\SubscriberInterface;
-use GuzzleHttp\Message\RequestInterface;
-use Keboola\Utils\Utils;
-use Keboola\Juicer\Client\RestRequest;
 
 /**
  * Might better be able to work with ANY type of auth, and tweak the request accordingly

@@ -2,11 +2,10 @@
 
 namespace Keboola\GenericExtractor\Config;
 
-use Keboola\Juicer\Config\Configuration as BaseConfiguration,
-    Keboola\Juicer\Filesystem\YamlFile,
-    Keboola\Juicer\Exception\FileNotFoundException,
-    Keboola\Juicer\Exception\ApplicationException,
-    Keboola\Juicer\Exception\NoDataException;
+use Keboola\Juicer\Config\Configuration as BaseConfiguration;
+use Keboola\Juicer\Exception\FileNotFoundException;
+use Keboola\Juicer\Exception\ApplicationException;
+use Keboola\Juicer\Exception\NoDataException;
 use Keboola\Juicer\Filesystem\JsonFile;
 
 /**
@@ -23,7 +22,7 @@ class Configuration extends BaseConfiguration
     {
         try {
             return $this->getJSON('/config.json', 'parameters', 'cache');
-        } catch(NoDataException $e) {
+        } catch (NoDataException $e) {
             return [];
         }
     }
@@ -54,13 +53,13 @@ class Configuration extends BaseConfiguration
     {
         try {
             return $this->getJSON('/config.json', 'authorization');
-        } catch(NoDataException $e) {
+        } catch (NoDataException $e) {
             return [];
         }
     }
 
     /**
-     * @return $modules
+     * @return array
      * @throws ApplicationException
      * @todo 'tis flawed - the path shouldn't be hardcoded for tests
      */
@@ -70,11 +69,11 @@ class Configuration extends BaseConfiguration
 
         try {
             $modulesCfg = JsonFile::create(ROOT_PATH . '/config/modules.json')->getData();
-        } catch(FileNotFoundException $e) {
+        } catch (FileNotFoundException $e) {
             $modulesCfg = [];
         }
 
-        foreach($modulesCfg as $moduleCfg) {
+        foreach ($modulesCfg as $moduleCfg) {
             $module = $this->createModule($moduleCfg);
             if (isset($modules[$module['type']][$module['level']])) {
                 throw new ApplicationException(
@@ -91,7 +90,7 @@ class Configuration extends BaseConfiguration
             $modules[$module['type']][$module['level']] = $module['class'];
         }
 
-        foreach($modules as $type => &$typeModules) {
+        foreach ($modules as $type => &$typeModules) {
             ksort($typeModules);
         }
 

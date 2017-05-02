@@ -2,10 +2,10 @@
 namespace Keboola\GenericExtractor;
 
 use Keboola\GenericExtractor\Authentication\Query;
-use GuzzleHttp\Client,
-    GuzzleHttp\Message\Response,
-    GuzzleHttp\Stream\Stream,
-    GuzzleHttp\Subscriber\Mock;
+use GuzzleHttp\Client;
+use GuzzleHttp\Message\Response;
+use GuzzleHttp\Stream\Stream;
+use GuzzleHttp\Subscriber\Mock;
 use Keboola\Code\Builder;
 use Keboola\Juicer\Client\RestClient;
 

@@ -2,13 +2,11 @@
 namespace Keboola\GenericExtractor;
 
 use Keboola\GenericExtractor\Authentication\Login;
-use GuzzleHttp\Client,
-    GuzzleHttp\Exception\ClientException,
-    GuzzleHttp\Message\Response,
-    GuzzleHttp\Stream\Stream,
-    GuzzleHttp\Subscriber\Mock,
-    GuzzleHttp\Subscriber\History;
-use Keboola\Code\Builder;
+use GuzzleHttp\Client;
+use GuzzleHttp\Message\Response;
+use GuzzleHttp\Stream\Stream;
+use GuzzleHttp\Subscriber\Mock;
+use GuzzleHttp\Subscriber\History;
 use Keboola\Juicer\Client\RestClient;
 
 class LoginTest extends ExtractorTestCase

@@ -1,9 +1,8 @@
 <?php
 namespace Keboola\GenericExtractor\Authentication;
 
-use Keboola\Juicer\Exception\ApplicationException,
-    Keboola\Juicer\Exception\UserException,
-    Keboola\Juicer\Client\RestClient;
+use Keboola\Juicer\Exception\UserException;
+use Keboola\Juicer\Client\RestClient;
 
 /**
  * Basic HTTP Authentication using name and password

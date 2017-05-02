@@ -2,9 +2,10 @@
 namespace Keboola\GenericExtractor;
 
 use Keboola\Juicer\Common\Logger;
-use GuzzleHttp\Client,
-    GuzzleHttp\Exception\ClientException,
-    GuzzleHttp\Message\RequestInterface;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Message\RequestInterface;
+use Monolog\Handler\NullHandler;
 
 class ExtractorTestCase extends \PHPUnit_Framework_TestCase
 {
@@ -29,7 +30,7 @@ class ExtractorTestCase extends \PHPUnit_Framework_TestCase
     {
         return new \Monolog\Logger(
             $name,
-            $null ? [new \Monolog\Handler\NullHandler()] : []
+            $null ? [new NullHandler()] : []
         );
     }
 
@@ -42,7 +43,7 @@ class ExtractorTestCase extends \PHPUnit_Framework_TestCase
     {
         try {
             return $client->send($request);
-        } catch(ClientException $e) {
+        } catch (ClientException $e) {
             // this is expected, just need to send the request somewhere!
         }
     }

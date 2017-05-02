@@ -1,15 +1,16 @@
 <?php
 
 use Keboola\GenericExtractor\Executor;
-use Keboola\Juicer\Common\Logger,
-    Keboola\Juicer\Exception\ApplicationException,
-    Keboola\Juicer\Exception\UserException;
+use Keboola\Juicer\Common\Logger;
+use Keboola\Juicer\Exception\ApplicationException;
+use Keboola\Juicer\Exception\UserException;
 
 require_once(dirname(__FILE__) . "/bootstrap.php");
 
 const APP_NAME = 'ex-generic-v2';
 
-function userError(UserException $e) {
+function userError(UserException $e)
+{
     Logger::log('error', $e->getMessage(), (array) $e->getData());
     exit(1);
 }
@@ -17,12 +18,12 @@ function userError(UserException $e) {
 try {
     $executor = new Executor;
     $executor->run();
-} catch(UserException $e) {
+} catch (UserException $e) {
     userError($e);
-} catch(ApplicationException $e) {
+} catch (ApplicationException $e) {
     Logger::log('error', $e->getMessage(), (array) $e->getData());
     exit($e->getCode() > 1 ? $e->getCode(): 2);
-} catch(Exception $e) {
+} catch (Exception $e) {
     if ($e instanceof \GuzzleHttp\Exception\RequestException
         && $e->getPrevious() instanceof UserException) {
         userError($e->getPrevious());

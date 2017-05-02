@@ -45,17 +45,15 @@ class MockExecutionTest extends ExtractorTestCase
 
     public function testEmptyCfg()
     {
-        $result = exec('php ./run.php --data=./tests/data/emptyCfg 2>&1', $output, $retval);
-
+        exec('php ./run.php --data=./tests/data/emptyCfg 2>&1', $output, $retval);
         self::assertEquals(1, $retval);
     }
 
     public function testDynamicUserData()
     {
-        $result = exec('php ./run.php --data=./tests/data/dynamicUserData 2>&1', $output, $retval);
-
+        exec('php ./run.php --data=./tests/data/dynamicUserData 2>&1', $output, $retval);
         $expectedFile = file('./tests/data/dynamicUserData/expected/tables/get');
-        foreach($expectedFile as &$row) {
+        foreach ($expectedFile as &$row) {
             $row = str_replace('{{date}}', date('Y-m-d'), $row);
         }
 
@@ -68,19 +66,17 @@ class MockExecutionTest extends ExtractorTestCase
 
     public function testJsonMapError()
     {
-
     }
 
     protected function rmDir($dirPath)
     {
-        foreach(
-            new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator(
-                    $dirPath,
-                    \FilesystemIterator::SKIP_DOTS
-                ),
-                \RecursiveIteratorIterator::CHILD_FIRST
-            ) as $path) {
+        foreach (new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator(
+                $dirPath,
+                \FilesystemIterator::SKIP_DOTS
+            ),
+            \RecursiveIteratorIterator::CHILD_FIRST
+        ) as $path) {
             $path->isDir() && !$path->isLink() ? rmdir($path->getPathname()) : unlink($path->getPathname());
         }
         return rmdir($dirPath);
@@ -88,7 +84,7 @@ class MockExecutionTest extends ExtractorTestCase
 
     protected function assertDirectoryEquals($pathToExpected, $pathToActual)
     {
-        foreach(new \RecursiveIteratorIterator(
+        foreach (new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator(
                 $pathToExpected,
                 \FilesystemIterator::SKIP_DOTS

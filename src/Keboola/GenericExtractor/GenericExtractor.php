@@ -6,21 +6,19 @@ use GuzzleHttp\Message\RequestInterface;
 use GuzzleHttp\Subscriber\Cache\CacheStorage;
 use GuzzleHttp\Subscriber\Cache\CacheSubscriber;
 use Keboola\GenericExtractor\Config\JuicerRest;
-use Keboola\Juicer\Extractor\Extractor,
-    Keboola\Juicer\Config\Config,
-    Keboola\Juicer\Client\RestClient,
-    Keboola\Juicer\Parser\Json,
-    Keboola\Juicer\Parser\JsonMap,
-    Keboola\Juicer\Parser\ParserInterface,
-    Keboola\Juicer\Pagination\ScrollerInterface,
-    Keboola\Juicer\Exception\ApplicationException;
-use Keboola\GenericExtractor\GenericExtractorJob,
-    Keboola\GenericExtractor\Authentication\AuthInterface,
-    Keboola\GenericExtractor\Config\Api,
-    Keboola\GenericExtractor\Subscriber\LogRequest,
-    Keboola\GenericExtractor\Config\UserFunction;
+use Keboola\Juicer\Config\JobConfig;
+use Keboola\Juicer\Extractor\Extractor;
+use Keboola\Juicer\Config\Config;
+use Keboola\Juicer\Client\RestClient;
+use Keboola\Juicer\Parser\Json;
+use Keboola\Juicer\Parser\JsonMap;
+use Keboola\Juicer\Parser\ParserInterface;
+use Keboola\Juicer\Pagination\ScrollerInterface;
+use Keboola\GenericExtractor\Authentication\AuthInterface;
+use Keboola\GenericExtractor\Config\Api;
+use Keboola\GenericExtractor\Subscriber\LogRequest;
+use Keboola\GenericExtractor\Config\UserFunction;
 use Keboola\Code\Builder;
-use Keboola\Utils\Utils;
 
 class GenericExtractor extends Extractor
 {
@@ -112,16 +110,14 @@ class GenericExtractor extends Extractor
 
         $builder = new Builder();
 
-        foreach($config->getJobs() as $jobConfig) {
-            $this->runJob($jobConfig, $client, $config,$builder);
+        foreach ($config->getJobs() as $jobConfig) {
+            $this->runJob($jobConfig, $client, $config, $builder);
         }
 
         if ($this->parser instanceof Json) {
             // FIXME fallback from JsonMap
             $this->metadata = array_replace_recursive($this->metadata, $this->parser->getMetadata());
         }
-
-//         return $this->parser->getResults();
     }
 
     /**
@@ -140,7 +136,8 @@ class GenericExtractor extends Extractor
         $job->setBuilder($builder);
         $job->setResponseModules($this->modules['response']);
         if (!empty($config->getAttribute('userData'))) {
-            $job->setUserParentId(is_scalar($config->getAttribute('userData'))
+            $job->setUserParentId(
+                is_scalar($config->getAttribute('userData'))
                 ? ['userData' => $config->getAttribute('userData')]
                 : $config->getAttribute('userData')
             );

@@ -5,13 +5,13 @@
 
 namespace Keboola\GenericExtractor\Authentication;
 
-use Keboola\Juicer\Exception\UserException,
-    Keboola\Juicer\Client\RestRequest,
-    Keboola\Juicer\Client\RestClient;
-use Keboola\GenericExtractor\Subscriber\LoginSubscriber,
-    Keboola\GenericExtractor\Config\UserFunction;
-use Keboola\Utils\Utils,
-    Keboola\Utils\Exception\NoDataFoundException;
+use Keboola\Juicer\Exception\UserException;
+use Keboola\Juicer\Client\RestRequest;
+use Keboola\Juicer\Client\RestClient;
+use Keboola\GenericExtractor\Subscriber\LoginSubscriber;
+use Keboola\GenericExtractor\Config\UserFunction;
+use Keboola\Utils\Utils;
+use Keboola\Utils\Exception\NoDataFoundException;
 
 /**
  * config:
@@ -44,12 +44,12 @@ class Login implements AuthInterface
     public function __construct(array $attrs, array $api)
     {
         $this->attrs = $attrs;
-
         $this->auth = $api['authentication'];
     }
 
     /**
      * @param array $config
+     * @throws UserException
      * @return RestRequest
      */
     protected function getAuthRequest(array $config)
@@ -100,18 +100,19 @@ class Login implements AuthInterface
     /**
      * Maps data from login result into $type (header/query)
      *
-     * @param object $response
+     * @param \stdClass $response
      * @param string $type
      * @return array
+     * @throws UserException
      */
     protected function getResults(\stdClass $response, $type)
     {
         $result = [];
         if (!empty($this->auth['apiRequest'][$type])) {
-            foreach($this->auth['apiRequest'][$type] as $key => $path) {
+            foreach ($this->auth['apiRequest'][$type] as $key => $path) {
                 try {
                     $result[$key] = Utils::getDataFromPath($path, $response, '.', false);
-                } catch(NoDataFoundException $e) {
+                } catch (NoDataFoundException $e) {
                     throw new UserException("Key '{$key}' not found at path '{$path}' in the Login response");
                 }
             }
@@ -120,8 +121,9 @@ class Login implements AuthInterface
     }
 
     /**
-     * @param object $response
+     * @param \stdclass $response
      * @return int
+     * @throws UserException
      */
     protected function getExpiry(\stdclass $response)
     {

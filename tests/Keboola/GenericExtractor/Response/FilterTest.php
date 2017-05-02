@@ -257,6 +257,5 @@ class FilterTest extends ExtractorTestCase
             ],
             $filter->run($data)
         );
-
     }
 }

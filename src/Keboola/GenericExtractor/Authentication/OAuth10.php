@@ -1,9 +1,8 @@
 <?php
 namespace Keboola\GenericExtractor\Authentication;
 
-use Keboola\Juicer\Exception\ApplicationException,
-    Keboola\Juicer\Exception\UserException,
-    Keboola\Juicer\Client\RestClient;
+use Keboola\Juicer\Exception\UserException;
+use Keboola\Juicer\Client\RestClient;
 use GuzzleHttp\Subscriber\Oauth\Oauth1;
 use Keboola\Utils\Utils;
 
@@ -37,7 +36,7 @@ class OAuth10 implements AuthInterface
 
         $oauthApiDetails = $authorization['oauth_api']['credentials'];
 
-        foreach(['#data', 'appKey', '#appSecret'] as $key) {
+        foreach (['#data', 'appKey', '#appSecret'] as $key) {
             if (empty($oauthApiDetails[$key])) {
                 throw new UserException("Missing '{$key}' for OAuth 1.0 authorization");
             }

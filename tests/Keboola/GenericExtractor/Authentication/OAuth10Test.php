@@ -2,11 +2,11 @@
 namespace Keboola\GenericExtractor;
 
 use Keboola\GenericExtractor\Authentication\OAuth10;
-use GuzzleHttp\Client,
-    GuzzleHttp\Message\Response,
-    GuzzleHttp\Stream\Stream,
-    GuzzleHttp\Subscriber\Mock,
-    GuzzleHttp\Subscriber\History;
+use GuzzleHttp\Client;
+use GuzzleHttp\Message\Response;
+use GuzzleHttp\Stream\Stream;
+use GuzzleHttp\Subscriber\Mock;
+use GuzzleHttp\Subscriber\History;
 use Keboola\Juicer\Client\RestClient;
 
 class OAuth10Test extends ExtractorTestCase
