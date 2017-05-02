@@ -1,19 +1,26 @@
 language: bash
+
 services:
   - docker
+
 before_script:
-  - docker-compose build extractor  
+  - docker -v
+  - docker-compose -v
+  - docker-compose build
+
 script: 
-  - docker-compose run --rm extractor ./vendor/bin/phpcs --standard=psr2 --ignore=vendor -n .
-  - docker-compose run --rm --entrypoint sh -e CODECLIMATE_REPO_TOKEN extractor /home/tests/run.sh
+  - docker-compose run --rm -e CODECLIMATE_REPO_TOKEN tests
+
 after_success:
   - docker images
+
 deploy:
   provider: script
   skip_cleanup: true
   script: ./deploy.sh
   on:
     tags: true
+
 notifications:
   slack:
     secure: fRVSNiGtTdKQsP+LOVeYlK/Ed2NjB4HoZgBFkBqkirNlS8ZuvyQSto6xr1VNHxRCBx6DjeyXwyHD1OPAX6/CkcTcOaNYFXJnSTmrEjRtA8lK021t6xyCiUtuP3LLC67ukUl59zx2eVMbp3H2AVRUoJQ/rCwxGjFx4HJqQdiQPH65Fj6YGeG/YCyXywYU1GwaEOW0IcioMY+Ltsn34blgfHZ5ZYlEHj79HJu66T/muYi5P+YPwzkn3+/AeRDR0JHb6kAs2EOOtbu55KVtbdpsMEgBFqtMOm74rDQW2gGQ0sw841A/sQ4Yolmi86OKKlQILrIO0rmkMMqNKeotHEeOiT2pQOwwzc82pylj6CQGJKLBU/Id7qI6MUsSGLZZD4iNaxh1kKOCFhdPSPRiSlFXcFDS9wNhY7/ZUKDU2hOAZJDTgSCcgrqPGfN/JwTbIO5UkLw5bMDbCXP9Bw+56JGhiHwMUMc+3cHwQAgR5ueAzajMoQUKpnwAxlyemaCF6d8WU2b0unxFecaYi7n3G8a12biD+imvglBCaE1I0E8goPjmEZJmizNtB8barDIQMMJS1aU95GvO9XfwxG7bJXuk18L0XJkJ7GdIWeItehh4UcWlS0tZbloxbfXXbPlJa/43nnV1ZyA3ud0w7Dzy0GuE8xHacLcKNHguHL2bIhUMIwU=

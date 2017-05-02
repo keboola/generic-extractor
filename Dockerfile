@@ -10,12 +10,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	&& curl -sS https://getcomposer.org/installer | php \
   	&& ln -s /root/composer.phar /usr/local/bin/composer
 
-WORKDIR /home
+WORKDIR /code
 
 # Initialize
-COPY . /home/
+COPY . /code/
 COPY php.ini /usr/local/etc/php/
 
 RUN composer install --no-interaction
 
-CMD php ./run.php --data=/data
+CMD php /code/run.php --data=/data

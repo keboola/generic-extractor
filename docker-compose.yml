@@ -5,17 +5,18 @@ services:
     build: .
     image: keboola/generic-extractor
     volumes:
-      - .:/home
+      - .:/code
       - .tmp:/tmp
-    working_dir: /home
-    command: "php ./run.php --data=./data"
     tty: true
     stdin_open: true
+
   tests:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile-tests
     volumes:
-      - .:/home
-    working_dir: /home
-    command: "./phpunit.sh"
+      - .:/code
+      - .tmp:/tmp
+    command: "/code/phpunit.sh"
     tty: true
     stdin_open: true
