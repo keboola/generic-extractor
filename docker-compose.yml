@@ -21,3 +21,14 @@ services:
     command: "/code/phpunit.sh"
     tty: true
     stdin_open: true
+
+  tests-local:
+    build:
+      context: .
+      dockerfile: Dockerfile-tests
+    volumes:
+      - .:/code
+      - .tmp:/tmp
+    command: "sh -c \"composer install --no-interaction && /code/phpunit.sh\""
+    tty: true
+    stdin_open: true    
