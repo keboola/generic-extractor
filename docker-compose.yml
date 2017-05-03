@@ -18,7 +18,8 @@ services:
     volumes:
       - ./.git:/code/.git
       - .tmp:/tmp
-    command: "/code/phpunit.sh"
+    command: 
+      - /code/phpunit.sh
     tty: true
     stdin_open: true
 
@@ -29,6 +30,9 @@ services:
     volumes:
       - .:/code
       - .tmp:/tmp
-    command: "sh -c \"composer install --no-interaction && /code/phpunit.sh\""
+    command:
+      - /bin/sh 
+      - -c
+      - "composer install --no-interaction && /code/phpunit.sh"
     tty: true
     stdin_open: true    

@@ -10,6 +10,7 @@ before_script:
 
 script: 
   - docker-compose run --rm -e CODECLIMATE_REPO_TOKEN tests
+  - sh -c "cd doc && ./run-samples.sh"
 
 after_success:
   - docker images

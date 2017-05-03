@@ -14,15 +14,16 @@ services:
         - KBC_EXAMPLES_DIR=/examples/
 
   extractor:
-    image: quay.io/keboola/generic-extractor
+    build: ..
+    image: keboola/generic-extractor
     volumes:
-      - ./examples/:/examples/
-    working_dir: /home
+      - .tmp:/tmp
+      - ./examples/:/examples/      
+    tty: true
+    stdin_open: true
     command:
       - /bin/sh 
       - -c
-      - "php /home/run.php --data=/examples/$$KBC_EXAMPLE_NAME"
-    tty: true
-    stdin_open: true
+      - "php /code/run.php --data=/examples/$$KBC_EXAMPLE_NAME"    
     links: 
       - mock-server
