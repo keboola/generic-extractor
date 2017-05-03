@@ -5,8 +5,9 @@ services:
     build: .
     image: keboola/generic-extractor
     volumes:
-      - .:/code
       - .tmp:/tmp
+      - .:/code
+      - ./data:/data
     tty: true
     stdin_open: true
 
@@ -15,7 +16,7 @@ services:
       context: .
       dockerfile: Dockerfile-tests
     volumes:
-      - .:/code
+      - ./.git:/code/.git
       - .tmp:/tmp
     command: "/code/phpunit.sh"
     tty: true
