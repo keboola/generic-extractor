@@ -2,11 +2,11 @@
 
 namespace Keboola\GenericExtractor\Authentication;
 
-use Keboola\Juicer\Exception\UserException,
-    Keboola\Juicer\Client\RestRequest;
+use Keboola\Juicer\Exception\UserException;
+use Keboola\Juicer\Client\RestRequest;
 use Keboola\GenericExtractor\Config\UserFunction;
-use Keboola\Utils\Utils,
-    Keboola\Utils\Exception\JsonDecodeException;
+use Keboola\Utils\Utils;
+use Keboola\Utils\Exception\JsonDecodeException;
 
 /**
  * config:
@@ -43,7 +43,7 @@ class OAuth20Login extends Login
         }
 
         $oauthApiDetails = $authorization['oauth_api']['credentials'];
-        foreach(['#data', 'appKey', '#appSecret'] as $key) {
+        foreach (['#data', 'appKey', '#appSecret'] as $key) {
             if (empty($oauthApiDetails[$key])) {
                 throw new UserException("Missing '{$key}' for OAuth 2.0 authorization");
             }
@@ -51,7 +51,7 @@ class OAuth20Login extends Login
 
         try {
             $oAuthData = Utils::json_decode($oauthApiDetails['#data'], true);
-        } catch(JsonDecodeException $e) {
+        } catch (JsonDecodeException $e) {
             throw new UserException("The OAuth data is not a valid JSON");
         }
 
@@ -70,6 +70,7 @@ class OAuth20Login extends Login
 
     /**
      * @param array $config
+     * @throws UserException
      * @return RestRequest
      */
     protected function getAuthRequest(array $config)

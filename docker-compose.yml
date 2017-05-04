@@ -5,17 +5,34 @@ services:
     build: .
     image: keboola/generic-extractor
     volumes:
-      - .:/home
       - .tmp:/tmp
-    working_dir: /home
-    command: "php ./run.php --data=./data"
+      - .:/code
+      - ./data:/data
     tty: true
     stdin_open: true
+
   tests:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile-tests
     volumes:
-      - .:/home
-    working_dir: /home
-    command: "./phpunit.sh"
+      - ./.git:/code/.git
+      - .tmp:/tmp
+    command: 
+      - /code/phpunit.sh
     tty: true
     stdin_open: true
+
+  tests-local:
+    build:
+      context: .
+      dockerfile: Dockerfile-tests
+    volumes:
+      - .:/code
+      - .tmp:/tmp
+    command:
+      - /bin/sh 
+      - -c
+      - "composer install --no-interaction && /code/phpunit.sh"
+    tty: true
+    stdin_open: true    

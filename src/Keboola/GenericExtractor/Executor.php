@@ -4,11 +4,11 @@ namespace Keboola\GenericExtractor;
 
 use Doctrine\Common\Cache\FilesystemCache;
 use GuzzleHttp\Subscriber\Cache\CacheStorage;
-use Keboola\GenericExtractor\Config\Configuration,
-    Keboola\GenericExtractor\GenericExtractor;
+use Keboola\GenericExtractor\Config\Configuration;
+use Keboola\Juicer\Config\Config;
 use Keboola\Temp\Temp;
-use Keboola\Juicer\Common\Logger,
-    Keboola\Juicer\Exception\UserException;
+use Keboola\Juicer\Common\Logger;
+use Keboola\Juicer\Exception\UserException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
@@ -58,7 +58,8 @@ class Executor
         $cacheStorage = $this->initCacheStorage($configuration);
 
         $results = [];
-        foreach($configs as $config) {
+        /** @var Config[] $configs */
+        foreach ($configs as $config) {
             // Reinitialize logger depending on debug status
             if ($config->getAttribute('debug')) {
                 Logger::initLogger(APP_NAME, true);
@@ -96,10 +97,9 @@ class Executor
 
             $results[$outputBucket]['parser'] = $extractor->getParser();
             $results[$outputBucket]['incremental'] = $config->getAttribute('incrementalOutput');
-
         }
 
-        foreach($results as $bucket => $result) {
+        foreach ($results as $bucket => $result) {
             Logger::log('debug', "Processing results for {$bucket}.");
             $configuration->storeResults(
                 $result['parser']->getResults(),
@@ -117,7 +117,9 @@ class Executor
                 $filesFinder = new Finder();
                 $files = $filesFinder->files()->in($folder->getPathname())->depth(0);
                 foreach ($files as $file) {
-                    $destination = $arguments['data'] . "/out/tables/" . basename($folder->getPathname()) . "." . basename($file->getPathname());
+                    $destination =
+                        $arguments['data'] . "/out/tables/" . basename($folder->getPathname()) .
+                        "." . basename($file->getPathname());
                     // maybe move will be better?
                     $fs->rename($file->getPathname(), $destination);
                 }
@@ -131,6 +133,7 @@ class Executor
     }
 
     /**
+     * @param Configuration $configuration
      * @return array ['response' => ResponseModuleInterface[]]
      */
     protected function loadModules(Configuration $configuration)

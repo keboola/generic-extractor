@@ -10,6 +10,5 @@ class NoAuth implements AuthInterface
      */
     public function authenticateClient(RestClient $client)
     {
-
     }
 }

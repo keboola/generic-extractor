@@ -2,8 +2,7 @@
 namespace Keboola\GenericExtractor;
 
 use Keboola\GenericExtractor\Config\Api;
-use Keboola\Juicer\Config\Config,
-    Keboola\Juicer\Filesystem\YamlFile;
+use Keboola\Juicer\Config\Config;
 use Keboola\Juicer\Filesystem\JsonFile;
 
 class ApiTest extends ExtractorTestCase
@@ -43,7 +42,7 @@ class ApiTest extends ExtractorTestCase
     }
 
     /**
-     * @expectedException Keboola\Juicer\Exception\UserException
+     * @expectedException \Keboola\Juicer\Exception\UserException
      */
     public function testCreateBaseUrlFunctionError()
     {

@@ -1,16 +1,14 @@
 <?php
 namespace Keboola\GenericExtractor;
 
-use Keboola\GenericExtractor\GenericExtractorJob;
-use Keboola\Juicer\Config\JobConfig,
-    Keboola\Juicer\Pagination\ResponseUrlScroller,
-    Keboola\Juicer\Config\Config,
-    Keboola\Juicer\Client\RestClient,
-    Keboola\Juicer\Parser\Json;
+use Keboola\Juicer\Config\JobConfig;
+use Keboola\Juicer\Pagination\ResponseUrlScroller;
+use Keboola\Juicer\Config\Config;
+use Keboola\Juicer\Client\RestClient;
+use Keboola\Juicer\Parser\Json;
 use Keboola\Temp\Temp;
 use Keboola\Utils\Utils;
 use Keboola\Code\Builder;
-// use GuzzleHttp\Client;
 
 class GenericExtractorJobTest extends ExtractorTestCase
 {
@@ -287,6 +285,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 (object) ['result' => 'data']
             ]);
 
+        /** @var GenericExtractorJob $job */
         $job->run();
 
         self::assertCount(1, $parser->getResults());

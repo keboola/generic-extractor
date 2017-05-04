@@ -2,21 +2,17 @@
 
 namespace Keboola\GenericExtractor;
 
-use Keboola\GenericExtractor\Response\Filter,
-    Keboola\GenericExtractor\Config\UserFunction,
-    Keboola\GenericExtractor\Modules\ResponseModuleInterface;
-use Keboola\Juicer\Extractor\RecursiveJob,
-    Keboola\Juicer\Config\JobConfig,
-    Keboola\Juicer\Common\Logger,
-    Keboola\Juicer\Client\RequestInterface,
-    Keboola\Juicer\Exception\ApplicationException,
-    Keboola\Juicer\Exception\UserException,
-    Keboola\Juicer\Pagination\ScrollerInterface,
-    Keboola\Juicer\Pagination\NoScroller;
-use Keboola\Utils\Utils,
-    Keboola\Utils\Exception\JsonDecodeException;
-use Keboola\Code\Builder,
-    Keboola\Code\Exception\UserScriptException;
+use Keboola\GenericExtractor\Response\Filter;
+use Keboola\GenericExtractor\Config\UserFunction;
+use Keboola\GenericExtractor\Modules\ResponseModuleInterface;
+use Keboola\Juicer\Extractor\RecursiveJob;
+use Keboola\Juicer\Config\JobConfig;
+use Keboola\Juicer\Common\Logger;
+use Keboola\Juicer\Client\RequestInterface;
+use Keboola\Juicer\Exception\UserException;
+use Keboola\Juicer\Pagination\ScrollerInterface;
+use Keboola\Juicer\Pagination\NoScroller;
+use Keboola\Code\Builder;
 
 class GenericExtractorJob extends RecursiveJob
 {
@@ -89,7 +85,7 @@ class GenericExtractorJob extends RecursiveJob
      * @param JobConfig $config
      * @param mixed $response
      * @param array|null $data
-     * @return RequestInterface | false
+     * @return RequestInterface|false
      */
     protected function nextPage(JobConfig $config, $response, $data)
     {
@@ -101,7 +97,7 @@ class GenericExtractorJob extends RecursiveJob
      * Return a download request
      *
      * @param JobConfig $config
-     * @return RequestInterface | false
+     * @return RequestInterface|false
      */
     protected function firstPage(JobConfig $config)
     {
@@ -222,7 +218,7 @@ class GenericExtractorJob extends RecursiveJob
 
     protected function runResponseModules($response, JobConfig $jobConfig)
     {
-        foreach($this->responseModules as $module) {
+        foreach ($this->responseModules as $module) {
             $response = $module->process($response, $jobConfig);
         }
 

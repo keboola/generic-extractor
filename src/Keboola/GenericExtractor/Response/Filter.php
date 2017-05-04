@@ -2,8 +2,8 @@
 
 namespace Keboola\GenericExtractor\Response;
 
-use Keboola\Juicer\Config\JobConfig,
-    Keboola\Juicer\Exception\UserException;
+use Keboola\Juicer\Config\JobConfig;
+use Keboola\Juicer\Exception\UserException;
 
 /**
  * Processes data and converts them to scalar values by
@@ -35,6 +35,7 @@ class Filter
 
     /**
      * @param JobConfig $config
+     * @return Filter
      */
     public static function create(JobConfig $config)
     {
@@ -61,8 +62,8 @@ class Filter
      */
     public function run(array $data)
     {
-        foreach($this->filters as $path) {
-            foreach($data as &$item) {
+        foreach ($this->filters as $path) {
+            foreach ($data as &$item) {
                 $item = $this->filterItem($item, $path);
             }
         }
@@ -73,6 +74,8 @@ class Filter
     /**
      * @param \stdClass $item
      * @param string $path
+     * @throws UserException
+     * @return \stdClass
      */
     protected function filterItem($item, $path)
     {
@@ -95,7 +98,7 @@ class Filter
                 throw new UserException("Error filtering response. '{$key}' is not an array.");
             }
 
-            foreach($item->{$key} as &$subItem) {
+            foreach ($item->{$key} as &$subItem) {
                 if (count($currentPath) == 1) {
                     $subItem = $this->updateItem($subItem);
                 } else {

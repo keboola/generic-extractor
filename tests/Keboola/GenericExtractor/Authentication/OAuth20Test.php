@@ -2,16 +2,10 @@
 namespace Keboola\GenericExtractor;
 
 use Keboola\GenericExtractor\Authentication\OAuth20;
-use GuzzleHttp\Client,
-    GuzzleHttp\Message\Response,
-    GuzzleHttp\Stream\Stream,
-    GuzzleHttp\Subscriber\Mock,
-    GuzzleHttp\Subscriber\History;
+use GuzzleHttp\Client;
 use Keboola\Juicer\Client\RestClient;
 use Keboola\Juicer\Filesystem\JsonFile;
-use Keboola\Juicer\Filesystem\YamlFile;
-use Keboola\Code\Builder,
-    Keboola\Code\Exception\UserScriptException;
+use Keboola\Code\Builder;
 
 class OAuth20Test extends ExtractorTestCase
 {

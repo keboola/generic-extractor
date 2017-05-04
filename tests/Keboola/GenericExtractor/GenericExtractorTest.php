@@ -1,13 +1,11 @@
 <?php
 namespace Keboola\GenericExtractor;
 
-use Keboola\GenericExtractor\GenericExtractor,
-    Keboola\GenericExtractor\Config\Api;
-use Keboola\Juicer\Config\Config,
-    Keboola\Juicer\Parser\Json,
-    Keboola\Juicer\Common\Logger;
+use Keboola\GenericExtractor\Config\Api;
+use Keboola\Juicer\Config\Config;
+use Keboola\Juicer\Parser\Json;
+use Keboola\Juicer\Common\Logger;
 use Keboola\Temp\Temp;
-// use GuzzleHttp\Client;
 
 class GenericExtractorTest extends ExtractorTestCase
 {

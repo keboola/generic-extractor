@@ -2,9 +2,9 @@
 
 namespace Keboola\GenericExtractor\Config;
 
-use Keboola\Juicer\Config\Config,
-    Keboola\Juicer\Exception\ApplicationException,
-    Keboola\Juicer\Exception\UserException;
+use Keboola\Juicer\Config\Config;
+use Keboola\Juicer\Exception\UserException;
+
 /**
  * API Headers wrapper
  */
@@ -50,6 +50,7 @@ class Headers
 
     /**
      * @param Config $config
+     * @throws UserException
      */
     public function loadConfig(Config $config)
     {
@@ -57,7 +58,7 @@ class Headers
         $configHeaders = empty($attrs['http']['headers']) ? [] : $attrs['http']['headers'];
 
         if (!empty($this->requiredHeaders)) {
-            foreach($this->requiredHeaders as $rHeader) {
+            foreach ($this->requiredHeaders as $rHeader) {
                 if (empty($configHeaders[$rHeader])) {
                     throw new UserException("Missing required header {$rHeader} in config.http.headers!");
                 }

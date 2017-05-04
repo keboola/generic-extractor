@@ -2,17 +2,17 @@
 
 namespace Keboola\GenericExtractor\Config;
 
-use Keboola\GenericExtractor\Authentication\AuthInterface,
-    Keboola\GenericExtractor\Authentication;
-use Keboola\Juicer\Exception\ApplicationException,
-    Keboola\Juicer\Exception\UserException,
-    Keboola\Juicer\Pagination\ScrollerInterface,
-    Keboola\Juicer\Pagination\ScrollerFactory,
-    Keboola\Juicer\Config\Config,
-    Keboola\Juicer\Common\Logger;
+use Keboola\GenericExtractor\Authentication\AuthInterface;
+use Keboola\GenericExtractor\Authentication;
+use Keboola\Juicer\Exception\ApplicationException;
+use Keboola\Juicer\Exception\UserException;
+use Keboola\Juicer\Pagination\ScrollerInterface;
+use Keboola\Juicer\Pagination\ScrollerFactory;
+use Keboola\Juicer\Config\Config;
+use Keboola\Juicer\Common\Logger;
 use Keboola\Code\Builder;
-use Keboola\Utils\Utils,
-    Keboola\Utils\Exception\JsonDecodeException;
+use Keboola\Utils\Utils;
+use Keboola\Utils\Exception\JsonDecodeException;
 
 /**
  * API Description
@@ -108,6 +108,8 @@ class Api
      * @param array $api
      * @param Config $config
      * @param array $authorization
+     * @throws UserException
+     * @throws ApplicationException
      * @return AuthInterface
      */
     public static function createAuth($api, Config $config, array $authorization)
@@ -152,6 +154,7 @@ class Api
     /**
      * @param array $api
      * @param Config $config
+     * @throws UserException
      * @return string
      * @todo Allow storing URL function as an actual object, not a JSON
      */
@@ -163,11 +166,11 @@ class Api
 
         if (filter_var($api['baseUrl'], FILTER_VALIDATE_URL)) {
             return $api['baseUrl'];
-        } elseif(is_string($api['baseUrl'])) {
+        } elseif (is_string($api['baseUrl'])) {
             // For backwards compatibility
             try {
                 $fn = Utils::json_decode($api['baseUrl']);
-            } catch(JsonDecodeException $e) {
+            } catch (JsonDecodeException $e) {
                 throw new UserException("The 'baseUrl' attribute in API configuration is not an URL string, neither a valid JSON containing an user function! Error: " . $e->getMessage(), $e);
             }
             return UserFunction::build([$fn], ['attr' => $config->getAttributes()])[0];
@@ -199,7 +202,7 @@ class Api
     /**
      * @param array $api
      * @param Config $config
-     * @return array
+     * @return Headers
      */
     public static function createHeaders($api, Config $config)
     {
@@ -208,6 +211,7 @@ class Api
 
     /**
      * @param array $api
+     * @return string
      */
     public static function createName($api)
     {
@@ -216,6 +220,7 @@ class Api
 
     /**
      * @param array $api
+     * @return array
      */
     public static function createDefaultRequestOptions($api)
     {

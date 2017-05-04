@@ -4,7 +4,6 @@ namespace Keboola\GenericExtractor\Subscriber;
 
 use GuzzleHttp\Event\BeforeEvent;
 use GuzzleHttp\Event\RequestEvents;
-use GuzzleHttp\Event\SubscriberInterface;
 use GuzzleHttp\Message\RequestInterface;
 
 /**
@@ -49,7 +48,7 @@ abstract class AbstractSignature
     protected function getRequestAndQuery(RequestInterface $request)
     {
         $query = [];
-        foreach($request->getQuery() as $param => $val) {
+        foreach ($request->getQuery() as $param => $val) {
             $query[$param] = $val;
         }
         $requestInfo = [

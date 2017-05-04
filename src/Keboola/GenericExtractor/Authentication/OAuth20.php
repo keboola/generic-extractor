@@ -1,14 +1,14 @@
 <?php
 namespace Keboola\GenericExtractor\Authentication;
 
-use Keboola\Juicer\Exception\ApplicationException,
-    Keboola\Juicer\Exception\UserException,
-    Keboola\Juicer\Client\RestClient;
+use Keboola\GenericExtractor\Subscriber\AbstractSignature;
+use Keboola\Juicer\Exception\UserException;
+use Keboola\Juicer\Client\RestClient;
 use Keboola\Utils\Utils;
-use Keboola\GenericExtractor\Subscriber\UrlSignature,
-    Keboola\GenericExtractor\Subscriber\HeaderSignature;
-use Keboola\Code\Builder,
-    Keboola\Code\Exception\UserScriptException;
+use Keboola\GenericExtractor\Subscriber\UrlSignature;
+use Keboola\GenericExtractor\Subscriber\HeaderSignature;
+use Keboola\Code\Builder;
+use Keboola\Code\Exception\UserScriptException;
 
 /**
  * OAuth 2.0 Bearer implementation
@@ -66,7 +66,7 @@ class OAuth20 implements AuthInterface
 
         $oauthApiDetails = $authorization['oauth_api']['credentials'];
 
-        foreach(['#data', 'appKey', '#appSecret'] as $key) {
+        foreach (['#data', 'appKey', '#appSecret'] as $key) {
             if (empty($oauthApiDetails[$key])) {
                 throw new UserException("Missing '{$key}' for OAuth 2.0 authorization");
             }
@@ -128,7 +128,7 @@ class OAuth20 implements AuthInterface
             $authorization['data'] = $this->data;
         }
 
-        foreach($subscribers as $subscriber) {
+        foreach ($subscribers as $subscriber) {
             if (empty($subscriber['definitions'])) {
                 continue;
             }
@@ -139,20 +139,21 @@ class OAuth20 implements AuthInterface
     }
 
     /**
+     * @param AbstractSignature $subscriber
      * @param array|object $definitions
+     * @param array $authorization
      */
     protected function addGenerator($subscriber, $definitions, $authorization)
     {
         // Create array of objects instead of arrays from YML
         $q = (array) Utils::arrayToObject($definitions);
         $subscriber->setSignatureGenerator(
-            function (array $requestInfo = []) use ($q, $authorization)
-            {
+            function (array $requestInfo = []) use ($q, $authorization) {
                 $params = array_merge($requestInfo, ['authorization' => $authorization]);
 
                 $result = [];
                 try {
-                    foreach($q as $key => $value) {
+                    foreach ($q as $key => $value) {
                         $result[$key] = is_scalar($value)
                             ? $value
                             : $this->builder->run(
@@ -160,7 +161,7 @@ class OAuth20 implements AuthInterface
                                 $params
                             );
                     }
-                } catch(UserScriptException $e) {
+                } catch (UserScriptException $e) {
                     throw new UserException("Error in OAuth authentication script: " . $e->getMessage());
                 }
 

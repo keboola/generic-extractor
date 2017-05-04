@@ -3,9 +3,9 @@ namespace Keboola\GenericExtractor;
 
 use Keboola\GenericExtractor\Subscriber\UrlSignature;
 use GuzzleHttp\Message\Request;
-use GuzzleHttp\Event\BeforeEvent,
-    GuzzleHttp\Transaction,
-    GuzzleHttp\Client;
+use GuzzleHttp\Event\BeforeEvent;
+use GuzzleHttp\Transaction;
+use GuzzleHttp\Client;
 
 class UrlSignatureTest extends ExtractorTestCase
 {
@@ -17,7 +17,7 @@ class UrlSignatureTest extends ExtractorTestCase
 
         $subscriber = new UrlSignature();
         $subscriber->setSignatureGenerator(
-            function() {
+            function () {
                 return ['token' => 'tokenValue'];
             }
         );
@@ -35,7 +35,7 @@ class UrlSignatureTest extends ExtractorTestCase
 
         $subscriber = new UrlSignature();
         $subscriber->setSignatureGenerator(
-            function() {
+            function () {
                 return ['token' => 'tokenValue'];
             }
         );

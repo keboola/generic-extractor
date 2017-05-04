@@ -1217,3 +1217,9 @@ Best way to create and test new configurations is run extractor in docker contai
 ```
 docker-compose run --rm tests
 ``` 
+
+or (with local source code and vendor copy)
+
+```
+docker-compose run --rm tests-local
+``` 
