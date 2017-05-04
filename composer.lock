@@ -697,16 +697,16 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "ffd75274d1378931bbe74320bedf02d9ac8b1a89"
+                "reference": "9ff687b14c22f7f86c3df1184ba6dfbe74c06cb6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/ffd75274d1378931bbe74320bedf02d9ac8b1a89",
-                "reference": "ffd75274d1378931bbe74320bedf02d9ac8b1a89",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/9ff687b14c22f7f86c3df1184ba6dfbe74c06cb6",
+                "reference": "9ff687b14c22f7f86c3df1184ba6dfbe74c06cb6",
                 "shasum": ""
             },
             "require": {
@@ -725,7 +725,9 @@
             },
             "require-dev": {
                 "codeclimate/php-test-reporter": "dev-master",
-                "phpunit/phpunit": "^5.2"
+                "phpstan/phpstan": "^0.6.4",
+                "phpunit/phpunit": "^5.2",
+                "squizlabs/php_codesniffer": "2.*"
             },
             "type": "library",
             "autoload": {
@@ -746,7 +748,7 @@
                 "extractor",
                 "keboola"
             ],
-            "time": "2017-02-14T14:28:43+00:00"
+            "time": "2017-05-04T16:38:04+00:00"
         },
         {
             "name": "keboola/php-csvtable",
@@ -1490,7 +1492,7 @@
                 "codeclimate",
                 "coverage"
             ],
-            "time": "2017-04-24T15:47:41+00:00"
+            "time": "2017-04-24 15:47:41"
         },
         {
             "name": "doctrine/instantiator",
@@ -2234,12 +2236,12 @@
             "version": "1.0.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/padraic/file_get_contents.git",
+                "url": "https://github.com/humbug/file_get_contents.git",
                 "reference": "66797199019d0cb4529cb8d29c6f0b4c5085b53a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/file_get_contents/zipball/66797199019d0cb4529cb8d29c6f0b4c5085b53a",
+                "url": "https://api.github.com/repos/humbug/file_get_contents/zipball/66797199019d0cb4529cb8d29c6f0b4c5085b53a",
                 "reference": "66797199019d0cb4529cb8d29c6f0b4c5085b53a",
                 "shasum": ""
             },
@@ -2291,12 +2293,12 @@
             "version": "1.0.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/padraic/phar-updater.git",
+                "url": "https://github.com/humbug/phar-updater.git",
                 "reference": "c17eeb3887dc4269d1b4837dc875d39e9f8149a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/phar-updater/zipball/c17eeb3887dc4269d1b4837dc875d39e9f8149a8",
+                "url": "https://api.github.com/repos/humbug/phar-updater/zipball/c17eeb3887dc4269d1b4837dc875d39e9f8149a8",
                 "reference": "c17eeb3887dc4269d1b4837dc875d39e9f8149a8",
                 "shasum": ""
             },
