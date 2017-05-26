@@ -30,7 +30,7 @@
                         "type": "table",
                         "destination": "user-interests",
                         "tableMapping": {
-                            "": {
+                            ".": {
                                 "type": "column",
                                 "mapping": {
                                     "destination": "interest"
