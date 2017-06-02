@@ -33,8 +33,7 @@
             "jobs": [
                 {
                     "endpoint": "reports",
-                    "dataField": "rows",
-                    "dataType": "rows"
+                    "dataField": "."
                 }
             ]
         }
