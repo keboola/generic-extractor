@@ -1,0 +1,51 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/114-oauth2-google/",
+            "authentication": {
+                "type": "oauth20.login",
+                "loginRequest": {
+                    "endpoint": "token",
+                    "method": "FORM",
+                    "params": {
+                        "client_id": {
+                            "consumer": "client_id"
+                        },
+                        "client_secret": {
+                            "consumer": "client_secret"
+                        },
+                        "refresh_token": {
+                            "user": "refresh_token"
+                        },
+                        "grant_type": "refresh_token"
+                    }
+                },
+                "apiRequest": {
+                    "query": {
+                        "access_token": "access_token"
+                    }
+                }
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "adsense",
+            "jobs": [
+                {
+                    "endpoint": "reports",
+                    "dataField": "rows",
+                    "dataType": "rows"
+                }
+            ]
+        }
+    },
+    "authorization": {
+        "oauth_api": {
+            "credentials": {
+                "#data": "{\"access_token\": \"abcd01234\",\"refresh_token\": \"efgh56789\"}",
+                "appKey": "clientId1234asdf",
+                "#appSecret": "clientSecret5678ghjk"
+            }
+        }
+    }
+}
