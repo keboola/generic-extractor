@@ -1,0 +1,61 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/115-multiple-pk-parent/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users"
+                }
+            ],
+            "mappings": {
+                "users": {
+                    "id": {
+                        "mapping": {
+                            "destination": "id",
+                            "primaryKey": true
+                        }
+                    },
+                    "name": {
+                        "mapping": {
+                            "destination": "name"
+                        }
+                    },
+                    "addresses": {
+                        "type": "table",
+                        "parentKey": {
+                            "destination": "userId",
+                            "primaryKey": true
+                        },
+                        "destination": "user-address",
+                        "tableMapping": {
+                            "index": {
+                                "type": "column",
+                                "mapping": {
+                                    "destination": "index",
+                                    "primaryKey": true
+                                }
+                            },
+                            "street": {
+                                "type": "column",
+                                "mapping": {
+                                    "destination": "street"
+                                }
+                            },
+                            "country": {
+                                "type": "column",
+                                "mapping": {
+                                    "destination": "country"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }    
+    }
+}

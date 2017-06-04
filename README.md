@@ -289,7 +289,7 @@ Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/conf
 
 This requires the `authorization.oauth_api.credentials` object in configuration to contain `#data`, `appKey` and `#appSecret`, where `#data` **must** contain a JSON encoded object with `oauth_token` and `oauth_token_secret` properties. `appKey` **must** contain the consumer key, and `#appSecret` **must** contain the consumer secret.
 
-Use [Keboola Docker and OAuth API integration](https://developers.keboola.com/extend/generic-extractor/authentication/oauth/10/) to generate the authorization configuration section.
+Use [Keboola Docker and OAuth API integration](https://developers.keboola.com/extend/common-interface/oauth/) to generate the authorization configuration section.
 
 - **authentication.type**: `oauth10`
 
