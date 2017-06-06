@@ -65,7 +65,7 @@ class OAuth20Login extends Login
             'user' => $oAuthData
         ];
 
-        $this->auth = $api['authentication'];
+        parent::__construct([], $api);
     }
 
     /**

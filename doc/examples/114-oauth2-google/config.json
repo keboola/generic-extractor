@@ -36,7 +36,47 @@
                     "dataField": "rows",
                     "dataType": "rows"
                 }
-            ]
+            ],
+            "mappings": {
+                "rows": {
+                    ".": {
+                        "type": "table",
+                        "destination": "rows-detail",
+                        "tableMapping": {
+                            "0": {
+                                "type": "column",
+                                "mapping": {
+                                    "destination": "date"
+                                }
+                            },
+                            "1": {
+                                "type": "column",
+                                "mapping": {
+                                    "destination": "unit_id"
+                                }
+                            },
+                            "2": {
+                                "type": "column",
+                                "mapping": {
+                                    "destination": "unit_name"
+                                }
+                            },
+                            "3": {
+                                "type": "column",
+                                "mapping": {
+                                    "destination": "clicks"
+                                }
+                            },
+                            "4": {
+                                "type": "column",
+                                "mapping": {
+                                    "destination": "cost_per_click"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "authorization": {
