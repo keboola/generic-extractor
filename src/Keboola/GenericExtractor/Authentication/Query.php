@@ -6,7 +6,6 @@ use Keboola\Juicer\Client\RestClient;
 use Keboola\GenericExtractor\Subscriber\UrlSignature;
 use Keboola\Code\Builder;
 use Keboola\Code\Exception\UserScriptException;
-use Keboola\Utils\Utils;
 
 /**
  * Authentication method using query parameters
@@ -40,7 +39,7 @@ class Query implements AuthInterface
     {
         $sub = new UrlSignature();
         // Create array of objects instead of arrays from YML
-        $q = (array) Utils::arrayToObject($this->query);
+        $q = (array) \Keboola\Utils\arrayToObject($this->query);
         $sub->setSignatureGenerator(
             function (array $requestInfo = []) use ($q) {
                 $params = array_merge($requestInfo, ['attr' => $this->attrs]);

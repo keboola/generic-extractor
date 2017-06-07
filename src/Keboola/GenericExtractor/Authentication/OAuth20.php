@@ -4,7 +4,6 @@ namespace Keboola\GenericExtractor\Authentication;
 use Keboola\GenericExtractor\Subscriber\AbstractSignature;
 use Keboola\Juicer\Exception\UserException;
 use Keboola\Juicer\Client\RestClient;
-use Keboola\Utils\Utils;
 use Keboola\GenericExtractor\Subscriber\UrlSignature;
 use Keboola\GenericExtractor\Subscriber\HeaderSignature;
 use Keboola\Code\Builder;
@@ -76,7 +75,7 @@ class OAuth20 implements AuthInterface
             switch ($apiAuth['format']) {
                 case 'json':
                     // authorization: { data: key }
-                    $this->data = Utils::json_decode($oauthApiDetails['#data']);
+                    $this->data = \Keboola\Utils\jsonDecode($oauthApiDetails['#data']);
                     break;
                 default:
                     throw new UserException("Unknown OAuth data format '{$apiAuth['format']}'");
@@ -122,7 +121,7 @@ class OAuth20 implements AuthInterface
         if (!is_scalar($this->data)) {
             $authorization = array_merge(
                 $authorization,
-                Utils::flattenArray(Utils::objectToArray($this->data), 'data.')
+                \Keboola\Utils\flattenArray(\Keboola\Utils\objectToArray($this->data), 'data.')
             );
         } else {
             $authorization['data'] = $this->data;
@@ -146,7 +145,7 @@ class OAuth20 implements AuthInterface
     protected function addGenerator($subscriber, $definitions, $authorization)
     {
         // Create array of objects instead of arrays from YML
-        $q = (array) Utils::arrayToObject($definitions);
+        $q = (array) \Keboola\Utils\arrayToObject($definitions);
         $subscriber->setSignatureGenerator(
             function (array $requestInfo = []) use ($q, $authorization) {
                 $params = array_merge($requestInfo, ['authorization' => $authorization]);

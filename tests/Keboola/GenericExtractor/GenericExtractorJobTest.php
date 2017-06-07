@@ -7,7 +7,6 @@ use Keboola\Juicer\Config\Config;
 use Keboola\Juicer\Client\RestClient;
 use Keboola\Juicer\Parser\Json;
 use Keboola\Temp\Temp;
-use Keboola\Utils\Utils;
 use Keboola\Code\Builder;
 
 class GenericExtractorJobTest extends ExtractorTestCase
@@ -161,7 +160,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
     public function testBuildParams()
     {
         $cfg = new JobConfig(1, [
-            'params' => Utils::json_decode('{
+            'params' => \Keboola\Utils\jsonDecode('{
                 "timeframe": "this_24_hours",
                 "filters": {
                     "function": "concat",
@@ -207,7 +206,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
     {
 
         $cfg = new JobConfig(1, [
-            'params' => Utils::json_decode('{
+            'params' => \Keboola\Utils\jsonDecode('{
                 "filters": {
                     "function": "date"
                 }

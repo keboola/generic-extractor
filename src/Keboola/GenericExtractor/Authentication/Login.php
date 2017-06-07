@@ -10,7 +10,6 @@ use Keboola\Juicer\Client\RestRequest;
 use Keboola\Juicer\Client\RestClient;
 use Keboola\GenericExtractor\Subscriber\LoginSubscriber;
 use Keboola\GenericExtractor\Config\UserFunction;
-use Keboola\Utils\Utils;
 use Keboola\Utils\Exception\NoDataFoundException;
 
 /**
@@ -111,7 +110,7 @@ class Login implements AuthInterface
         if (!empty($this->auth['apiRequest'][$type])) {
             foreach ($this->auth['apiRequest'][$type] as $key => $path) {
                 try {
-                    $result[$key] = Utils::getDataFromPath($path, $response, '.', false);
+                    $result[$key] = \Keboola\Utils\getDataFromPath($path, $response, '.', false);
                 } catch (NoDataFoundException $e) {
                     throw new UserException("Key '{$key}' not found at path '{$path}' in the Login response");
                 }
@@ -121,11 +120,11 @@ class Login implements AuthInterface
     }
 
     /**
-     * @param \stdclass $response
+     * @param \stdClass $response
      * @return int|null
      * @throws UserException
      */
-    protected function getExpiry(\stdclass $response)
+    protected function getExpiry(\stdClass $response)
     {
         if (!isset($this->auth['expires'])) {
             return null;
@@ -136,7 +135,7 @@ class Login implements AuthInterface
                 throw new UserException("'authentication.expires' must be either an integer or an array with 'response' key containing a path in the response");
             }
 
-            $rExpiry = Utils::getDataFromPath($this->auth['expires']['response'], $response, '.');
+            $rExpiry = \Keboola\Utils\getDataFromPath($this->auth['expires']['response'], $response, '.');
             $expiry = is_int($rExpiry) ? $rExpiry : strtotime($rExpiry);
 
             if (!empty($this->auth['expires']['relative'])) {

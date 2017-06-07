@@ -5,7 +5,6 @@ namespace Keboola\GenericExtractor\Authentication;
 use Keboola\Juicer\Exception\UserException;
 use Keboola\Juicer\Client\RestRequest;
 use Keboola\GenericExtractor\Config\UserFunction;
-use Keboola\Utils\Utils;
 use Keboola\Utils\Exception\JsonDecodeException;
 
 /**
@@ -50,7 +49,7 @@ class OAuth20Login extends Login
         }
 
         try {
-            $oAuthData = Utils::json_decode($oauthApiDetails['#data'], true);
+            $oAuthData = \Keboola\Utils\jsonDecode($oauthApiDetails['#data'], true);
         } catch (JsonDecodeException $e) {
             throw new UserException("The OAuth data is not a valid JSON");
         }

@@ -5,7 +5,6 @@ namespace Keboola\GenericExtractor\Config;
 use Keboola\Juicer\Exception\UserException;
 use Keboola\Code\Builder;
 use Keboola\Code\Exception\UserScriptException;
-use Keboola\Utils\Utils;
 
 /**
  * Keboola\Code\Builder wrapper
@@ -25,7 +24,7 @@ class UserFunction
             $builder = new Builder();
         }
 
-        $functions = (array) Utils::arrayToObject($functions);
+        $functions = (array) \Keboola\Utils\arrayToObject($functions);
         try {
             array_walk($functions, function (&$value, $key) use ($params, $builder) {
                 $value = !is_object($value) ? $value : $builder->run($value, $params);

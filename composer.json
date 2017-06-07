@@ -10,7 +10,7 @@
         "keboola/php-utils": "~1.0.3",
         "symfony/console": "^2.6",
         "symfony/finder": "^2.6",
-        "keboola/ex-generic-response-array": "^0.0.3",
+        "keboola/ex-generic-response-array": "^0.0.4",
         "guzzlehttp/oauth-subscriber": "^0.2",
         "guzzlehttp/cache-subscriber": "dev-master#aaab195",
         "guzzlehttp/retry-subscriber": "dev-master#270393c"

@@ -4,7 +4,6 @@ namespace Keboola\GenericExtractor\Authentication;
 use Keboola\Juicer\Exception\UserException;
 use Keboola\Juicer\Client\RestClient;
 use GuzzleHttp\Subscriber\Oauth\Oauth1;
-use Keboola\Utils\Utils;
 
 /**
  * OAuth 1.0 implementation
@@ -42,7 +41,7 @@ class OAuth10 implements AuthInterface
             }
         }
 
-        $data = Utils::json_decode($oauthApiDetails['#data']);
+        $data = \Keboola\Utils\jsonDecode($oauthApiDetails['#data']);
         $this->token = $data->oauth_token;
         $this->tokenSecret = $data->oauth_token_secret;
         $this->consumerKey = $oauthApiDetails['appKey'];
