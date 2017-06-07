@@ -33,14 +33,15 @@
             "jobs": [
                 {
                     "endpoint": "reports",
-                    "dataField": "."
+                    "dataField": ".",
+                    "dataType": "rows"
                 }
             ],
             "mappings": {
                 "rows": {
-                    ".": {
+                    "rows": {
                         "type": "table",
-                        "destination": "rows-detail",
+                        "destination": "report-rows",
                         "tableMapping": {
                             "0": {
                                 "type": "column",

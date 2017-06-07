@@ -1,6 +1,32 @@
 {
   "kind": "adsense#report",
   "totalMatchedRows": 2,
+  "headers": [
+    {
+      "name": "DATE",
+      "type": "DIMENSION"
+    },
+    {
+      "name": "AD_UNIT_ID",
+      "type": "DIMENSION"
+    },
+    {
+      "name": "AD_UNIT_NAME",
+      "type": "DIMENSION"
+    },
+    {
+      "name": "CLICKS",
+      "type": "METRIC"
+    },
+    {
+      "name": "COST_PER_CLICK",
+      "type": "METRIC"
+    }
+  ],
+  "rows": [
+    ["2017-05-27","ca-pub-12345:67890","article-bot-lef-x","83008","0.0065"],
+    ["2017-05-27","ca-pub-11122:33445","article-bot-mob-x","105723","0.0043"]
+  ],
   "startDate": "2017-05-27",
   "endDate": "2017-05-27"
 }
