@@ -15,11 +15,11 @@ Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/)
 
 # API Definition
 
-Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/)
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/api/)
 
 ## baseUrl
 
-Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/#base-url)
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/api/#base-url)
 
 The most important part of configuration, the API url (should end with a `/`)
 - **Must** be either a string or user function (allows custom domains, see examples)
@@ -53,7 +53,7 @@ https://yourDomain.zendesk.com/api/v2/
 
 ## retryConfig
 
-Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/#retry-configuration)
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/api/#retry-configuration)
 
 Set the retry limit, rate limit reset header and HTTP codes to retry if the API returns an error
 
@@ -68,7 +68,7 @@ Set the retry limit, rate limit reset header and HTTP codes to retry if the API 
 
 ## http.requiredHeaders
 
-Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/#required-headers)
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/api/#required-headers)
 
 - Headers required to be set in the config section
 - Should be an array, eg: `App-Key,X-User-Email`
@@ -97,26 +97,26 @@ Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/
 
 ## http.headers.{Header-Name}
 
-Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/#required-headers)
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/api/#required-headers)
 
 - Headers to be sent with all requests from all configurations
 - eg: **http.headers.Accept-Encoding**: `gzip`
 
 ## http.defaultOptions
 
-Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/#required-headers)
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/api/#required-headers)
 
 - Define the default request options, that will be included in all requests
 - eg: **http.defaultOptions.params.queryParameter**: `value`
 
 # Authentication
 
-Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/#authentication)
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/api/#authentication)
 
 ## Methods
 ### basic
 
-Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/authentication/basic/)
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/api/authentication/basic/)
 
 - **authentication.type**: `basic`
 - use **username** and **password** or **#password** attributes in the config section.
@@ -138,7 +138,7 @@ Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/
 
 ### query
 
-Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/authentication/query/)
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/api/authentication/query/)
 
 - Supports signature function as a value
 - Values should be described in `api` section
@@ -226,7 +226,7 @@ Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/
 
 ### login
 
-Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/authentication/login/)
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/api/authentication/login/)
 
 - Log into a web service to obtain a token, which is then used for signing requests
 
@@ -282,14 +282,14 @@ Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/
 
 ### oauth10
 
-Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/authentication/oauth10/)
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/api/authentication/oauth10/)
 
 - Use OAuth 1.0 tokens
 - Using OAuth in ex-generic-v2 in KBC currently requires the application to be registered under the API's component ID and cannot be configured in Generic extractor itself
 
 This requires the `authorization.oauth_api.credentials` object in configuration to contain `#data`, `appKey` and `#appSecret`, where `#data` **must** contain a JSON encoded object with `oauth_token` and `oauth_token_secret` properties. `appKey` **must** contain the consumer key, and `#appSecret` **must** contain the consumer secret.
 
-Use [Keboola Docker and OAuth API integration](https://developers.keboola.com/extend/generic-extractor/authentication/oauth/10/) to generate the authorization configuration section.
+Use [Keboola Docker and OAuth API integration](https://developers.keboola.com/extend/common-interface/oauth/) to generate the authorization configuration section.
 
 - **authentication.type**: `oauth10`
 
@@ -318,7 +318,7 @@ Example minimum `config.json`:
 
 ### oauth20
 
-Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/authentication/oauth20/)
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/api/authentication/oauth20/)
 
 Uses [User functions](#user-functions) to use tokens in headers or query. Instead of `attr` or `time` parameters, you should use `authorization` to access the OAuth data. If the data is a raw token string, use `authorization: data` to access it. If it's a JSON string, use `authentication.format: json` and access its values isong the `.` annotation, like in example below (`authorization: data.access_token`).
 
@@ -448,16 +448,16 @@ Example for **MAC** authentication:
 
 # Pagination
 
-Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/pagination/)
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/api/pagination/)
 
 ## Methods
 Configured in `api.pagination.method`
 
-Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/pagination/#choosing-paging-strategy)
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/api/pagination/#choosing-paging-strategy)
 
 ### offset
 
-Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/pagination/offset/)
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/api/pagination/offset/)
 
 - **pagination.method**: `offset`
 - **pagination.limit**: integer
@@ -508,7 +508,7 @@ Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/
 
 ### response.param
 
-Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/pagination/response-param/)
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/api/pagination/response-param/)
 
 - **pagination.method**: `response.param`
 - **pagination.responseParam**:
@@ -540,7 +540,7 @@ Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/
 
 ### response.url
 
-Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/pagination/response-url/)
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/api/pagination/response-url/)
 
 - **pagination.method**: `response.url`
 - **pagination.urlKey**: `next_page`
@@ -564,7 +564,7 @@ Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/
 
 ### pagenum
 
-Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/pagination/pagenum/)
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/api/pagination/pagenum/)
 
 simple page number increasing 1 by 1
 
@@ -593,7 +593,7 @@ simple page number increasing 1 by 1
 
 ### cursor
 
-Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/pagination/cursor/)
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/api/pagination/cursor/)
 
 Looks within the response **data** for an ID which is then used as a parameter for scrolling.
 
@@ -637,7 +637,7 @@ The intention is to look for identifiers within data and in the next request, us
 
 ### multiple
 
-Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/pagination/multiple/)
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/api/pagination/multiple/)
 
 Allows setting scrollers per endpoint.
 
@@ -690,7 +690,7 @@ Allows setting scrollers per endpoint.
 ## Common scrolling parameters
 ### nextPageFlag
 
-Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/api/pagination/#stopping-strategy)
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/api/pagination/#stopping-strategy)
 
 Looks within responses to find a boolean field determining whether to continue scrolling or not.
 
@@ -718,7 +718,7 @@ Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/func
 
 ## Attributes
 
-Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/config/)
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/config/)
 
 Attributes must be configured accordingly to the `api` configuration (eg *auth*, *pagination*, *http.requiredHeaders*). They are under the `config` section of the configuration. (see example below)
 
@@ -746,7 +746,7 @@ Attributes must be configured accordingly to the `api` configuration (eg *auth*,
 
 ## Jobs
 
-Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/config/jobs/)
+Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/config/jobs/)
 
 - Columns:
     - **endpoint** (required): The API endpoint
@@ -882,7 +882,7 @@ Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/conf
 
 ## Mappings
 
-Noved to [new docs](https://developers.keboola.com/extend/generic-extractor/config/mappings/)
+Noved to [new docs](https://developers.keboola.com/extend/generic-extractor/configuration/config/mappings/)
 
 `mappings` attribute can be used to force the extractor to map the response into columns in a CSV file as described in the [JSON to CSV Mapper documentation](https://github.com/keboola/php-csvmap).
 Each property in the `mappings` object must follow the mapper settings, where the key is the `dataType` of a `job`. Note that if a `dataType` is not set, it is generated from the endpoint and might be confusing if ommited.

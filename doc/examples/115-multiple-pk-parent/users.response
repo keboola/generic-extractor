@@ -1,0 +1,31 @@
+[
+    {
+        "id": 123,
+        "name": "John Doe",
+        "addresses": [
+            {
+                "index": 1,
+                "street": "Blossom Avenue",
+                "country": "United Kingdom"
+            },
+            {
+                "index": 2,
+                "street": "Whiteheaven Mansions",
+                "city": "London",
+                "country": "United Kingdom"
+            }
+        ]
+    },
+    {
+        "id": 234,
+        "name": "Jane Doe",
+        "addresses": [
+            {
+                "index": 1,
+                "street": "Whiteheaven Mansions",
+                "city": "London",
+                "country": "United Kingdom"
+            }
+        ]
+    }
+]
