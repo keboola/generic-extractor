@@ -7,7 +7,6 @@ use GuzzleHttp\Subscriber\Cache\CacheStorage;
 use GuzzleHttp\Subscriber\Cache\CacheSubscriber;
 use Keboola\GenericExtractor\Config\JuicerRest;
 use Keboola\Juicer\Config\JobConfig;
-use Keboola\Juicer\Extractor\Extractor;
 use Keboola\Juicer\Config\Config;
 use Keboola\Juicer\Client\RestClient;
 use Keboola\Juicer\Parser\Json;
@@ -19,11 +18,11 @@ use Keboola\GenericExtractor\Config\Api;
 use Keboola\GenericExtractor\Subscriber\LogRequest;
 use Keboola\GenericExtractor\Config\UserFunction;
 use Keboola\Code\Builder;
+use Keboola\Temp\Temp;
+use Psr\Log\LoggerInterface;
 
-class GenericExtractor extends Extractor
+class GenericExtractor
 {
-    protected $name = "generic";
-    protected $prefix = "ex-api";
     /**
      * @var string
      */
@@ -64,6 +63,27 @@ class GenericExtractor extends Extractor
     protected $cache;
 
     /**
+     * @var Temp
+     */
+    protected $temp;
+
+    /**
+     * @var array
+     */
+    protected $metadata = [];
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    public function __construct(Temp $temp, LoggerInterface $logger)
+    {
+        $this->temp = $temp;
+        $this->logger = $logger;
+    }
+
+    /**
      * @param CacheStorage $cache
      * @return $this
      */
@@ -76,6 +96,7 @@ class GenericExtractor extends Extractor
     public function run(Config $config)
     {
         $client = RestClient::create(
+            $this->logger,
             [
                 'base_url' => $this->baseUrl,
                 'defaults' => [
@@ -129,7 +150,7 @@ class GenericExtractor extends Extractor
     protected function runJob($jobConfig, $client, $config, $builder)
     {
         // FIXME this is rather duplicated in RecursiveJob::createChild()
-        $job = new GenericExtractorJob($jobConfig, $client, $this->parser);
+        $job = new GenericExtractorJob($jobConfig, $client, $this->parser, $this->logger);
         $job->setScroller($this->scroller);
         $job->setAttributes($config->getAttributes());
         $job->setMetadata($this->metadata);
@@ -147,14 +168,6 @@ class GenericExtractor extends Extractor
     }
 
     /**
-     * @param string $name
-     */
-    public function setAppName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
      * @param Api $api
      */
     public function setApi(Api $api)
@@ -163,7 +176,6 @@ class GenericExtractor extends Extractor
         $this->setAuth($api->getAuth());
         $this->setScroller($api->getScroller());
         $this->setHeaders($api->getHeaders()->getHeaders());
-        $this->setAppName($api->getName());
         $this->setDefaultRequestOptions($api->getDefaultRequestOptions());
         $this->setRetryConfig($api->getRetryConfig());
     }
@@ -232,7 +244,7 @@ class GenericExtractor extends Extractor
             return $this->parser;
         }
 
-        $parser = Json::create($config, $this->getLogger(), $this->getTemp(), $this->metadata);
+        $parser = Json::create($config, $this->logger, $this->temp, $this->metadata);
         $parser->getParser()->getStruct()->setAutoUpgradeToArray(true);
         $parser->getParser()->setCacheMemoryLimit('2M');
         $parser->getParser()->getAnalyzer()->setNestedArrayAsJson(true);
@@ -240,7 +252,7 @@ class GenericExtractor extends Extractor
         if (empty($config->getAttribute('mappings'))) {
             $this->parser = $parser;
         } else {
-            $this->parser = JsonMap::create($config, $parser);
+            $this->parser = JsonMap::create($config, $this->logger, $parser);
         }
 
         return $this->parser;
@@ -257,5 +269,15 @@ class GenericExtractor extends Extractor
     public function setDefaultRequestOptions(array $options)
     {
         $this->defaultRequestOptions = $options;
+    }
+
+    public function setMetadata(array $data)
+    {
+        $this->metadata = $data;
+    }
+
+    public function getMetadata()
+    {
+        return $this->metadata;
     }
 }
