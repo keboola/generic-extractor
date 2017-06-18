@@ -7,7 +7,6 @@ use Keboola\GenericExtractor\Config\UserFunction;
 use Keboola\GenericExtractor\Modules\ResponseModuleInterface;
 use Keboola\Juicer\Extractor\RecursiveJob;
 use Keboola\Juicer\Config\JobConfig;
-use Keboola\Juicer\Common\Logger;
 use Keboola\Juicer\Client\RequestInterface;
 use Keboola\Juicer\Exception\UserException;
 use Keboola\Juicer\Pagination\ScrollerInterface;
@@ -63,7 +62,10 @@ class GenericExtractorJob extends RecursiveJob
 
             $responseHash = sha1(serialize($response));
             if ($responseHash == $this->lastResponseHash) {
-                Logger::log("DEBUG", sprintf("Job '%s' finished when last response matched the previous!", $this->getJobId()));
+                $this->logger->debug(sprintf(
+                    "Job '%s' finished when last response matched the previous!",
+                    $this->getJobId()
+                ));
                 $this->scroller->reset();
                 break;
             } else {
@@ -188,6 +190,7 @@ class GenericExtractorJob extends RecursiveJob
      */
     protected function createChild(JobConfig $config, array $parentResults)
     {
+        /** @var GenericExtractorJob $job */
         $job = parent::createChild($config, $parentResults);
         $scroller = clone $this->scroller;
         $scroller->reset();
@@ -252,7 +255,12 @@ class GenericExtractorJob extends RecursiveJob
     public function setUserParentId($id)
     {
         if (!is_array($id)) {
-            throw new UserException("User defined parent ID must be a key:value pair, or multiple such pairs.", 0, null, ["id" => $id]);
+            throw new UserException(
+                "User defined parent ID must be a key:value pair, or multiple such pairs.",
+                0,
+                null,
+                ["id" => $id]
+            );
         }
 
         $this->userParentId = $id;

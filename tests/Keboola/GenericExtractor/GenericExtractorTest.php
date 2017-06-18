@@ -1,11 +1,12 @@
 <?php
+
 namespace Keboola\GenericExtractor;
 
 use Keboola\GenericExtractor\Config\Api;
 use Keboola\Juicer\Config\Config;
 use Keboola\Juicer\Parser\Json;
-use Keboola\Juicer\Common\Logger;
 use Keboola\Temp\Temp;
+use Psr\Log\NullLogger;
 
 class GenericExtractorTest extends ExtractorTestCase
 {
@@ -14,10 +15,6 @@ class GenericExtractorTest extends ExtractorTestCase
      */
     public function testRunMetadataUpdate()
     {
-        $logger = $this->getLogger('test', true);
-
-        Logger::setLogger($logger);
-
         $meta = [
             'json_parser.struct' => [
                 'tickets.via' => ['channel' => 'scalar', 'source' => 'object']
@@ -28,10 +25,9 @@ class GenericExtractorTest extends ExtractorTestCase
         ];
 
         $cfg = new Config('testApp', 'testCfg', []);
-        $api = Api::create(['baseUrl' => 'http://example.com'], $cfg);
+        $api = Api::create(new NullLogger(), ['baseUrl' => 'http://example.com'], $cfg);
 
-        $ex = new GenericExtractor(new Temp);
-        $ex->setLogger($logger);
+        $ex = new GenericExtractor(new Temp(), new NullLogger());
         $ex->setApi($api);
 
         $ex->setMetadata($meta);
@@ -44,10 +40,10 @@ class GenericExtractorTest extends ExtractorTestCase
 
     public function testGetParser()
     {
-        $temp = new Temp;
-        $parser = Json::create(new Config('testApp', 'testCfg', []), $this->getLogger(), $temp);
+        $temp = new Temp();
+        $parser = Json::create(new Config('testApp', 'testCfg', []), new NullLogger(), $temp);
 
-        $extractor = new GenericExtractor($temp);
+        $extractor = new GenericExtractor($temp, new NullLogger());
         $extractor->setParser($parser);
         self::assertEquals($parser, $extractor->getParser());
     }

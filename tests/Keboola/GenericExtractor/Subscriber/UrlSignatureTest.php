@@ -23,8 +23,7 @@ class UrlSignatureTest extends ExtractorTestCase
         );
 
         $subscriber->onBefore($event);
-
-        $this->assertEquals('tokenValue', $request->getQuery()->get('token'));
+        self::assertEquals('tokenValue', $request->getQuery()->get('token'));
     }
 
     public function testKeepSignature()
@@ -41,7 +40,6 @@ class UrlSignatureTest extends ExtractorTestCase
         );
 
         $subscriber->onBefore($event);
-
-        $this->assertEquals('originalValue', $request->getQuery()->get('token'));
+        self::assertEquals('originalValue', $request->getQuery()->get('token'));
     }
 }

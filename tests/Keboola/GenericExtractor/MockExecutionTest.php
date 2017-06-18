@@ -5,6 +5,7 @@ class MockExecutionTest extends ExtractorTestCase
 {
     /**
      * @dataProvider configProvider
+     * @param string $configDir
      */
     public function testRun($configDir)
     {
