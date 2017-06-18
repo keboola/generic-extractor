@@ -8,6 +8,7 @@ use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Subscriber\Mock;
 use GuzzleHttp\Subscriber\History;
 use Keboola\Juicer\Client\RestClient;
+use Psr\Log\NullLogger;
 
 class LoginTest extends ExtractorTestCase
 {
@@ -36,7 +37,7 @@ class LoginTest extends ExtractorTestCase
         $history = new History();
         $guzzle->getEmitter()->attach($history);
 
-        $restClient = new RestClient($guzzle);
+        $restClient = new RestClient($guzzle, new NullLogger());
 
         $attrs = ['first' => 1, 'second' => 'two'];
 
@@ -65,7 +66,10 @@ class LoginTest extends ExtractorTestCase
 
         // test creation of the login request
         self::assertEquals($attrs['second'], $history->getIterator()[0]['request']->getHeader('X-Header'));
-        self::assertEquals(json_encode(['par' => $attrs['first']]), (string) $history->getIterator()[0]['request']->getBody());
+        self::assertEquals(
+            json_encode(['par' => $attrs['first']]),
+            (string) $history->getIterator()[0]['request']->getBody()
+        );
 
         // test signature of the api request
         self::assertEquals(1234, $history->getIterator()[1]['request']->getHeader('X-Test-Auth'));

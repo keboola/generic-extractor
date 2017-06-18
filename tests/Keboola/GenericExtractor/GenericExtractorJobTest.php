@@ -8,13 +8,16 @@ use Keboola\Juicer\Client\RestClient;
 use Keboola\Juicer\Parser\Json;
 use Keboola\Temp\Temp;
 use Keboola\Code\Builder;
+use Psr\Log\NullLogger;
 
 class GenericExtractorJobTest extends ExtractorTestCase
 {
     /**
      * @dataProvider parentIdProvider
+     * @param JobConfig $cfg
+     * @param string $expected
      */
-    public function testGetParentId($cfg, $expected)
+    public function testGetParentId(JobConfig $cfg, $expected)
     {
         $job = $this->getJob($cfg);
 
@@ -120,6 +123,8 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     /**
      * @dataProvider nextPageProvider
+     * @param array $config
+     * @param array $expectedParams
      */
     public function testNextPage($config, $expectedParams)
     {
@@ -265,20 +270,21 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
         $parser = Json::create(
             new Config('ex-generic-test', 'test', []),
-            $this->getLogger('test', true),
+            new NullLogger(),
             new Temp()
         );
 
-        $job = $this->getMockBuilder('\Keboola\GenericExtractor\GenericExtractorJob')
+        $job = $this->getMockBuilder(GenericExtractorJob::class)
             ->setMethods(['download'])
             ->setConstructorArgs([
                 $jobConfig,
-                RestClient::create([]),
-                $parser
+                RestClient::create(new NullLogger()),
+                $parser,
+                new NullLogger()
             ])
             ->getMock();
 
-        $job->expects($this->once())
+        $job->expects(self::once())
             ->method('download')
             ->willReturn([
                 (object) ['result' => 'data']
@@ -299,14 +305,16 @@ class GenericExtractorJobTest extends ExtractorTestCase
     {
         return new GenericExtractorJob(
             $config,
-            RestClient::create([
-                'base_url' => 'http://example.com/api/'
-            ]),
+            RestClient::create(
+                new NullLogger(),
+                ['base_url' => 'http://example.com/api/']
+            ),
             Json::create(
                 new Config('ex-generic-test', 'test', []),
-                $this->getLogger(),
+                new NullLogger(),
                 new Temp()
-            )
+            ),
+            new NullLogger()
         );
     }
 }

@@ -1,9 +1,14 @@
 <?php
+
 namespace Keboola\GenericExtractor;
 
+use Keboola\GenericExtractor\Authentication\OAuth20;
+use Keboola\GenericExtractor\Authentication\OAuth20Login;
+use Keboola\GenericExtractor\Authentication\Query;
 use Keboola\GenericExtractor\Config\Api;
 use Keboola\Juicer\Config\Config;
 use Keboola\Juicer\Filesystem\JsonFile;
+use Psr\Log\NullLogger;
 
 class ApiTest extends ExtractorTestCase
 {
@@ -55,13 +60,11 @@ class ApiTest extends ExtractorTestCase
             ]
         ];
 
-        $url = Api::createBaseUrl(
+        Api::createBaseUrl(
             ['baseUrl' => $fn],
             $config
         );
     }
-
-    // TODO JSON, array (and object?)
 
     public function testCreateAuthQueryDeprecated()
     {
@@ -80,11 +83,11 @@ class ApiTest extends ExtractorTestCase
             ]
         ];
 
-        $queryAuth = Api::createAuth($api, $config, []);
+        $queryAuth = Api::createAuth(new NullLogger(), $api, $config, []);
 
         self::assertEquals($api['query'], self::getProperty($queryAuth, 'query'));
         self::assertEquals($config->getAttributes(), self::getProperty($queryAuth, 'attrs'));
-        self::assertInstanceOf('\Keboola\GenericExtractor\Authentication\Query', $queryAuth);
+        self::assertInstanceOf(Query::class, $queryAuth);
     }
 
     public function testCreateAuthQuery()
@@ -103,11 +106,11 @@ class ApiTest extends ExtractorTestCase
             ]
         ];
 
-        $queryAuth = Api::createAuth($api, $config, []);
+        $queryAuth = Api::createAuth(new NullLogger(), $api, $config, []);
 
         self::assertEquals($api['authentication']['query'], self::getProperty($queryAuth, 'query'));
         self::assertEquals($config->getAttributes(), self::getProperty($queryAuth, 'attrs'));
-        self::assertInstanceOf('\Keboola\GenericExtractor\Authentication\Query', $queryAuth);
+        self::assertInstanceOf(Query::class, $queryAuth);
     }
 
     public function testCreateAuthOAuth20Bearer()
@@ -120,8 +123,8 @@ class ApiTest extends ExtractorTestCase
 
         $authorization = $jsonConfig->get('authorization');
 
-        $oauth = Api::createAuth($api, $config, $authorization);
-        self::assertInstanceOf('\Keboola\GenericExtractor\Authentication\OAuth20', $oauth);
+        $oauth = Api::createAuth(new NullLogger(), $api, $config, $authorization);
+        self::assertInstanceOf(OAuth20::class, $oauth);
     }
 
     public function testCreateOauth2Login()
@@ -134,7 +137,7 @@ class ApiTest extends ExtractorTestCase
 
         $authorization = $jsonConfig->get('authorization');
 
-        $oauth = Api::createAuth($api, $config, $authorization);
-        self::assertInstanceOf('\Keboola\GenericExtractor\Authentication\OAuth20Login', $oauth);
+        $oauth = Api::createAuth(new NullLogger(), $api, $config, $authorization);
+        self::assertInstanceOf(OAuth20Login::class, $oauth);
     }
 }

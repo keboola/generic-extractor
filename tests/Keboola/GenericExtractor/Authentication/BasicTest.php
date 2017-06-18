@@ -1,9 +1,11 @@
 <?php
+
 namespace Keboola\GenericExtractor;
 
 use Keboola\GenericExtractor\Authentication\Basic;
 use GuzzleHttp\Client;
 use Keboola\Juicer\Client\RestClient;
+use Psr\Log\NullLogger;
 
 class BasicTest extends ExtractorTestCase
 {
@@ -16,7 +18,7 @@ class BasicTest extends ExtractorTestCase
     {
         $client = new Client;
         $auth = new Basic($credentials);
-        $auth->authenticateClient(new RestClient($client));
+        $auth->authenticateClient(new RestClient($client, new NullLogger()));
 
         self::assertEquals(['test','pass'], $client->getDefaultOption('auth'));
 

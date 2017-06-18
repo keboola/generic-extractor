@@ -22,26 +22,24 @@ class JuicerRestTest extends ExtractorTestCase
         $newConfig = JuicerRest::convertRetry($oldConfig);
 
         // items
-        $this->assertArrayHasKey('maxRetries', $newConfig);
-        $this->assertArrayHasKey('custom', $newConfig);
-
-        $this->assertArrayHasKey('curl', $newConfig);
-        $this->assertArrayHasKey('codes', $newConfig['curl']);
-
-        $this->assertArrayHasKey('http', $newConfig);
-        $this->assertArrayHasKey('codes', $newConfig['http']);
-        $this->assertArrayHasKey('retryHeader', $newConfig['http']);
+        self::assertArrayHasKey('maxRetries', $newConfig);
+        self::assertArrayHasKey('custom', $newConfig);
+        self::assertArrayHasKey('curl', $newConfig);
+        self::assertArrayHasKey('codes', $newConfig['curl']);
+        self::assertArrayHasKey('http', $newConfig);
+        self::assertArrayHasKey('codes', $newConfig['http']);
+        self::assertArrayHasKey('retryHeader', $newConfig['http']);
 
         // item values
-        $this->assertSame($oldConfig['custom'], $newConfig['custom']);
-        $this->assertSame($oldConfig['maxRetries'], $newConfig['maxRetries']);
-        $this->assertSame($oldConfig['curlCodes'], $newConfig['curl']['codes']);
-        $this->assertSame($oldConfig['httpCodes'], $newConfig['http']['codes']);
-        $this->assertSame($oldConfig['headerName'], $newConfig['http']['retryHeader']);
+        self::assertSame($oldConfig['custom'], $newConfig['custom']);
+        self::assertSame($oldConfig['maxRetries'], $newConfig['maxRetries']);
+        self::assertSame($oldConfig['curlCodes'], $newConfig['curl']['codes']);
+        self::assertSame($oldConfig['httpCodes'], $newConfig['http']['codes']);
+        self::assertSame($oldConfig['headerName'], $newConfig['http']['retryHeader']);
 
         // removed items
-        $this->assertArrayNotHasKey('curlCodes', $newConfig);
-        $this->assertArrayNotHasKey('httpCodes', $newConfig);
-        $this->assertArrayNotHasKey('headerName', $newConfig);
+        self::assertArrayNotHasKey('curlCodes', $newConfig);
+        self::assertArrayNotHasKey('httpCodes', $newConfig);
+        self::assertArrayNotHasKey('headerName', $newConfig);
     }
 }
