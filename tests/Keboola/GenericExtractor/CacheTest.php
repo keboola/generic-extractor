@@ -14,11 +14,9 @@ class CacheTest extends ExtractorTestCase
         $output = shell_exec('php ./run.php --data=./tests/data/requestCacheTTL');
 
         self::assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
-
-        $this->assertFileExists($filePath);
-
+        self::assertFileExists($filePath);
         $csv = new CsvFile($filePath);
-        $this->assertEquals(3, $csv->getColumnsCount());
+        self::assertEquals(3, $csv->getColumnsCount());
 
         $csv->next();
         $data = $csv->current();
@@ -33,18 +31,16 @@ class CacheTest extends ExtractorTestCase
         $output = shell_exec('php ./run.php --data=./tests/data/requestCacheTTL');
 
         self::assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
-
-        $this->assertFileExists($filePath);
-
+        self::assertFileExists($filePath);
         $csv = new CsvFile($filePath);
-        $this->assertEquals(3, $csv->getColumnsCount());
+        self::assertEquals(3, $csv->getColumnsCount());
 
         $csv->next();
         $data = $csv->current();
         unset($csv);
 
         $secondDateTime = (int)$data[1];
-        $this->assertTrue($firstDateTime === $secondDateTime);
+        self::assertTrue($firstDateTime === $secondDateTime);
 
         $this->rmDir('./tests/data/requestCacheTTL/out');
 
@@ -54,18 +50,16 @@ class CacheTest extends ExtractorTestCase
         $output = shell_exec('php ./run.php --data=./tests/data/requestCacheTTL');
 
         self::assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
-
-        $this->assertFileExists($filePath);
-
+        self::assertFileExists($filePath);
         $csv = new CsvFile($filePath);
-        $this->assertEquals(3, $csv->getColumnsCount());
+        self::assertEquals(3, $csv->getColumnsCount());
 
         $csv->next();
         $data = $csv->current();
         unset($csv);
 
         $thirdDateTime = (int)$data[1];
-        $this->assertTrue($secondDateTime < $thirdDateTime);
+        self::assertTrue($secondDateTime < $thirdDateTime);
 
         $this->rmDir('./tests/data/requestCacheTTL/out');
 
@@ -94,11 +88,9 @@ class CacheTest extends ExtractorTestCase
         $output = shell_exec('php ./run.php --data=./tests/data/requestCache');
 
         self::assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
-
-        $this->assertFileExists($filePath);
-
+        self::assertFileExists($filePath);
         $csv = new CsvFile($filePath);
-        $this->assertEquals(3, $csv->getColumnsCount());
+        self::assertEquals(3, $csv->getColumnsCount());
 
         $csv->next();
         $data = $csv->current();
@@ -113,18 +105,16 @@ class CacheTest extends ExtractorTestCase
         $output = shell_exec('php ./run.php --data=./tests/data/requestCache');
 
         self::assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
-
-        $this->assertFileExists($filePath);
-
+        self::assertFileExists($filePath);
         $csv = new CsvFile($filePath);
-        $this->assertEquals(3, $csv->getColumnsCount());
+        self::assertEquals(3, $csv->getColumnsCount());
 
         $csv->next();
         $data = $csv->current();
         unset($csv);
 
         $secondDateTime = (int)$data[1];
-        $this->assertTrue($firstDateTime === $secondDateTime);
+        self::assertTrue($firstDateTime === $secondDateTime);
 
         $this->rmDir('./tests/data/requestCache/out');
 
@@ -139,11 +129,9 @@ class CacheTest extends ExtractorTestCase
         $output = shell_exec('php ./run.php --data=./tests/data/noCache');
 
         self::assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
-
-        $this->assertFileExists($filePath);
-
+        self::assertFileExists($filePath);
         $csv = new CsvFile($filePath);
-        $this->assertEquals(3, $csv->getColumnsCount());
+        self::assertEquals(3, $csv->getColumnsCount());
 
         $csv->next();
         $data = $csv->current();
@@ -156,21 +144,18 @@ class CacheTest extends ExtractorTestCase
 
         // second execution
         $output = shell_exec('php ./run.php --data=./tests/data/noCache');
-
         self::assertEquals('Extractor finished successfully.' . PHP_EOL, $output);
-
-        $this->assertFileExists($filePath);
+        self::assertFileExists($filePath);
 
         $csv = new CsvFile($filePath);
-        $this->assertEquals(3, $csv->getColumnsCount());
+        self::assertEquals(3, $csv->getColumnsCount());
 
         $csv->next();
         $data = $csv->current();
         unset($csv);
 
         $secondDateTime = (int)$data[1];
-
-        $this->assertTrue($firstDateTime < $secondDateTime);
+        self::assertTrue($firstDateTime < $secondDateTime);
 
         $this->rmDir('./tests/data/noCache/out');
     }

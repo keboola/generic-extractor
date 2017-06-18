@@ -1,4 +1,5 @@
 <?php
+
 namespace Keboola\GenericExtractor;
 
 use Keboola\GenericExtractor\Authentication\OAuth20;
@@ -6,6 +7,7 @@ use GuzzleHttp\Client;
 use Keboola\Juicer\Client\RestClient;
 use Keboola\Juicer\Filesystem\JsonFile;
 use Keboola\Code\Builder;
+use Psr\Log\NullLogger;
 
 class OAuth20Test extends ExtractorTestCase
 {
@@ -16,7 +18,7 @@ class OAuth20Test extends ExtractorTestCase
         // FIXME base_url from cfg
         $client = new Client(['base_url' => 'http://example.com']);
         $client->setDefaultOption('headers', ['X-Test' => 'test']);
-        $restClient = new RestClient($client);
+        $restClient = new RestClient($client, new NullLogger());
         $auth = new OAuth20(
             $config->get('authorization'),
             $config->get('parameters', 'api', 'authentication'),
@@ -37,7 +39,7 @@ class OAuth20Test extends ExtractorTestCase
 
         // FIXME base_url from cfg
         $client = new Client(['base_url' => 'http://example.com']);
-        $restClient = new RestClient($client);
+        $restClient = new RestClient($client, new NullLogger());
         $auth = new OAuth20(
             $config->get('authorization'),
             $config->get('parameters', 'api', 'authentication'),
@@ -51,7 +53,11 @@ class OAuth20Test extends ExtractorTestCase
         $authData = json_decode($config->get('authorization', 'oauth_api', 'credentials', '#data'));
 
         $authHeader = $request->getHeader('Authorization');
-        $match = preg_match('/MAC id="testToken", ts="([0-9]{10})", nonce="([0-9a-zA-Z]{16})", mac="([0-9a-zA-Z]{32})"/', $authHeader, $matches);
+        $match = preg_match(
+            '/MAC id="testToken", ts="([0-9]{10})", nonce="([0-9a-zA-Z]{16})", mac="([0-9a-zA-Z]{32})"/',
+            $authHeader,
+            $matches
+        );
         if (1 !== $match) {
             throw new \Exception("MAC Header does not match the expected pattern");
         }

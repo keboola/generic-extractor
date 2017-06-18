@@ -1,4 +1,5 @@
 <?php
+
 namespace Keboola\GenericExtractor;
 
 use Keboola\GenericExtractor\Authentication\OAuth20Login;
@@ -8,6 +9,7 @@ use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Subscriber\Mock;
 use GuzzleHttp\Subscriber\History;
 use Keboola\Juicer\Client\RestClient;
+use Psr\Log\NullLogger;
 
 class OAuth20LoginTest extends ExtractorTestCase
 {
@@ -39,7 +41,7 @@ class OAuth20LoginTest extends ExtractorTestCase
         $history = new History();
         $guzzle->getEmitter()->attach($history);
 
-        $restClient = new RestClient($guzzle);
+        $restClient = new RestClient($guzzle, new NullLogger());
 
         $oauthCredentials = [
             'appKey' => 1,
