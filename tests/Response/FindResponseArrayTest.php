@@ -2,9 +2,10 @@
 
 namespace Keboola\GenericExtractor\Tests\Response;
 
-use Keboola\ExGenericModule\FindResponseArray;
+use Keboola\GenericExtractor\Response\FindResponseArray;
 use Keboola\Juicer\Config\JobConfig;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 
 class FindResponseArrayTest extends TestCase
 {
@@ -15,7 +16,7 @@ class FindResponseArrayTest extends TestCase
             'dataField' => 'results'
         ]);
 
-        $module = new FindResponseArray;
+        $module = new FindResponseArray(new NullLogger());
 
         $response = (object) [
             'results' => [
@@ -36,7 +37,7 @@ class FindResponseArrayTest extends TestCase
             'dataField' => 'data.results'
         ]);
 
-        $module = new FindResponseArray;
+        $module = new FindResponseArray(new NullLogger());
 
         $response = (object) [
             'data' => (object) [
@@ -62,7 +63,7 @@ class FindResponseArrayTest extends TestCase
             'endpoint' => 'a'
         ]);
 
-        $module = new FindResponseArray;
+        $module = new FindResponseArray(new NullLogger());
 
         $response = (object) [
             'results' => [

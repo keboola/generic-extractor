@@ -30,11 +30,6 @@ class FindResponseArray implements ResponseModuleInterface
      * @param JobConfig $jobConfig
      * @return array
      * @throws UserException
-     * @internal param array $config
-     * @todo support array of dataFields
-     *     - would return object with results, changing the class' API
-     *     - parse would just have to loop through if it returns an object
-     *     - and append $type with the dataField
      */
     public function process($response, JobConfig $jobConfig)
     {
@@ -83,7 +78,9 @@ class FindResponseArray implements ResponseModuleInterface
                 ]);
                 $data = [];
             } else {
-                $e = new UserException("More than one array found in response! Use 'dataField' parameter to specify a key to the data array. (endpoint: {$config['endpoint']}, arrays in response root: " . join(", ", $arrayNames) . ")");
+                $e = new UserException(
+                    "More than one array found in response! Use 'dataField' parameter to specify a key to the data array. (endpoint: {$config['endpoint']}, arrays in response root: " . join(", ", $arrayNames) . ")"
+                );
                 $e->setData([
                     'response' => json_encode($response),
                     'arrays found' => $arrayNames
