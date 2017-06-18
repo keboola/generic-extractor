@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "844acbc7e61afa413c94ddf6db40f92b",
+    "content-hash": "38bed82bdffe284012de1fe3349fc228",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -512,99 +512,6 @@
             "time": "2017-06-06T10:30:54+00:00"
         },
         {
-            "name": "keboola/ex-generic-moduleinterface",
-            "version": "0.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/keboola/ex-generic-moduleinterface.git",
-                "reference": "b4df85ea699a1152dcab5175d1f538f10427765a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/keboola/ex-generic-moduleinterface/zipball/b4df85ea699a1152dcab5175d1f538f10427765a",
-                "reference": "b4df85ea699a1152dcab5175d1f538f10427765a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">5.4.0"
-            },
-            "require-dev": {
-                "codeclimate/php-test-reporter": "dev-master",
-                "phpunit/phpunit": "3.7.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Keboola\\GenericExtractor": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Ondrej Vana",
-                    "email": "kachna@keboola.cz"
-                }
-            ],
-            "description": "Interfaces for generic extractor modules",
-            "keywords": [
-                "ex-generic",
-                "keboola",
-                "module"
-            ],
-            "time": "2016-05-25T12:44:58+00:00"
-        },
-        {
-            "name": "keboola/ex-generic-response-array",
-            "version": "0.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/keboola/gex-get-response-array.git",
-                "reference": "e11e36078106182b92d4a91df305425b17d22f55"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/keboola/gex-get-response-array/zipball/e11e36078106182b92d4a91df305425b17d22f55",
-                "reference": "e11e36078106182b92d4a91df305425b17d22f55",
-                "shasum": ""
-            },
-            "require": {
-                "keboola/ex-generic-moduleinterface": "^0.2.0",
-                "keboola/juicer": "^1.0",
-                "keboola/php-utils": "^1.0",
-                "php": ">=7.0"
-            },
-            "require-dev": {
-                "codeclimate/php-test-reporter": "dev-master",
-                "phpunit/phpunit": "3.7.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Keboola\\ExGenericModule": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Ondrej Vana",
-                    "email": "kachna@keboola.cz"
-                }
-            ],
-            "description": "Find an array within the response object",
-            "keywords": [
-                "extractor",
-                "generic",
-                "rest"
-            ],
-            "time": "2017-06-06T14:38:02+00:00"
-        },
-        {
             "name": "keboola/filter",
             "version": "0.1.4",
             "source": {
@@ -647,16 +554,16 @@
         },
         {
             "name": "keboola/json-parser",
-            "version": "1.0.13",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-jsonparser.git",
-                "reference": "714a9ba5936de5d4846368f481522c17dfab0f09"
+                "reference": "0a8ba36d93a85f0437aab3252782388778549540"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-jsonparser/zipball/714a9ba5936de5d4846368f481522c17dfab0f09",
-                "reference": "714a9ba5936de5d4846368f481522c17dfab0f09",
+                "url": "https://api.github.com/repos/keboola/php-jsonparser/zipball/0a8ba36d93a85f0437aab3252782388778549540",
+                "reference": "0a8ba36d93a85f0437aab3252782388778549540",
                 "shasum": ""
             },
             "require": {
@@ -695,41 +602,40 @@
                 "json2csv",
                 "parser"
             ],
-            "time": "2017-06-06T11:53:29+00:00"
+            "time": "2017-06-15T22:12:55+00:00"
         },
         {
             "name": "keboola/juicer",
-            "version": "1.0.4",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "b7fda3e6157821e704c9a46472e9d1c90a61a7d1"
+                "reference": "4840d57e6c31427f71b3f77217d907e4ac36d6bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/b7fda3e6157821e704c9a46472e9d1c90a61a7d1",
-                "reference": "b7fda3e6157821e704c9a46472e9d1c90a61a7d1",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/4840d57e6c31427f71b3f77217d907e4ac36d6bd",
+                "reference": "4840d57e6c31427f71b3f77217d907e4ac36d6bd",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "^5.3",
                 "guzzlehttp/retry-subscriber": "dev-master#270393c",
-                "keboola/codebuilder": "~0.2.2",
+                "keboola/codebuilder": "^0.2",
                 "keboola/csvmap": "^0.4",
-                "keboola/filter": "~0.1.4",
-                "keboola/json-parser": "~1.0.0",
-                "keboola/php-csvtable": "~0.1.6",
-                "keboola/php-temp": "~0.1.0",
-                "keboola/php-utils": "~1.0.3",
-                "monolog/monolog": "~1.15.0",
-                "php": ">=7.0",
-                "symfony/yaml": "~2.6.3"
+                "keboola/filter": "^0.1",
+                "keboola/json-parser": "^1.1",
+                "keboola/php-csvtable": "^0.1",
+                "keboola/php-temp": "^0.1",
+                "keboola/php-utils": "^1.0",
+                "php": ">=7.0"
             },
             "require-dev": {
-                "codeclimate/php-test-reporter": "dev-master",
-                "phpstan/phpstan": "^0.6.4",
-                "phpunit/phpunit": "^5.2",
-                "squizlabs/php_codesniffer": "2.*"
+                "codeclimate/php-test-reporter": "^0.4",
+                "monolog/monolog": "^1.22",
+                "phpstan/phpstan": "^0.7",
+                "phpunit/phpunit": "^6.2",
+                "squizlabs/php_codesniffer": "^3.0"
             },
             "type": "library",
             "autoload": {
@@ -738,19 +644,22 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
             "authors": [
                 {
-                    "name": "Ondrej Vana",
-                    "email": "ondrej.vana@keboola.com"
+                    "name": "Keboola",
+                    "email": "devel@keboola.com"
                 }
             ],
-            "description": "Keboola Extractor Development Bundle",
+            "description": "Generic Extractor Juicer",
             "keywords": [
-                "development",
-                "extractor",
-                "keboola"
+                "generic extractor",
+                "json",
+                "rest"
             ],
-            "time": "2017-06-06T13:23:47+00:00"
+            "time": "2017-06-16T20:46:59+00:00"
         },
         {
             "name": "keboola/php-csvtable",
@@ -916,16 +825,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.15.0",
+            "version": "1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "dc5150cc608f2334c72c3b6a553ec9668a4156b0"
+                "reference": "1e044bc4b34e91743943479f1be7a1d5eb93add0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/dc5150cc608f2334c72c3b6a553ec9668a4156b0",
-                "reference": "dc5150cc608f2334c72c3b6a553ec9668a4156b0",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1e044bc4b34e91743943479f1be7a1d5eb93add0",
+                "reference": "1e044bc4b34e91743943479f1be7a1d5eb93add0",
                 "shasum": ""
             },
             "require": {
@@ -936,16 +845,17 @@
                 "psr/log-implementation": "1.0.0"
             },
             "require-dev": {
-                "aws/aws-sdk-php": "^2.4.9",
+                "aws/aws-sdk-php": "^2.4.9 || ^3.0",
                 "doctrine/couchdb": "~1.0@dev",
                 "graylog2/gelf-php": "~1.0",
+                "jakub-onderka/php-parallel-lint": "0.9",
+                "php-amqplib/php-amqplib": "~2.4",
                 "php-console/php-console": "^3.1.3",
                 "phpunit/phpunit": "~4.5",
                 "phpunit/phpunit-mock-objects": "2.3.0",
-                "raven/raven": "~0.8",
                 "ruflin/elastica": ">=0.90 <3.0",
-                "swiftmailer/swiftmailer": "~5.3",
-                "videlalvaro/php-amqplib": "~2.4"
+                "sentry/sentry": "^0.13",
+                "swiftmailer/swiftmailer": "~5.3"
             },
             "suggest": {
                 "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
@@ -953,16 +863,17 @@
                 "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
                 "ext-mongo": "Allow sending log messages to a MongoDB server",
                 "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
+                "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
+                "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
                 "php-console/php-console": "Allow sending log messages to Google Chrome",
-                "raven/raven": "Allow sending log messages to a Sentry server",
                 "rollbar/rollbar": "Allow sending log messages to Rollbar",
                 "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
-                "videlalvaro/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib"
+                "sentry/sentry": "Allow sending log messages to a Sentry server"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.15.x-dev"
+                    "dev-master": "2.0.x-dev"
                 }
             },
             "autoload": {
@@ -988,7 +899,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2015-07-12T13:54:09+00:00"
+            "time": "2017-03-13T07:08:03+00:00"
         },
         {
             "name": "psr/log",
@@ -1406,71 +1317,21 @@
                 "shim"
             ],
             "time": "2017-06-09T14:24:12+00:00"
-        },
-        {
-            "name": "symfony/yaml",
-            "version": "v2.6.13",
-            "target-dir": "Symfony/Component/Yaml",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/yaml.git",
-                "reference": "c044d1744b8e91aaaa0d9bac683ab87ec7cbf359"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/c044d1744b8e91aaaa0d9bac683ab87ec7cbf359",
-                "reference": "c044d1744b8e91aaaa0d9bac683ab87ec7cbf359",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "require-dev": {
-                "symfony/phpunit-bridge": "~2.7"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.6-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Symfony\\Component\\Yaml\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Yaml Component",
-            "homepage": "https://symfony.com",
-            "time": "2015-07-26T08:59:42+00:00"
         }
     ],
     "packages-dev": [
         {
             "name": "codeclimate/php-test-reporter",
-            "version": "dev-master",
+            "version": "v0.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/codeclimate/php-test-reporter.git",
-                "reference": "8093f0e532f1ba36d9cbebd30d58c85869b13a0a"
+                "reference": "eab9ac233f23a4c12a12755793750f22fc46dd3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codeclimate/php-test-reporter/zipball/8093f0e532f1ba36d9cbebd30d58c85869b13a0a",
-                "reference": "8093f0e532f1ba36d9cbebd30d58c85869b13a0a",
+                "url": "https://api.github.com/repos/codeclimate/php-test-reporter/zipball/eab9ac233f23a4c12a12755793750f22fc46dd3e",
+                "reference": "eab9ac233f23a4c12a12755793750f22fc46dd3e",
                 "shasum": ""
             },
             "require": {
@@ -1483,7 +1344,7 @@
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^2.0.0",
-                "phpunit/phpunit": "^4.8.35 || ^5.7.0 || ^6.0.0"
+                "phpunit/phpunit": "^4.8.31"
             },
             "bin": [
                 "composer/bin/test-reporter"
@@ -1516,7 +1377,7 @@
                 "codeclimate",
                 "coverage"
             ],
-            "time": "2017-06-01T13:19:55+00:00"
+            "time": "2017-02-15T22:25:47+00:00"
         },
         {
             "name": "composer/ca-bundle",
@@ -2640,16 +2501,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.6.4",
+            "version": "0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "55ee8b0c451546ac069c2c4130ce505c4a4cf409"
+                "reference": "8da03c084b2c8e4a92d48f6926f6191c2c7783ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/55ee8b0c451546ac069c2c4130ce505c4a4cf409",
-                "reference": "55ee8b0c451546ac069c2c4130ce505c4a4cf409",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/8da03c084b2c8e4a92d48f6926f6191c2c7783ad",
+                "reference": "8da03c084b2c8e4a92d48f6926f6191c2c7783ad",
                 "shasum": ""
             },
             "require": {
@@ -2665,11 +2526,11 @@
             },
             "require-dev": {
                 "consistence/coding-standard": "~0.13.0",
-                "jakub-onderka/php-parallel-lint": "^0.9",
-                "phing/phing": "^2.13.0",
-                "phpunit/phpunit": "^5.6",
+                "jakub-onderka/php-parallel-lint": "^0.9.2",
+                "phing/phing": "^2.16.0",
+                "phpunit/phpunit": "^6.0.7",
                 "satooshi/php-coveralls": "^1.0",
-                "slevomat/coding-standard": "dev-2.0-dev#2b8e2b0992f31205e4c1d2fb5c39af05274c7c4d"
+                "slevomat/coding-standard": "^2.0"
             },
             "bin": [
                 "bin/phpstan"
@@ -2677,7 +2538,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.6-dev"
+                    "dev-master": "0.7-dev"
                 }
             },
             "autoload": {
@@ -2690,7 +2551,7 @@
                 "MIT"
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
-            "time": "2017-02-20T20:45:32+00:00"
+            "time": "2017-05-14T20:37:59+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -3655,63 +3516,36 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "2.9.1",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "dcbed1074f8244661eecddfc2a675430d8d33f62"
+                "reference": "f9eaf037edf22fdfccf04cb0ab57ebcb1e166219"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/dcbed1074f8244661eecddfc2a675430d8d33f62",
-                "reference": "dcbed1074f8244661eecddfc2a675430d8d33f62",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/f9eaf037edf22fdfccf04cb0ab57ebcb1e166219",
+                "reference": "f9eaf037edf22fdfccf04cb0ab57ebcb1e166219",
                 "shasum": ""
             },
             "require": {
                 "ext-simplexml": "*",
                 "ext-tokenizer": "*",
                 "ext-xmlwriter": "*",
-                "php": ">=5.1.2"
+                "php": ">=5.4.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "~4.0"
             },
             "bin": [
-                "scripts/phpcs",
-                "scripts/phpcbf"
+                "bin/phpcs",
+                "bin/phpcbf"
             ],
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.x-dev"
+                    "dev-master": "3.x-dev"
                 }
-            },
-            "autoload": {
-                "classmap": [
-                    "CodeSniffer.php",
-                    "CodeSniffer/CLI.php",
-                    "CodeSniffer/Exception.php",
-                    "CodeSniffer/File.php",
-                    "CodeSniffer/Fixer.php",
-                    "CodeSniffer/Report.php",
-                    "CodeSniffer/Reporting.php",
-                    "CodeSniffer/Sniff.php",
-                    "CodeSniffer/Tokens.php",
-                    "CodeSniffer/Reports/",
-                    "CodeSniffer/Tokenizers/",
-                    "CodeSniffer/DocGenerators/",
-                    "CodeSniffer/Standards/AbstractPatternSniff.php",
-                    "CodeSniffer/Standards/AbstractScopeSniff.php",
-                    "CodeSniffer/Standards/AbstractVariableSniff.php",
-                    "CodeSniffer/Standards/IncorrectPatternException.php",
-                    "CodeSniffer/Standards/Generic/Sniffs/",
-                    "CodeSniffer/Standards/MySource/Sniffs/",
-                    "CodeSniffer/Standards/PEAR/Sniffs/",
-                    "CodeSniffer/Standards/PSR1/Sniffs/",
-                    "CodeSniffer/Standards/PSR2/Sniffs/",
-                    "CodeSniffer/Standards/Squiz/Sniffs/",
-                    "CodeSniffer/Standards/Zend/Sniffs/"
-                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -3729,7 +3563,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2017-05-22T02:43:20+00:00"
+            "time": "2017-06-14T01:23:49+00:00"
         },
         {
             "name": "symfony/config",
@@ -3901,6 +3735,61 @@
             "time": "2017-04-12T14:14:56+00:00"
         },
         {
+            "name": "symfony/yaml",
+            "version": "v3.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/yaml.git",
+                "reference": "9752a30000a8ca9f4b34b5227d15d0101b96b063"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/9752a30000a8ca9f4b34b5227d15d0101b96b063",
+                "reference": "9752a30000a8ca9f4b34b5227d15d0101b96b063",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9"
+            },
+            "require-dev": {
+                "symfony/console": "~2.8|~3.0"
+            },
+            "suggest": {
+                "symfony/console": "For validating YAML files using the lint command"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Yaml\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Yaml Component",
+            "homepage": "https://symfony.com",
+            "time": "2017-06-02T22:05:06+00:00"
+        },
+        {
             "name": "webmozart/assert",
             "version": "1.2.0",
             "source": {
@@ -3955,8 +3844,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "guzzlehttp/cache-subscriber": 20,
-        "guzzlehttp/retry-subscriber": 20,
-        "codeclimate/php-test-reporter": 20
+        "guzzlehttp/retry-subscriber": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

@@ -4,22 +4,20 @@
     "type": "project",
     "require": {
         "php": ">=5.5",
-        "symfony/yaml": "~2.6.3",
-        "keboola/juicer": "^1.0",
-        "keboola/codebuilder": "~0.2.0",
-        "keboola/php-utils": "~1.0.3",
-        "symfony/console": "^2.6",
-        "symfony/finder": "^2.6",
-        "keboola/ex-generic-response-array": "^0.0.4",
+        "keboola/juicer": "^2.0",
+        "keboola/codebuilder": "^0.2",
+        "keboola/php-utils": "^1.0",
+        "symfony/console": "^2.8",
+        "symfony/finder": "^2.8",
         "guzzlehttp/oauth-subscriber": "^0.2",
         "guzzlehttp/cache-subscriber": "dev-master#aaab195",
         "guzzlehttp/retry-subscriber": "dev-master#270393c"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.2",
-        "codeclimate/php-test-reporter": "dev-master",
-        "squizlabs/php_codesniffer": "2.*",
-        "phpstan/phpstan": "^0.6.4"
+        "codeclimate/php-test-reporter": "^0.4",
+        "squizlabs/php_codesniffer": "^3.0",
+        "phpstan/phpstan": "^0.7"
     },
     "autoload": {
         "psr-4": {
