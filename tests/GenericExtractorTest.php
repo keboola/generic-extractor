@@ -1,14 +1,16 @@
 <?php
 
-namespace Keboola\GenericExtractor;
+namespace Keboola\GenericExtractor\Tests;
 
 use Keboola\GenericExtractor\Config\Api;
+use Keboola\GenericExtractor\GenericExtractor;
 use Keboola\Juicer\Config\Config;
 use Keboola\Juicer\Parser\Json;
 use Keboola\Temp\Temp;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
-class GenericExtractorTest extends ExtractorTestCase
+class GenericExtractorTest extends TestCase
 {
     /**
      * No change to JSON parser structure should happen when nothing is parsed!

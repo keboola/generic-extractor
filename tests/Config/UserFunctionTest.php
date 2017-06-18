@@ -1,9 +1,11 @@
 <?php
-namespace Keboola\GenericExtractor;
+
+namespace Keboola\GenericExtractor\Tests\Config;
 
 use Keboola\GenericExtractor\Config\UserFunction;
+use PHPUnit\Framework\TestCase;
 
-class UserFunctionTest extends ExtractorTestCase
+class UserFunctionTest extends TestCase
 {
     public function testBuild()
     {

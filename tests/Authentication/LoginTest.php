@@ -1,5 +1,6 @@
 <?php
-namespace Keboola\GenericExtractor;
+
+namespace Keboola\GenericExtractor\Tests\Authentication;
 
 use Keboola\GenericExtractor\Authentication\Login;
 use GuzzleHttp\Client;
@@ -8,9 +9,10 @@ use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Subscriber\Mock;
 use GuzzleHttp\Subscriber\History;
 use Keboola\Juicer\Client\RestClient;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
-class LoginTest extends ExtractorTestCase
+class LoginTest extends TestCase
 {
     public function testAuthenticateClient()
     {

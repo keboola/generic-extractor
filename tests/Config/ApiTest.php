@@ -1,6 +1,6 @@
 <?php
 
-namespace Keboola\GenericExtractor;
+namespace Keboola\GenericExtractor\Tests\Config;
 
 use Keboola\GenericExtractor\Authentication\OAuth20;
 use Keboola\GenericExtractor\Authentication\OAuth20Login;
@@ -8,9 +8,10 @@ use Keboola\GenericExtractor\Authentication\Query;
 use Keboola\GenericExtractor\Config\Api;
 use Keboola\Juicer\Config\Config;
 use Keboola\Juicer\Filesystem\JsonFile;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
-class ApiTest extends ExtractorTestCase
+class ApiTest extends TestCase
 {
     public function testCreateBaseUrlString()
     {

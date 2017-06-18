@@ -14,14 +14,15 @@
         "guzzlehttp/retry-subscriber": "dev-master#270393c"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.2",
+        "phpunit/phpunit": "^6.2",
         "codeclimate/php-test-reporter": "^0.4",
         "squizlabs/php_codesniffer": "^3.0",
         "phpstan/phpstan": "^0.7"
     },
     "autoload": {
         "psr-4": {
-            "Keboola\\GenericExtractor\\": "src/Keboola/GenericExtractor"
+            "Keboola\\GenericExtractor\\": "src/Keboola/GenericExtractor",
+            "Keboola\\GenericExtractor\\Tests\\": "tests/"
         }
     }
 }

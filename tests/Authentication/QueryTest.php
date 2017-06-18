@@ -1,6 +1,6 @@
 <?php
 
-namespace Keboola\GenericExtractor;
+namespace Keboola\GenericExtractor\Tests\Authentication;
 
 use Keboola\GenericExtractor\Authentication\Query;
 use GuzzleHttp\Client;
@@ -8,6 +8,7 @@ use GuzzleHttp\Message\Response;
 use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Subscriber\Mock;
 use Keboola\Code\Builder;
+use Keboola\GenericExtractor\Tests\ExtractorTestCase;
 use Keboola\Juicer\Client\RestClient;
 use Psr\Log\NullLogger;
 

@@ -1,13 +1,14 @@
 <?php
 
-namespace Keboola\GenericExtractor;
+namespace Keboola\GenericExtractor\Tests\Authentication;
 
 use Keboola\GenericExtractor\Authentication\Basic;
 use GuzzleHttp\Client;
 use Keboola\Juicer\Client\RestClient;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
-class BasicTest extends ExtractorTestCase
+class BasicTest extends TestCase
 {
 
     /**

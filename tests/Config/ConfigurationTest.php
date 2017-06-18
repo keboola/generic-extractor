@@ -1,7 +1,9 @@
 <?php
-namespace Keboola\GenericExtractor;
+
+namespace Keboola\GenericExtractor\Tests\Config;
 
 use Keboola\GenericExtractor\Config\Configuration;
+use Keboola\GenericExtractor\Tests\ExtractorTestCase;
 use Keboola\Juicer\Filesystem\JsonFile;
 use Keboola\Temp\Temp;
 

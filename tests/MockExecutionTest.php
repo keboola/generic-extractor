@@ -1,7 +1,10 @@
 <?php
-namespace Keboola\GenericExtractor;
 
-class MockExecutionTest extends ExtractorTestCase
+namespace Keboola\GenericExtractor\Tests;
+
+use PHPUnit\Framework\TestCase;
+
+class MockExecutionTest extends TestCase
 {
     /**
      * @dataProvider configProvider

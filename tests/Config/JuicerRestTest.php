@@ -1,13 +1,11 @@
 <?php
-/**
- * @author Erik Zigo <erik.zigo@keboola.com>
- */
 
-namespace Keboola\GenericExtractor;
+namespace Keboola\GenericExtractor\Tests\Config;
 
 use Keboola\GenericExtractor\Config\JuicerRest;
+use PHPUnit\Framework\TestCase;
 
-class JuicerRestTest extends ExtractorTestCase
+class JuicerRestTest extends TestCase
 {
     public function testConvert()
     {

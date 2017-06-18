@@ -1,12 +1,13 @@
 <?php
 
-namespace Keboola\GenericExtractor;
+namespace Keboola\GenericExtractor\Tests;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Message\RequestInterface;
+use PHPUnit\Framework\TestCase;
 
-class ExtractorTestCase extends \PHPUnit_Framework_TestCase
+class ExtractorTestCase extends TestCase
 {
     protected static function callMethod($obj, $name, array $args = [])
     {

@@ -1,10 +1,11 @@
 <?php
 
-namespace Keboola\GenericExtractor;
+namespace Keboola\GenericExtractor\Tests;
 
 use Keboola\Csv\CsvFile;
+use PHPUnit\Framework\TestCase;
 
-class CacheTest extends ExtractorTestCase
+class CacheTest extends TestCase
 {
     public function testCacheTTL()
     {

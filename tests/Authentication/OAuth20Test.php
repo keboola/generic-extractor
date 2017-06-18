@@ -1,9 +1,10 @@
 <?php
 
-namespace Keboola\GenericExtractor;
+namespace Keboola\GenericExtractor\Tests\Authentication;
 
 use Keboola\GenericExtractor\Authentication\OAuth20;
 use GuzzleHttp\Client;
+use Keboola\GenericExtractor\Tests\ExtractorTestCase;
 use Keboola\Juicer\Client\RestClient;
 use Keboola\Juicer\Filesystem\JsonFile;
 use Keboola\Code\Builder;

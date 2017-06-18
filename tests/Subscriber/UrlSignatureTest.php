@@ -1,13 +1,15 @@
 <?php
-namespace Keboola\GenericExtractor;
+
+namespace Keboola\GenericExtractor\Tests\Subscriber;
 
 use Keboola\GenericExtractor\Subscriber\UrlSignature;
 use GuzzleHttp\Message\Request;
 use GuzzleHttp\Event\BeforeEvent;
 use GuzzleHttp\Transaction;
 use GuzzleHttp\Client;
+use PHPUnit\Framework\TestCase;
 
-class UrlSignatureTest extends ExtractorTestCase
+class UrlSignatureTest extends TestCase
 {
     public function testAddSignature()
     {

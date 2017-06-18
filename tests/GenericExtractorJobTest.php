@@ -1,5 +1,6 @@
 <?php
-namespace Keboola\GenericExtractor;
+
+namespace Keboola\GenericExtractor\Tests;
 
 use Keboola\Juicer\Config\JobConfig;
 use Keboola\Juicer\Pagination\ResponseUrlScroller;
