@@ -1,7 +1,4 @@
 <?php
-/**
- *
- */
 
 namespace Keboola\GenericExtractor\Authentication;
 
@@ -132,7 +129,9 @@ class Login implements AuthInterface
             return time() + (int) $this->auth['expires'];
         } elseif (is_array($this->auth['expires'])) {
             if (empty($this->auth['expires']['response'])) {
-                throw new UserException("'authentication.expires' must be either an integer or an array with 'response' key containing a path in the response");
+                throw new UserException(
+                    "'authentication.expires' must be either an integer or an array with 'response' key containing a path in the response"
+                );
             }
 
             $rExpiry = \Keboola\Utils\getDataFromPath($this->auth['expires']['response'], $response, '.');
@@ -148,5 +147,6 @@ class Login implements AuthInterface
 
             return $expiry;
         }
+        return null;
     }
 }

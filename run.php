@@ -16,7 +16,7 @@ function userError(UserException $e)
 }
 
 try {
-    $executor = new Executor;
+    $executor = new Executor($logger);
     $executor->run();
 } catch (UserException $e) {
     userError($e);

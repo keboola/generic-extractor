@@ -9,9 +9,9 @@ use Keboola\Juicer\Exception\UserException;
 use Keboola\Juicer\Pagination\ScrollerInterface;
 use Keboola\Juicer\Pagination\ScrollerFactory;
 use Keboola\Juicer\Config\Config;
-use Keboola\Juicer\Common\Logger;
 use Keboola\Code\Builder;
 use Keboola\Utils\Exception\JsonDecodeException;
+use Psr\Log\LoggerInterface;
 
 /**
  * API Description
@@ -53,8 +53,19 @@ class Api
      */
     protected $retryConfig = [];
 
-    public function __construct(array $config)
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * Api constructor.
+     * @param array $config
+     * @param LoggerInterface $logger
+     */
+    public function __construct(LoggerInterface $logger, array $config)
     {
+        $this->logger = $logger;
         if (!empty($config['baseUrl'])) {
             $this->setBaseUrl($config['baseUrl']);
         }
@@ -78,17 +89,27 @@ class Api
         }
     }
 
-    public static function create(array $api, Config $config, array $authorization = [])
+    /**
+     * @param LoggerInterface $logger
+     * @param array $api
+     * @param Config $config
+     * @param array $authorization
+     * @return Api
+     */
+    public static function create(LoggerInterface $logger, array $api, Config $config, array $authorization = [])
     {
-        return new static([
-            'baseUrl' => self::createBaseUrl($api, $config),
-            'auth' => self::createAuth($api, $config, $authorization),
-            'scroller' => self::createScroller($api),
-            'headers' => self::createHeaders($api, $config),
-            'name' => self::createName($api),
-            'defaultRequestOptions' => self::createDefaultRequestOptions($api),
-            'retryConfig' => self::createRetryConfig($api)
-        ]);
+        return new static(
+            $logger,
+            [
+                'baseUrl' => self::createBaseUrl($api, $config),
+                'auth' => self::createAuth($logger, $api, $config, $authorization),
+                'scroller' => self::createScroller($api),
+                'headers' => self::createHeaders($api, $config),
+                'name' => self::createName($api),
+                'defaultRequestOptions' => self::createDefaultRequestOptions($api),
+                'retryConfig' => self::createRetryConfig($api)
+            ]
+        );
     }
 
     public static function createRetryConfig(array $api)
@@ -104,21 +125,22 @@ class Api
      * - OR an array of defaults for the client (possibly using the callback ^^)
      * - Method that accepts GuzzleClient as parameter and adds the emitter/defaults to it
      *
+     * @param LoggerInterface $logger
      * @param array $api
      * @param Config $config
      * @param array $authorization
-     * @throws UserException
-     * @throws ApplicationException
      * @return AuthInterface
+     * @throws ApplicationException
+     * @throws UserException
      */
-    public static function createAuth($api, Config $config, array $authorization)
+    public static function createAuth(LoggerInterface $logger, $api, Config $config, array $authorization)
     {
         if (empty($api['authentication']['type'])) {
-            Logger::log("DEBUG", "Using NO Auth");
+            $logger->debug("Using NO Auth");
             return new Authentication\NoAuth();
         }
 
-        Logger::log("DEBUG", "Using '{$api['authentication']['type']}' Auth");
+        $logger->debug("Using '{$api['authentication']['type']}' Auth");
         switch ($api['authentication']['type']) {
             case 'basic':
                 return new Authentication\Basic($config->getAttributes());
@@ -129,7 +151,9 @@ class Api
             case 'query':
             case 'url.query':
                 if (empty($api['authentication']['query']) && empty($api['query'])) {
-                    throw new UserException("The query authentication method requires query parameters to be defined in the API configuration.");
+                    throw new UserException(
+                        "The query authentication method requires query parameters to be defined in the API configuration."
+                    );
                 }
 
                 $query = empty($api['authentication']['query']) ? $api['query'] : $api['authentication']['query'];
@@ -170,7 +194,10 @@ class Api
             try {
                 $fn = \Keboola\Utils\jsonDecode($api['baseUrl']);
             } catch (JsonDecodeException $e) {
-                throw new UserException("The 'baseUrl' attribute in API configuration is not an URL string, neither a valid JSON containing an user function! Error: " . $e->getMessage(), $e);
+                throw new UserException(
+                    "The 'baseUrl' attribute in API configuration is not an URL string, neither a valid JSON containing an user function! Error: " . $e->getMessage(),
+                    $e
+                );
             }
             return UserFunction::build([$fn], ['attr' => $config->getAttributes()])[0];
         } else {

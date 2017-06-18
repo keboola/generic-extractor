@@ -7,13 +7,27 @@ use GuzzleHttp\Subscriber\Cache\CacheStorage;
 use Keboola\GenericExtractor\Config\Configuration;
 use Keboola\Juicer\Config\Config;
 use Keboola\Temp\Temp;
-use Keboola\Juicer\Common\Logger;
 use Keboola\Juicer\Exception\UserException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
 class Executor
 {
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * Executor constructor.
+     * @param LoggerInterface $logger
+     */
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
     /**
      * @param Configuration $config
      * @return CacheStorage|null
@@ -36,8 +50,6 @@ class Executor
     public function run()
     {
         $temp = new Temp(APP_NAME);
-
-        Logger::initLogger(APP_NAME);
 
         $arguments = getopt("d::", ["data::"]);
         if (!isset($arguments["data"])) {
@@ -77,8 +89,7 @@ class Executor
                 $outputBucket = "__kbc_default";
             }
 
-            $extractor = new GenericExtractor($temp);
-            $extractor->setLogger(Logger::getLogger());
+            $extractor = new GenericExtractor($temp, $this->logger);
 
             if ($cacheStorage) {
                 $extractor->enableCache($cacheStorage);
@@ -100,7 +111,7 @@ class Executor
         }
 
         foreach ($results as $bucket => $result) {
-            Logger::log('debug', "Processing results for {$bucket}.");
+            $this->logger->debug("Processing results for {$bucket}.");
             $configuration->storeResults(
                 $result['parser']->getResults(),
                 $bucket == "__kbc_default" ? null : $bucket,
