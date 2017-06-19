@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "6232aa273123f3fa28a5becc62ced8c2",
+    "content-hash": "2fac72cf77a0d950cfed6880bffae3a9",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -387,30 +387,32 @@
         },
         {
             "name": "keboola/codebuilder",
-            "version": "0.2.2",
+            "version": "0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-codebuilder.git",
-                "reference": "b7d388640d010e532f9d1d447464151f39f85841"
+                "reference": "fe677a04b092129f5791cd8633f82c4ed97518e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-codebuilder/zipball/b7d388640d010e532f9d1d447464151f39f85841",
-                "reference": "b7d388640d010e532f9d1d447464151f39f85841",
+                "url": "https://api.github.com/repos/keboola/php-codebuilder/zipball/fe677a04b092129f5791cd8633f82c4ed97518e8",
+                "reference": "fe677a04b092129f5791cd8633f82c4ed97518e8",
                 "shasum": ""
             },
             "require": {
-                "keboola/php-utils": "~1.0.3",
+                "keboola/php-utils": "^1.0",
                 "php": ">=5.6.0"
             },
             "require-dev": {
-                "codeclimate/php-test-reporter": "dev-master",
-                "phpunit/phpunit": "^5.2"
+                "codeclimate/php-test-reporter": "^0.4",
+                "phpunit/phpunit": "^6.2",
+                "squizlabs/php_codesniffer": "^3.0"
             },
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "Keboola\\Code": "src/"
+                    "Keboola\\Code": "src/",
+                    "Keboola\\Code\\Tests": "tests/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -419,8 +421,8 @@
             ],
             "authors": [
                 {
-                    "name": "Ondrej Vana",
-                    "email": "kachna@keboola.cz"
+                    "name": "Keboola",
+                    "email": "devel@keboola.com"
                 }
             ],
             "description": "Execute JSON defined user scripts",
@@ -429,7 +431,7 @@
                 "user",
                 "user-script"
             ],
-            "time": "2017-06-06T12:16:06+00:00"
+            "time": "2017-06-18T18:05:29+00:00"
         },
         {
             "name": "keboola/csv",
@@ -606,22 +608,22 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "2.0.2",
+            "version": "2.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "4840d57e6c31427f71b3f77217d907e4ac36d6bd"
+                "reference": "d9de2a3d36ef9184d72f65055f2ed573c30a5b76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/4840d57e6c31427f71b3f77217d907e4ac36d6bd",
-                "reference": "4840d57e6c31427f71b3f77217d907e4ac36d6bd",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/d9de2a3d36ef9184d72f65055f2ed573c30a5b76",
+                "reference": "d9de2a3d36ef9184d72f65055f2ed573c30a5b76",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "^5.3",
                 "guzzlehttp/retry-subscriber": "dev-master#270393c",
-                "keboola/codebuilder": "^0.2",
+                "keboola/codebuilder": "^0.3",
                 "keboola/csvmap": "^0.4",
                 "keboola/filter": "^0.1",
                 "keboola/json-parser": "^1.1",
@@ -659,7 +661,7 @@
                 "json",
                 "rest"
             ],
-            "time": "2017-06-16T20:46:59+00:00"
+            "time": "2017-06-18T22:23:12+00:00"
         },
         {
             "name": "keboola/php-csvtable",
@@ -996,16 +998,16 @@
         },
         {
             "name": "seld/jsonlint",
-            "version": "1.6.0",
+            "version": "1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/jsonlint.git",
-                "reference": "791f8c594f300d246cdf01c6b3e1e19611e301d8"
+                "reference": "50d63f2858d87c4738d5b76a7dcbb99fa8cf7c77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/791f8c594f300d246cdf01c6b3e1e19611e301d8",
-                "reference": "791f8c594f300d246cdf01c6b3e1e19611e301d8",
+                "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/50d63f2858d87c4738d5b76a7dcbb99fa8cf7c77",
+                "reference": "50d63f2858d87c4738d5b76a7dcbb99fa8cf7c77",
                 "shasum": ""
             },
             "require": {
@@ -1041,7 +1043,7 @@
                 "parser",
                 "validator"
             ],
-            "time": "2017-03-06T16:42:24+00:00"
+            "time": "2017-06-18T15:11:04+00:00"
         },
         {
             "name": "symfony/console",
