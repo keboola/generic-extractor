@@ -12,16 +12,17 @@ class MockExecutionTest extends TestCase
      */
     public function testRun($configDir)
     {
-        exec("php ./run.php --data=./tests/data/{$configDir} 2>&1", $output, $retval);
+        $this->rmDir(__DIR__ . "/data/{$configDir}/out");
+        exec("php " . __DIR__ . "/../run.php --data=" . __DIR__ . "/data/{$configDir} 2>&1", $output, $retval);
 
         self::assertDirectoryEquals(
-            "./tests/data/{$configDir}/expected/tables/",
-            "./tests/data/{$configDir}/out/tables/"
+            __DIR__ . "/data/{$configDir}/expected/tables",
+            __DIR__ . "/data/{$configDir}/out/tables"
         );
 
-        self::assertEquals('Extractor finished successfully.', $output[0]);
+        self::assertContains('Extractor finished successfully.', $output[0]);
         self::assertEquals(0, $retval);
-        $this->rmDir("./tests/data/{$configDir}/out");
+        $this->rmDir(__DIR__ . "/data/{$configDir}/out");
     }
 
     public function configProvider()
@@ -40,16 +41,14 @@ class MockExecutionTest extends TestCase
 
     public function testDefaultRequestOptions()
     {
-        $output = shell_exec('php ./run.php --data=./tests/data/defaultOptions');
-
-        self::assertRegexp('/GET \/defaultOptions\?param=value/', $output);
-
-        $this->rmDir('./tests/data/defaultOptions/out');
+        exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/defaultOptions', $output);
+        self::assertRegexp('/GET \/defaultOptions\?param=value/', implode("\n", $output));
+        $this->rmDir(__DIR__ . '/data/defaultOptions/out');
     }
 
     public function testEmptyCfg()
     {
-        exec('php ./run.php --data=./tests/data/emptyCfg 2>&1', $output, $retval);
+        exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/emptyCfg 2>&1', $output, $retval);
         self::assertEquals(1, $retval);
     }
 
@@ -68,12 +67,11 @@ class MockExecutionTest extends TestCase
         $this->rmDir('./tests/data/dynamicUserData/out');
     }
 
-    public function testJsonMapError()
-    {
-    }
-
     protected function rmDir($dirPath)
     {
+        if (!file_exists($dirPath)) {
+            return;
+        }
         foreach (new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator(
                 $dirPath,
@@ -83,7 +81,7 @@ class MockExecutionTest extends TestCase
         ) as $path) {
             $path->isDir() && !$path->isLink() ? rmdir($path->getPathname()) : unlink($path->getPathname());
         }
-        return rmdir($dirPath);
+        rmdir($dirPath);
     }
 
     protected function assertDirectoryEquals($pathToExpected, $pathToActual)
