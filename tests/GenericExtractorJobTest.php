@@ -2,6 +2,7 @@
 
 namespace Keboola\GenericExtractor\Tests;
 
+use Keboola\GenericExtractor\GenericExtractorJob;
 use Keboola\Juicer\Config\JobConfig;
 use Keboola\Juicer\Pagination\ResponseUrlScroller;
 use Keboola\Juicer\Config\Config;
@@ -210,7 +211,6 @@ class GenericExtractorJobTest extends ExtractorTestCase
      */
     public function testBuildParamsException()
     {
-
         $cfg = new JobConfig(1, [
             'params' => \Keboola\Utils\jsonDecode('{
                 "filters": {
@@ -270,7 +270,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         ]);
 
         $parser = Json::create(
-            new Config('ex-generic-test', 'test', []),
+            new Config('test', []),
             new NullLogger(),
             new Temp()
         );
@@ -311,7 +311,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 ['base_url' => 'http://example.com/api/']
             ),
             Json::create(
-                new Config('ex-generic-test', 'test', []),
+                new Config('test', []),
                 new NullLogger(),
                 new Temp()
             ),

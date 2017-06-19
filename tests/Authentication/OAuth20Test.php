@@ -14,7 +14,7 @@ class OAuth20Test extends ExtractorTestCase
 {
     public function testAuthenticateClientJson()
     {
-        $config = JsonFile::create(ROOT_PATH . '/tests/data/oauth20bearer/config.json');
+        $config = JsonFile::create(__DIR__ . '/../data/oauth20bearer/config.json');
 
         // FIXME base_url from cfg
         $client = new Client(['base_url' => 'http://example.com']);
@@ -36,7 +36,7 @@ class OAuth20Test extends ExtractorTestCase
 
     public function testMACAuth()
     {
-        $config = JsonFile::create(ROOT_PATH . '/tests/data/oauth20mac/config.json');
+        $config = JsonFile::create(__DIR__ . '/../data/oauth20mac/config.json');
 
         // FIXME base_url from cfg
         $client = new Client(['base_url' => 'http://example.com']);

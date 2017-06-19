@@ -8,11 +8,11 @@ use GuzzleHttp\Message\Response;
 use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Subscriber\Mock;
 use GuzzleHttp\Subscriber\History;
+use Keboola\GenericExtractor\Tests\ExtractorTestCase;
 use Keboola\Juicer\Client\RestClient;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
-class LoginTest extends TestCase
+class LoginTest extends ExtractorTestCase
 {
     public function testAuthenticateClient()
     {

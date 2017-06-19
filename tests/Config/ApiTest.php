@@ -6,16 +6,16 @@ use Keboola\GenericExtractor\Authentication\OAuth20;
 use Keboola\GenericExtractor\Authentication\OAuth20Login;
 use Keboola\GenericExtractor\Authentication\Query;
 use Keboola\GenericExtractor\Config\Api;
+use Keboola\GenericExtractor\Tests\ExtractorTestCase;
 use Keboola\Juicer\Config\Config;
 use Keboola\Juicer\Filesystem\JsonFile;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
-class ApiTest extends TestCase
+class ApiTest extends ExtractorTestCase
 {
     public function testCreateBaseUrlString()
     {
-        $config = new Config('testApp', 'testCfg', []);
+        $config = new Config('testCfg', []);
         $string = 'https://third.second.com/TEST/Something/';
 
         $url = Api::createBaseUrl(
@@ -28,7 +28,7 @@ class ApiTest extends TestCase
 
     public function testCreateBaseUrlFunction()
     {
-        $config = new Config('testApp', 'testCfg', []);
+        $config = new Config('testCfg', []);
         $config->setAttributes(['domain' => 'keboola']);
         $fn = [
             'function' => 'concat',
@@ -52,7 +52,7 @@ class ApiTest extends TestCase
      */
     public function testCreateBaseUrlFunctionError()
     {
-        $config = new Config('testApp', 'testCfg', []);
+        $config = new Config('testCfg', []);
         $fn = [
             'function' => 'concat',
             'args' => [
@@ -69,7 +69,7 @@ class ApiTest extends TestCase
 
     public function testCreateAuthQueryDeprecated()
     {
-        $config = new Config('testApp', 'testCfg', []);
+        $config = new Config('testCfg', []);
         $config->setAttributes(['key' => 'val']);
 
         // Deprecated way
@@ -93,7 +93,7 @@ class ApiTest extends TestCase
 
     public function testCreateAuthQuery()
     {
-        $config = new Config('testApp', 'testCfg', []);
+        $config = new Config('testCfg', []);
         $config->setAttributes(['key' => 'val']);
 
         $api = [
@@ -116,9 +116,9 @@ class ApiTest extends TestCase
 
     public function testCreateAuthOAuth20Bearer()
     {
-        $jsonConfig = JsonFile::create(ROOT_PATH . '/tests/data/oauth20bearer/config.json');
+        $jsonConfig = JsonFile::create(__DIR__ . '/../data/oauth20bearer/config.json');
 
-        $config = new Config('testApp', 'testCfg', []);
+        $config = new Config('testCfg', []);
 
         $api = $jsonConfig->get('parameters', 'api');
 
@@ -130,9 +130,9 @@ class ApiTest extends TestCase
 
     public function testCreateOauth2Login()
     {
-        $jsonConfig = JsonFile::create(ROOT_PATH . '/tests/data/oauth20login/config.json');
+        $jsonConfig = JsonFile::create(__DIR__ . '/../data/oauth20login/config.json');
 
-        $config = new Config('testApp', 'testCfg', []);
+        $config = new Config('testCfg', []);
 
         $api = $jsonConfig->get('parameters', 'api');
 
