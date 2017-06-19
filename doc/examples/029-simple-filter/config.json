@@ -13,7 +13,7 @@
                         {
                             "endpoint": "user/{user-id}",
                             "dataField": ".",
-                            "dataType": "user-deail",
+                            "dataType": "user-detail",
                             "placeholders": {
                                 "user-id": "id"
                             },
