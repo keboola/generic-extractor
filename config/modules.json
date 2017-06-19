@@ -1,6 +1,6 @@
 [
   {
-    "class": "Keboola\\ExGenericModule\\FindResponseArray",
+    "class": "Keboola\\GenericExtractor\\Response\\FindResponseArray",
     "level": 100,
     "type": "response"
   }
