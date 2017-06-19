@@ -43,7 +43,7 @@ class Configuration extends BaseConfiguration
     public function getApi($config, $authorization)
     {
         // TODO check if it exists (have some getter fn in parent Configuration)
-        return Api::create($this->getJSON('/config.json', 'parameters', 'api'), $config, $authorization);
+        return Api::create($this->logger, $this->getJSON('/config.json', 'parameters', 'api'), $config, $authorization);
     }
 
     /**
@@ -68,7 +68,7 @@ class Configuration extends BaseConfiguration
         $modules = ['response' => []];
 
         try {
-            $modulesCfg = JsonFile::create(ROOT_PATH . '/config/modules.json')->getData();
+            $modulesCfg = JsonFile::create(__DIR__ . '/../../../../config/modules.json')->getData();
         } catch (FileNotFoundException $e) {
             $modulesCfg = [];
         }
@@ -117,7 +117,7 @@ class Configuration extends BaseConfiguration
         }
 
         return [
-            'class' => new $config['class'](isset($config['config']) ? $config['config'] : null),
+            'class' => new $config['class']($this->logger, isset($config['config']) ? $config['config'] : null),
             'type' => $config['type'],
             'level' => $config['level']
         ];

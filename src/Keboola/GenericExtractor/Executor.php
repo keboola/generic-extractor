@@ -6,24 +6,27 @@ use Doctrine\Common\Cache\FilesystemCache;
 use GuzzleHttp\Subscriber\Cache\CacheStorage;
 use Keboola\GenericExtractor\Config\Configuration;
 use Keboola\Juicer\Config\Config;
+use Keboola\Juicer\Parser\Json;
 use Keboola\Temp\Temp;
 use Keboola\Juicer\Exception\UserException;
-use Psr\Log\LoggerInterface;
+use Monolog\Handler\AbstractHandler;
+use Monolog\Logger;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 class Executor
 {
     /**
-     * @var LoggerInterface
+     * @var Logger
      */
     private $logger;
 
     /**
      * Executor constructor.
-     * @param LoggerInterface $logger
+     * @param Logger $logger
      */
-    public function __construct(LoggerInterface $logger)
+    public function __construct(Logger $logger)
     {
         $this->logger = $logger;
     }
@@ -47,21 +50,39 @@ class Executor
         );
     }
 
+    /**
+     * @param bool $debug
+     */
+    private function setLogLevel($debug)
+    {
+        /** @var AbstractHandler $handler */
+        foreach ($this->logger->getHandlers() as $handler) {
+            if ($handler instanceof AbstractHandler) {
+                if ($debug) {
+                    $handler->setLevel($this->logger::DEBUG);
+                } else {
+                    $handler->setLevel($this->logger::INFO);
+                }
+            }
+        }
+    }
+
     public function run()
     {
-        $temp = new Temp(APP_NAME);
+        $temp = new Temp();
 
         $arguments = getopt("d::", ["data::"]);
         if (!isset($arguments["data"])) {
             throw new UserException('Data folder not set.');
         }
 
-        $configuration = new Configuration($arguments['data'], APP_NAME, $temp);
+        $configuration = new Configuration($arguments['data'], $temp, $this->logger);
 
         $configs = $configuration->getMultipleConfigs();
 
-        $metadata = $configuration->getConfigMetadata() ?: [];
-        $metadata['time']['previousStart'] = empty($metadata['time']['previousStart']) ? 0 : $metadata['time']['previousStart'];
+        $metadata = $configuration->getMetadata()->getData() ?: [];
+        $metadata['time']['previousStart'] =
+            empty($metadata['time']['previousStart']) ? 0 : $metadata['time']['previousStart'];
         $metadata['time']['currentStart'] = time();
 
         $modules = $this->loadModules($configuration);
@@ -72,13 +93,7 @@ class Executor
         $results = [];
         /** @var Config[] $configs */
         foreach ($configs as $config) {
-            // Reinitialize logger depending on debug status
-            if ($config->getAttribute('debug')) {
-                Logger::initLogger(APP_NAME, true);
-            } else {
-                Logger::initLogger(APP_NAME);
-            }
-
+            $this->setLogLevel($config->getAttribute('debug'));
             $api = $configuration->getApi($config, $authorization);
 
             if (!empty($config->getAttribute('outputBucket'))) {
@@ -112,8 +127,10 @@ class Executor
 
         foreach ($results as $bucket => $result) {
             $this->logger->debug("Processing results for {$bucket}.");
+            /** @var Json $parser */
+            $parser = $result['parser'];
             $configuration->storeResults(
-                $result['parser']->getResults(),
+                $parser->getResults(),
                 $bucket == "__kbc_default" ? null : $bucket,
                 true,
                 $result['incremental']
@@ -124,9 +141,10 @@ class Executor
             $fs = new Filesystem();
             $folders = $folderFinder->directories()->in($arguments['data'] . "/out/tables")->depth(0);
             foreach ($folders as $folder) {
-                //$files = $finder->files()->in($folder->getPathname())->depth(0);
+                /** @var SplFileInfo $folder */
                 $filesFinder = new Finder();
                 $files = $filesFinder->files()->in($folder->getPathname())->depth(0);
+                /** @var SplFileInfo $file */
                 foreach ($files as $file) {
                     $destination =
                         $arguments['data'] . "/out/tables/" . basename($folder->getPathname()) .

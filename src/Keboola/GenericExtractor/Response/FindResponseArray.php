@@ -4,7 +4,7 @@ namespace Keboola\GenericExtractor\Response;
 
 use Keboola\GenericExtractor\Modules\ResponseModuleInterface;
 use Keboola\Juicer\Config\JobConfig;
-use	Keboola\Juicer\Exception\UserException;
+use Keboola\Juicer\Exception\UserException;
 use Psr\Log\LoggerInterface;
 
 class FindResponseArray implements ResponseModuleInterface
@@ -63,7 +63,7 @@ class FindResponseArray implements ResponseModuleInterface
         } elseif (is_object($response)) {
             // Find arrays in the response
             $arrays = [];
-            foreach($response as $key => $value) {
+            foreach ($response as $key => $value) {
                 if (is_array($value)) {
                     $arrays[$key] = $value;
                 } // TODO else {$this->metadata[$key] = json_encode($value);} ? return [$data,$metadata];

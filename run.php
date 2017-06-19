@@ -1,35 +1,43 @@
 <?php
 
 use Keboola\GenericExtractor\Executor;
-use Keboola\Juicer\Common\Logger;
 use Keboola\Juicer\Exception\ApplicationException;
 use Keboola\Juicer\Exception\UserException;
 
-require_once(dirname(__FILE__) . "/bootstrap.php");
+require_once(__DIR__ . "/vendor/autoload.php");
 
-const APP_NAME = 'ex-generic-v2';
+set_error_handler(function ($severity, $message, $file, $line) {
+    if (!(error_reporting() & $severity)) {
+        // This error code is not included in error_reporting
+        return;
+    }
+    throw new ErrorException($message, 0, $severity, $file, $line);
+});
 
-function userError(UserException $e)
-{
-    Logger::log('error', $e->getMessage(), (array) $e->getData());
-    exit(1);
-}
+// initialize logger
+$logger = new Monolog\Logger("logger");
+$stream = fopen('php://stdout', 'r');
+$logger->pushHandler(new \Monolog\Handler\StreamHandler($stream));
+//$logger->debug("Starting up");
 
 try {
     $executor = new Executor($logger);
     $executor->run();
 } catch (UserException $e) {
-    userError($e);
+    $logger->error($e->getMessage(), (array)$e->getData());
+    exit(1);
 } catch (ApplicationException $e) {
-    Logger::log('error', $e->getMessage(), (array) $e->getData());
-    exit($e->getCode() > 1 ? $e->getCode(): 2);
+    $logger->error($e->getMessage(), (array)$e->getData());
+    exit($e->getCode() > 1 ? $e->getCode() : 2);
 } catch (Exception $e) {
     if ($e instanceof \GuzzleHttp\Exception\RequestException
         && $e->getPrevious() instanceof UserException) {
-        userError($e->getPrevious());
+        /** @var UserException $ex */
+        $ex = $e->getPrevious();
+        $logger->error($ex->getMessage(), (array)$ex->getData());
+        exit(1);
     }
-
-    Logger::log('error', $e->getMessage(), [
+    $logger->error($e->getMessage(), [
         'errFile' => $e->getFile(),
         'errLine' => $e->getLine(),
         'trace' => $e->getTrace(),
@@ -38,5 +46,5 @@ try {
     exit(2);
 }
 
-Logger::log('info', "Extractor finished successfully.");
+$logger->info("Extractor finished successfully.");
 exit(0);

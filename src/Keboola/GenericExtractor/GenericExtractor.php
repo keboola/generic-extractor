@@ -112,7 +112,7 @@ class GenericExtractor
 
         $this->auth->authenticateClient($client);
         // Verbose Logging of all requests
-        $client->getClient()->getEmitter()->attach(new LogRequest);
+        $client->getClient()->getEmitter()->attach(new LogRequest($this->logger));
 
         if ($this->cache) {
             CacheSubscriber::attach(

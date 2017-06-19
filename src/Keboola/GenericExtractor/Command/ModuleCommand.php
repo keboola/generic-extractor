@@ -44,7 +44,7 @@ class ModuleCommand extends Command
     {
         $config = YamlFile::create($path)->getData();
         // TODO check for type&class
-        $modulesYml = YamlFile::create(ROOT_PATH . '/config/modules.yml', 'w');
+        $modulesYml = YamlFile::create(__DIR__ . '/config/modules.yml', 'w');
 
         $modules = $modulesYml->getData();
         $modules[] = $config;
