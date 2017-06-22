@@ -2,9 +2,10 @@
 
 namespace Keboola\GenericExtractor\Config;
 
+use Keboola\CsvTable\Table;
+use Keboola\GenericExtractor\Exception\NoDataException;
 use Keboola\Juicer\Config\Config;
 use Keboola\Juicer\Config\JobConfig;
-use Keboola\Juicer\Exception\NoDataException;
 use Keboola\Juicer\Exception\UserException;
 use Keboola\Temp\Temp;
 use Psr\Log\LoggerInterface;
@@ -54,10 +55,10 @@ class Configuration
      */
     public function getMultipleConfigs()
     {
-        try {
-            $iterations = $this->getJSON('/config.json', 'parameters', 'iterations');
-        } catch (NoDataException $e) {
-            $iterations = [null];
+        $iterations = [null];
+        $json = $this->getJSON('/config.json');
+        if (!empty($json['parameters']['iterations'])) {
+            $iterations = $json['parameters']['iterations'];
         }
 
         $configs = [];
@@ -76,7 +77,7 @@ class Configuration
     public function getConfig(array $params = null)
     {
         try {
-            $configJson = $this->getJSON('/config.json', 'parameters', 'config');
+            $configJson = $this->getJSON('/config.json')['parameters']['config'];
         } catch (NoDataException $e) {
             throw new UserException($e->getMessage(), 0, $e);
         }
@@ -126,7 +127,14 @@ class Configuration
      */
     public function getMetadata()
     {
-        return json_decode(file_get_contents($this->dataDir . "/in/state.json"), true);
+        $fileName = $this->dataDir . "/in/state.json";
+        if (file_exists($fileName)) {
+            $json = json_decode(file_get_contents($fileName), true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                return $json;
+            }
+        }
+        return null;
     }
 
     public function saveConfigMetadata(array $data)
@@ -143,18 +151,26 @@ class Configuration
 
     /**
      * @param string $filePath
-     * @return mixed
+     * @return array
+     * @throws NoDataException
      */
     protected function getJSON($filePath)
     {
-        $path = func_get_args();
-        $filePath = array_shift($path);
-
-        if (empty($this->jsonFiles[$filePath])) {
-            $this->jsonFiles[$filePath] = json_decode(file_get_contents($this->dataDir . $filePath), true);
+        $fileName = $this->dataDir . $filePath;
+        if (file_exists($fileName)) {
+            if (empty($this->jsonFiles[$filePath])) {
+                $this->jsonFiles[$filePath] = json_decode(file_get_contents($fileName), true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    return $this->jsonFiles[$filePath];
+                } else {
+                    throw new NoDataException("Invalid JSON: " . json_last_error_msg());
+                }
+            } else {
+                return $this->jsonFiles[$filePath];
+            }
+        } else {
+            throw new NoDataException("File $fileName not found.");
         }
-
-        return call_user_func_array([$this->jsonFiles[$filePath], 'get'], $path);
     }
 
     /**
@@ -203,11 +219,11 @@ class Configuration
      */
     public function getCache()
     {
-        try {
-            return $this->getJSON('/config.json', 'parameters', 'cache');
-        } catch (NoDataException $e) {
-            return [];
+        $json = $this->getJSON('/config.json');
+        if (!empty($json['parameters']['cache'])) {
+            return $json['parameters']['cache'];
         }
+        return [];
     }
 
     /**
@@ -226,7 +242,7 @@ class Configuration
     public function getApi($config, $authorization)
     {
         // TODO check if it exists (have some getter fn in parent Configuration)
-        return Api::create($this->logger, $this->getJSON('/config.json', 'parameters', 'api'), $config, $authorization);
+        return Api::create($this->logger, $this->getJSON('/config.json')['parameters']['api'], $config, $authorization);
     }
 
     /**
@@ -234,10 +250,10 @@ class Configuration
      */
     public function getAuthorization()
     {
-        try {
-            return $this->getJSON('/config.json', 'authorization');
-        } catch (NoDataException $e) {
-            return [];
+        $json = $this->getJSON('/config.json');
+        if (!empty($json['authorization'])) {
+            return $json['authorization'];
         }
+        return [];
     }
 }
