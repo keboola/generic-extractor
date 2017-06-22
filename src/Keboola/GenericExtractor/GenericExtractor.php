@@ -27,31 +27,32 @@ class GenericExtractor
      * @var string
      */
     protected $baseUrl;
+
     /**
      * @var array
      */
     protected $headers;
+
     /**
      * @var ScrollerInterface
      */
     protected $scroller;
+
     /**
      * @var AuthInterface
      */
     protected $auth;
+
     /**
      * @var ParserInterface
      */
     protected $parser;
-    /**
-     * ['response' => ResponseModuleInterface[], ...]
-     * @var array
-     */
-    protected $modules;
+
     /**
      * @var array
      */
     protected $defaultRequestOptions = [];
+
     /**
      * @var array
      */
@@ -155,7 +156,6 @@ class GenericExtractor
         $job->setAttributes($config->getAttributes());
         $job->setMetadata($this->metadata);
         $job->setBuilder($builder);
-        $job->setResponseModules($this->modules['response']);
         if (!empty($config->getAttribute('userData'))) {
             $job->setUserParentId(
                 is_scalar($config->getAttribute('userData'))
@@ -256,14 +256,6 @@ class GenericExtractor
         }
 
         return $this->parser;
-    }
-
-    /**
-     * @param array $modules ['response' => ResponseModuleInterface[]]
-     */
-    public function setModules(array $modules)
-    {
-        $this->modules = $modules;
     }
 
     public function setDefaultRequestOptions(array $options)

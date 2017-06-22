@@ -80,12 +80,10 @@ class Executor
 
         $configs = $configuration->getMultipleConfigs();
 
-        $metadata = $configuration->getMetadata()->getData() ?: [];
+        $metadata = $configuration->getMetadata() ?: [];
         $metadata['time']['previousStart'] =
             empty($metadata['time']['previousStart']) ? 0 : $metadata['time']['previousStart'];
         $metadata['time']['currentStart'] = time();
-
-        $modules = $this->loadModules($configuration);
 
         $authorization = $configuration->getAuthorization();
         $cacheStorage = $this->initCacheStorage($configuration);
@@ -115,7 +113,6 @@ class Executor
             }
             $extractor->setApi($api);
             $extractor->setMetadata($metadata);
-            $extractor->setModules($modules);
 
             $extractor->run($config);
 
@@ -159,15 +156,5 @@ class Executor
         $metadata['time']['previousStart'] = $metadata['time']['currentStart'];
         unset($metadata['time']['currentStart']);
         $configuration->saveConfigMetadata($metadata);
-    }
-
-    /**
-     * @param Configuration $configuration
-     * @return array ['response' => ResponseModuleInterface[]]
-     */
-    protected function loadModules(Configuration $configuration)
-    {
-        $modules = $configuration->getModules();
-        return $modules;
     }
 }

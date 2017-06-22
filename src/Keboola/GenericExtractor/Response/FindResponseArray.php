@@ -2,12 +2,11 @@
 
 namespace Keboola\GenericExtractor\Response;
 
-use Keboola\GenericExtractor\Modules\ResponseModuleInterface;
 use Keboola\Juicer\Config\JobConfig;
 use Keboola\Juicer\Exception\UserException;
 use Psr\Log\LoggerInterface;
 
-class FindResponseArray implements ResponseModuleInterface
+class FindResponseArray
 {
     /**
      * @var LoggerInterface

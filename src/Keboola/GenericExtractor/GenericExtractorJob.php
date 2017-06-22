@@ -4,7 +4,7 @@ namespace Keboola\GenericExtractor;
 
 use Keboola\GenericExtractor\Response\Filter;
 use Keboola\GenericExtractor\Config\UserFunction;
-use Keboola\GenericExtractor\Modules\ResponseModuleInterface;
+use Keboola\GenericExtractor\Response\FindResponseArray;
 use Keboola\Juicer\Extractor\RecursiveJob;
 use Keboola\Juicer\Config\JobConfig;
 use Keboola\Juicer\Client\RequestInterface;
@@ -19,31 +19,32 @@ class GenericExtractorJob extends RecursiveJob
      * @var array
      */
     protected $params;
+
     /**
      * @var array
      */
-    protected $attributes;
+    protected $attributes = [];
+
     /**
      * @var array
      */
     protected $metadata;
+
     /**
      * @var string
      */
     protected $lastResponseHash;
+
     /**
      * @var Builder
      */
     protected $stringBuilder;
+
     /**
      * Data to append to the root result
      * @var array
      */
     protected $userParentId;
-    /**
-     * @var ResponseModuleInterface[]
-     */
-    protected $responseModules = [];
 
     /**
      * {@inheritdoc}
@@ -152,16 +153,11 @@ class GenericExtractorJob extends RecursiveJob
         return UserFunction::build(
             $jobUserData,
             [
-                'attr' => $this->getAttributes(),
+                'attr' => $this->attributes,
                 'time' => $this->metadata['time'] ?: []
             ],
             $this->stringBuilder
         );
-    }
-
-    protected function getAttributes()
-    {
-        return $this->attributes ?: [];
     }
 
     /**
@@ -198,7 +194,6 @@ class GenericExtractorJob extends RecursiveJob
         $job->setMetadata($this->metadata);
         $job->setAttributes($this->attributes);
         $job->setBuilder($this->stringBuilder);
-        $job->setResponseModules($this->responseModules);
         return $job;
     }
 
@@ -210,8 +205,6 @@ class GenericExtractorJob extends RecursiveJob
      * @param JobConfig $config
      * @param array $data
      * @return array
-     * @todo allow nesting
-     * @todo turn into a module
      */
     protected function filterResponse(JobConfig $config, array $data)
     {
@@ -219,13 +212,15 @@ class GenericExtractorJob extends RecursiveJob
         return $filter->run($data);
     }
 
+    /**
+     * @param array|object $response
+     * @param JobConfig $jobConfig
+     * @return array
+     */
     protected function runResponseModules($response, JobConfig $jobConfig)
     {
-        foreach ($this->responseModules as $module) {
-            $response = $module->process($response, $jobConfig);
-        }
-
-        return $response;
+        $responseModule = new FindResponseArray($this->logger);
+        return $responseModule->process($response, $jobConfig);
     }
 
     /**
@@ -264,10 +259,5 @@ class GenericExtractorJob extends RecursiveJob
         }
 
         $this->userParentId = $id;
-    }
-
-    public function setResponseModules(array $modules)
-    {
-        $this->responseModules = $modules;
     }
 }
