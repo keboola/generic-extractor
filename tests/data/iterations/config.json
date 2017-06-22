@@ -1,0 +1,29 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "test",
+            "authentication": {
+                "type": "basic"
+            }
+        },
+        "config": {
+            "id": "multiCfg",
+            "jobs": [
+                {
+                    "endpoint": "exports/tickets.json",
+                    "dataType": "tickets_export"
+                }
+            ]
+        },
+        "iterations": [
+            {
+                "username": "aaa",
+                "password": "apass"
+            },
+            {
+                "username": "bbb",
+                "password": "bpass"
+            }
+        ]
+    }
+}

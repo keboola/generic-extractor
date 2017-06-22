@@ -1,0 +1,31 @@
+{
+  "parameters": {
+    "api": {
+      "baseUrl": "http://example.com/"
+    },
+    "config": {
+      "jobs": [
+        {
+          "endpoint": "root",
+          "children": [
+            {
+              "endpoint": "root/{1:id}",
+              "placeholders": {
+                "1:id": "id"
+              },
+              "children": [
+                {
+                  "endpoint": "root/{2:id}/{1:id}",
+                  "placeholders": {
+                    "2:id": "id",
+                    "1:id": "id"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
