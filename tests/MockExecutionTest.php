@@ -54,17 +54,17 @@ class MockExecutionTest extends TestCase
 
     public function testDynamicUserData()
     {
-        exec('php ./run.php --data=./tests/data/dynamicUserData 2>&1', $output, $retval);
-        $expectedFile = file('./tests/data/dynamicUserData/expected/tables/get');
+        exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/dynamicUserData 2>&1', $output, $retval);
+        $expectedFile = file(__DIR__ . '/data/dynamicUserData/expected/tables/get');
         foreach ($expectedFile as &$row) {
             $row = str_replace('{{date}}', date('Y-m-d'), $row);
         }
 
-        self::assertEquals($expectedFile, file('./tests/data/dynamicUserData/out/tables/get'));
+        self::assertEquals($expectedFile, file(__DIR__ . '/data/dynamicUserData/out/tables/get'));
         // 2nd row; 3rd column should contain the date
-        self::assertEquals(date('Y-m-d'), str_getcsv(file('./tests/data/dynamicUserData/out/tables/get')[1])[2]);
+        self::assertEquals(date('Y-m-d'), str_getcsv(file(__DIR__ . '/data/dynamicUserData/out/tables/get')[1])[2]);
 
-        $this->rmDir('./tests/data/dynamicUserData/out');
+        $this->rmDir(__DIR__ . '/data/dynamicUserData/out');
     }
 
     protected function rmDir($dirPath)
