@@ -6,7 +6,6 @@ use Keboola\GenericExtractor\Authentication\OAuth20;
 use GuzzleHttp\Client;
 use Keboola\GenericExtractor\Tests\ExtractorTestCase;
 use Keboola\Juicer\Client\RestClient;
-use Keboola\Juicer\Filesystem\JsonFile;
 use Keboola\Code\Builder;
 use Psr\Log\NullLogger;
 
@@ -14,16 +13,14 @@ class OAuth20Test extends ExtractorTestCase
 {
     public function testAuthenticateClientJson()
     {
-        $config = JsonFile::create(__DIR__ . '/../data/oauth20bearer/config.json');
-
-        // FIXME base_url from cfg
+        $config = json_decode(file_get_contents(__DIR__ . '/../data/oauth20bearer/config.json'), true);
         $client = new Client(['base_url' => 'http://example.com']);
         $client->setDefaultOption('headers', ['X-Test' => 'test']);
         $restClient = new RestClient($client, new NullLogger());
         $auth = new OAuth20(
-            $config->get('authorization'),
-            $config->get('parameters', 'api', 'authentication'),
-            new Builder
+            $config['authorization'],
+            $config['parameters']['api']['authentication'],
+            new Builder()
         );
         $auth->authenticateClient($restClient);
 
@@ -36,22 +33,20 @@ class OAuth20Test extends ExtractorTestCase
 
     public function testMACAuth()
     {
-        $config = JsonFile::create(__DIR__ . '/../data/oauth20mac/config.json');
-
-        // FIXME base_url from cfg
+        $config = json_decode(file_get_contents(__DIR__ . '/../data/oauth20mac/config.json'), true);
         $client = new Client(['base_url' => 'http://example.com']);
         $restClient = new RestClient($client, new NullLogger());
         $auth = new OAuth20(
-            $config->get('authorization'),
-            $config->get('parameters', 'api', 'authentication'),
-            new Builder
+            $config['authorization'],
+            $config['parameters']['api']['authentication'],
+            new Builder()
         );
         $auth->authenticateClient($restClient);
 
         $request = $client->createRequest('GET', '/resource?k=v');
         self::sendRequest($client, $request);
 
-        $authData = json_decode($config->get('authorization', 'oauth_api', 'credentials', '#data'));
+        $authData = json_decode($config['authorization']['oauth_api']['credentials']['#data']);
 
         $authHeader = $request->getHeader('Authorization');
         $match = preg_match(
@@ -86,6 +81,6 @@ class OAuth20Test extends ExtractorTestCase
 
         self::assertEquals($expectedAuthHeader, $authHeader);
         // Header gets last newline trimmed
-        self::assertEquals($macString, $request->getHeader('Test') . PHP_EOL . PHP_EOL);
+        self::assertEquals($macString, $request->getHeader('Test') . "\n\n");
     }
 }

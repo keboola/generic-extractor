@@ -8,7 +8,6 @@ use Keboola\GenericExtractor\Authentication\Query;
 use Keboola\GenericExtractor\Config\Api;
 use Keboola\GenericExtractor\Tests\ExtractorTestCase;
 use Keboola\Juicer\Config\Config;
-use Keboola\Juicer\Filesystem\JsonFile;
 use Psr\Log\NullLogger;
 
 class ApiTest extends ExtractorTestCase
@@ -116,8 +115,7 @@ class ApiTest extends ExtractorTestCase
 
     public function testCreateAuthOAuth20Bearer()
     {
-        $jsonConfig = JsonFile::create(__DIR__ . '/../data/oauth20bearer/config.json');
-
+        $jsonConfig = json_decode(file_get_contents(__DIR__ . '/../data/oauth20bearer/config.json'), true);
         $config = new Config('testCfg', []);
 
         $api = $jsonConfig->get('parameters', 'api');
@@ -130,8 +128,7 @@ class ApiTest extends ExtractorTestCase
 
     public function testCreateOauth2Login()
     {
-        $jsonConfig = JsonFile::create(__DIR__ . '/../data/oauth20login/config.json');
-
+        $jsonConfig = json_decode(file_get_contents(__DIR__ . '/../data/oauth20login/config.json'), true);
         $config = new Config('testCfg', []);
 
         $api = $jsonConfig->get('parameters', 'api');
