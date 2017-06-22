@@ -19,7 +19,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Keboola\\GenericExtractor\\": "src/Keboola/GenericExtractor",
+            "Keboola\\GenericExtractor\\": "src/",
             "Keboola\\GenericExtractor\\Tests\\": "tests/"
         }
     }
