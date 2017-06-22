@@ -2,8 +2,8 @@
 
 namespace Keboola\GenericExtractor\Tests\Config;
 
+use Keboola\GenericExtractor\Config\Configuration;
 use Keboola\Juicer\Config\Config;
-use Keboola\Juicer\Config\Configuration;
 use Keboola\Juicer\Config\JobConfig;
 use Keboola\Juicer\Exception\UserException;
 use Keboola\Juicer\Tests\ExtractorTestCase;
@@ -16,21 +16,21 @@ class ConfigurationTest extends ExtractorTestCase
 {
     public function testStoreResults()
     {
-        $resultsPath = './data/storeResultsTest' . uniqid();
+        $resultsPath = __DIR__ . '/../data/storeResultsTest' . uniqid();
 
         $this->storeResults($resultsPath, 'full', false);
     }
 
     public function testIncrementalResults()
     {
-        $resultsPath = './data/storeResultsTest' . uniqid();
+        $resultsPath = __DIR__ . '/../data/storeResultsTest' . uniqid();
 
         $this->storeResults($resultsPath, 'incremental', true);
     }
 
     public function testDefaultBucketResults()
     {
-        $resultsPath = './data/storeResultsDefaultBucket' . uniqid();
+        $resultsPath = __DIR__ . '/../data/storeResultsDefaultBucket' . uniqid();
 
         $configuration = new Configuration($resultsPath, new Temp(), new NullLogger());
 
@@ -45,7 +45,7 @@ class ConfigurationTest extends ExtractorTestCase
 
         $configuration->storeResults($files);
 
-        foreach (new \DirectoryIterator(__DIR__ . '/../data/storeResultsDefaultBucket/out/tables/') as $file) {
+        foreach (new \FilesystemIterator(__DIR__ . '/../data/storeResultsDefaultBucket/out/tables/') as $file) {
             self::assertFileEquals($file->getPathname(), $resultsPath . '/out/tables/' . $file->getFilename());
         }
 
@@ -66,8 +66,11 @@ class ConfigurationTest extends ExtractorTestCase
 
         $configuration->storeResults($files, $name, true, $incremental);
 
-        foreach (new \DirectoryIterator(__DIR__ . '/../data/storeResultsTest/out/tables/' . $name) as $file) {
-            self::assertFileEquals($file->getPathname(), $resultsPath . '/out/tables/' . $name . '/' . $file->getFilename());
+        foreach (new \FilesystemIterator(__DIR__ . '/../data/storeResultsTest/out/tables/' . $name) as $file) {
+            self::assertFileEquals(
+                $file->getPathname(),
+                $resultsPath . '/out/tables/' . $name . '/' . $file->getFilename()
+            );
         }
 
         $this->rmDir($resultsPath);
@@ -88,7 +91,7 @@ class ConfigurationTest extends ExtractorTestCase
 
     public function testSaveConfigMetadata()
     {
-        $resultsPath = './data/metadataTest' . uniqid();
+        $resultsPath = __DIR__ . '/../data/metadataTest' . uniqid();
 
         $configuration = new Configuration($resultsPath, new Temp('test'), new NullLogger());
 
@@ -127,7 +130,10 @@ class ConfigurationTest extends ExtractorTestCase
         $json = json_decode(file_get_contents(__DIR__ . '/../data/iterations/config.json'), true);
 
         foreach ($json['parameters']['iterations'] as $i => $params) {
-            self::assertEquals(array_replace(['id' => $json['parameters']['config']['id']], $params), $configs[$i]->getAttributes());
+            self::assertEquals(
+                array_replace(['id' => $json['parameters']['config']['id']], $params),
+                $configs[$i]->getAttributes()
+            );
         }
         self::assertEquals($configs[0]->getJobs(), $configs[1]->getJobs());
         self::assertContainsOnlyInstancesOf(Config::class, $configs);
@@ -146,9 +152,8 @@ class ConfigurationTest extends ExtractorTestCase
     public function testGetJson()
     {
         $configuration = new Configuration(__DIR__ . '/../data/simple_basic', new Temp(), new NullLogger());
-
-        $result = self::callMethod($configuration, 'getJson', ['/config.json', 'parameters', 'config', 'id']);
-
+        $result = self::callMethod($configuration, 'getJson', ['/config.json']);
+        $result = $result['parameters']['config']['id'];
         self::assertEquals('multiCfg', $result);
     }
 
