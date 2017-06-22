@@ -3,7 +3,9 @@
 namespace Keboola\GenericExtractor\Tests;
 
 use Keboola\GenericExtractor\GenericExtractorJob;
+use Keboola\Json\Parser;
 use Keboola\Juicer\Config\JobConfig;
+use Keboola\Juicer\Exception\UserException;
 use Keboola\Juicer\Pagination\ResponseUrlScroller;
 use Keboola\Juicer\Config\Config;
 use Keboola\Juicer\Client\RestClient;
@@ -317,5 +319,167 @@ class GenericExtractorJobTest extends ExtractorTestCase
             ),
             new NullLogger()
         );
+    }
+
+    public function testGetDataType()
+    {
+        $jobConfig = JobConfig::create(['endpoint' => 'resources/res.json', 'dataType' => 'res']);
+
+        $job = new GenericExtractorJob(
+            $jobConfig,
+            RestClient::create(new NullLogger()),
+            new Json(Parser::create(new NullLogger()), new NullLogger()),
+            new NullLogger()
+        );
+
+        self::assertEquals($jobConfig->getDataType(), self::callMethod($job, 'getDataType', []));
+    }
+
+    public function testGetDataTypeFromEndpoint()
+    {
+        $jobConfig = JobConfig::create(['endpoint' => 'resources/res.json']);
+
+        $job = new GenericExtractorJob(
+            $jobConfig,
+            RestClient::create(new NullLogger()),
+            new Json(Parser::create(new NullLogger()), new NullLogger()),
+            new NullLogger()
+        );
+
+        self::assertEquals($jobConfig->getEndpoint(), self::callMethod($job, 'getDataType', []));
+    }
+
+    /**
+     * @dataProvider placeholderProvider
+     * @param $field
+     * @param $expectedValue
+     */
+    public function testGetPlaceholder($field, $expectedValue)
+    {
+        $job = $this->getMockBuilder(GenericExtractorJob::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $value = self::callMethod(
+            $job,
+            'getPlaceholder',
+            [ // $placeholder, $field, $parentResults
+                '1:id',
+                $field,
+                [
+                    (object) [
+                        'field' => 'data',
+                        'id' => '1:1'
+                    ]
+                ]
+            ]
+        );
+
+        self::assertEquals(
+            [
+                'placeholder' => '1:id',
+                'field' => 'id',
+                'value' => $expectedValue
+            ],
+            $value
+        );
+    }
+
+    public function placeholderProvider()
+    {
+        return [
+            [
+                [
+                    'path' => 'id',
+                    'function' => 'urlencode',
+                    'args' => [
+                        ['placeholder' => 'value']
+                    ]
+                ],
+                '1%3A1'
+            ],
+            [
+                'id',
+                '1:1'
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider placeholderValueProvider
+     * @param $level
+     * @param $expected
+     */
+    public function testGetPlaceholderValue($level, $expected)
+    {
+        $job = $this->getMockBuilder(GenericExtractorJob::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $value = self::callMethod(
+            $job,
+            'getPlaceholderValue',
+            [ // $field, $parentResults, $level, $placeholder
+                'id',
+                [
+                    0 => ['id' => 123],
+                    1 => ['id' => 456]
+                ],
+                $level,
+                '1:id'
+            ]
+        );
+
+        self::assertEquals($expected, $value);
+    }
+
+    /**
+     * @dataProvider placeholderErrorValueProvider
+     * @param $data
+     * @param $message
+     */
+    public function testGetPlaceholderValueError($data, $message)
+    {
+        $job = $this->getMockBuilder(GenericExtractorJob::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        try {
+            self::callMethod(
+                $job,
+                'getPlaceholderValue',
+                [ // $field, $parentResults, $level, $placeholder
+                    'id',
+                    $data,
+                    0,
+                    '1:id'
+                ]
+            );
+            self::fail('UserException was not thrown');
+        } catch (UserException $e) {
+            self::assertEquals($message, $e->getMessage());
+        }
+    }
+
+    public function placeholderErrorValueProvider()
+    {
+        return [
+            [[], 'Level 1 not found in parent results! Maximum level: 0'],
+            [[0 => ['noId' => 'noVal']], 'No value found for 1:id in parent result. (level: 1)']
+        ];
+    }
+
+    public function placeholderValueProvider()
+    {
+        return [
+            [
+                0,
+                123
+            ],
+            [
+                1,
+                456
+            ]
+        ];
     }
 }
