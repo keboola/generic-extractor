@@ -15,12 +15,12 @@ class MockExecutionTest extends TestCase
         $this->rmDir(__DIR__ . "/data/{$configDir}/out");
         exec("php " . __DIR__ . "/../run.php --data=" . __DIR__ . "/data/{$configDir} 2>&1", $output, $retval);
 
+        self::assertContains('Extractor finished successfully.', $output[0]);
         self::assertDirectoryEquals(
             __DIR__ . "/data/{$configDir}/expected/tables",
             __DIR__ . "/data/{$configDir}/out/tables"
         );
 
-        self::assertContains('Extractor finished successfully.', $output[0]);
         self::assertEquals(0, $retval);
         $this->rmDir(__DIR__ . "/data/{$configDir}/out");
     }
@@ -49,7 +49,8 @@ class MockExecutionTest extends TestCase
     public function testEmptyCfg()
     {
         exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/emptyCfg 2>&1', $output, $retval);
-        self::assertEquals(1, $retval);
+        self::assertContains('Invalid JSON: Syntax error ', implode("\n", $output));
+        self::assertEquals(2, $retval);
     }
 
     public function testDynamicUserData()
