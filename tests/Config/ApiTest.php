@@ -118,9 +118,9 @@ class ApiTest extends ExtractorTestCase
         $jsonConfig = json_decode(file_get_contents(__DIR__ . '/../data/oauth20bearer/config.json'), true);
         $config = new Config('testCfg', []);
 
-        $api = $jsonConfig->get('parameters', 'api');
+        $api = $jsonConfig['parameters']['api'];
 
-        $authorization = $jsonConfig->get('authorization');
+        $authorization = $jsonConfig['authorization'];
 
         $oauth = Api::createAuth(new NullLogger(), $api, $config, $authorization);
         self::assertInstanceOf(OAuth20::class, $oauth);
@@ -131,9 +131,8 @@ class ApiTest extends ExtractorTestCase
         $jsonConfig = json_decode(file_get_contents(__DIR__ . '/../data/oauth20login/config.json'), true);
         $config = new Config('testCfg', []);
 
-        $api = $jsonConfig->get('parameters', 'api');
-
-        $authorization = $jsonConfig->get('authorization');
+        $api = $jsonConfig['parameters']['api'];
+        $authorization = $jsonConfig['authorization'];
 
         $oauth = Api::createAuth(new NullLogger(), $api, $config, $authorization);
         self::assertInstanceOf(OAuth20Login::class, $oauth);
