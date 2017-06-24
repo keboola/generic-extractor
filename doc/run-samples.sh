@@ -2,22 +2,22 @@
 set -e
 
 run_example() {
-	if [ -z "$1" ] ; then
-    	printf "No example name provided."
-    	exit 1 	
-   	else
-    	printf "\nRunning example $1\n"
-   	fi
-   	EXAMPLE_NAME=$1
-	rm -rf examples/$1/out/*
-	mkdir -p examples/$1/out/tables/
-	docker-compose run -e "KBC_EXAMPLE_NAME=$EXAMPLE_NAME" extractor
-	if diff --brief --recursive examples/$EXAMPLE_NAME/out/tables/ examples/$EXAMPLE_NAME/_sample_out/ ; then
-		printf "Example $EXAMPLE_NAME successfull.\n"
-	else
-		printf "Example $EXAMPLE_NAME failed.\n"
-		diff --recursive examples/$EXAMPLE_NAME/out/tables/ examples/$EXAMPLE_NAME/_sample_out/
-	fi
+    if [ -z "$1" ] ; then
+        printf "No example name provided."
+        exit 1
+    else
+        printf "\nRunning example $1\n"
+    fi
+    EXAMPLE_NAME=$1
+    rm -rf examples/$1/out/*
+    mkdir -p examples/$1/out/tables/
+    docker-compose run -e "KBC_EXAMPLE_NAME=$EXAMPLE_NAME" extractor
+    if diff --brief --recursive examples/${EXAMPLE_NAME}/out/tables/ examples/${EXAMPLE_NAME}/_sample_out/ ; then
+        printf "Example $EXAMPLE_NAME successful.\n"
+    else
+        printf "Example $EXAMPLE_NAME failed.\n"
+        diff --recursive examples/${EXAMPLE_NAME}/out/tables/ examples/${EXAMPLE_NAME}/_sample_out/
+    fi
 }
 
 # Start mock server
@@ -80,7 +80,7 @@ run_example "053-pagination-pagenum-override"
 run_example "054-pagination-response-url-basic"
 run_example "055-pagination-response-url-params"
 run_example "056-pagination-response-url-params-override"
-run_example "057-pagination-response-param-basic"	
+run_example "057-pagination-response-param-basic"
 run_example "058-pagination-response-param-override"
 run_example "059-pagination-response-param-scroll-request"
 run_example "060-pagination-cursor-basic"
