@@ -354,7 +354,7 @@ class GenericExtractorJob
      */
     protected function parse(array $data, array $parentId = null)
     {
-        $this->parser->process($data, $this->getDataType(), $parentId);
+        $this->parser->process($data, $this->getDataType(), $this->getParentCols($parentId));
         $this->runChildJobs($data);
         return $data;
     }

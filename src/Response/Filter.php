@@ -117,7 +117,6 @@ class Filter
     }
 
     /**
-     * @todo Different modes - null/json_encode() non-scalars/forced json_encode()/?
      * @param mixed $item
      * @return string
      */
