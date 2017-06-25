@@ -5,7 +5,9 @@ namespace Keboola\GenericExtractor;
 use GuzzleHttp\Message\RequestInterface;
 use GuzzleHttp\Subscriber\Cache\CacheStorage;
 use GuzzleHttp\Subscriber\Cache\CacheSubscriber;
-use Keboola\GenericExtractor\Config\JuicerRest;
+use Keboola\GenericExtractor\Configuration\Api;
+use Keboola\GenericExtractor\Configuration\JuicerRest;
+use Keboola\GenericExtractor\Configuration\UserFunction;
 use Keboola\Juicer\Config\JobConfig;
 use Keboola\Juicer\Config\Config;
 use Keboola\Juicer\Client\RestClient;
@@ -14,15 +16,14 @@ use Keboola\Juicer\Parser\JsonMap;
 use Keboola\Juicer\Parser\ParserInterface;
 use Keboola\Juicer\Pagination\ScrollerInterface;
 use Keboola\GenericExtractor\Authentication\AuthInterface;
-use Keboola\GenericExtractor\Config\Api;
 use Keboola\GenericExtractor\Subscriber\LogRequest;
-use Keboola\GenericExtractor\Config\UserFunction;
 use Keboola\Code\Builder;
 use Keboola\Temp\Temp;
 use Psr\Log\LoggerInterface;
 
 class GenericExtractor
 {
+
     /**
      * @var string
      */

@@ -2,9 +2,7 @@
 
 namespace Keboola\GenericExtractor;
 
-use Doctrine\Common\Cache\FilesystemCache;
-use GuzzleHttp\Subscriber\Cache\CacheStorage;
-use Keboola\GenericExtractor\Config\Configuration;
+use Keboola\GenericExtractor\Configuration\Extractor;
 use Keboola\Juicer\Config\Config;
 use Keboola\Juicer\Parser\Json;
 use Keboola\Temp\Temp;
@@ -17,8 +15,6 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class Executor
 {
-    const CACHE_TTL = 604800;
-
     /**
      * @var Logger
      */
@@ -32,26 +28,6 @@ class Executor
     {
         $this->logger = $logger;
     }
-
-    /**
-     * @param Configuration $config
-     * @return CacheStorage|null
-     */
-    private function initCacheStorage(Configuration $config)
-    {
-        $cacheConfig = $config->getCache();
-
-        if (!$cacheConfig) {
-            return null;
-        }
-
-        return new CacheStorage(
-            new FilesystemCache($config->getDataDir() . '/cache'),
-            null,
-            !empty($cacheConfig['ttl']) ? (int) $cacheConfig['ttl'] : self::CACHE_TTL
-        );
-    }
-
 
     /**
      * @param bool $debug
@@ -79,7 +55,7 @@ class Executor
             throw new UserException('Data folder not set.');
         }
 
-        $configuration = new Configuration($arguments['data'], $temp, $this->logger);
+        $configuration = new Extractor($arguments['data'], $this->logger);
 
         $configs = $configuration->getMultipleConfigs();
 
@@ -87,15 +63,13 @@ class Executor
         $metadata['time']['previousStart'] =
             empty($metadata['time']['previousStart']) ? 0 : $metadata['time']['previousStart'];
         $metadata['time']['currentStart'] = time();
-
-        $authorization = $configuration->getAuthorization();
-        $cacheStorage = $this->initCacheStorage($configuration);
+        $cacheStorage = $configuration->getCache();
 
         $results = [];
         /** @var Config[] $configs */
         foreach ($configs as $config) {
             $this->setLogLevel($config->getAttribute('debug'));
-            $api = $configuration->getApi($config, $authorization);
+            $api = $configuration->getApi($config);
 
             if (!empty($config->getAttribute('outputBucket'))) {
                 $outputBucket = $config->getAttribute('outputBucket');
