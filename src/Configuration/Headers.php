@@ -1,6 +1,6 @@
 <?php
 
-namespace Keboola\GenericExtractor\Config;
+namespace Keboola\GenericExtractor\Configuration;
 
 use Keboola\Juicer\Config\Config;
 use Keboola\Juicer\Exception\UserException;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Keboola\GenericExtractor\Config;
+namespace Keboola\GenericExtractor\Configuration;
 
 use Keboola\CsvTable\Table;
 use Keboola\GenericExtractor\Exception\NoDataException;
@@ -11,43 +11,76 @@ use Keboola\Temp\Temp;
 use Psr\Log\LoggerInterface;
 
 /**
- * {@inheritdoc}
+ * Class Extractor provides interfaces for procesing configuration files and
+ * obtaning parts of GE extractor confgiruaton.
  */
-class Configuration
+class Extractor
 {
-    /**
-     * @var Temp
-     */
-    protected $temp;
-
-    /**
-     * @var string
-     */
-    protected $dataDir;
-
-    /**
-     * @var []
-     */
-    protected $jsonFiles;
-
     /**
      * @var LoggerInterface
      */
-    protected $logger;
-
-    const CACHE_TTL = 604800;
+    private $logger;
 
     /**
-     * Configuration constructor.
+     * @var array
+     */
+    private $config;
+
+    /**
+     * @var array
+     */
+    private $state;
+
+    /**
+     * Extractor constructor.
      * @param $dataDir
-     * @param Temp $temp
      * @param LoggerInterface $logger
      */
-    public function __construct($dataDir, Temp $temp, LoggerInterface $logger)
+    public function __construct(string $dataDir, LoggerInterface $logger)
     {
-        $this->temp = $temp;
-        $this->dataDir = $dataDir;
         $this->logger = $logger;
+        $this->config = $this->loadConfigFile($dataDir);
+        $this->state = $this->loadStateFile($dataDir);
+    }
+
+    /**
+     * @param string $dataDir
+     * @return array
+     */
+    private function loadConfigFile(string $dataDir) : array
+    {
+        $data = $this->loadJSONFile($dataDir, 'config.json');
+        $processor = new Processor();
+        try {
+            $processor->processConfiguration(new ConfigFile(), $data);
+        } catch (InvalidConfigurationException $e) {
+            // TODO: create issuse to make this strict
+            $this->logger->warning("State file configuration is invalid: " . $e->getMessage());
+        }
+        return $data;
+    }
+
+    /**
+     * @param string $dataDir
+     * @return array
+     */
+    private function loadStateFile(string $dataDir) : array
+    {
+        try {
+            $data = $this->loadJSONFile($dataDir, 'in' . DIRECTORY_SEPARATOR . 'state.json');
+        } catch (ApplicationException $e) {
+            // state file is optional so only log the error
+            $this->logger->warning("State file not found " . $e->getMessage());
+            $data = [];
+        }
+        $processor = new Processor();
+        try {
+            $processor->processConfiguration(new ConfigFile(), $data);
+        } catch (InvalidConfigurationException $e) {
+            // TODO: create issuse to make this strict
+            $this->logger->warning("State file configuration is invalid: " . $e->getMessage());
+        }
+        return $data;
     }
 
     /**

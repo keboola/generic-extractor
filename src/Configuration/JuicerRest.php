@@ -1,9 +1,6 @@
 <?php
-/**
- * @author Erik Zigo <erik.zigo@keboola.com>
- */
 
-namespace Keboola\GenericExtractor\Config;
+namespace Keboola\GenericExtractor\Configuration;
 
 class JuicerRest
 {
@@ -15,6 +12,7 @@ class JuicerRest
      */
     public static function convertRetry(array $config)
     {
+        // TODO: add deprecation
         if (isset($config['curlCodes'])) {
             $config['curl'] = [];
             $config['curl']['codes'] = $config['curlCodes'];

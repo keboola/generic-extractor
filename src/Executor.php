@@ -17,6 +17,8 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class Executor
 {
+    const CACHE_TTL = 604800;
+
     /**
      * @var Logger
      */
@@ -46,9 +48,10 @@ class Executor
         return new CacheStorage(
             new FilesystemCache($config->getDataDir() . '/cache'),
             null,
-            !empty($cacheConfig['ttl']) ? (int) $cacheConfig['ttl'] : Configuration::CACHE_TTL
+            !empty($cacheConfig['ttl']) ? (int) $cacheConfig['ttl'] : self::CACHE_TTL
         );
     }
+
 
     /**
      * @param bool $debug

@@ -1,6 +1,6 @@
 <?php
 
-namespace Keboola\GenericExtractor\Config;
+namespace Keboola\GenericExtractor\Configuration;
 
 use Keboola\GenericExtractor\Authentication\AuthInterface;
 use Keboola\GenericExtractor\Authentication;

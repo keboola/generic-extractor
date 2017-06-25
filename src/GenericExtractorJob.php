@@ -32,74 +32,69 @@ class GenericExtractorJob
     /**
      * @var JobConfig
      */
-    protected $config;
+    private $config;
 
     /**
      * @var RestClient
      */
-    protected $client;
+    private $client;
 
     /**
      * @var ParserInterface
      */
-    protected $parser;
+    private $parser;
 
     /**
      * @var ScrollerInterface
      */
-    protected $scroller;
+    private $scroller;
 
     /**
      * @var string
      */
-    protected $jobId;
+    private $jobId;
 
     /**
      * @var LoggerInterface
      */
-    protected $logger;
+    private $logger;
 
     /**
      * @var array
      */
-    protected $params;
+    private $attributes = [];
 
     /**
      * @var array
      */
-    protected $attributes = [];
-
-    /**
-     * @var array
-     */
-    protected $metadata = [];
+    private $metadata = [];
 
     /**
      * @var string
      */
-    protected $lastResponseHash;
+    private $lastResponseHash;
 
     /**
      * @var Builder
      */
-    protected $stringBuilder;
+    private $stringBuilder;
 
     /**
      * Data to append to the root result
      * @var array
      */
-    protected $userParentId;
+    private $userParentId;
 
     /**
      * Used to save necessary parents' data to child's output
      * @var array
      */
-    protected $parentParams = [];
+    private $parentParams = [];
 
     /**
      * @var array
      */
-    protected $parentResults = [];
+    private $parentResults = [];
 
     /**
      * @param JobConfig $config
@@ -161,7 +156,7 @@ class GenericExtractorJob
      * @param array $data
      * @throws UserException
      */
-    protected function runChildJobs(array $data)
+    private function runChildJobs(array $data)
     {
         foreach ($this->config->getChildJobs() as $jobId => $child) {
             $filter = null;
@@ -194,7 +189,7 @@ class GenericExtractorJob
      * @param array $parentResults
      * @return static
      */
-    protected function createChild(JobConfig $config, array $parentResults)
+    private function createChild(JobConfig $config, array $parentResults)
     {
         // Clone the config to prevent overwriting the placeholder(s) in endpoint
         $job = new static(clone $config, $this->client, $this->parser, $this->logger);
@@ -235,7 +230,7 @@ class GenericExtractorJob
      * @return array ['placeholder', 'field', 'value']
      * @throws UserException
      */
-    protected function getPlaceholder($placeholder, $field, $parentResults)
+    private function getPlaceholder($placeholder, $field, $parentResults)
     {
         // TODO allow using a descriptive ID(level) by storing the result by `task(job) id` in $parentResults
         $level = strpos($placeholder, ':') === false
@@ -277,7 +272,7 @@ class GenericExtractorJob
      * @return mixed
      * @throws UserException
      */
-    protected function getPlaceholderValue($field, $parentResults, $level, $placeholder)
+    private function getPlaceholderValue($field, $parentResults, $level, $placeholder)
     {
         try {
             if (!array_key_exists($level, $parentResults)) {
@@ -312,7 +307,7 @@ class GenericExtractorJob
      * @param RestRequest $request
      * @return \StdClass $response
      */
-    protected function download(RestRequest $request)
+    private function download(RestRequest $request)
     {
         return $this->client->download($request);
     }
@@ -327,7 +322,7 @@ class GenericExtractorJob
      * @param array|null $data
      * @return RestRequest | false
      */
-    protected function nextPage(JobConfig $config, $response, $data)
+    private function nextPage(JobConfig $config, $response, $data)
     {
         return $this->getScroller()->getNextRequest($this->client, $config, $response, $data);
     }
@@ -339,7 +334,7 @@ class GenericExtractorJob
      * @param JobConfig $config
      * @return RestRequest | false
      */
-    protected function firstPage(JobConfig $config)
+    private function firstPage(JobConfig $config)
     {
         return $this->getScroller()->getFirstRequest($this->client, $config);
     }
@@ -352,7 +347,7 @@ class GenericExtractorJob
      * @param array $parentId ID (or list thereof) to be passed to parser
      * @return array
      */
-    protected function parse(array $data, array $parentId = null)
+    private function parse(array $data, array $parentId = null)
     {
         $this->parser->process($data, $this->getDataType(), $this->getParentCols($parentId));
         $this->runChildJobs($data);
@@ -362,7 +357,7 @@ class GenericExtractorJob
     /**
      * @return ScrollerInterface
      */
-    protected function getScroller()
+    private function getScroller()
     {
         if (empty($this->scroller)) {
             $this->scroller = new NoScroller;
@@ -382,7 +377,7 @@ class GenericExtractorJob
     /**
      * @return null|array
      */
-    protected function getParentId()
+    private function getParentId()
     {
         if (!empty($this->config->getConfig()['userData'])) {
             if (!is_array($this->config->getConfig()['userData'])) {
@@ -416,7 +411,7 @@ class GenericExtractorJob
      * @param array $parentIdCols
      * @return array
      */
-    protected function getParentCols(array $parentIdCols = null)
+    private function getParentCols(array $parentIdCols = null)
     {
         // Add parent values to the result
         $parentCols = is_null($parentIdCols) ? [] : $parentIdCols;
@@ -431,7 +426,7 @@ class GenericExtractorJob
      * @param JobConfig $config
      * @return array
      */
-    protected function buildParams(JobConfig $config)
+    private function buildParams(JobConfig $config)
     {
         $params = UserFunction::build(
             $config->getParams(),
@@ -456,7 +451,7 @@ class GenericExtractorJob
      * @param array $data
      * @return array
      */
-    protected function filterResponse(JobConfig $config, array $data)
+    private function filterResponse(JobConfig $config, array $data)
     {
         $filter = Filter::create($config);
         return $filter->run($data);
@@ -467,7 +462,7 @@ class GenericExtractorJob
      * @param JobConfig $jobConfig
      * @return array
      */
-    protected function runResponseModules($response, JobConfig $jobConfig)
+    private function runResponseModules($response, JobConfig $jobConfig)
     {
         $responseModule = new FindResponseArray($this->logger);
         return $responseModule->process($response, $jobConfig);
@@ -494,7 +489,7 @@ class GenericExtractorJob
      * @param string $string
      * @return string
      */
-    protected function prependParent($string)
+    private function prependParent($string)
     {
         return (substr($string, 0, 7) == "parent_") ? $string : "parent_{$string}";
     }
@@ -540,7 +535,7 @@ class GenericExtractorJob
     /**
      * @return string
      */
-    protected function getDataType()
+    private function getDataType()
     {
         $config = $this->config->getConfig();
         $type = !empty($config['dataType'])

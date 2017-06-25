@@ -1,4 +1,5 @@
 <?php
+
 namespace Keboola\GenericExtractor\Authentication;
 
 use Keboola\Juicer\Client\RestClient;
