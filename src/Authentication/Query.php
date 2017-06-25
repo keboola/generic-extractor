@@ -1,11 +1,11 @@
 <?php
+
 namespace Keboola\GenericExtractor\Authentication;
 
+use Keboola\GenericExtractor\Configuration\UserFunction;
 use Keboola\Juicer\Exception\UserException;
 use Keboola\Juicer\Client\RestClient;
 use Keboola\GenericExtractor\Subscriber\UrlSignature;
-use Keboola\Code\Builder;
-use Keboola\Code\Exception\UserScriptException;
 
 /**
  * Authentication method using query parameters
@@ -16,20 +16,27 @@ class Query implements AuthInterface
      * @var array
      */
     protected $query;
+
     /**
      * @var array
      */
-    protected $attrs;
-    /**
-     * @var Builder
-     */
-    protected $builder;
+    protected $configAttributes;
 
-    public function __construct(Builder $builder, $attrs, $definitions)
+    /**
+     * Query constructor.
+     * @param array $configAttributes
+     * @param array $authentication
+     * @throws UserException
+     */
+    public function __construct(array $configAttributes, array $authentication)
     {
-        $this->query = $definitions;
-        $this->attrs = $attrs;
-        $this->builder = $builder;
+        if (empty($authentication['query'])) {
+            throw new UserException(
+                "The query authentication method requires 'query' configuration in 'authentication' section."
+            );
+        }
+        $this->query = $authentication['query'];
+        $this->configAttributes = $configAttributes;
     }
 
     /**
@@ -42,20 +49,8 @@ class Query implements AuthInterface
         $q = (array) \Keboola\Utils\arrayToObject($this->query);
         $sub->setSignatureGenerator(
             function (array $requestInfo = []) use ($q) {
-                $params = array_merge($requestInfo, ['attr' => $this->attrs]);
-
-                $query = [];
-                try {
-                    foreach ($q as $key => $value) {
-                        $query[$key] = is_scalar($value)
-                            ? $value
-                            : $this->builder->run($value, $params);
-                    }
-                } catch (UserScriptException $e) {
-                    throw new UserException("Error in query authentication script: " . $e->getMessage());
-                }
-
-                return $query;
+                $params = array_merge($requestInfo, ['attr' => $this->configAttributes]);
+                return UserFunction::build($q, $params);
             }
         );
         $client->getClient()->getEmitter()->attach($sub);

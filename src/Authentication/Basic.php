@@ -1,4 +1,5 @@
 <?php
+
 namespace Keboola\GenericExtractor\Authentication;
 
 use Keboola\Juicer\Exception\UserException;
@@ -19,13 +20,18 @@ class Basic implements AuthInterface
      */
     protected $password;
 
+    /**
+     * Basic constructor.
+     * @param array $config
+     * @throws UserException
+     */
     public function __construct(array $config)
     {
         if (empty($config['username']) && empty($config['#username'])) {
-            throw new UserException("Missing required 'username' attribute in config");
+            throw new UserException("Missing the required '#username' (or 'username') attribute in config.");
         }
         if (empty($config['password']) && empty($config['#password'])) {
-            throw new UserException("Missing required 'password' attribute in config");
+            throw new UserException("Missing the required '#password' attribute in config.");
         }
 
         $this->username = empty($config['username']) ? $config['#username'] : $config['username'];
@@ -33,8 +39,7 @@ class Basic implements AuthInterface
     }
 
     /**
-     * @param RestClient $client
-     * @todo Add a possibility to add the option before each request, to allow refresh/signature here?
+     * @inheritdoc
      */
     public function authenticateClient(RestClient $client)
     {

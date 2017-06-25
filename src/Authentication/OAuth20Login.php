@@ -2,9 +2,9 @@
 
 namespace Keboola\GenericExtractor\Authentication;
 
+use Keboola\GenericExtractor\Configuration\UserFunction;
 use Keboola\Juicer\Exception\UserException;
 use Keboola\Juicer\Client\RestRequest;
-use Keboola\GenericExtractor\Config\UserFunction;
 use Keboola\Utils\Exception\JsonDecodeException;
 
 /**
@@ -35,7 +35,14 @@ class OAuth20Login extends Login
      */
     protected $auth;
 
-    public function __construct($authorization, array $api)
+    /**
+     * OAuth20Login constructor.
+     * @param array $configAttributes
+     * @param array $authorization
+     * @param array $authentication
+     * @throws UserException
+     */
+    public function __construct(array $configAttributes, array $authorization, array $authentication)
     {
         if (empty($authorization['oauth_api']['credentials'])) {
             throw new UserException("OAuth API credentials not supplied in config");
@@ -61,23 +68,19 @@ class OAuth20Login extends Login
 
         $this->params = [
             'consumer' => $consumerData,
-            'user' => $oAuthData
+            'user' => $oAuthData,
+            'attr' => $this->configAttributes
         ];
 
-        parent::__construct([], $api);
+        parent::__construct($configAttributes, $authentication);
     }
 
     /**
-     * @param array $config
-     * @throws UserException
-     * @return RestRequest
+     * @inheritdoc
      */
-    protected function getAuthRequest(array $config)
+    protected function getAuthRequest(array $config) : RestRequest
     {
-        if (empty($config['endpoint'])) {
-            throw new UserException('Request endpoint must be set for the Login authentication method.');
-        }
-
+        parent::getAuthRequest($config);
         if (!empty($config['params'])) {
             $config['params'] = UserFunction::build($config['params'], $this->params);
         }

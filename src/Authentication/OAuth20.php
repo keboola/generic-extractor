@@ -1,13 +1,13 @@
 <?php
+
 namespace Keboola\GenericExtractor\Authentication;
 
+use Keboola\GenericExtractor\Configuration\UserFunction;
 use Keboola\GenericExtractor\Subscriber\AbstractSignature;
 use Keboola\Juicer\Exception\UserException;
 use Keboola\Juicer\Client\RestClient;
 use Keboola\GenericExtractor\Subscriber\UrlSignature;
 use Keboola\GenericExtractor\Subscriber\HeaderSignature;
-use Keboola\Code\Builder;
-use Keboola\Code\Exception\UserScriptException;
 
 /**
  * OAuth 2.0 Bearer implementation
@@ -36,68 +36,80 @@ class OAuth20 implements AuthInterface
      * @var string|object
      */
     protected $data;
+
     /**
      * @var string
      */
     protected $clientId;
+
     /**
      * @var string
      */
     protected $clientSecret;
+
     /**
      * @var array
      */
     protected $headers;
+
     /**
      * @var array
      */
     protected $query;
-    /**
-     * @var Builder
-     */
-    protected $builder;
 
-    public function __construct(array $authorization, array $apiAuth, Builder $builder)
+    /**
+     * @var array
+     */
+    protected $configAttributes;
+
+    /**
+     * OAuth20 constructor.
+     * @param array $authorization
+     * @param array $authentication
+     * @param array $configAttributes
+     * @throws UserException
+     */
+    public function __construct(array $authorization, array $authentication, array $configAttributes)
     {
         if (empty($authorization['oauth_api']['credentials'])) {
-            throw new UserException("OAuth API credentials not supplied in config");
+            throw new UserException("OAuth API credentials not supplied in configuration.");
         }
 
         $oauthApiDetails = $authorization['oauth_api']['credentials'];
 
         foreach (['#data', 'appKey', '#appSecret'] as $key) {
             if (empty($oauthApiDetails[$key])) {
-                throw new UserException("Missing '{$key}' for OAuth 2.0 authorization");
+                throw new UserException("Missing '{$key}' for OAuth 2.0 authorization.");
             }
         }
 
-        if (!empty($apiAuth['format'])) {
-            switch ($apiAuth['format']) {
-                case 'json':
-                    // authorization: { data: key }
-                    $this->data = \Keboola\Utils\jsonDecode($oauthApiDetails['#data']);
-                    break;
-                default:
-                    throw new UserException("Unknown OAuth data format '{$apiAuth['format']}'");
-            }
-        } else {
-            // authorization: data
-            $this->data = $oauthApiDetails['#data'];
+        if (empty($authentication['format'])) {
+            $authentication['format'] = 'text';
+        }
+        switch ($authentication['format']) {
+            case 'json':
+                // authorization: { data: key }
+                $this->data = \Keboola\Utils\jsonDecode($oauthApiDetails['#data']);
+                break;
+            case 'text':
+                // authorization: data
+                $this->data = $oauthApiDetails['#data'];
+                break;
+            default:
+                throw new UserException("Unknown OAuth data format '{$authentication['format']}'.");
         }
 
         // authorization: clientId
         $this->clientId = $oauthApiDetails['appKey'];
         // authorization: clientSecret
         $this->clientSecret = $oauthApiDetails['#appSecret'];
-
-        $this->headers = empty($apiAuth['headers']) ? [] : $apiAuth['headers'];
-        $this->query = empty($apiAuth['query']) ? [] : $apiAuth['query'];
-
-        $this->builder = $builder;
+        $this->headers = empty($authentication['headers']) ? [] : $authentication['headers'];
+        $this->query = empty($authentication['query']) ? [] : $authentication['query'];
+        $this->configAttributes = $configAttributes;
     }
 
     /**
-     * @param RestClient $client
+     * @inheritdoc
      */
     public function authenticateClient(RestClient $client)
     {
@@ -149,22 +161,7 @@ class OAuth20 implements AuthInterface
         $subscriber->setSignatureGenerator(
             function (array $requestInfo = []) use ($q, $authorization) {
                 $params = array_merge($requestInfo, ['authorization' => $authorization]);
-
-                $result = [];
-                try {
-                    foreach ($q as $key => $value) {
-                        $result[$key] = is_scalar($value)
-                            ? $value
-                            : $this->builder->run(
-                                $value,
-                                $params
-                            );
-                    }
-                } catch (UserScriptException $e) {
-                    throw new UserException("Error in OAuth authentication script: " . $e->getMessage());
-                }
-
-                return $result;
+                return UserFunction::build($q, $params);
             }
         );
     }

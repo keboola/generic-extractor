@@ -2,11 +2,11 @@
 
 namespace Keboola\GenericExtractor\Authentication;
 
+use Keboola\GenericExtractor\Configuration\UserFunction;
 use Keboola\Juicer\Exception\UserException;
 use Keboola\Juicer\Client\RestRequest;
 use Keboola\Juicer\Client\RestClient;
 use Keboola\GenericExtractor\Subscriber\LoginSubscriber;
-use Keboola\GenericExtractor\Config\UserFunction;
 use Keboola\Utils\Exception\NoDataFoundException;
 
 /**
@@ -23,24 +23,41 @@ use Keboola\Utils\Exception\NoDataFoundException;
  * expires: int|array # # of seconds OR ['response' => 'path', 'relative' => false] (optional)
  *
  * The response MUST be a JSON object containing credentials
- *
  */
 class Login implements AuthInterface
 {
     /**
      * @var array
      */
-    protected $attrs;
+    protected $configAttributes;
 
     /**
      * @var array
      */
     protected $auth;
 
-    public function __construct(array $attrs, array $api)
+    /**
+     * Login constructor.
+     * @param array $configAttributes
+     * @param array $authentication
+     * @throws UserException
+     */
+    public function __construct(array $configAttributes, array $authentication)
     {
-        $this->attrs = $attrs;
-        $this->auth = $api['authentication'];
+        $this->configAttributes = $configAttributes;
+        $this->auth = $authentication;
+        if (empty($authentication['endpoint'])) {
+            throw new UserException('Request endpoint must be set for the Login authentication method.');
+        }
+        if (empty($authentication['loginRequest'])) {
+            throw new UserException("'loginRequest' is not configured for Login authentication");
+        }
+        if (!is_integer($authentication['expires']) && empty($authentication['expires']['response'])) {
+            throw new UserException(
+                "The 'expires' attribute must be either an integer or an array with 'response' " .
+                "key containing a path in the response"
+            );
+        }
     }
 
     /**
@@ -48,33 +65,25 @@ class Login implements AuthInterface
      * @throws UserException
      * @return RestRequest
      */
-    protected function getAuthRequest(array $config)
+    protected function getAuthRequest(array $config) : RestRequest
     {
-        if (empty($config['endpoint'])) {
-            throw new UserException('Request endpoint must be set for the Login authentication method.');
-        }
-
         if (!empty($config['params'])) {
-            $config['params'] = UserFunction::build($config['params'], ['attr' => $this->attrs]);
+            $config['params'] = UserFunction::build($config['params'], ['attr' => $this->configAttributes]);
         }
         if (!empty($config['headers'])) {
-            $config['headers'] = UserFunction::build($config['headers'], ['attr' => $this->attrs]);
+            $config['headers'] = UserFunction::build($config['headers'], ['attr' => $this->configAttributes]);
         }
-
         return RestRequest::create($config);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function authenticateClient(RestClient $client)
     {
-        if (empty($this->auth['loginRequest'])) {
-            throw new UserException("'loginRequest' is not configured for Login authentication");
-        }
-
         $loginRequest = $this->getAuthRequest($this->auth['loginRequest']);
-
         $sub = new LoginSubscriber();
 
-        // @return [query, headers]
         $sub->setLoginMethod(
             function () use ($client, $loginRequest, $sub) {
                 // Need to bypass the subscriber for the login call
@@ -101,7 +110,7 @@ class Login implements AuthInterface
      * @return array
      * @throws UserException
      */
-    protected function getResults(\stdClass $response, $type)
+    protected function getResults(\stdClass $response, $type) : array
     {
         $result = [];
         if (!empty($this->auth['apiRequest'][$type])) {
@@ -121,19 +130,13 @@ class Login implements AuthInterface
      * @return int|null
      * @throws UserException
      */
-    protected function getExpiry(\stdClass $response)
+    protected function getExpiry(\stdClass $response) : ?int
     {
         if (!isset($this->auth['expires'])) {
             return null;
         } elseif (is_numeric($this->auth['expires'])) {
             return time() + (int) $this->auth['expires'];
         } elseif (is_array($this->auth['expires'])) {
-            if (empty($this->auth['expires']['response'])) {
-                throw new UserException(
-                    "'authentication.expires' must be either an integer or an array with 'response' key containing a path in the response"
-                );
-            }
-
             $rExpiry = \Keboola\Utils\getDataFromPath($this->auth['expires']['response'], $response, '.');
             $expiry = is_int($rExpiry) ? $rExpiry : strtotime($rExpiry);
 
