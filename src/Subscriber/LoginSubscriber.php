@@ -12,7 +12,7 @@ use GuzzleHttp\Event\SubscriberInterface;
 class LoginSubscriber implements SubscriberInterface
 {
     /**
-     * @var int
+     * @var int|null
      */
     protected $expires;
 

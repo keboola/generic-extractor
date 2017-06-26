@@ -13,6 +13,10 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
+/**
+ * Class Executor manages multiple configurations (created by iterations) and executes
+ * GenericExtractor for each of them.
+ */
 class Executor
 {
     /**
@@ -56,10 +60,9 @@ class Executor
         }
 
         $configuration = new Extractor($arguments['data'], $this->logger);
-
         $configs = $configuration->getMultipleConfigs();
 
-        $metadata = $configuration->getMetadata() ?: [];
+        $metadata = $configuration->getMetadata();
         $metadata['time']['previousStart'] =
             empty($metadata['time']['previousStart']) ? 0 : $metadata['time']['previousStart'];
         $metadata['time']['currentStart'] = time();
@@ -69,7 +72,7 @@ class Executor
         /** @var Config[] $configs */
         foreach ($configs as $config) {
             $this->setLogLevel($config->getAttribute('debug'));
-            $api = $configuration->getApi($config);
+            $api = $configuration->getApi($config->getAttributes());
 
             if (!empty($config->getAttribute('outputBucket'))) {
                 $outputBucket = $config->getAttribute('outputBucket');
@@ -79,7 +82,7 @@ class Executor
                 $outputBucket = "__kbc_default";
             }
 
-            $extractor = new GenericExtractor($temp, $this->logger);
+            $extractor = new GenericExtractor($temp, $this->logger, $api);
 
             if ($cacheStorage) {
                 $extractor->enableCache($cacheStorage);
@@ -88,7 +91,6 @@ class Executor
             if (!empty($results[$outputBucket])) {
                 $extractor->setParser($results[$outputBucket]['parser']);
             }
-            $extractor->setApi($api);
             $extractor->setMetadata($metadata);
 
             $extractor->run($config);

@@ -14,8 +14,6 @@ use Keboola\Juicer\Client\RestClient;
 use Keboola\Juicer\Parser\Json;
 use Keboola\Juicer\Parser\JsonMap;
 use Keboola\Juicer\Parser\ParserInterface;
-use Keboola\Juicer\Pagination\ScrollerInterface;
-use Keboola\GenericExtractor\Authentication\AuthInterface;
 use Keboola\GenericExtractor\Subscriber\LogRequest;
 use Keboola\Code\Builder;
 use Keboola\Temp\Temp;
@@ -23,41 +21,10 @@ use Psr\Log\LoggerInterface;
 
 class GenericExtractor
 {
-
-    /**
-     * @var string
-     */
-    protected $baseUrl;
-
-    /**
-     * @var array
-     */
-    protected $headers;
-
-    /**
-     * @var ScrollerInterface
-     */
-    protected $scroller;
-
-    /**
-     * @var AuthInterface
-     */
-    protected $auth;
-
     /**
      * @var ParserInterface
      */
     protected $parser;
-
-    /**
-     * @var array
-     */
-    protected $defaultRequestOptions = [];
-
-    /**
-     * @var array
-     */
-    protected $retryConfig = [];
 
     /**
      * @var CacheStorage
@@ -79,10 +46,17 @@ class GenericExtractor
      */
     protected $logger;
 
-    public function __construct(Temp $temp, LoggerInterface $logger)
+    /**
+     * GenericExtractor constructor.
+     * @param Temp $temp
+     * @param LoggerInterface $logger
+     * @param Api $api
+     */
+    public function __construct(Temp $temp, LoggerInterface $logger, Api $api)
     {
         $this->temp = $temp;
         $this->logger = $logger;
+        $this->api = $api;
     }
 
     /**
@@ -100,19 +74,22 @@ class GenericExtractor
         $client = RestClient::create(
             $this->logger,
             [
-                'base_url' => $this->baseUrl,
+                'base_url' => $this->api->getBaseUrl(),
                 'defaults' => [
-                    'headers' => UserFunction::build($this->headers, ['attr' => $config->getAttributes()])
+                    'headers' => UserFunction::build(
+                        $this->api->getHeaders()->getHeaders(),
+                        ['attr' => $config->getAttributes()]
+                    )
                 ]
             ],
-            JuicerRest::convertRetry($this->retryConfig)
+            JuicerRest::convertRetry($this->api->getRetryConfig())
         );
 
-        if (!empty($this->defaultRequestOptions)) {
-            $client->setDefaultRequestOptions($this->defaultRequestOptions);
+        if (!empty($this->api->getDefaultRequestOptions())) {
+            $client->setDefaultRequestOptions($this->api->getDefaultRequestOptions());
         }
 
-        $this->auth->authenticateClient($client);
+        $this->api->getAuth()->authenticateClient($client);
         // Verbose Logging of all requests
         $client->getClient()->getEmitter()->attach(new LogRequest($this->logger));
 
@@ -153,7 +130,7 @@ class GenericExtractor
     {
         // FIXME this is rather duplicated in RecursiveJob::createChild()
         $job = new GenericExtractorJob($jobConfig, $client, $this->parser, $this->logger);
-        $job->setScroller($this->scroller);
+        $job->setScroller($this->api->getScroller());
         $job->setAttributes($config->getAttributes());
         $job->setMetadata($this->metadata);
         $job->setBuilder($builder);
@@ -166,57 +143,6 @@ class GenericExtractor
         }
 
         $job->run();
-    }
-
-    /**
-     * @param Api $api
-     */
-    public function setApi(Api $api)
-    {
-        $this->setBaseUrl($api->getBaseUrl());
-        $this->setAuth($api->getAuth());
-        $this->setScroller($api->getScroller());
-        $this->setHeaders($api->getHeaders()->getHeaders());
-        $this->setDefaultRequestOptions($api->getDefaultRequestOptions());
-        $this->setRetryConfig($api->getRetryConfig());
-    }
-
-    public function setRetryConfig(array $config)
-    {
-        $this->retryConfig = $config;
-    }
-
-    /**
-     * Get base URL from Config
-     * @param string $url
-     */
-    public function setBaseUrl($url)
-    {
-        $this->baseUrl = $url;
-    }
-
-    /**
-     * @param AuthInterface $auth
-     */
-    public function setAuth(AuthInterface $auth)
-    {
-        $this->auth = $auth;
-    }
-
-    /**
-     * @param array $headers
-     */
-    public function setHeaders(array $headers)
-    {
-        $this->headers = $headers;
-    }
-
-    /**
-     * @param ScrollerInterface $scroller
-     */
-    public function setScroller(ScrollerInterface $scroller)
-    {
-        $this->scroller = $scroller;
     }
 
     /**
@@ -257,11 +183,6 @@ class GenericExtractor
         }
 
         return $this->parser;
-    }
-
-    public function setDefaultRequestOptions(array $options)
-    {
-        $this->defaultRequestOptions = $options;
     }
 
     public function setMetadata(array $data)
