@@ -4,54 +4,51 @@ namespace Keboola\GenericExtractor\Configuration;
 
 use Keboola\GenericExtractor\Authentication\AuthInterface;
 use Keboola\GenericExtractor\Authentication;
-use Keboola\Juicer\Exception\ApplicationException;
-use Keboola\Juicer\Exception\UserException;
+use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\Juicer\Pagination\ScrollerInterface;
 use Keboola\Juicer\Pagination\ScrollerFactory;
-use Keboola\Juicer\Config\Config;
-use Keboola\Code\Builder;
 use Keboola\Utils\Exception\JsonDecodeException;
 use Psr\Log\LoggerInterface;
 
 /**
  * API Description
- * @todo TEST
  */
 class Api
 {
     /**
      * @var string
      */
-    protected $baseUrl;
+    private $baseUrl;
+
     /**
      * @var string
      */
-    protected $name;
+    private $name = 'generic';
 
     /**
      * @var AuthInterface
      */
-    protected $auth;
+    private $auth;
 
     /**
      * @var ScrollerInterface
      */
-    protected $scroller;
+    private $scroller;
 
     /**
      * @var Headers
      */
-    protected $headers;
+    private $headers;
 
     /**
      * @var array
      */
-    protected $defaultRequestOptions = [];
+    private $defaultRequestOptions = [];
 
     /**
      * @var array
      */
-    protected $retryConfig = [];
+    private $retryConfig = [];
 
     /**
      * @var LoggerInterface
@@ -60,128 +57,86 @@ class Api
 
     /**
      * Api constructor.
-     * @param array $config
      * @param LoggerInterface $logger
+     * @param array $api
+     * @param array $configAttributes
+     * @param array $authorization
      */
-    public function __construct(LoggerInterface $logger, array $config)
+    public function __construct(LoggerInterface $logger, array $api, array $configAttributes, array $authorization)
     {
         $this->logger = $logger;
-        if (!empty($config['baseUrl'])) {
-            $this->setBaseUrl($config['baseUrl']);
+        $this->auth = $this->createAuth($api, $configAttributes, $authorization);
+        $this->scroller = ScrollerFactory::getScroller($api['pagination'] ?? []);
+        $this->headers = new Headers($api, $configAttributes);
+        if (!empty($api['retryConfig']) && is_array($api['retryConfig'])) {
+            $this->retryConfig = $api['retryConfig'];
         }
-        if (!empty($config['scroller'])) {
-            $this->setScroller($config['scroller']);
+        $this->baseUrl = $this->createBaseUrl($api, $configAttributes);
+        if (!empty($api['name'])) {
+            $this->name = $api['name'];
         }
-        if (!empty($config['auth'])) {
-            $this->setAuth($config['auth']);
-        }
-        if (!empty($config['headers'])) {
-            $this->setHeaders($config['headers']);
-        }
-        if (!empty($config['name'])) {
-            $this->setName($config['name']);
-        }
-        if (!empty($config['defaultRequestOptions'])) {
-            $this->setDefaultRequestOptions($config['defaultRequestOptions']);
-        }
-        if (!empty($config['retryConfig'])) {
-            $this->setRetryConfig($config['retryConfig']);
+        if (!empty($api['http']['defaultOptions'])) {
+            $this->defaultRequestOptions = $api['http']['defaultOptions'];
         }
     }
 
     /**
-     * @param LoggerInterface $logger
-     * @param array $api
-     * @param Config $config
-     * @param array $authorization
-     * @return Api
-     */
-    public static function create(LoggerInterface $logger, array $api, Config $config, array $authorization = [])
-    {
-        return new static(
-            $logger,
-            [
-                'baseUrl' => self::createBaseUrl($api, $config),
-                'auth' => self::createAuth($logger, $api, $config, $authorization),
-                'scroller' => self::createScroller($api),
-                'headers' => self::createHeaders($api, $config),
-                'name' => self::createName($api),
-                'defaultRequestOptions' => self::createDefaultRequestOptions($api),
-                'retryConfig' => self::createRetryConfig($api)
-            ]
-        );
-    }
-
-    public static function createRetryConfig(array $api)
-    {
-        return !empty($api['retryConfig']) && is_array($api['retryConfig'])
-            ? $api['retryConfig'] : [];
-    }
-
-    /**
-     * Should return a class that contains
-     * - info about what attrs store the Auth keys
-     * - callback method that generates a signature
-     * - OR an array of defaults for the client (possibly using the callback ^^)
-     * - Method that accepts GuzzleClient as parameter and adds the emitter/defaults to it
+     * Create Authentication class that accepts a Guzzle client.
      *
-     * @param LoggerInterface $logger
      * @param array $api
-     * @param Config $config
+     * @param array $configAttributes
      * @param array $authorization
      * @return AuthInterface
-     * @throws ApplicationException
      * @throws UserException
      */
-    public static function createAuth(LoggerInterface $logger, $api, Config $config, array $authorization)
+    private function createAuth(array $api, array $configAttributes, array $authorization) : AuthInterface
     {
         if (empty($api['authentication']['type'])) {
-            $logger->debug("Using NO Auth");
-            return new Authentication\NoAuth();
+            $this->logger->debug("Using no authentication.");
+            $this->auth = new Authentication\NoAuth();
         }
 
-        $logger->debug("Using '{$api['authentication']['type']}' Auth");
+        $this->logger->debug("Using '{$api['authentication']['type']}' authentication.");
         switch ($api['authentication']['type']) {
             case 'basic':
-                return new Authentication\Basic($config->getAttributes());
-                break;
-            case 'bearer':
-                throw new ApplicationException("The bearer method is not implemented yet");
-                break;
-            case 'query':
-            case 'url.query':
-                if (empty($api['authentication']['query']) && empty($api['query'])) {
-                    throw new UserException(
-                        "The query authentication method requires query parameters to be defined in the API configuration."
-                    );
+                if (!empty($config['password']) && empty($config['#password'])) {
+                    $this->logger->warning("Using deprecated 'password', use '#password' instead.");
                 }
-
-                $query = empty($api['authentication']['query']) ? $api['query'] : $api['authentication']['query'];
-                return new Authentication\Query(new Builder(), $config->getAttributes(), $query);
+                return new Authentication\Basic($configAttributes);
+                break;
+            /** @noinspection PhpMissingBreakStatementInspection */
+            case 'url.query':
+                $this->logger->warning("Method 'url.query' auth is deprecated, use 'query'.");
+                // intentional, no break
+            case 'query':
+                if (empty($api['authentication']['query']) && !empty($api['query'])) {
+                    $this->logger->warning("Using 'api.query' is deprecated, use 'api.authentication.query");
+                    $api['authentication']['query'] = $api['query'];
+                }
+                return new Authentication\Query($configAttributes, $api['authentication']);
                 break;
             case 'login':
-                return new Authentication\Login($config->getAttributes(), $api);
+                return new Authentication\Login($configAttributes, $api['authentication']);
                 break;
             case 'oauth10':
                 return new Authentication\OAuth10($authorization);
             case 'oauth20':
-                return new Authentication\OAuth20($authorization, $api['authentication'], new Builder());
+                return new Authentication\OAuth20($configAttributes, $authorization, $api['authentication']);
             case 'oauth20.login':
-                return new Authentication\OAuth20Login($authorization, $api);
+                return new Authentication\OAuth20Login($configAttributes, $authorization, $api['authentication']);
             default:
-                throw new UserException("Unknown authorization type '{$api['authentication']['type']}'");
+                throw new UserException("Unknown authorization type '{$api['authentication']['type']}'.");
                 break;
         }
     }
 
     /**
      * @param array $api
-     * @param Config $config
+     * @param array $configAttributes
      * @throws UserException
      * @return string
-     * @todo Allow storing URL function as an actual object, not a JSON
      */
-    public static function createBaseUrl($api, Config $config)
+    private function createBaseUrl(array $api, array $configAttributes) : string
     {
         if (empty($api['baseUrl'])) {
             throw new UserException("The 'baseUrl' attribute must be set in API configuration");
@@ -193,132 +148,72 @@ class Api
             // For backwards compatibility
             try {
                 $fn = \Keboola\Utils\jsonDecode($api['baseUrl']);
+                $this->logger->warning("Passing json-encoded baseUrl is deprecated.");
             } catch (JsonDecodeException $e) {
                 throw new UserException(
-                    "The 'baseUrl' attribute in API configuration is not an URL string, neither a valid JSON containing an user function! Error: " . $e->getMessage(),
+                    "The 'baseUrl' attribute in API configuration is not an URL string, ".
+                    "neither a valid JSON containing an user function! Error: " . $e->getMessage(),
                     $e
                 );
             }
-            return UserFunction::build([$fn], ['attr' => $config->getAttributes()])[0];
+            return UserFunction::build([$fn], ['attr' => $configAttributes])[0];
         } else {
-            return UserFunction::build(
-                [$api['baseUrl']],
-                ['attr' => $config->getAttributes()]
-            )[0];
+            return UserFunction::build([$api['baseUrl']], ['attr' => $configAttributes])[0];
         }
     }
 
     /**
-     * Return pagination scoller
-     * @param array $api
-     * @return ScrollerInterface
-     * @todo ditch the switch and simply camelize the method
-     *     to create the class name, then throw 501 if it doesn't
-     *     exist (should be UserException really?)
-     */
-    public static function createScroller($api)
-    {
-        if (empty($api['pagination'])) {
-            return ScrollerFactory::getScroller([]);
-        } else {
-            return ScrollerFactory::getScroller($api['pagination']);
-        }
-    }
-
-    /**
-     * @param array $api
-     * @param Config $config
-     * @return Headers
-     */
-    public static function createHeaders($api, Config $config)
-    {
-        return Headers::create($api, $config);
-    }
-
-    /**
-     * @param array $api
      * @return string
      */
-    public static function createName($api)
-    {
-        return empty($api['name']) ? 'generic' : $api['name'];
-    }
-
-    /**
-     * @param array $api
-     * @return array
-     */
-    public static function createDefaultRequestOptions($api)
-    {
-        return empty($api['http']['defaultOptions']) ? [] : $api['http']['defaultOptions'];
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    public function getName()
+    public function getName() : string
     {
         return $this->name;
     }
 
-    public function setBaseUrl($url)
-    {
-        $this->baseUrl = $url;
-    }
-
-    public function getBaseUrl()
+    /**
+     * @return string
+     */
+    public function getBaseUrl() : string
     {
         return $this->baseUrl;
     }
 
-    public function setScroller(ScrollerInterface $scroller)
-    {
-        $this->scroller = $scroller;
-    }
-
-    public function getScroller()
+    /**
+     * @return ScrollerInterface
+     */
+    public function getScroller() : ScrollerInterface
     {
         return $this->scroller;
     }
 
-    public function setAuth(AuthInterface $auth)
-    {
-        $this->auth = $auth;
-    }
-
-    public function getAuth()
+    /**
+     * @return AuthInterface
+     */
+    public function getAuth() : AuthInterface
     {
         return $this->auth;
     }
 
-    public function setHeaders(Headers $headers)
-    {
-        $this->headers = $headers;
-    }
-
-    public function getHeaders()
+    /**
+     * @return Headers
+     */
+    public function getHeaders() : Headers
     {
         return $this->headers;
     }
 
-    public function setDefaultRequestOptions(array $options)
-    {
-        $this->defaultRequestOptions = $options;
-    }
-
-    public function getDefaultRequestOptions()
+    /**
+     * @return array
+     */
+    public function getDefaultRequestOptions() : array
     {
         return $this->defaultRequestOptions;
     }
 
-    public function setRetryConfig(array $config)
-    {
-        $this->retryConfig = $config;
-    }
-
-    public function getRetryConfig()
+    /**
+     * @return array
+     */
+    public function getRetryConfig() : array
     {
         return $this->retryConfig;
     }

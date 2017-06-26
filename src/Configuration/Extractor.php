@@ -54,7 +54,6 @@ class Extractor
         $this->dataDir = $dataDir;
     }
 
-
     /**
      * @param string $dataDir
      * @param string $name
@@ -167,10 +166,10 @@ class Extractor
     }
 
     /**
-     * @param $config
+     * @param array $configAttributes
      * @return Api
      */
-    public function getApi()
+    public function getApi(array $configAttributes) : Api
     {
         if (!empty($this->config['authorization'])) {
             $authorization = $this->config['authorization'];
@@ -180,8 +179,7 @@ class Extractor
         if (empty($this->config['parameters']['api']) && !is_array($this->config['parameters']['api'])) {
             throw new UserException("The 'api' section is required in configuration.");
         }
-        // TODO tady potrebujem konfig
-        return Api::create($this->logger, $this->config['parameters']['api'], $config, $authorization);
+        return new Api($this->logger, $this->config['parameters']['api'], $configAttributes, $authorization);
     }
 
     /**
