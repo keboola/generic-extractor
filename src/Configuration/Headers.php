@@ -2,8 +2,7 @@
 
 namespace Keboola\GenericExtractor\Configuration;
 
-use Keboola\Juicer\Config\Config;
-use Keboola\Juicer\Exception\UserException;
+use Keboola\GenericExtractor\Exception\UserException;
 
 /**
  * API Headers wrapper
@@ -13,54 +12,51 @@ class Headers
     /**
      * @var array
      */
-    protected $apiHeaders = [];
+    private $apiHeaders = [];
 
     /**
      * @var array
      */
-    protected $configHeaders = [];
+    private $configHeaders = [];
 
     /**
      * @var array
      */
-    protected $requiredHeaders = [];
-
-    public function __construct(array $apiHeaders = [], array $requiredHeaders = [])
-    {
-        $this->apiHeaders = $apiHeaders;
-        $this->requiredHeaders = $requiredHeaders;
-    }
+    private $requiredHeaders = [];
 
     /**
+     * Headers constructor.
      * @param array $api
-     * @param Config $config
-     * @return self
+     * @param array $configAttributes
      */
-    public static function create(array $api, Config $config)
+    public function __construct(array $api, array $configAttributes)
     {
-        $headers = new self(
-            empty($api['http']['headers']) ? [] : $api['http']['headers'],
-            empty($api['http']['requiredHeaders']) ? [] : $api['http']['requiredHeaders']
-        );
+        if (!empty($api['http']['headers']) && is_array($api['http']['headers'])) {
+            $this->apiHeaders = $api['http']['headers'];
+        }
+        if (!empty($api['http']['requiredHeaders']) && is_array($api['http']['requiredHeaders'])) {
+            $this->requiredHeaders = $api['http']['requiredHeaders'];
+        }
 
-        $headers->loadConfig($config);
-
-        return $headers;
+        $this->loadConfig($configAttributes);
     }
 
     /**
-     * @param Config $config
+     * @param array $configAttributes
      * @throws UserException
      */
-    public function loadConfig(Config $config)
+    private function loadConfig(array $configAttributes)
     {
-        $attrs = $config->getAttributes();
-        $configHeaders = empty($attrs['http']['headers']) ? [] : $attrs['http']['headers'];
+        if (!empty($configAttributes['http']['headers']) && is_array($configAttributes['http']['headers'])) {
+            $configHeaders = $configAttributes['http']['headers'];
+        } else {
+            $configHeaders = [];
+        }
 
         if (!empty($this->requiredHeaders)) {
             foreach ($this->requiredHeaders as $rHeader) {
                 if (empty($configHeaders[$rHeader])) {
-                    throw new UserException("Missing required header {$rHeader} in config.http.headers!");
+                    throw new UserException("Missing required header {$rHeader} in 'config.http.headers'.");
                 }
             }
         }
