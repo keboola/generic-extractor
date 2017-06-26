@@ -69,7 +69,7 @@ class OAuth20 implements AuthInterface
      * @param array $configAttributes
      * @throws UserException
      */
-    public function __construct(array $authorization, array $authentication, array $configAttributes)
+    public function __construct(array $configAttributes, array $authorization, array $authentication)
     {
         if (empty($authorization['oauth_api']['credentials'])) {
             throw new UserException("OAuth API credentials not supplied in configuration.");

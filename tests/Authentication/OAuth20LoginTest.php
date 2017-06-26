@@ -54,21 +54,19 @@ class OAuth20LoginTest extends ExtractorTestCase
             ])
         ];
 
-        $api = [
-            'authentication' => [
-                'loginRequest' => [
-                    'endpoint' => 'auth/refresh',
-                    'params' => ['refresh_token' => ['user' => 'refresh_token']],
-                    'method' => 'POST'
-                ],
-                'apiRequest' => [
-                    'query' => ['access_token' => 'access_token']
-                ],
-                'expires' => ['response' => 'expires_in', 'relative' => true]
-            ]
+        $authentication = [
+            'loginRequest' => [
+                'endpoint' => 'auth/refresh',
+                'params' => ['refresh_token' => ['user' => 'refresh_token']],
+                'method' => 'POST'
+            ],
+            'apiRequest' => [
+                'query' => ['access_token' => 'access_token']
+            ],
+            'expires' => ['response' => 'expires_in', 'relative' => true]
         ];
 
-        $auth = new OAuth20Login(['oauth_api' => ['credentials' => $oauthCredentials]], $api);
+        $auth = new OAuth20Login([], ['oauth_api' => ['credentials' => $oauthCredentials]], $authentication);
         $auth->authenticateClient($restClient);
 
         $request = $restClient->createRequest(['endpoint' => '/']);
