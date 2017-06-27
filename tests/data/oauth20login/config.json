@@ -17,9 +17,7 @@
           "endpoint": "https://www.linkedin.com/uas/oauth2/accessToken",
           "params": {
             "grant_type": "authorization_code",
-            "code\"": {
-              "user": "refresh_token"
-            },
+            "code": "refresh_token",
             "redirect_uri": "https://syrup.keboola.com/oauth-v2/authorize/keboola.ex-linkedin/callback",
             "client_id": {
               "consumer": "client_id"
