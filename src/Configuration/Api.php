@@ -93,7 +93,7 @@ class Api
     {
         if (empty($api['authentication']['type'])) {
             $this->logger->debug("Using no authentication.");
-            $this->auth = new Authentication\NoAuth();
+            return new Authentication\NoAuth();
         }
 
         $this->logger->debug("Using '{$api['authentication']['type']}' authentication.");
