@@ -46,13 +46,15 @@ class Login implements AuthInterface
     {
         $this->configAttributes = $configAttributes;
         $this->auth = $authentication;
-        if (empty($authentication['endpoint'])) {
-            throw new UserException('Request endpoint must be set for the Login authentication method.');
-        }
         if (empty($authentication['loginRequest'])) {
             throw new UserException("'loginRequest' is not configured for Login authentication");
         }
-        if (!is_integer($authentication['expires']) && empty($authentication['expires']['response'])) {
+        if (empty($authentication['loginRequest']['endpoint'])) {
+            throw new UserException('Request endpoint must be set for the Login authentication method.');
+        }
+        if (!empty($authentication['expires']) &&
+            (!is_integer($authentication['expires']) && empty($authentication['expires']['response']))
+        ) {
             throw new UserException(
                 "The 'expires' attribute must be either an integer or an array with 'response' " .
                 "key containing a path in the response"
