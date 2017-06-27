@@ -2,7 +2,7 @@
 
 namespace Keboola\GenericExtractor\Tests;
 
-use Keboola\GenericExtractor\Config\Api;
+use Keboola\GenericExtractor\Configuration\Api;
 use Keboola\GenericExtractor\GenericExtractor;
 use Keboola\Juicer\Config\Config;
 use Keboola\Juicer\Parser\Json;
@@ -27,10 +27,9 @@ class GenericExtractorTest extends TestCase
         ];
 
         $cfg = new Config('testCfg', []);
-        $api = Api::create(new NullLogger(), ['baseUrl' => 'http://example.com'], $cfg);
+        $api = new Api(new NullLogger(), ['baseUrl' => 'http://example.com'], [], []);
 
-        $ex = new GenericExtractor(new Temp(), new NullLogger());
-        $ex->setApi($api);
+        $ex = new GenericExtractor(new Temp(), new NullLogger(), $api);
 
         $ex->setMetadata($meta);
         $ex->run($cfg);
@@ -44,8 +43,8 @@ class GenericExtractorTest extends TestCase
     {
         $temp = new Temp();
         $parser = Json::create(new Config('testCfg', []), new NullLogger(), $temp);
-
-        $extractor = new GenericExtractor($temp, new NullLogger());
+        $api = new Api(new NullLogger(), [], [], []);
+        $extractor = new GenericExtractor($temp, new NullLogger(), $api);
         $extractor->setParser($parser);
         self::assertEquals($parser, $extractor->getParser());
     }

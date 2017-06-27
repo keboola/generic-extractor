@@ -7,7 +7,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Subscriber\Mock;
-use Keboola\Code\Builder;
 use Keboola\GenericExtractor\Tests\ExtractorTestCase;
 use Keboola\Juicer\Client\RestClient;
 use Psr\Log\NullLogger;
@@ -17,26 +16,26 @@ class QueryTest extends ExtractorTestCase
     public function testAuthenticateClient()
     {
         $client = new Client(['base_url' => 'http://example.com']);
-
-        $builder = new Builder;
-        $definitions = [
-            'paramOne' => (object) ['attr' => 'first'],
-            'paramTwo' => (object) [
-                'function' => 'md5',
-                'args' => [(object) ['attr' => 'second']]
-            ],
-            'paramThree' => 'string'
+        $authentication = [
+            'query' => [
+                'paramOne' => (object) ['attr' => 'first'],
+                'paramTwo' => (object) [
+                    'function' => 'md5',
+                    'args' => [(object) ['attr' => 'second']]
+                ],
+                'paramThree' => 'string'
+            ]
         ];
-        $attrs = ['first' => 1, 'second' => 'two'];
+        $configAttributes = ['first' => 1, 'second' => 'two'];
 
-        $auth = new Query($builder, $attrs, $definitions);
+        $auth = new Query($configAttributes, $authentication);
         $auth->authenticateClient(new RestClient($client, new NullLogger()));
 
         $request = $client->createRequest('GET', '/');
         $client->send($request);
 
         self::assertEquals(
-            'paramOne=1&paramTwo=' . md5($attrs['second']) . '&paramThree=string',
+            'paramOne=1&paramTwo=' . md5($configAttributes['second']) . '&paramThree=string',
             (string) $request->getQuery()
         );
     }
@@ -44,9 +43,7 @@ class QueryTest extends ExtractorTestCase
     public function testAuthenticateClientQuery()
     {
         $client = new Client(['base_url' => 'http://example.com']);
-
-        $builder = new Builder;
-        $auth = new Query($builder, [], ['authParam' => 'secretCodeWow']);
+        $auth = new Query([], ['authParam' => 'secretCodeWow']);
         $restClient = new RestClient($client, new NullLogger());
         $auth->authenticateClient($restClient);
 
@@ -69,9 +66,6 @@ class QueryTest extends ExtractorTestCase
     public function testRequestInfo()
     {
         $client = new Client(['base_url' => 'http://example.com']);
-
-        $builder = new Builder;
-
         $urlTokenParam = (object) [
             'function' => 'concat',
             'args' => [
@@ -81,20 +75,22 @@ class QueryTest extends ExtractorTestCase
             ]
         ];
 
-        $definitions = [
-            'urlTokenParamHash' => (object) [
-                'function' => 'md5',
-                'args' => [
-                    $urlTokenParam
-                ]
-            ],
-            'urlTokenParam' => $urlTokenParam
+        $authentication = [
+            'query' => [
+                'urlTokenParamHash' => (object) [
+                    'function' => 'md5',
+                    'args' => [
+                        $urlTokenParam
+                    ]
+                ],
+                'urlTokenParam' => $urlTokenParam
+            ]
         ];
-        $attrs = [
+        $configAttributes = [
             'token' => 'asdf1234'
         ];
 
-        $auth = new Query($builder, $attrs, $definitions);
+        $auth = new Query($configAttributes, $authentication);
         $auth->authenticateClient(new RestClient($client, new NullLogger()));
 
         $mock = new Mock([
@@ -109,8 +105,8 @@ class QueryTest extends ExtractorTestCase
         self::sendRequest($client, $request);
         self::assertEquals(
             'param=value&urlTokenParamHash=' .
-                md5($originalUrl . $attrs['token'] . 'value') .
-                '&urlTokenParam=' . urlencode($originalUrl) . $attrs['token'] . 'value',
+                md5($originalUrl . $configAttributes['token'] . 'value') .
+                '&urlTokenParam=' . urlencode($originalUrl) . $configAttributes['token'] . 'value',
             (string) $request->getQuery()
         );
     }
