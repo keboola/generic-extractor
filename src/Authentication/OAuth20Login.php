@@ -44,6 +44,7 @@ class OAuth20Login extends Login
      */
     public function __construct(array $configAttributes, array $authorization, array $authentication)
     {
+        parent::__construct($configAttributes, $authentication);
         if (empty($authorization['oauth_api']['credentials'])) {
             throw new UserException("OAuth API credentials not supplied in config");
         }
@@ -71,8 +72,6 @@ class OAuth20Login extends Login
             'user' => $oAuthData,
             'attr' => $this->configAttributes
         ];
-
-        parent::__construct($configAttributes, $authentication);
     }
 
     /**
@@ -80,7 +79,6 @@ class OAuth20Login extends Login
      */
     protected function getAuthRequest(array $config) : RestRequest
     {
-        parent::getAuthRequest($config);
         if (!empty($config['params'])) {
             $config['params'] = UserFunction::build($config['params'], $this->params);
         }
