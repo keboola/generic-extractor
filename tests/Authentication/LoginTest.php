@@ -40,23 +40,19 @@ class LoginTest extends ExtractorTestCase
         $guzzle->getEmitter()->attach($history);
 
         $restClient = new RestClient($guzzle, new NullLogger());
-
         $attrs = ['first' => 1, 'second' => 'two'];
-
         $api = [
-            'authentication' => [
-                'loginRequest' => [
-                    'endpoint' => 'login',
-                    'params' => ['par' => ['attr' => 'first']],
-                    'headers' => ['X-Header' => ['attr' => 'second']],
-                    'method' => 'POST'
-                ],
-                'apiRequest' => [
-                    'headers' => ['X-Test-Auth' => 'headerToken'],
-                    'query' => ['qToken' => 'queryToken']
-                ],
-                'expires' => ['response' => 'expiresIn', 'relative' => true]
-            ]
+            'loginRequest' => [
+                'endpoint' => 'login',
+                'params' => ['par' => ['attr' => 'first']],
+                'headers' => ['X-Header' => ['attr' => 'second']],
+                'method' => 'POST'
+            ],
+            'apiRequest' => [
+                'headers' => ['X-Test-Auth' => 'headerToken'],
+                'query' => ['qToken' => 'queryToken']
+            ],
+            'expires' => ['response' => 'expiresIn', 'relative' => true]
         ];
 
         $auth = new Login($attrs, $api);

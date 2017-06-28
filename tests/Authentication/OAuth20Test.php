@@ -6,7 +6,6 @@ use Keboola\GenericExtractor\Authentication\OAuth20;
 use GuzzleHttp\Client;
 use Keboola\GenericExtractor\Tests\ExtractorTestCase;
 use Keboola\Juicer\Client\RestClient;
-use Keboola\Code\Builder;
 use Psr\Log\NullLogger;
 
 class OAuth20Test extends ExtractorTestCase
@@ -18,9 +17,9 @@ class OAuth20Test extends ExtractorTestCase
         $client->setDefaultOption('headers', ['X-Test' => 'test']);
         $restClient = new RestClient($client, new NullLogger());
         $auth = new OAuth20(
+            [],
             $config['authorization'],
-            $config['parameters']['api']['authentication'],
-            new Builder()
+            $config['parameters']['api']['authentication']
         );
         $auth->authenticateClient($restClient);
 
@@ -37,9 +36,9 @@ class OAuth20Test extends ExtractorTestCase
         $client = new Client(['base_url' => 'http://example.com']);
         $restClient = new RestClient($client, new NullLogger());
         $auth = new OAuth20(
+            [],
             $config['authorization'],
-            $config['parameters']['api']['authentication'],
-            new Builder()
+            $config['parameters']['api']['authentication']
         );
         $auth->authenticateClient($restClient);
 

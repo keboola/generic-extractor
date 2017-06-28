@@ -32,7 +32,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
     {
         return [
             [
-                new JobConfig(1, [
+                new JobConfig([
                     'endpoint' => 'ep',
                     'userData' => [
                         'k' => 'v'
@@ -43,13 +43,13 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 ]
             ],
             [
-                new JobConfig(1, [
+                new JobConfig([
                     'endpoint' => 'ep'
                 ]),
                 null
             ],
             [
-                new JobConfig(1, [
+                new JobConfig([
                     'endpoint' => 'ep',
                     'userData' => 'v'
                 ]),
@@ -58,7 +58,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 ]
             ],
             [
-                new JobConfig(1, [
+                new JobConfig([
                     'endpoint' => 'ep',
                     'userData' => [
                         'hash' => [
@@ -79,7 +79,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
     public function testUserParentId()
     {
         $value = ['parent' => 'val'];
-        $job = $this->getJob(new JobConfig(1, [
+        $job = $this->getJob(new JobConfig([
             'endpoint' => 'ep'
         ]));
         $job->setUserParentId($value);
@@ -89,7 +89,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     public function testUserParentIdMerge()
     {
-        $job = $this->getJob(new JobConfig(1, [
+        $job = $this->getJob(new JobConfig([
             'endpoint' => 'ep',
             'userData' => [
                 'cfg' => 'cfgVal',
@@ -113,7 +113,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     public function testFirstPage()
     {
-        $cfg = new JobConfig(1, [
+        $cfg = new JobConfig([
             'endpoint' => 'ep',
             'params' => [
                 'first' => 1
@@ -132,7 +132,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
      */
     public function testNextPage($config, $expectedParams)
     {
-        $cfg = new JobConfig(1, [
+        $cfg = new JobConfig([
             'endpoint' => 'ep',
             'params' => [
                 'first' => 1
@@ -168,7 +168,8 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     public function testBuildParams()
     {
-        $cfg = new JobConfig(1, [
+        $cfg = new JobConfig([
+            'endpoint' => 'fooBar',
             'params' => \Keboola\Utils\jsonDecode('{
                 "timeframe": "this_24_hours",
                 "filters": {
@@ -213,7 +214,8 @@ class GenericExtractorJobTest extends ExtractorTestCase
      */
     public function testBuildParamsException()
     {
-        $cfg = new JobConfig(1, [
+        $cfg = new JobConfig([
+            'endpoint' => 'fooBar',
             'params' => \Keboola\Utils\jsonDecode('{
                 "filters": {
                     "function": "date"
@@ -240,7 +242,8 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     public function testFilterResponse()
     {
-        $cfg = new JobConfig(1, [
+        $cfg = new JobConfig([
+            'endpoint' => 'fooBar',
             'responseFilter' => 'complexItem'
         ]);
 
@@ -267,12 +270,12 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     public function testRun()
     {
-        $jobConfig = new JobConfig(1, [
+        $jobConfig = new JobConfig([
             'endpoint' => 'ep'
         ]);
 
         $parser = Json::create(
-            new Config('test', []),
+            new Config('test', ['jobs' => [['endpoint' => 'fooBar']]]),
             new NullLogger(),
             new Temp()
         );
@@ -313,7 +316,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 ['base_url' => 'http://example.com/api/']
             ),
             Json::create(
-                new Config('test', []),
+                new Config('test', ['jobs' => [['endpoint' => 'fooBar']]]),
                 new NullLogger(),
                 new Temp()
             ),
@@ -323,7 +326,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     public function testGetDataType()
     {
-        $jobConfig = JobConfig::create(['endpoint' => 'resources/res.json', 'dataType' => 'res']);
+        $jobConfig = new JobConfig(['endpoint' => 'resources/res.json', 'dataType' => 'res']);
 
         $job = new GenericExtractorJob(
             $jobConfig,
@@ -337,7 +340,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     public function testGetDataTypeFromEndpoint()
     {
-        $jobConfig = JobConfig::create(['endpoint' => 'resources/res.json']);
+        $jobConfig = new JobConfig(['endpoint' => 'resources/res.json']);
 
         $job = new GenericExtractorJob(
             $jobConfig,

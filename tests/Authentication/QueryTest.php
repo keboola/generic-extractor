@@ -43,7 +43,7 @@ class QueryTest extends ExtractorTestCase
     public function testAuthenticateClientQuery()
     {
         $client = new Client(['base_url' => 'http://example.com']);
-        $auth = new Query([], ['authParam' => 'secretCodeWow']);
+        $auth = new Query([], ['query' => ['authParam' => 'secretCodeWow']]);
         $restClient = new RestClient($client, new NullLogger());
         $auth->authenticateClient($restClient);
 

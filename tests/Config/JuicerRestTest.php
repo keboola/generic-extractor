@@ -2,7 +2,7 @@
 
 namespace Keboola\GenericExtractor\Tests\Config;
 
-use Keboola\GenericExtractor\Config\JuicerRest;
+use Keboola\GenericExtractor\Configuration\JuicerRest;
 use PHPUnit\Framework\TestCase;
 
 class JuicerRestTest extends TestCase

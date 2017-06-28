@@ -2,7 +2,7 @@
 
 namespace Keboola\GenericExtractor\Tests\Config;
 
-use Keboola\GenericExtractor\Config\UserFunction;
+use Keboola\GenericExtractor\Configuration\UserFunction;
 use PHPUnit\Framework\TestCase;
 
 class UserFunctionTest extends TestCase
