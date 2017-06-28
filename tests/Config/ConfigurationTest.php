@@ -2,10 +2,9 @@
 
 namespace Keboola\GenericExtractor\Tests\Config;
 
-use Keboola\GenericExtractor\Config\Configuration;
+use Keboola\GenericExtractor\Configuration\Extractor;
+use Keboola\GenericExtractor\Exception\ApplicationException;
 use Keboola\Juicer\Config\Config;
-use Keboola\Juicer\Config\JobConfig;
-use Keboola\Juicer\Exception\UserException;
 use Keboola\Juicer\Tests\ExtractorTestCase;
 use Keboola\Temp\Temp;
 use Keboola\CsvTable\Table;
@@ -16,23 +15,26 @@ class ConfigurationTest extends ExtractorTestCase
 {
     public function testStoreResults()
     {
-        $resultsPath = __DIR__ . '/../data/storeResultsTest' . uniqid();
-
+        $temp = new Temp();
+        $resultsPath = $temp->getTmpFolder() . DIRECTORY_SEPARATOR . 'data';
         $this->storeResults($resultsPath, 'full', false);
     }
 
     public function testIncrementalResults()
     {
-        $resultsPath = __DIR__ . '/../data/storeResultsTest' . uniqid();
-
+        $temp = new Temp();
+        $resultsPath = $temp->getTmpFolder() . DIRECTORY_SEPARATOR . 'data';
         $this->storeResults($resultsPath, 'incremental', true);
     }
 
     public function testDefaultBucketResults()
     {
-        $resultsPath = __DIR__ . '/../data/storeResultsDefaultBucket' . uniqid();
-
-        $configuration = new Configuration($resultsPath, new Temp(), new NullLogger());
+        $temp = new Temp();
+        $resultsPath = $temp->getTmpFolder() . DIRECTORY_SEPARATOR . 'data';
+        $config = '{"parameters":{}}';
+        $fs = new Filesystem();
+        $fs->dumpFile($resultsPath . DIRECTORY_SEPARATOR . 'config.json', $config);
+        $configuration = new Extractor($resultsPath, new NullLogger());
 
         $files = [
             Table::create('first', ['col1', 'col2']),
@@ -54,7 +56,10 @@ class ConfigurationTest extends ExtractorTestCase
 
     protected function storeResults($resultsPath, $name, $incremental)
     {
-        $configuration = new Configuration($resultsPath, new Temp('test'), new NullLogger());
+        $config = '{"parameters":{}}';
+        $fs = new Filesystem();
+        $fs->dumpFile($resultsPath . DIRECTORY_SEPARATOR . 'config.json', $config);
+        $configuration = new Extractor($resultsPath, new NullLogger());
 
         $files = [
             Table::create('first', ['col1', 'col2']),
@@ -79,21 +84,23 @@ class ConfigurationTest extends ExtractorTestCase
     public function testGetConfigMetadata()
     {
         $path = __DIR__ . '/../data/metadataTest';
-
-        $configuration = new Configuration($path, new Temp('test'), new NullLogger());
+        $configuration = new Extractor($path, new NullLogger());
         $json = $configuration->getMetadata();
 
         self::assertEquals(json_decode('{"some":"data","more": {"woah": "such recursive"}}', true), $json);
-
-        $noConfiguration = new Configuration('asdf', new Temp('test'), new NullLogger());
+        $path = __DIR__ . '/../data/noCache';
+        $noConfiguration = new Extractor($path, new NullLogger());
         self::assertEquals(null, $noConfiguration->getMetadata());
     }
 
     public function testSaveConfigMetadata()
     {
-        $resultsPath = __DIR__ . '/../data/metadataTest' . uniqid();
-
-        $configuration = new Configuration($resultsPath, new Temp('test'), new NullLogger());
+        $temp = new Temp();
+        $resultsPath = $temp->getTmpFolder() . DIRECTORY_SEPARATOR . 'data';
+        $config = '{"parameters":{}}';
+        $fs = new Filesystem();
+        $fs->dumpFile($resultsPath . DIRECTORY_SEPARATOR . 'config.json', $config);
+        $configuration = new Extractor($resultsPath, new NullLogger());
 
         $configuration->saveConfigMetadata([
             'some' => 'data',
@@ -107,26 +114,10 @@ class ConfigurationTest extends ExtractorTestCase
         $this->rmDir($resultsPath);
     }
 
-    public function testGetConfig()
-    {
-        $configuration = new Configuration(__DIR__ . '/../data/recursive', new Temp('test'), new NullLogger());
-
-        $config = $configuration->getConfig();
-
-        $json = json_decode(file_get_contents(__DIR__ . '/../data/recursive/config.json'), true);
-
-        $jobs = $config->getJobs();
-        self::assertEquals(JobConfig::create($json['parameters']['config']['jobs'][0]), reset($jobs));
-
-        self::assertEquals($json['parameters']['config']['outputBucket'], $config->getAttribute('outputBucket'));
-    }
-
     public function testGetMultipleConfigs()
     {
-        $configuration = new Configuration(__DIR__ . '/../data/iterations', new Temp('test'), new NullLogger());
-
+        $configuration = new Extractor(__DIR__ . '/../data/iterations', new NullLogger());
         $configs = $configuration->getMultipleConfigs();
-
         $json = json_decode(file_get_contents(__DIR__ . '/../data/iterations/config.json'), true);
 
         foreach ($json['parameters']['iterations'] as $i => $params) {
@@ -138,23 +129,22 @@ class ConfigurationTest extends ExtractorTestCase
         self::assertEquals($configs[0]->getJobs(), $configs[1]->getJobs());
         self::assertContainsOnlyInstancesOf(Config::class, $configs);
         self::assertCount(count($json['parameters']['iterations']), $configs);
+        self::assertEquals($json['parameters']['config']['outputBucket'], $configs[0]->getAttribute('outputBucket'));
     }
 
     public function testGetMultipleConfigsSingle()
     {
-        $configuration = new Configuration(__DIR__ . '/../data/simple_basic', new Temp(), new NullLogger());
+        $configuration = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
         $configs = $configuration->getMultipleConfigs();
         self::assertContainsOnlyInstancesOf(Config::class, $configs);
         self::assertCount(1, $configs);
-        self::assertEquals($configuration->getConfig(), $configs[0]);
     }
 
     public function testGetJson()
     {
-        $configuration = new Configuration(__DIR__ . '/../data/simple_basic', new Temp(), new NullLogger());
-        $result = self::callMethod($configuration, 'getJson', ['/config.json']);
-        $result = $result['parameters']['config']['id'];
-        self::assertEquals('multiCfg', $result);
+        $configuration = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        $configs = $configuration->getMultipleConfigs();
+        self::assertEquals('multiCfg', $configs[0]->getConfigName());
     }
 
     public function testGetInvalidConfig()
@@ -162,12 +152,11 @@ class ConfigurationTest extends ExtractorTestCase
         $temp = new Temp();
         $fs = new Filesystem();
         $fs->dumpFile($temp->getTmpFolder() . '/config.json', 'invalidJSON');
-        $configuration = new Configuration($temp->getTmpFolder(), new Temp(), new NullLogger());
         try {
-            $configuration->getConfig();
+            new Extractor($temp->getTmpFolder(), new NullLogger());
             self::fail("Invalid JSON must cause exception");
-        } catch (UserException $e) {
-            self::assertContains('Invalid JSON: Syntax error', $e->getMessage());
+        } catch (ApplicationException $e) {
+            self::assertContains('Configuration file is not a valid JSON: Syntax error', $e->getMessage());
         }
     }
 

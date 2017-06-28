@@ -17,6 +17,7 @@ class UserFunction
      * @param Builder $builder
      * @throws UserException
      * @return array
+     * TODO remove $builder parameter,
      */
     public static function build($functions, array $params = [], Builder $builder = null)
     {
