@@ -11,7 +11,7 @@ class FindResponseArrayTest extends TestCase
 {
     public function testSingleArray()
     {
-        $cfg = JobConfig::create([
+        $cfg = new JobConfig([
             'endpoint' => 'a',
             'dataField' => 'results'
         ]);
@@ -32,7 +32,7 @@ class FindResponseArrayTest extends TestCase
 
     public function testNestedArray()
     {
-        $cfg = JobConfig::create([
+        $cfg = new JobConfig([
             'endpoint' => 'a',
             'dataField' => 'data.results'
         ]);
@@ -59,7 +59,7 @@ class FindResponseArrayTest extends TestCase
      */
     public function testMultipleArraysException()
     {
-        $cfg = JobConfig::create([
+        $cfg = new JobConfig([
             'endpoint' => 'a'
         ]);
 

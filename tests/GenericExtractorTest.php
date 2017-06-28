@@ -43,7 +43,7 @@ class GenericExtractorTest extends TestCase
     {
         $temp = new Temp();
         $parser = Json::create(new Config('testCfg', []), new NullLogger(), $temp);
-        $api = new Api(new NullLogger(), [], [], []);
+        $api = new Api(new NullLogger(), ['baseUrl' => 'http://example.com'], [], []);
         $extractor = new GenericExtractor($temp, new NullLogger(), $api);
         $extractor->setParser($parser);
         self::assertEquals($parser, $extractor->getParser());

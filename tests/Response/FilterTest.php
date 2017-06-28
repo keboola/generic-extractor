@@ -10,7 +10,7 @@ class FilterTest extends TestCase
 {
     public function testRun()
     {
-        $jobConfig = JobConfig::create([
+        $jobConfig = new JobConfig([
             'endpoint' => 'ep',
             'responseFilter' => 'out.arr[].in'
         ]);
@@ -55,7 +55,7 @@ class FilterTest extends TestCase
 
     public function testArray()
     {
-        $jobConfig = JobConfig::create([
+        $jobConfig = new JobConfig([
             'endpoint' => 'ep',
             'responseFilter' => 'out.arr[]'
         ]);
@@ -98,7 +98,7 @@ class FilterTest extends TestCase
 
     public function testMissingData()
     {
-        $jobConfig = JobConfig::create([
+        $jobConfig = new JobConfig([
             'endpoint' => 'ep',
             'responseFilter' => 'out.arr[].in'
         ]);

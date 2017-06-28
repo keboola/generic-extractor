@@ -3,7 +3,7 @@
 namespace Keboola\GenericExtractor\Tests;
 
 use Keboola\Code\Builder;
-use Keboola\GenericExtractor\Config\Configuration;
+use Keboola\GenericExtractor\Configuration\Extractor;
 use Keboola\GenericExtractor\GenericExtractorJob;
 use Keboola\Juicer\Client\RestClient;
 use Keboola\Juicer\Pagination\NoScroller;
@@ -148,11 +148,11 @@ class RecursiveJobTest extends ExtractorTestCase
     public function getJob($dir)
     {
         $temp = new Temp('recursion');
-        $configuration = new Configuration(__DIR__ . '/data/' . $dir, $temp, new NullLogger());
+        $configuration = new Extractor(__DIR__ . '/data/' . $dir, new NullLogger());
 
-        $jobConfig = array_values($configuration->getConfig()->getJobs())[0];
+        $jobConfig = array_values($configuration->getMultipleConfigs()[0]->getJobs())[0];
 
-        $parser = Json::create($configuration->getConfig(), new NullLogger(), $temp);
+        $parser = Json::create($configuration->getMultipleConfigs()[0], new NullLogger(), $temp);
 
         $client = RestClient::create(new NullLogger());
 
