@@ -26,7 +26,7 @@ class GenericExtractorTest extends TestCase
             ]
         ];
 
-        $cfg = new Config('testCfg', []);
+        $cfg = new Config('testCfg', ['jobs' => [['endpoint' => 'fooBar']]]);
         $api = new Api(new NullLogger(), ['baseUrl' => 'http://example.com'], [], []);
 
         $ex = new GenericExtractor(new Temp(), new NullLogger(), $api);
@@ -42,7 +42,7 @@ class GenericExtractorTest extends TestCase
     public function testGetParser()
     {
         $temp = new Temp();
-        $parser = Json::create(new Config('testCfg', []), new NullLogger(), $temp);
+        $parser = Json::create(new Config('testCfg', ['jobs' => [['endpoint' => 'fooBar']]]), new NullLogger(), $temp);
         $api = new Api(new NullLogger(), ['baseUrl' => 'http://example.com'], [], []);
         $extractor = new GenericExtractor($temp, new NullLogger(), $api);
         $extractor->setParser($parser);
