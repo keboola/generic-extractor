@@ -2,33 +2,52 @@
 
 namespace Keboola\GenericExtractor\Tests\Config;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Event\BeforeEvent;
+use GuzzleHttp\Event\Emitter;
+use GuzzleHttp\Message\Request;
 use Keboola\GenericExtractor\Authentication\OAuth20;
 use Keboola\GenericExtractor\Authentication\OAuth20Login;
 use Keboola\GenericExtractor\Authentication\Query;
-use Keboola\GenericExtractor\Config\Api;
-use Keboola\GenericExtractor\Tests\ExtractorTestCase;
-use Keboola\Juicer\Config\Config;
+use Keboola\GenericExtractor\Configuration\Api;
+use Keboola\GenericExtractor\Subscriber\AbstractSignature;
+use Keboola\Juicer\Client\RestClient;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
-class ApiTest extends ExtractorTestCase
+class ApiTest extends TestCase
 {
+    private function getClientMock(Request $request)
+    {
+        $beforeEventMock = self::createMock(BeforeEvent::class);
+        $beforeEventMock->method('getRequest')->willReturn($request);
+        /** @var BeforeEvent $beforeEventMock */
+        $emitterMock = self::createMock(Emitter::class);
+        $a = 1;
+        $emitterMock->method('attach')->willReturnCallback(function ($arg) use ($beforeEventMock, $request, &$a) {
+            /** @var AbstractSignature $arg */
+            if ($a === 1) {
+                // make sure the onBefore is triggered only once because of LoginRequests
+                $a++;
+                $arg->onBefore($beforeEventMock);
+            }
+        });
+        $guzzleClientMock = self::createMock(Client::class);
+        $guzzleClientMock->method('getEmitter')->willReturn($emitterMock);
+        $restClientMock = self::createMock(RestClient::class);
+        $restClientMock->method('getClient')->willReturn($guzzleClientMock);
+        return $restClientMock;
+    }
+
     public function testCreateBaseUrlString()
     {
-        $config = new Config('testCfg', []);
         $string = 'https://third.second.com/TEST/Something/';
-
-        $url = Api::createBaseUrl(
-            ['baseUrl' => $string],
-            $config
-        );
-
-        self::assertEquals($string, $url);
+        $api = new Api(new NullLogger(), ['baseUrl' => $string], [], []);
+        self::assertEquals($string, $api->getBaseUrl());
     }
 
     public function testCreateBaseUrlFunction()
     {
-        $config = new Config('testCfg', []);
-        $config->setAttributes(['domain' => 'keboola']);
         $fn = [
             'function' => 'concat',
             'args' => [
@@ -37,13 +56,8 @@ class ApiTest extends ExtractorTestCase
                 '.example.com/'
             ]
         ];
-
-        $url = Api::createBaseUrl(
-            ['baseUrl' => $fn],
-            $config
-        );
-
-        self::assertEquals('https://keboola.example.com/', $url);
+        $api = new Api(new NullLogger(), ['baseUrl' => $fn], ['domain' => 'keboola'], []);
+        self::assertEquals('https://keboola.example.com/', $api->getBaseUrl());
     }
 
     /**
@@ -51,7 +65,6 @@ class ApiTest extends ExtractorTestCase
      */
     public function testCreateBaseUrlFunctionError()
     {
-        $config = new Config('testCfg', []);
         $fn = [
             'function' => 'concat',
             'args' => [
@@ -59,20 +72,15 @@ class ApiTest extends ExtractorTestCase
                 (object) ['attr' => 'path']
             ]
         ];
-
-        Api::createBaseUrl(
-            ['baseUrl' => $fn],
-            $config
-        );
+        new Api(new NullLogger(), ['baseUrl' => $fn], [], []);
     }
 
     public function testCreateAuthQueryDeprecated()
     {
-        $config = new Config('testCfg', []);
-        $config->setAttributes(['key' => 'val']);
-
+        $attributes = ['key' => 'val'];
         // Deprecated way
-        $api = [
+        $apiConfig = [
+            'baseUrl' => 'http://example.com',
             'authentication' => [
                 'type' => 'url.query'
             ],
@@ -82,20 +90,19 @@ class ApiTest extends ExtractorTestCase
                 ]
             ]
         ];
-
-        $queryAuth = Api::createAuth(new NullLogger(), $api, $config, []);
-
-        self::assertEquals($api['query'], self::getProperty($queryAuth, 'query'));
-        self::assertEquals($config->getAttributes(), self::getProperty($queryAuth, 'attrs'));
-        self::assertInstanceOf(Query::class, $queryAuth);
+        $api = new Api(new NullLogger(), $apiConfig, $attributes, []);
+        $request = new Request('GET', 'http://example.com?foo=bar');
+        $restClientMock = $this->getClientMock($request);
+        /** @var RestClient $restClientMock */
+        $api->getAuth()->authenticateClient($restClientMock);
+        self::assertEquals(['foo' => 'bar', 'param' => 'val'], $request->getQuery()->toArray());
+        self::assertInstanceOf(Query::class, $api->getAuth());
     }
 
     public function testCreateAuthQuery()
     {
-        $config = new Config('testCfg', []);
-        $config->setAttributes(['key' => 'val']);
-
-        $api = [
+        $apiConfig = [
+            'baseUrl' => 'http://example.com',
             'authentication' => [
                 'type' => 'query',
                 'query' => [
@@ -106,35 +113,42 @@ class ApiTest extends ExtractorTestCase
             ]
         ];
 
-        $queryAuth = Api::createAuth(new NullLogger(), $api, $config, []);
-
-        self::assertEquals($api['authentication']['query'], self::getProperty($queryAuth, 'query'));
-        self::assertEquals($config->getAttributes(), self::getProperty($queryAuth, 'attrs'));
-        self::assertInstanceOf(Query::class, $queryAuth);
+        $api = new Api(new NullLogger(), $apiConfig, ['key' => 'val'], []);
+        $request = new Request('GET', 'http://example.com?foo=bar');
+        $restClientMock = $this->getClientMock($request);
+        /** @var RestClient $restClientMock */
+        $api->getAuth()->authenticateClient($restClientMock);
+        self::assertEquals(['foo' => 'bar', 'param' => 'val'], $request->getQuery()->toArray());
+        self::assertInstanceOf(Query::class, $api->getAuth());
     }
 
     public function testCreateAuthOAuth20Bearer()
     {
-        $jsonConfig = json_decode(file_get_contents(__DIR__ . '/../data/oauth20bearer/config.json'), true);
-        $config = new Config('testCfg', []);
-
-        $api = $jsonConfig['parameters']['api'];
-
-        $authorization = $jsonConfig['authorization'];
-
-        $oauth = Api::createAuth(new NullLogger(), $api, $config, $authorization);
-        self::assertInstanceOf(OAuth20::class, $oauth);
+        $config = json_decode(file_get_contents(__DIR__ . '/../data/oauth20bearer/config.json'), true);
+        $api = new Api(new NullLogger(), $config['parameters']['api'], [], $config['authorization']);
+        $request = new Request('GET', 'http://example.com?foo=bar');
+        $restClientMock = $this->getClientMock($request);
+        /** @var RestClient $restClientMock */
+        $api->getAuth()->authenticateClient($restClientMock);
+        self::assertInstanceOf(OAuth20::class, $api->getAuth());
+        self::assertEquals(['foo' => 'bar'], $request->getQuery()->toArray());
+        self::assertEquals(
+            ['Host' => ['example.com'], 'Authorization' => ['Bearer testToken']],
+            $request->getHeaders()
+        );
     }
 
     public function testCreateOauth2Login()
     {
-        $jsonConfig = json_decode(file_get_contents(__DIR__ . '/../data/oauth20login/config.json'), true);
-        $config = new Config('testCfg', []);
-
-        $api = $jsonConfig['parameters']['api'];
-        $authorization = $jsonConfig['authorization'];
-
-        $oauth = Api::createAuth(new NullLogger(), $api, $config, $authorization);
-        self::assertInstanceOf(OAuth20Login::class, $oauth);
+        $config = json_decode(file_get_contents(__DIR__ . '/../data/oauth20login/config.json'), true);
+        $api = new Api(new NullLogger(), $config['parameters']['api'], [], $config['authorization']);
+        $request = new Request('GET', 'http://example.com?foo=bar');
+        $restClientMock = $this->getClientMock($request);
+        $restClientMock->method('download')->willReturn((object)['access_token' => 'baz']);
+        /** @var RestClient $restClientMock */
+        $api->getAuth()->authenticateClient($restClientMock);
+        self::assertInstanceOf(OAuth20Login::class, $api->getAuth());
+        self::assertEquals(['foo' => 'bar', 'oauth2_access_token' => 'baz'], $request->getQuery()->toArray());
+        self::assertEquals(['Host' => ['example.com']], $request->getHeaders());
     }
 }
