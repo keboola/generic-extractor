@@ -1,6 +1,6 @@
 <?php
 
-namespace Keboola\GenericExtractor\Configuration\Extractor;
+namespace Keboola\GenericExtractor\Configuration\Extractor\Node;
 
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 

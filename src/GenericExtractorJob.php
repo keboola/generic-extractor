@@ -4,8 +4,8 @@ namespace Keboola\GenericExtractor;
 
 use Keboola\Filter\Exception\FilterException;
 use Keboola\Filter\FilterFactory;
+use Keboola\GenericExtractor\Configuration\UserFunction;
 use Keboola\GenericExtractor\Response\Filter;
-use Keboola\GenericExtractor\Config\UserFunction;
 use Keboola\GenericExtractor\Response\FindResponseArray;
 use Keboola\Juicer\Client\RestClient;
 use Keboola\Juicer\Client\RestRequest;

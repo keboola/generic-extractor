@@ -4,6 +4,7 @@ namespace Keboola\GenericExtractor\Configuration\Extractor;
 
 use Keboola\GenericExtractor\Configuration\Extractor\Node\Api;
 use Keboola\GenericExtractor\Configuration\Extractor\Node\Authorization;
+use Keboola\GenericExtractor\Configuration\Extractor\Node\Config;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
