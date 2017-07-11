@@ -2,9 +2,9 @@
 
 namespace Keboola\GenericExtractor\Configuration;
 
-use Keboola\Juicer\Exception\UserException;
 use Keboola\Code\Builder;
 use Keboola\Code\Exception\UserScriptException;
+use Keboola\GenericExtractor\Exception\UserException;
 
 /**
  * Keboola\Code\Builder wrapper

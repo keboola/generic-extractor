@@ -2,12 +2,11 @@
 
 namespace Keboola\GenericExtractor\Tests;
 
-use Keboola\GenericExtractor\GenericExtractor;
+use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\GenericExtractor\GenericExtractorJob;
 use Keboola\Json\Parser;
 use Keboola\Juicer\Client\RestRequest;
 use Keboola\Juicer\Config\JobConfig;
-use Keboola\Juicer\Exception\UserException;
 use Keboola\Juicer\Pagination\ResponseUrlScroller;
 use Keboola\Juicer\Config\Config;
 use Keboola\Juicer\Client\RestClient;
@@ -211,7 +210,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
     }
 
     /**
-     * @expectedException \Keboola\Juicer\Exception\UserException
+     * @expectedException \Keboola\GenericExtractor\Exception\UserException
      * @expectedExceptionMessage User script error: date() expects at least 1 parameter, 0 given
      */
     public function testBuildParamsException()

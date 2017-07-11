@@ -2,8 +2,8 @@
 
 namespace Keboola\GenericExtractor\Response;
 
+use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\Juicer\Config\JobConfig;
-use Keboola\Juicer\Exception\UserException;
 use Psr\Log\LoggerInterface;
 
 class FindResponseArray
@@ -77,21 +77,20 @@ class FindResponseArray
                 ]);
                 $data = [];
             } else {
-                $e = new UserException(
-                    "More than one array found in response! Use 'dataField' parameter to specify a key to the data array. (endpoint: {$config['endpoint']}, arrays in response root: " . join(", ", $arrayNames) . ")"
+                throw new UserException(
+                    "More than one array found in response! Use 'dataField' parameter to specify a key to the data " .
+                    "array. (endpoint: " . $config['endpoint'] . ", arrays in response root: " .
+                    implode(", ", $arrayNames) . ")",
+                    0,
+                    null,
+                    [
+                        'response' => json_encode($response),
+                        'arrays found' => $arrayNames
+                    ]
                 );
-                $e->setData([
-                    'response' => json_encode($response),
-                    'arrays found' => $arrayNames
-                ]);
-                throw $e;
             }
         } else {
-            $e = new UserException('Unknown response from API.');
-            $e->setData([
-                'response' => json_encode($response)
-            ]);
-            throw $e;
+            throw new UserException('Unknown response from API.', 0, null, ['response' => json_encode($response)]);
         }
 
         return $data;

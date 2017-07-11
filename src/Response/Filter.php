@@ -2,8 +2,8 @@
 
 namespace Keboola\GenericExtractor\Response;
 
+use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\Juicer\Config\JobConfig;
-use Keboola\Juicer\Exception\UserException;
 
 /**
  * Processes data and converts them to scalar values by

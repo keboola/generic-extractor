@@ -3,10 +3,10 @@
 namespace Keboola\GenericExtractor;
 
 use Keboola\GenericExtractor\Configuration\Extractor;
+use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\Juicer\Config\Config;
 use Keboola\Juicer\Parser\Json;
 use Keboola\Temp\Temp;
-use Keboola\Juicer\Exception\UserException;
 use Monolog\Handler\AbstractHandler;
 use Monolog\Logger;
 use Symfony\Component\Filesystem\Filesystem;
@@ -76,8 +76,8 @@ class Executor
 
             if (!empty($config->getAttribute('outputBucket'))) {
                 $outputBucket = $config->getAttribute('outputBucket');
-            } elseif (!empty($config->getConfigName())) {
-                $outputBucket = 'ex-api-' . $api->getName() . "-" . $config->getConfigName();
+            } elseif ($config->getAttribute('id')) {
+                $outputBucket = 'ex-api-' . $api->getName() . "-" . $config->getAttribute('id');
             } else {
                 $outputBucket = "__kbc_default";
             }

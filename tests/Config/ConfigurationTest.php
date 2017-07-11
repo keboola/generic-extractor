@@ -150,7 +150,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $configuration = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
         $configs = $configuration->getMultipleConfigs();
-        self::assertEquals('multiCfg', $configs[0]->getConfigName());
+        self::assertEquals('multiCfg', $configs[0]->getAttribute('id'));
     }
 
     public function testGetInvalidConfig()
