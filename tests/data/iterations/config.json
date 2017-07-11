@@ -8,6 +8,7 @@
         },
         "config": {
             "id": "multiCfg",
+            "outputBucket": "in.c-main",
             "jobs": [
                 {
                     "endpoint": "exports/tickets.json",
