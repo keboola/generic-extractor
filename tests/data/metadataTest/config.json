@@ -1,0 +1,8 @@
+{
+  "parameters": {
+    "api": {
+      "baseUrl": "http://example.com"
+    },
+    "config": {}
+  }
+}

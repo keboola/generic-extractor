@@ -3,6 +3,7 @@
 namespace Keboola\GenericExtractor\Authentication;
 
 use Keboola\GenericExtractor\Configuration\UserFunction;
+use Keboola\GenericExtractor\Response\Filter;
 use Keboola\Juicer\Exception\UserException;
 use Keboola\Juicer\Client\RestRequest;
 use Keboola\Juicer\Client\RestClient;
@@ -52,8 +53,8 @@ class Login implements AuthInterface
         if (empty($authentication['loginRequest']['endpoint'])) {
             throw new UserException('Request endpoint must be set for the Login authentication method.');
         }
-        if (!empty($authentication['expires']) &&
-            (!is_integer($authentication['expires']) && empty($authentication['expires']['response']))
+        if (!empty($authentication['expires']) && (!filter_var($authentication['expires'], FILTER_VALIDATE_INT)
+                && empty($authentication['expires']['response']))
         ) {
             throw new UserException(
                 "The 'expires' attribute must be either an integer or an array with 'response' " .
