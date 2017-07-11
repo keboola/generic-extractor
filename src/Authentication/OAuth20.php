@@ -3,8 +3,8 @@
 namespace Keboola\GenericExtractor\Authentication;
 
 use Keboola\GenericExtractor\Configuration\UserFunction;
+use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\GenericExtractor\Subscriber\AbstractSignature;
-use Keboola\Juicer\Exception\UserException;
 use Keboola\Juicer\Client\RestClient;
 use Keboola\GenericExtractor\Subscriber\UrlSignature;
 use Keboola\GenericExtractor\Subscriber\HeaderSignature;

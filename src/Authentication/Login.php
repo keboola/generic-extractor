@@ -3,8 +3,7 @@
 namespace Keboola\GenericExtractor\Authentication;
 
 use Keboola\GenericExtractor\Configuration\UserFunction;
-use Keboola\GenericExtractor\Response\Filter;
-use Keboola\Juicer\Exception\UserException;
+use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\Juicer\Client\RestRequest;
 use Keboola\Juicer\Client\RestClient;
 use Keboola\GenericExtractor\Subscriber\LoginSubscriber;

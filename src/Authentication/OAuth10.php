@@ -1,7 +1,7 @@
 <?php
 namespace Keboola\GenericExtractor\Authentication;
 
-use Keboola\Juicer\Exception\UserException;
+use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\Juicer\Client\RestClient;
 use GuzzleHttp\Subscriber\Oauth\Oauth1;
 
