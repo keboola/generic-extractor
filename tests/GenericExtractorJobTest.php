@@ -2,8 +2,10 @@
 
 namespace Keboola\GenericExtractor\Tests;
 
+use Keboola\GenericExtractor\GenericExtractor;
 use Keboola\GenericExtractor\GenericExtractorJob;
 use Keboola\Json\Parser;
+use Keboola\Juicer\Client\RestRequest;
 use Keboola\Juicer\Config\JobConfig;
 use Keboola\Juicer\Exception\UserException;
 use Keboola\Juicer\Pagination\ResponseUrlScroller;
@@ -280,22 +282,12 @@ class GenericExtractorJobTest extends ExtractorTestCase
             new Temp()
         );
 
-        $job = $this->getMockBuilder(GenericExtractorJob::class)
-            ->setMethods(['download'])
-            ->setConstructorArgs([
-                $jobConfig,
-                RestClient::create(new NullLogger()),
-                $parser,
-                new NullLogger()
-            ])
-            ->getMock();
+        $client = self::createMock(RestClient::class);
+        $client->method('download')->willReturn([(object) ['result' => 'data']]);
+        $client->method('createRequest')->willReturn(RestRequest::create($jobConfig->getConfig()));
 
-        $job->expects(self::once())
-            ->method('download')
-            ->willReturn([
-                (object) ['result' => 'data']
-            ]);
-
+        /** @var RestClient $client */
+        $job = new GenericExtractorJob($jobConfig, $client, $parser, new NullLogger());
         /** @var GenericExtractorJob $job */
         $job->run();
 
