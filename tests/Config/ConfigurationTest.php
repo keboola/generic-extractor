@@ -90,7 +90,7 @@ class ConfigurationTest extends ExtractorTestCase
         self::assertEquals(json_decode('{"some":"data","more": {"woah": "such recursive"}}', true), $json);
         $path = __DIR__ . '/../data/noCache';
         $noConfiguration = new Extractor($path, new NullLogger());
-        self::assertEquals(null, $noConfiguration->getMetadata());
+        self::assertEquals([], $noConfiguration->getMetadata());
     }
 
     public function testSaveConfigMetadata()
@@ -122,7 +122,13 @@ class ConfigurationTest extends ExtractorTestCase
 
         foreach ($json['parameters']['iterations'] as $i => $params) {
             self::assertEquals(
-                array_replace(['id' => $json['parameters']['config']['id']], $params),
+                array_replace(
+                    [
+                        'id' => $json['parameters']['config']['id'],
+                        'outputBucket' => $json['parameters']['config']['outputBucket']
+                    ],
+                    $params
+                ),
                 $configs[$i]->getAttributes()
             );
         }
