@@ -6,14 +6,6 @@ use Keboola\Juicer\Exception\UserException;
 
 require_once(__DIR__ . "/vendor/autoload.php");
 
-set_error_handler(function ($severity, $message, $file, $line) {
-    if (!(error_reporting() & $severity)) {
-        // This error code is not included in error_reporting
-        return;
-    }
-    throw new ErrorException($message, 0, $severity, $file, $line);
-});
-
 // initialize logger
 $logger = new Monolog\Logger("logger");
 $stream = fopen('php://stdout', 'r');
