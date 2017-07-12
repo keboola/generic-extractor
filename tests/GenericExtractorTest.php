@@ -27,7 +27,7 @@ class GenericExtractorTest extends TestCase
             ]
         ];
 
-        $cfg = new Config('testCfg', ['jobs' => [['endpoint' => 'get']]]);
+        $cfg = new Config(['jobs' => [['endpoint' => 'get']]]);
         $api = new Api(new NullLogger(), ['baseUrl' => 'http://example.com/'], [], []);
         $ex = new GenericExtractor(new Temp(), new NullLogger(), $api);
 
@@ -53,7 +53,7 @@ class GenericExtractorTest extends TestCase
             ]
         ];
 
-        $cfg = new Config('testCfg', ['jobs' => [['endpoint' => 'get']]]);
+        $cfg = new Config(['jobs' => [['endpoint' => 'get']]]);
         $api = new Api(new NullLogger(), ['baseUrl' => 'http://private-74f7c-extractormock.apiary-mock.com/'], [], []);
         $ex = new GenericExtractor(new Temp(), new NullLogger(), $api);
 
@@ -69,7 +69,7 @@ class GenericExtractorTest extends TestCase
     public function testGetParser()
     {
         $temp = new Temp();
-        $parser = Json::create(new Config('testCfg', ['jobs' => [['endpoint' => 'fooBar']]]), new NullLogger(), $temp);
+        $parser = Json::create(new Config(['jobs' => [['endpoint' => 'fooBar']]]), new NullLogger(), $temp);
         $api = new Api(new NullLogger(), ['baseUrl' => 'http://example.com'], [], []);
         $extractor = new GenericExtractor($temp, new NullLogger(), $api);
         $extractor->setParser($parser);

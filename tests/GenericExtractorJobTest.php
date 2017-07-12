@@ -146,7 +146,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 ['base_url' => 'http://example.com/api/']
             ),
             Json::create(
-                new Config('test', ['jobs' => [['endpoint' => 'fooBar']]]),
+                new Config(['jobs' => [['endpoint' => 'fooBar']]]),
                 new NullLogger(),
                 new Temp()
             ),
@@ -284,7 +284,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         ]);
 
         $parser = Json::create(
-            new Config('test', ['jobs' => [['endpoint' => 'fooBar']]]),
+            new Config(['jobs' => [['endpoint' => 'fooBar']]]),
             new NullLogger(),
             new Temp()
         );
@@ -317,7 +317,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 ['base_url' => 'http://example.com/api/']
             ),
             Json::create(
-                new Config('test', ['jobs' => [['endpoint' => 'fooBar']]]),
+                new Config(['jobs' => [['endpoint' => 'fooBar']]]),
                 new NullLogger(),
                 new Temp()
             ),

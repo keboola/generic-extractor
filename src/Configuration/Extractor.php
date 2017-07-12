@@ -6,6 +6,7 @@ use Doctrine\Common\Cache\FilesystemCache;
 use GuzzleHttp\Subscriber\Cache\CacheStorage;
 use Keboola\CsvTable\Table;
 use Keboola\GenericExtractor\Configuration\Extractor\ConfigFile;
+use Keboola\GenericExtractor\Configuration\Extractor\StateFile;
 use Keboola\GenericExtractor\Exception\ApplicationException;
 use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\Juicer\Config\Config;
@@ -84,7 +85,7 @@ class Extractor
             $processor->processConfiguration(new ConfigFile(), $data);
         } catch (InvalidConfigurationException $e) {
             // TODO: create issue to make this strict
-            $this->logger->warning("State file configuration is invalid: " . $e->getMessage());
+            //$this->logger->warning("Configuration file configuration is invalid: " . $e->getMessage());
         }
         return $data;
     }
@@ -104,10 +105,10 @@ class Extractor
         }
         $processor = new Processor();
         try {
-            $processor->processConfiguration(new ConfigFile(), $data);
+            $processor->processConfiguration(new StateFile(), $data);
         } catch (InvalidConfigurationException $e) {
             // TODO: create issue to make this strict
-            $this->logger->warning("State file configuration is invalid: " . $e->getMessage());
+            //$this->logger->warning("State file configuration is invalid: " . $e->getMessage());
         }
         return $data;
     }
@@ -139,8 +140,7 @@ class Extractor
             throw new UserException("The 'config' section is required in the configuration.");
         }
         $configuration = array_replace($this->config['parameters']['config'], $params);
-        $configName = empty($configuration['id']) ? '' : $configuration['id'];
-        return new Config($configName, $configuration);
+        return new Config($configuration);
     }
 
     /**
