@@ -14,17 +14,12 @@ class UserFunction
     /**
      * @param array|\stdClass $functions
      * @param array $params ['attr' => $attributesArray, ...]
-     * @param Builder $builder
      * @throws UserException
      * @return array
-     * TODO remove $builder parameter,
      */
-    public static function build($functions, array $params = [], Builder $builder = null)
+    public static function build($functions, array $params = [])
     {
-        if (is_null($builder)) {
-            $builder = new Builder();
-        }
-
+        $builder = new Builder();
         $functions = (array) \Keboola\Utils\arrayToObject($functions);
         try {
             array_walk($functions, function (&$value, $key) use ($params, $builder) {
