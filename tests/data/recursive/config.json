@@ -1,0 +1,35 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "test"
+        },
+        "config": {
+            "outputBucket": "rec",
+            "jobs": [
+                {
+                    "endpoint": "exports/tickets.json",
+                    "dataType": "tickets_export",
+                    "children": [
+                        {
+                            "endpoint": "tickets/{1:id}/comments.json",
+                            "recursionFilter": "status!=Deleted",
+                            "dataType": "comments",
+                            "placeholders": {
+                                "1:id": "id"
+                            },
+                            "children": [
+                                {
+                                    "endpoint": "third/level/{2:id}/{id}.json",
+                                    "placeholders": {
+                                        "2:id": "id",
+                                        "id": "id"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

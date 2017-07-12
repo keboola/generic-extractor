@@ -1,11 +1,7 @@
 vendor/
 /data/
 .idea/
-build/
-.kdev4
-*.kdev4
-composer.phar
-codeclimate.json
 .tmp
 /doc/examples/*/out/state.json
 /doc/examples/*/out/tables/*
+/build/logs

@@ -1,8 +1,23 @@
-# Save as .codeclimate.yml (note leading .) in project root directory
 languages:
-  Ruby: false
-  JavaScript: false
   PHP: true
-  Python: false
   exclude_paths:
   - "vendor"
+engines:
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - php
+    exclude_paths:
+      - tests/      
+  fixme:
+    enabled: true
+  phpmd:
+    enabled: true
+    checks:
+      CleanCode/ElseExpression:
+        enabled: false
+      Naming/ShortVariable:
+        enabled: false 
+      Naming/LongVariable:
+        enabled: false

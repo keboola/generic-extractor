@@ -1,0 +1,47 @@
+<?php
+
+namespace Keboola\GenericExtractor\Tests\Subscriber;
+
+use Keboola\GenericExtractor\Subscriber\UrlSignature;
+use GuzzleHttp\Message\Request;
+use GuzzleHttp\Event\BeforeEvent;
+use GuzzleHttp\Transaction;
+use GuzzleHttp\Client;
+use PHPUnit\Framework\TestCase;
+
+class UrlSignatureTest extends TestCase
+{
+    public function testAddSignature()
+    {
+        $request = new Request('GET', '/endpoint');
+        $transaction = new Transaction(new Client(), $request);
+        $event = new BeforeEvent($transaction);
+
+        $subscriber = new UrlSignature();
+        $subscriber->setSignatureGenerator(
+            function () {
+                return ['token' => 'tokenValue'];
+            }
+        );
+
+        $subscriber->onBefore($event);
+        self::assertEquals('tokenValue', $request->getQuery()->get('token'));
+    }
+
+    public function testKeepSignature()
+    {
+        $request = new Request('GET', '/endpoint?token=originalValue');
+        $transaction = new Transaction(new Client(), $request);
+        $event = new BeforeEvent($transaction);
+
+        $subscriber = new UrlSignature();
+        $subscriber->setSignatureGenerator(
+            function () {
+                return ['token' => 'tokenValue'];
+            }
+        );
+
+        $subscriber->onBefore($event);
+        self::assertEquals('originalValue', $request->getQuery()->get('token'));
+    }
+}

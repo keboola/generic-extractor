@@ -8,10 +8,19 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
-         bootstrap="bootstrap-dev.php">
+         bootstrap="bootstrap.php">
 
-	<testsuite name="Generic Extractor Test Suite">
-		<directory>./tests</directory>
-	</testsuite>
-
+    <testsuite name="Generic Extractor Test Suite">
+        <directory>./tests</directory>
+    </testsuite>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">.</directory>
+            <exclude>
+                <directory suffix=".php">vendor</directory>
+                <file>run.php</file>
+                <file>console.php</file>
+            </exclude>
+        </whitelist>
+    </filter>
 </phpunit>
