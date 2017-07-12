@@ -15,7 +15,6 @@ use Keboola\Juicer\Parser\Json;
 use Keboola\Juicer\Parser\JsonMap;
 use Keboola\Juicer\Parser\ParserInterface;
 use Keboola\GenericExtractor\Subscriber\LogRequest;
-use Keboola\Code\Builder;
 use Keboola\Temp\Temp;
 use Psr\Log\LoggerInterface;
 
