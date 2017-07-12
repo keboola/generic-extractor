@@ -54,7 +54,7 @@ class FindResponseArrayTest extends TestCase
     }
 
     /**
-     * @expectedException \Keboola\Juicer\Exception\UserException
+     * @expectedException \Keboola\GenericExtractor\Exception\UserException
      * @expectedExceptionMessage More than one array found in response! Use 'dataField' parameter to specify a key to the data array. (endpoint: a, arrays in response root: results, otherArray)
      */
     public function testMultipleArraysException()
