@@ -111,34 +111,32 @@ class LoginTest extends ExtractorTestCase
         $history = new History();
         $guzzle->getEmitter()->attach($history);
 
-        $restClient = new RestClient($guzzle);
+        $restClient = new RestClient($guzzle, new NullLogger());
 
         $attrs = ['first' => 1, 'second' => 'two'];
 
         $api = [
-            'authentication' => [
-                'loginRequest' => [
-                    'endpoint' => 'login',
-                    'params' => ['par' => ['attr' => 'first']],
-                    'headers' => ['X-Header' => ['attr' => 'second']],
-                    'method' => 'POST'
-                ],
-                'apiRequest' => [
-                    'headers' => [
-                        'X-Test-Auth' => 'xTestToken',
-                        'Authorization' => [
-                            'function' => 'concat',
-                            'args' => [
-                                'Bearer',
-                                ' ',
-                                'bearerToken' => 'headerTokens.token'
-                            ]
-                        ],
+            'loginRequest' => [
+                'endpoint' => 'login',
+                'params' => ['par' => ['attr' => 'first']],
+                'headers' => ['X-Header' => ['attr' => 'second']],
+                'method' => 'POST'
+            ],
+            'apiRequest' => [
+                'headers' => [
+                    'X-Test-Auth' => 'xTestToken',
+                    'Authorization' => [
+                        'function' => 'concat',
+                        'args' => [
+                            'Bearer',
+                            ' ',
+                            'bearerToken' => 'headerTokens.token'
+                        ]
                     ],
-                    'query' => ['qToken' => 'queryToken']
                 ],
-                'expires' => ['response' => 'expiresIn', 'relative' => true]
-            ]
+                'query' => ['qToken' => 'queryToken']
+            ],
+            'expires' => ['response' => 'expiresIn', 'relative' => true]
         ];
 
         $auth = new Login($attrs, $api);
