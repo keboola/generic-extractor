@@ -47,6 +47,11 @@ class GenericExtractor
     protected $logger;
 
     /**
+     * @var Api
+     */
+    private $api;
+
+    /**
      * GenericExtractor constructor.
      * @param Temp $temp
      * @param LoggerInterface $logger

@@ -344,7 +344,7 @@ class GenericExtractorJob
      * Return a download request
      *
      * @param JobConfig $config
-     * @return RestRequest | false
+     * @return RestRequest|bool
      */
     private function firstPage(JobConfig $config)
     {
