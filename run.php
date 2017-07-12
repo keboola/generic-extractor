@@ -1,8 +1,8 @@
 <?php
 
+use Keboola\GenericExtractor\Exception\ApplicationException;
+use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\GenericExtractor\Executor;
-use Keboola\Juicer\Exception\ApplicationException;
-use Keboola\Juicer\Exception\UserException;
 
 require_once(__DIR__ . "/vendor/autoload.php");
 
