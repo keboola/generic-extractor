@@ -61,7 +61,7 @@ class ApiTest extends TestCase
     }
 
     /**
-     * @expectedException \Keboola\Juicer\Exception\UserException
+     * @expectedException \Keboola\GenericExtractor\Exception\UserException
      */
     public function testCreateBaseUrlFunctionError()
     {

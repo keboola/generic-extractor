@@ -2,7 +2,6 @@
 
 namespace Keboola\GenericExtractor\Tests;
 
-use Keboola\Code\Builder;
 use Keboola\GenericExtractor\Configuration\Extractor;
 use Keboola\GenericExtractor\GenericExtractorJob;
 use Keboola\Juicer\Client\RestClient;
@@ -158,11 +157,7 @@ class RecursiveJobTest extends ExtractorTestCase
         $history = new History();
         $client->getClient()->getEmitter()->attach($history);
 
-        $job = new GenericExtractorJob($jobConfig, $client, $parser, new NullLogger());
-        $job->setBuilder(new Builder());
-        /** @var GenericExtractorJob $job */
-        $job->setScroller(new NoScroller());
-
+        $job = new GenericExtractorJob($jobConfig, $client, $parser, new NullLogger(), new NoScroller(), [], []);
         return [
             $job,
             $parser,

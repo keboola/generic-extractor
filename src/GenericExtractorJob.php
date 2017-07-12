@@ -75,11 +75,6 @@ class GenericExtractorJob
     private $lastResponseHash;
 
     /**
-     * @var Builder
-     */
-    private $stringBuilder;
-
-    /**
      * Data to append to the root result
      * @var array
      */
@@ -101,14 +96,27 @@ class GenericExtractorJob
      * @param RestClient $client A client used to communicate with the API (wrapper for Guzzle)
      * @param ParserInterface $parser A parser to handle the result and convert it into CSV file(s)
      * @param LoggerInterface $logger
+     * @param ScrollerInterface $scroller
+     * @param array $attributes
+     * @param array $metadata
      */
-    public function __construct(JobConfig $config, RestClient $client, ParserInterface $parser, LoggerInterface $logger)
-    {
+    public function __construct(
+        JobConfig $config,
+        RestClient $client,
+        ParserInterface $parser,
+        LoggerInterface $logger,
+        ScrollerInterface $scroller,
+        array $attributes,
+        array $metadata
+    ) {
         $this->logger = $logger;
         $this->config = $config;
         $this->client = $client;
         $this->parser = $parser;
+        $this->scroller = $scroller;
         $this->jobId = $config->getJobId();
+        $this->attributes = $attributes;
+        $this->metadata = $metadata;
         // If no dataType is set, save endpoint as dataType before replacing placeholders
         if (empty($this->config->getConfig()['dataType']) && !empty($this->config->getConfig()['endpoint'])) {
             $this->config->setDataType($this->getDataType());
@@ -124,7 +132,7 @@ class GenericExtractorJob
      */
     public function run()
     {
-        $this->buildParams($this->config);
+        $this->config->setParams($this->buildParams($this->config));
 
         $parentId = $this->getParentId();
 
@@ -191,8 +199,19 @@ class GenericExtractorJob
      */
     private function createChild(JobConfig $config, array $parentResults)
     {
+        // Clone and reset Scroller
+        $scroller = clone $this->scroller;
+        $scroller->reset();
         // Clone the config to prevent overwriting the placeholder(s) in endpoint
-        $job = new static(clone $config, $this->client, $this->parser, $this->logger);
+        $job = new static(
+            clone $config,
+            $this->client,
+            $this->parser,
+            $this->logger,
+            $scroller,
+            $this->attributes,
+            $this->metadata
+        );
 
         $params = [];
         $placeholders = !empty($config->getConfig()['placeholders']) ? $config->getConfig()['placeholders'] : [];
@@ -212,14 +231,6 @@ class GenericExtractorJob
 
         $job->setParams($params);
         $job->setParentResults($parentResults);
-
-        // Inject $scroller into a child job
-        $scroller = clone $this->scroller;
-        $scroller->reset();
-        $job->setScroller($scroller);
-        $job->setMetadata($this->metadata);
-        $job->setAttributes($this->attributes);
-        $job->setBuilder($this->stringBuilder);
         return $job;
     }
 
@@ -240,7 +251,8 @@ class GenericExtractorJob
         if (!is_scalar($field)) {
             if (empty($field['path'])) {
                 throw new UserException(
-                    "The path for placeholder '{$placeholder}' must be a string value or an object containing 'path' and 'function'."
+                    "The path for placeholder '{$placeholder}' must be a string value or an object ".
+                    "containing 'path' and 'function'."
                 );
             }
 
@@ -367,14 +379,6 @@ class GenericExtractorJob
     }
 
     /**
-     * @param ScrollerInterface $scroller
-     */
-    public function setScroller(ScrollerInterface $scroller)
-    {
-        $this->scroller = $scroller;
-    }
-
-    /**
      * @return null|array
      */
     private function getParentId()
@@ -402,8 +406,7 @@ class GenericExtractorJob
             [
                 'attr' => $this->attributes,
                 'time' => !empty($this->metadata['time']) ? $this->metadata['time'] : []
-            ],
-            $this->stringBuilder
+            ]
         );
     }
 
@@ -433,12 +436,8 @@ class GenericExtractorJob
             [
                 'attr' => $this->attributes,
                 'time' => !empty($this->metadata['time']) ? $this->metadata['time'] : []
-            ],
-            $this->stringBuilder
+            ]
         );
-
-        $config->setParams($params);
-
         return $params;
     }
 
@@ -492,30 +491,6 @@ class GenericExtractorJob
     private function prependParent($string)
     {
         return (substr($string, 0, 7) == "parent_") ? $string : "parent_{$string}";
-    }
-
-    /**
-     * @param array $attributes
-     */
-    public function setAttributes(array $attributes)
-    {
-        $this->attributes = $attributes;
-    }
-
-    /**
-     * @param Builder $builder
-     */
-    public function setBuilder(Builder $builder)
-    {
-        $this->stringBuilder = $builder;
-    }
-
-    /**
-     * @param array $metadata
-     */
-    public function setMetadata(array $metadata)
-    {
-        $this->metadata = $metadata;
     }
 
     public function setUserParentId($id)

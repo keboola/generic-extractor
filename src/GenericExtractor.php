@@ -107,11 +107,8 @@ class GenericExtractor
         }
 
         $this->initParser($config);
-
-        $builder = new Builder();
-
         foreach ($config->getJobs() as $jobConfig) {
-            $this->runJob($jobConfig, $client, $config, $builder);
+            $this->runJob($jobConfig, $client, $config);
         }
 
         if ($this->parser instanceof Json) {
@@ -126,14 +123,18 @@ class GenericExtractor
      * @param Config $config
      * @param Builder $builder
      */
-    protected function runJob($jobConfig, $client, $config, $builder)
+    protected function runJob($jobConfig, $client, $config)
     {
         // FIXME this is rather duplicated in RecursiveJob::createChild()
-        $job = new GenericExtractorJob($jobConfig, $client, $this->parser, $this->logger);
-        $job->setScroller($this->api->getScroller());
-        $job->setAttributes($config->getAttributes());
-        $job->setMetadata($this->metadata);
-        $job->setBuilder($builder);
+        $job = new GenericExtractorJob(
+            $jobConfig,
+            $client,
+            $this->parser,
+            $this->logger,
+            $this->api->getScroller(),
+            $config->getAttributes(),
+            $this->metadata
+        );
         if (!empty($config->getAttribute('userData'))) {
             $job->setUserParentId(
                 is_scalar($config->getAttribute('userData'))

@@ -7,12 +7,12 @@ use Keboola\GenericExtractor\GenericExtractorJob;
 use Keboola\Json\Parser;
 use Keboola\Juicer\Client\RestRequest;
 use Keboola\Juicer\Config\JobConfig;
+use Keboola\Juicer\Pagination\NoScroller;
 use Keboola\Juicer\Pagination\ResponseUrlScroller;
 use Keboola\Juicer\Config\Config;
 use Keboola\Juicer\Client\RestClient;
 use Keboola\Juicer\Parser\Json;
 use Keboola\Temp\Temp;
-use Keboola\Code\Builder;
 use Psr\Log\NullLogger;
 
 class GenericExtractorJobTest extends ExtractorTestCase
@@ -24,7 +24,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
      */
     public function testGetParentId(JobConfig $cfg, $expected)
     {
-        $job = $this->getJob($cfg);
+        $job = $this->getJob($cfg, [], []);
 
         self::assertEquals($expected, self::callMethod($job, 'getParentId', []));
     }
@@ -82,7 +82,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         $value = ['parent' => 'val'];
         $job = $this->getJob(new JobConfig([
             'endpoint' => 'ep'
-        ]));
+        ]), [], []);
         $job->setUserParentId($value);
 
         self::assertEquals($value, self::callMethod($job, 'getParentId', []));
@@ -96,7 +96,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 'cfg' => 'cfgVal',
                 'both' => 'cfgVal'
             ]
-        ]));
+        ]), [], []);
         $job->setUserParentId([
             'inj' => 'injVal',
             'both' => 'injVal'
@@ -120,7 +120,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 'first' => 1
             ]
         ]);
-        $job = $this->getJob($cfg);
+        $job = $this->getJob($cfg, [], []);
 
         $req = self::callMethod($job, 'firstPage', [$cfg]);
         self::assertEquals('ep', $req->getEndpoint());
@@ -139,11 +139,23 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 'first' => 1
             ]
         ]);
-        $job = $this->getJob($cfg);
-
+        $job = new GenericExtractorJob(
+            $cfg,
+            RestClient::create(
+                new NullLogger(),
+                ['base_url' => 'http://example.com/api/']
+            ),
+            Json::create(
+                new Config('test', ['jobs' => [['endpoint' => 'fooBar']]]),
+                new NullLogger(),
+                new Temp()
+            ),
+            new NullLogger(),
+            new ResponseUrlScroller($config),
+            [],
+            []
+        );
         self::callMethod($job, 'buildParams', [$cfg]);
-
-        $job->setScroller(new ResponseUrlScroller($config));
 
         $response = new \stdClass();
         $response->nextPage = "http://example.com/api/ep?something=2";
@@ -187,18 +199,16 @@ class GenericExtractorJobTest extends ExtractorTestCase
             }')
         ]);
 
-        $job = $this->getJob($cfg);
-        $job->setAttributes([
-            'das.attribute' => "something interesting"
-        ]);
-        $job->setMetadata([
-            'time' => [
-                'previousStart' => 0,
-                'currentStart' => time()
+        $job = $this->getJob(
+            $cfg,
+            ['das.attribute' => "something interesting"],
+            [
+                'time' => [
+                    'previousStart' => 0,
+                    'currentStart' => time()
+                ]
             ]
-        ]);
-        $job->setBuilder(new Builder());
-
+        );
         $params = self::callMethod($job, 'buildParams', [
             $cfg
         ]);
@@ -224,18 +234,16 @@ class GenericExtractorJobTest extends ExtractorTestCase
             }')
         ]);
 
-        $job = $this->getJob($cfg);
-        $job->setAttributes([
-            'das.attribute' => "something interesting"
-        ]);
-        $job->setMetadata([
-            'time' => [
-                'previousStart' => 0,
-                'currentStart' => time()
+        $job = $this->getJob(
+            $cfg,
+            ['das.attribute' => "something interesting"],
+            [
+                'time' => [
+                    'previousStart' => 0,
+                    'currentStart' => time()
+                ]
             ]
-        ]);
-        $job->setBuilder(new Builder());
-
+        );
         self::callMethod($job, 'buildParams', [
             $cfg
         ]);
@@ -248,7 +256,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
             'responseFilter' => 'complexItem'
         ]);
 
-        $job = $this->getJob($cfg);
+        $job = $this->getJob($cfg, [], []);
 
         $data = [
             (object) [
@@ -286,7 +294,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         $client->method('createRequest')->willReturn(RestRequest::create($jobConfig->getConfig()));
 
         /** @var RestClient $client */
-        $job = new GenericExtractorJob($jobConfig, $client, $parser, new NullLogger());
+        $job = new GenericExtractorJob($jobConfig, $client, $parser, new NullLogger(), new NoScroller(), [], []);
         /** @var GenericExtractorJob $job */
         $job->run();
 
@@ -296,9 +304,11 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     /**
      * @param JobConfig $config
+     * @param array $attributes
+     * @param array $metadata
      * @return GenericExtractorJob
      */
-    protected function getJob(JobConfig $config)
+    protected function getJob(JobConfig $config, array $attributes, array $metadata)
     {
         return new GenericExtractorJob(
             $config,
@@ -311,7 +321,10 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 new NullLogger(),
                 new Temp()
             ),
-            new NullLogger()
+            new NullLogger(),
+            new NoScroller(),
+            $attributes,
+            $metadata
         );
     }
 
@@ -323,7 +336,10 @@ class GenericExtractorJobTest extends ExtractorTestCase
             $jobConfig,
             RestClient::create(new NullLogger()),
             new Json(Parser::create(new NullLogger()), new NullLogger()),
-            new NullLogger()
+            new NullLogger(),
+            new NoScroller(),
+            [],
+            []
         );
 
         self::assertEquals($jobConfig->getDataType(), self::callMethod($job, 'getDataType', []));
@@ -337,7 +353,10 @@ class GenericExtractorJobTest extends ExtractorTestCase
             $jobConfig,
             RestClient::create(new NullLogger()),
             new Json(Parser::create(new NullLogger()), new NullLogger()),
-            new NullLogger()
+            new NullLogger(),
+            new NoScroller(),
+            [],
+            []
         );
 
         self::assertEquals($jobConfig->getEndpoint(), self::callMethod($job, 'getDataType', []));
