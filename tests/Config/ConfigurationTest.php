@@ -4,8 +4,8 @@ namespace Keboola\GenericExtractor\Tests\Config;
 
 use Keboola\GenericExtractor\Configuration\Extractor;
 use Keboola\GenericExtractor\Exception\ApplicationException;
+use Keboola\GenericExtractor\Tests\ExtractorTestCase;
 use Keboola\Juicer\Config\Config;
-use Keboola\Juicer\Tests\ExtractorTestCase;
 use Keboola\Temp\Temp;
 use Keboola\CsvTable\Table;
 use Psr\Log\NullLogger;

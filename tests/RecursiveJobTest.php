@@ -8,7 +8,6 @@ use Keboola\GenericExtractor\GenericExtractorJob;
 use Keboola\Juicer\Client\RestClient;
 use Keboola\Juicer\Pagination\NoScroller;
 use Keboola\Juicer\Parser\Json;
-use Keboola\Juicer\Tests\ExtractorTestCase;
 use Keboola\Temp\Temp;
 use GuzzleHttp\Subscriber\History;
 use Psr\Log\NullLogger;
