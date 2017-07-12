@@ -121,17 +121,15 @@ class GenericExtractor
      * @param JobConfig $jobConfig
      * @param RestClient $client
      * @param Config $config
-     * @param Builder $builder
      */
     protected function runJob($jobConfig, $client, $config)
     {
-        // FIXME this is rather duplicated in RecursiveJob::createChild()
         $job = new GenericExtractorJob(
             $jobConfig,
             $client,
             $this->parser,
             $this->logger,
-            $this->api->getScroller(),
+            $this->api->getNewScroller(),
             $config->getAttributes(),
             $this->metadata
         );

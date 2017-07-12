@@ -31,9 +31,9 @@ class Api
     private $auth;
 
     /**
-     * @var ScrollerInterface
+     * @var array
      */
-    private $scroller;
+    private $scrollerConfig = [];
 
     /**
      * @var Headers
@@ -66,8 +66,10 @@ class Api
     {
         $this->logger = $logger;
         $this->auth = $this->createAuth($api, $configAttributes, $authorization);
-        $this->scroller = ScrollerFactory::getScroller($api['pagination'] ?? []);
         $this->headers = new Headers($api, $configAttributes);
+        if (!empty($api['pagination']) && is_array($api['pagination'])) {
+            $this->scrollerConfig = $api['pagination'];
+        }
         if (!empty($api['retryConfig']) && is_array($api['retryConfig'])) {
             $this->retryConfig = $api['retryConfig'];
         }
@@ -95,7 +97,6 @@ class Api
             $this->logger->debug("Using no authentication.");
             return new Authentication\NoAuth();
         }
-
         $this->logger->debug("Using '{$api['authentication']['type']}' authentication.");
         switch ($api['authentication']['type']) {
             case 'basic':
@@ -181,9 +182,9 @@ class Api
     /**
      * @return ScrollerInterface
      */
-    public function getScroller() : ScrollerInterface
+    public function getNewScroller() : ScrollerInterface
     {
-        return $this->scroller;
+        return ScrollerFactory::getScroller($this->scrollerConfig);
     }
 
     /**
