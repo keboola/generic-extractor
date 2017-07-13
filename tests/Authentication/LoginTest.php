@@ -86,21 +86,12 @@ class LoginTest extends ExtractorTestCase
     public function testAuthenticateClientWithFunctionInApiRequestHeaders()
     {
         $guzzle = new Client(['base_url' => 'http://example.com/api']);
-        $guzzle->setDefaultOption('headers', ['X-Test' => '1']);
-
-        $expiresIn = 5000;
-        $expires = time() + $expiresIn;
         $mock = new Mock([
             new Response(200, [], Stream::factory(json_encode((object) [ // auth
-                'headerTokens' => [
-                    'token' => 1234
-                ],
-                'xTestToken' => 5678,
-                'queryToken' => 4321,
-                'expiresIn' => $expiresIn,
-            ]))),
-            new Response(200, [], Stream::factory(json_encode((object) [ // api call
-                'data' => [1,2,3]
+                'tokens' => [
+                    'header' => 1234,
+                    'query' => 4321
+                ]
             ]))),
             new Response(200, [], Stream::factory(json_encode((object) [ // api call
                 'data' => [1,2,3]
@@ -110,60 +101,51 @@ class LoginTest extends ExtractorTestCase
 
         $history = new History();
         $guzzle->getEmitter()->attach($history);
-
         $restClient = new RestClient($guzzle, new NullLogger());
-
-        $attrs = ['first' => 1, 'second' => 'two'];
-
         $api = [
             'loginRequest' => [
                 'endpoint' => 'login',
-                'params' => ['par' => ['attr' => 'first']],
-                'headers' => ['X-Header' => ['attr' => 'second']],
+                'headers' => ['X-Header' => 'fooBar'],
                 'method' => 'POST'
             ],
             'apiRequest' => [
                 'headers' => [
-                    'X-Test-Auth' => 'xTestToken',
                     'Authorization' => [
                         'function' => 'concat',
                         'args' => [
                             'Bearer',
                             ' ',
-                            'bearerToken' => 'headerTokens.token'
+                            'response' => 'tokens.header'
                         ]
                     ],
                 ],
-                'query' => ['qToken' => 'queryToken']
-            ],
-            'expires' => ['response' => 'expiresIn', 'relative' => true]
+                'query' => [
+                    'qqtoken' => 'tokens.query',
+                    'qToken' => [
+                        'function' => 'concat',
+                        'args' => [
+                            'qt',
+                            'response' => 'tokens.query'
+                        ]
+                    ]
+                ]
+            ]
         ];
 
-        $auth = new Login($attrs, $api);
+        $auth = new Login([], $api);
         $auth->authenticateClient($restClient);
-
         $request = $restClient->createRequest(['endpoint' => '/']);
-        $restClient->download($request);
         $restClient->download($request);
 
         // test creation of the login request
-        self::assertEquals($attrs['second'], $history->getIterator()[0]['request']->getHeader('X-Header'));
-        self::assertEquals(json_encode(['par' => $attrs['first']]), (string) $history->getIterator()[0]['request']->getBody());
+        self::assertEquals('fooBar', $history->getIterator()[0]['request']->getHeader('X-Header'));
 
         // test signature of the api request
-        self::assertEquals(5678, $history->getIterator()[1]['request']->getHeader('X-Test-Auth'));
         self::assertEquals('Bearer 1234', $history->getIterator()[1]['request']->getHeader('Authorization'));
-        self::assertEquals('qToken=4321', (string) $history->getIterator()[1]['request']->getQuery());
-
-        self::assertEquals(5678, $history->getIterator()[2]['request']->getHeader('X-Test-Auth'));
-        self::assertEquals('Bearer 1234', $history->getIterator()[2]['request']->getHeader('Authorization'));
-        self::assertEquals('qToken=4321', (string) $history->getIterator()[2]['request']->getQuery());
-
-        $expiry = self::getProperty(
-            $restClient->getClient()->getEmitter()->listeners('before')[0][0],
-            'expires'
+        self::assertEquals('qToken=qt4321', (string) $history->getIterator()[1]['request']->getQuery());
+        self::assertEquals(
+            json_encode(['data' => [1,2,3]]),
+            (string) $history->getIterator()[0]['request']->getBody()
         );
-        self::assertGreaterThan($expires - 2, $expiry);
-        self::assertLessThan($expires + 2, $expiry);
     }
 }

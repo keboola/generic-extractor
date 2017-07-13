@@ -118,7 +118,7 @@ class Login implements AuthInterface
         if (!empty($this->auth['apiRequest'][$type])) {
             foreach ($this->auth['apiRequest'][$type] as $key => $path) {
                 try {
-                    if ($type === 'headers' && is_array($path)) {
+                    if (is_array($path)) {
                         $result[$key] = $this->applyUserFunctionToHeaders($path, $response);
                     } else {
                         $result[$key] = \Keboola\Utils\getDataFromPath($path, $response, '.', false);
