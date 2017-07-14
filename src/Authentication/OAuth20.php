@@ -11,7 +11,7 @@ use Keboola\GenericExtractor\Subscriber\HeaderSignature;
 
 /**
  * OAuth 2.0 Bearer implementation
- * https://tools.ietf.org/html/rfc6750#section-2.1
+ * https:// tools.ietf.org/html/rfc6750#section-2.1
  *
  * This class allows using the OAuth data in any way.
  *

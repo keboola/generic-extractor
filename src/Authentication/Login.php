@@ -116,47 +116,23 @@ class Login implements AuthInterface
     {
         $result = [];
         if (!empty($this->auth['apiRequest'][$type])) {
-            foreach ($this->auth['apiRequest'][$type] as $key => $path) {
+            $result = UserFunction::build(
+                $this->auth['apiRequest'][$type],
+                [
+                    'response' => \Keboola\Utils\flattenArray(\Keboola\Utils\objectToArray($response)),
+                    'attr' => $this->configAttributes
+                ]
+            );
+            // for backward compatibility, check the values if they are a valid path within the response
+            foreach ($result as $key => $value) {
                 try {
-                    if (is_array($path)) {
-                        $result[$key] = $this->applyUserFunctionToHeaders($path, $response);
-                    } else {
-                        $result[$key] = \Keboola\Utils\getDataFromPath($path, $response, '.', false);
-                    }
+                    $result[$key] = \Keboola\Utils\getDataFromPath($value, $response, '.', false);
                 } catch (NoDataFoundException $e) {
-                    throw new UserException("Key '{$key}' not found at path '{$path}' in the Login response");
+                    // silently ignore invalid paths as they are probably values already processed by functions
                 }
             }
         }
         return $result;
-    }
-
-    /**
-     * Keeps value if it's specified as function and applies function to it.
-     * For key => val args it tries to fetch data from response.
-     *
-     * @param array $value A value of item in headers field
-     * @param \stdClass $response Response in which we find values (to address BC)
-     * @return array
-     * @throws UserException
-     */
-    private function applyUserFunctionToHeaders(array $value, \stdClass $response)
-    {
-        if (isset($value['function'], $value['args']) && is_array($value['args'])) {
-            $newArgs = [];
-            foreach ($value['args'] as $argKey => $argVal) {
-                if (is_string($argKey) && is_string($argVal)) {
-                    $newArgs[$argKey] = \Keboola\Utils\getDataFromPath($argVal, $response, '.', false);
-                } else {
-                    $newArgs[$argKey] = $argVal;
-                }
-            }
-            $newValue = $value;
-            $newValue['args'] = $newArgs;
-            return UserFunction::build([$newValue]);
-        } else {
-            throw new UserException("User function is not specified properly in authentication.apiRequest");
-        }
     }
 
     /**

@@ -110,29 +110,42 @@ class LoginTest extends ExtractorTestCase
             ],
             'apiRequest' => [
                 'headers' => [
-                    'Authorization' => [
+                    // backward compatible
+                    'Authorization1' => 'tokens.header',
+                    // function
+                    'Authorization2' => [
                         'function' => 'concat',
                         'args' => [
                             'Bearer',
                             ' ',
-                            'response' => 'tokens.header'
+                            ['response' => 'tokens.header']
                         ]
                     ],
+                    // direct reference
+                    'Authorization3' => [
+                        'response' => 'tokens.header'
+                    ]
                 ],
                 'query' => [
-                    'qqtoken' => 'tokens.query',
-                    'qToken' => [
+                    // backward compatible
+                    'qToken1' => 'tokens.query',
+                    // function
+                    'qToken2' => [
                         'function' => 'concat',
                         'args' => [
                             'qt',
-                            'response' => 'tokens.query'
+                            ['response' => 'tokens.query']
                         ]
+                    ],
+                    // direct reference
+                    'qToken3' => [
+                        'response' => 'tokens.query'
                     ]
                 ]
             ]
         ];
 
-        $auth = new Login([], $api);
+        $auth = new Login(['a1' => ['b1' => 'c1'], 'a2' => ['b2' => 'c2']], $api);
         $auth->authenticateClient($restClient);
         $request = $restClient->createRequest(['endpoint' => '/']);
         $restClient->download($request);
@@ -141,11 +154,16 @@ class LoginTest extends ExtractorTestCase
         self::assertEquals('fooBar', $history->getIterator()[0]['request']->getHeader('X-Header'));
 
         // test signature of the api request
-        self::assertEquals('Bearer 1234', $history->getIterator()[1]['request']->getHeader('Authorization'));
-        self::assertEquals('qToken=qt4321', (string) $history->getIterator()[1]['request']->getQuery());
+        self::assertEquals('1234', $history->getIterator()[1]['request']->getHeader('Authorization1'));
+        self::assertEquals('Bearer 1234', $history->getIterator()[1]['request']->getHeader('Authorization2'));
+        self::assertEquals('1234', $history->getIterator()[1]['request']->getHeader('Authorization3'));
+        self::assertEquals(
+            'qToken1=4321&qToken2=qt4321&qToken3=4321',
+            (string) $history->getIterator()[1]['request']->getQuery()
+        );
         self::assertEquals(
             json_encode(['data' => [1,2,3]]),
-            (string) $history->getIterator()[0]['request']->getBody()
+            (string) $history->getIterator()[1]['response']->getBody()
         );
     }
 }
