@@ -10,6 +10,7 @@ use Keboola\GenericExtractor\Authentication\OAuth20;
 use Keboola\GenericExtractor\Authentication\OAuth20Login;
 use Keboola\GenericExtractor\Authentication\Query;
 use Keboola\GenericExtractor\Configuration\Api;
+use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\GenericExtractor\Subscriber\AbstractSignature;
 use Keboola\Juicer\Client\RestClient;
 use PHPUnit\Framework\TestCase;
@@ -44,6 +45,16 @@ class ApiTest extends TestCase
         $string = 'https://third.second.com/TEST/Something/';
         $api = new Api(new NullLogger(), ['baseUrl' => $string], [], []);
         self::assertEquals($string, $api->getBaseUrl());
+    }
+
+    public function testCreateInvalidUrlString()
+    {
+        try {
+            new Api(new NullLogger(), ['baseUrl' => 'htt//this is not valid'], [], []);
+            self::fail("Invalid URL must fail");
+        } catch (UserException $e) {
+            self::assertContains('is not a valid URL', $e->getMessage());
+        }
     }
 
     public function testCreateBaseUrlFunction()

@@ -151,11 +151,7 @@ class Api
                 $fn = \Keboola\Utils\jsonDecode($api['baseUrl']);
                 $this->logger->warning("Passing json-encoded baseUrl is deprecated.");
             } catch (JsonDecodeException $e) {
-                throw new UserException(
-                    "The 'baseUrl' attribute in API configuration is not an URL string, ".
-                    "neither a valid JSON containing an user function! Error: " . $e->getMessage(),
-                    $e
-                );
+                throw new UserException("The 'baseUrl' attribute in API configuration is not a valid URL");
             }
             return UserFunction::build([$fn], ['attr' => $configAttributes])[0];
         } else {
