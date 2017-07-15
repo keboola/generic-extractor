@@ -82,4 +82,88 @@ class LoginTest extends ExtractorTestCase
         self::assertGreaterThan($expires - 2, $expiry);
         self::assertLessThan($expires + 2, $expiry);
     }
+
+    public function testAuthenticateClientWithFunctionInApiRequestHeaders()
+    {
+        $guzzle = new Client(['base_url' => 'http://example.com/api']);
+        $mock = new Mock([
+            new Response(200, [], Stream::factory(json_encode((object) [ // auth
+                'tokens' => [
+                    'header' => 1234,
+                    'query' => 4321
+                ]
+            ]))),
+            new Response(200, [], Stream::factory(json_encode((object) [ // api call
+                'data' => [1,2,3]
+            ])))
+        ]);
+        $guzzle->getEmitter()->attach($mock);
+
+        $history = new History();
+        $guzzle->getEmitter()->attach($history);
+        $restClient = new RestClient($guzzle, new NullLogger());
+        $api = [
+            'loginRequest' => [
+                'endpoint' => 'login',
+                'headers' => ['X-Header' => 'fooBar'],
+                'method' => 'POST'
+            ],
+            'apiRequest' => [
+                'headers' => [
+                    // backward compatible
+                    'Authorization1' => 'tokens.header',
+                    // function
+                    'Authorization2' => [
+                        'function' => 'concat',
+                        'args' => [
+                            'Bearer',
+                            ' ',
+                            ['response' => 'tokens.header']
+                        ]
+                    ],
+                    // direct reference
+                    'Authorization3' => [
+                        'response' => 'tokens.header'
+                    ]
+                ],
+                'query' => [
+                    // backward compatible
+                    'qToken1' => 'tokens.query',
+                    // function
+                    'qToken2' => [
+                        'function' => 'concat',
+                        'args' => [
+                            'qt',
+                            ['response' => 'tokens.query']
+                        ]
+                    ],
+                    // direct reference
+                    'qToken3' => [
+                        'response' => 'tokens.query'
+                    ]
+                ]
+            ]
+        ];
+
+        $auth = new Login(['a1' => ['b1' => 'c1'], 'a2' => ['b2' => 'c2']], $api);
+        $auth->authenticateClient($restClient);
+        $request = $restClient->createRequest(['endpoint' => '/']);
+        $restClient->download($request);
+
+        // test creation of the login request
+        self::assertEquals('fooBar', $history->getIterator()[0]['request']->getHeader('X-Header'));
+
+        // test signature of the api request
+        self::assertEquals('1234', $history->getIterator()[1]['request']->getHeader('Authorization1'));
+        self::assertEquals('Bearer 1234', $history->getIterator()[1]['request']->getHeader('Authorization2'));
+        self::assertEquals('1234', $history->getIterator()[1]['request']->getHeader('Authorization3'));
+        self::assertEquals(
+            'qToken1=4321&qToken2=qt4321&qToken3=4321',
+            (string) $history->getIterator()[1]['request']->getQuery()
+        );
+        self::assertEquals(
+            json_encode(['data' => [1,2,3]]),
+            (string) $history->getIterator()[1]['response']->getBody()
+        );
+    }
 }

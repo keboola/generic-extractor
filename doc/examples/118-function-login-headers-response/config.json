@@ -1,0 +1,56 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/118-function-login-headers-response/",
+            "authentication": {
+                "type": "login",
+                "loginRequest": {
+                    "endpoint": "auth",
+                    "headers": {
+                        "X-Authorization": {
+                            "function": "base64_encode",
+                            "args": [
+                                {
+                                    "function": "concat",
+                                    "args": [
+                                        {
+                                            "attr": "#login"
+                                        },
+                                        ":",
+                                        {
+                                            "attr": "#password"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "apiRequest": {
+                    "headers": {
+                        "X-Api-Token": {
+                            "function": "sha1",
+                            "args": [
+                                {
+                                    "response": "authorization.token"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "config": {
+            "#login": "JohnDoe",
+            "#password": "TopSecret",
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users"
+                }
+            ]
+        }
+    }
+}

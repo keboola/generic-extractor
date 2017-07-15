@@ -116,11 +116,19 @@ class Login implements AuthInterface
     {
         $result = [];
         if (!empty($this->auth['apiRequest'][$type])) {
-            foreach ($this->auth['apiRequest'][$type] as $key => $path) {
+            $result = UserFunction::build(
+                $this->auth['apiRequest'][$type],
+                [
+                    'response' => \Keboola\Utils\flattenArray(\Keboola\Utils\objectToArray($response)),
+                    'attr' => $this->configAttributes
+                ]
+            );
+            // for backward compatibility, check the values if they are a valid path within the response
+            foreach ($result as $key => $value) {
                 try {
-                    $result[$key] = \Keboola\Utils\getDataFromPath($path, $response, '.', false);
+                    $result[$key] = \Keboola\Utils\getDataFromPath($value, $response, '.', false);
                 } catch (NoDataFoundException $e) {
-                    throw new UserException("Key '{$key}' not found at path '{$path}' in the Login response");
+                    // silently ignore invalid paths as they are probably values already processed by functions
                 }
             }
         }

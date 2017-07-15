@@ -1,0 +1,65 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/117-function-login-params-response/",
+            "authentication": {
+                "type": "login",
+                "loginRequest": {
+                    "endpoint": "auth",
+                    "headers": {
+                        "X-Authorization": {
+                            "function": "base64_encode",
+                            "args": [
+                                {
+                                    "function": "concat",
+                                    "args": [
+                                        {
+                                            "attr": "#login"
+                                        },
+                                        ":",
+                                        {
+                                            "attr": "#password"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "apiRequest": {
+                    "query": {
+                        "auth": {
+                        	"function": "sha1",
+                        	"args": [
+                        		{
+		                            "function": "concat",
+		                            "args": [
+		                                {
+		                                    "attr": "#login"
+		                                },
+		                                ":",
+		                                {
+		                                    "response": "authorization.token"
+		                                }
+		                            ]
+		                        }
+		                    ]
+                        }
+                    }
+                }
+            }
+        },
+        "config": {
+            "#login": "JohnDoe",
+            "#password": "TopSecret",
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users"
+                }
+            ]
+        }
+    }
+}
