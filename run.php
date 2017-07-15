@@ -18,6 +18,9 @@ try {
 } catch (UserException $e) {
     $logger->error($e->getMessage(), (array)$e->getData());
     exit(1);
+} catch (\Keboola\Juicer\Exception\UserException $e) {
+    $logger->error($e->getMessage(), (array)$e->getData());
+    exit(1);
 } catch (ApplicationException $e) {
     $logger->error($e->getMessage(), (array)$e->getData());
     exit($e->getCode() > 1 ? $e->getCode() : 2);
