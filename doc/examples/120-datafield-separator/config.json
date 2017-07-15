@@ -1,0 +1,20 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/120-datafield-separator/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataField": {
+                        "path": "domains|example.com|active",
+                        "delimiter": "|"
+                    }
+                }
+            ]
+        }
+    }
+}

@@ -33,7 +33,7 @@ class FindResponseArray
     public function process($response, JobConfig $jobConfig)
     {
         $config = $jobConfig->getConfig();
-
+        $separator = ".";
         // If dataField doesn't say where the data is in a response, try to find it!
         if (!empty($config['dataField'])) {
             if (is_array($config['dataField'])) {
@@ -42,13 +42,16 @@ class FindResponseArray
                 }
 
                 $path = $config['dataField']['path'];
+                if (!empty($config['dataField']['delimiter'])) {
+                    $separator = $config['dataField']['delimiter'];
+                }
             } elseif (is_scalar($config['dataField'])) {
                 $path = $config['dataField'];
             } else {
                 throw new UserException("'dataField' must be either a path string or an object with 'path' attribute.");
             }
 
-            $data = \Keboola\Utils\getDataFromPath($path, $response, ".");
+            $data = \Keboola\Utils\getDataFromPath($path, $response, $separator);
             if (empty($data)) {
                 $this->logger->warning("dataField '{$path}' contains no data!");
                 $data = [];
