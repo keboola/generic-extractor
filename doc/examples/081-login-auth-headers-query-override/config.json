@@ -27,13 +27,23 @@
                 },
                 "apiRequest": {
                     "query": {
-                        "apiToken": "authorization.token",
-                        "secretKey": "authorization.secretKey",
-                        "customerId": "authorization.accountId"
+                        "apiToken": {
+                            "response": "authorization.token"
+                        },
+                        "secretKey": {
+                            "response": "authorization.secretKey"
+                        },
+                        "customerId": {
+                            "response": "authorization.accountId"
+                        }
                     },
                     "headers": {
-                        "X-SecretKey": "authorization.secretKey",
-                        "X-Account-Id": "authorization.accountId"
+                        "X-SecretKey": {
+                            "response": "authorization.secretKey"
+                        },
+                        "X-Account-Id": {
+                            "response": "authorization.accountId"
+                        }
                     }
                 }
             }

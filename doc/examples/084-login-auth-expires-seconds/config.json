@@ -14,7 +14,9 @@
                 },
                 "apiRequest": {
                     "headers": {
-                        "X-ApiToken": "authorization.token"
+                        "X-ApiToken": {
+                            "response": "authorization.token"
+                        }
                     }
                 },
                 "expires": {

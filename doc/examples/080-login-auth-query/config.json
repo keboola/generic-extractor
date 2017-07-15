@@ -14,8 +14,12 @@
                 },
                 "apiRequest": {
                     "query": {
-                        "secretKey": "authentication.0.secret",
-                        "tokenId": "authentication.1.token.id"
+                        "secretKey": {
+                            "response": "authentication.0.secret"
+                        },
+                        "tokenId": {
+                            "response": "authentication.1.token.id"
+                        }
                     }
                 }
             }
