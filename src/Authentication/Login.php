@@ -119,7 +119,7 @@ class Login implements AuthInterface
             $result = UserFunction::build(
                 $this->auth['apiRequest'][$type],
                 [
-                    'response' => \Keboola\Utils\flattenArray(\Keboola\Utils\objectToArray($response)),
+                    'response' => \Keboola\Utils\objectToArray($response),
                     'attr' => $this->configAttributes
                 ]
             );
