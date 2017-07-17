@@ -5,6 +5,7 @@ namespace Keboola\GenericExtractor\Tests;
 use Keboola\GenericExtractor\Configuration\Extractor;
 use Keboola\GenericExtractor\GenericExtractorJob;
 use Keboola\Juicer\Client\RestClient;
+use Keboola\Juicer\Client\RestRequest;
 use Keboola\Juicer\Config\JobConfig;
 use Keboola\Juicer\Pagination\NoScroller;
 use Keboola\Juicer\Parser\Json;
@@ -16,9 +17,14 @@ class RecursiveJobTest extends ExtractorTestCase
 {
     public function testParse()
     {
-        /** @var Json $parser */
-        list($job, $parser) = $this->getJob('simple_basic');
-
+        $temp = new Temp();
+        $jobConfig = new JobConfig([
+            "id" => "multiCfg",
+            "endpoint" => "exports/tickets.json",
+            "dataType" => "tickets_export",
+            'userData' => ['userData' => 'hello']
+        ]);
+        $parser = new Json(new NullLogger(), $temp);
         $response = json_decode('{
             "data": [
                 {
@@ -33,21 +39,32 @@ class RecursiveJobTest extends ExtractorTestCase
                 }
             ]
         }');
-
-        self::callMethod($job, 'parse', [$response->data, ['userData' => 'hello']]);
-
+        $client = self::createMock(RestClient::class);
+        $client->method('download')->willReturn($response);
+        $client->method('createRequest')->willReturn(new RestRequest($jobConfig->getConfig()));
+        /** @var RestClient $client */
+        $job = new GenericExtractorJob($jobConfig, $client, $parser, new NullLogger(), new NoScroller(), [], []);
+        $job->run();
         self::assertEquals(
             ['tickets_export', 'tickets_export_c'],
             array_keys($parser->getResults())
         );
 
-        self::assertFileEquals(
-            __DIR__ . '/data/recursiveJobParseResults/tickets_export',
-            $parser->getResults()['tickets_export']->getPathname()
+        self::assertEquals(
+            '"a","id","c","userData"' . "\n" .
+            '"first","1","tickets_export_708eef46be0d529f9495cf672287fbb5","hello"' . "\n" .
+            '"second","2","tickets_export_2e8ef466fbc672e6eb065306273f60f6","hello"' . "\n",
+            file_get_contents($parser->getResults()['tickets_export']->getPathname())
         );
-        self::assertFileEquals(
-            __DIR__ . '/data/recursiveJobParseResults/tickets_export_c',
-            $parser->getResults()['tickets_export_c']->getPathname()
+        self::assertEquals(
+            '"data","JSON_parentId"'. "\n" .
+            '"jedna","tickets_export_708eef46be0d529f9495cf672287fbb5"' . "\n" .
+            '"one","tickets_export_708eef46be0d529f9495cf672287fbb5"'. "\n" .
+            '"1","tickets_export_708eef46be0d529f9495cf672287fbb5"' . "\n" .
+            '"dva","tickets_export_2e8ef466fbc672e6eb065306273f60f6"' . "\n" .
+            '"two","tickets_export_2e8ef466fbc672e6eb065306273f60f6"' . "\n" .
+            '"2","tickets_export_2e8ef466fbc672e6eb065306273f60f6"' . "\n",
+            file_get_contents($parser->getResults()['tickets_export_c']->getPathname())
         );
     }
 
@@ -56,34 +73,77 @@ class RecursiveJobTest extends ExtractorTestCase
      */
     public function testSamePlaceholder()
     {
-        list($job, $parser, $jobConfig) = $this->getJob('recursive_same_ph');
-
-        $children = $jobConfig->getChildJobs();
-        $child = reset($children);
-
-        $childJob = self::callMethod(
-            $job,
-            'createChild',
-            [
-                $child,
-                [0 => ['id' => 123]]
+        $temp = new Temp();
+        $jobConfig = new JobConfig([
+            "id" => "first",
+            "endpoint" => "first/",
+            "dataType" => "first",
+            "children" => [
+                [
+                    "id" => "second",
+                    "endpoint" => "first/{first-id}",
+                    "dataType" => "second",
+                    "placeholders" => [
+                        "first-id" => "id"
+                    ],
+                    "children" => [
+                        [
+                            "id" => "third",
+                            "dataType" => "third",
+                            "endpoint" => "first/{first-id}/second/{second-id}",
+                            "placeholders" => [
+                                "second-id" => "id"
+                            ]
+                        ]
+                    ]
+                ]
             ]
+        ]);
+        $parser = new Json(new NullLogger(), $temp);
+        $client = self::createMock(RestClient::class);
+        $passes = 0;
+        $client->method('download')->willReturnCallback(function ($request) use (&$passes) {
+            /** @var RestRequest $request */
+            $passes++;
+            switch ($request->getEndpoint()) {
+                case 'first/':
+                    return \Keboola\Utils\arrayToObject(["data" => [["id" => 123, "1st" => 1]]]);
+                case 'first/123':
+                    return \Keboola\Utils\arrayToObject(
+                        ["data" => [["id" => 456, "2nd" => 2], ["id" => 789, "2nd" => 3]]]
+                    );
+                case 'first/123/second/456':
+                    return \Keboola\Utils\arrayToObject(["data" => [["3rd" => 4]]]);
+                case 'first/123/second/789':
+                    return \Keboola\Utils\arrayToObject(["data" => [["3rd" => 5]]]);
+                default:
+                    throw new \RuntimeException("Invalid request " . $request->getEndpoint());
+            }
+        });
+        $client->method('createRequest')->willReturnCallback(function ($config) {
+            return new RestRequest($config);
+        });
+        /** @var RestClient $client */
+        $job = new GenericExtractorJob($jobConfig, $client, $parser, new NullLogger(), new NoScroller(), [], []);
+        $job->run();
+        self::assertEquals(
+            ['first', 'second', 'third'],
+            array_keys($parser->getResults())
         );
 
-        self::assertEquals('root/123', self::getProperty($childJob, 'config')->getEndpoint());
-
-        $grandChildren = $child->getChildJobs();
-        $grandChild = reset($grandChildren);
-        $grandChildJob = self::callMethod(
-            $childJob,
-            'createChild',
-            [
-                $grandChild,
-                [0 => ['id' => 456], 1 => ['id' => 123]]
-            ]
+        self::assertEquals(4, $passes);
+        self::assertEquals(
+            "\"id\",\"1st\"\n\"123\",\"1\"\n",
+            file_get_contents($parser->getResults()['first']->getPathname())
         );
-
-        self::assertEquals('root/123/456', self::getProperty($grandChildJob, 'config')->getEndpoint());
+        self::assertEquals(
+            "\"id\",\"2nd\",\"parent_id\"\n\"456\",\"2\",\"123\"\n\"789\",\"3\",\"123\"\n",
+            file_get_contents($parser->getResults()['second']->getPathname())
+        );
+        self::assertEquals(
+            "\"3rd\",\"parent_id\"\n\"4\",\"456\"\n\"5\",\"789\"\n",
+            file_get_contents($parser->getResults()['third']->getPathname())
+        );
     }
 
     public function testCreateChild()
