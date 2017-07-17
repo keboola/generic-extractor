@@ -3,7 +3,6 @@
 namespace Keboola\GenericExtractor\Tests\Authentication;
 
 use Keboola\GenericExtractor\Authentication\Basic;
-use GuzzleHttp\Client;
 use Keboola\Juicer\Client\RestClient;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
@@ -17,13 +16,13 @@ class BasicTest extends TestCase
      */
     public function testAuthenticateClient($credentials)
     {
-        $client = new Client;
         $auth = new Basic($credentials);
-        $auth->authenticateClient(new RestClient($client, new NullLogger()));
+        $restClient = new RestClient(new NullLogger(), []);
+        $auth->authenticateClient($restClient);
 
-        self::assertEquals(['test','pass'], $client->getDefaultOption('auth'));
+        self::assertEquals(['test','pass'], $restClient->getClient()->getDefaultOption('auth'));
 
-        $request = $client->createRequest('GET', '/');
+        $request = $restClient->getClient()->createRequest('GET', '/');
         self::assertArrayHasKey('Authorization', $request->getHeaders());
         self::assertEquals(['Basic dGVzdDpwYXNz'], $request->getHeaders()['Authorization']);
     }

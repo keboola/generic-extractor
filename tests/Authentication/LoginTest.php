@@ -3,7 +3,6 @@
 namespace Keboola\GenericExtractor\Tests\Authentication;
 
 use Keboola\GenericExtractor\Authentication\Login;
-use GuzzleHttp\Client;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Subscriber\Mock;
@@ -16,9 +15,6 @@ class LoginTest extends ExtractorTestCase
 {
     public function testAuthenticateClient()
     {
-        $guzzle = new Client(['base_url' => 'http://example.com/api']);
-        $guzzle->setDefaultOption('headers', ['X-Test' => '1']);
-
         $expiresIn = 5000;
         $expires = time() + $expiresIn;
         $mock = new Mock([
@@ -34,12 +30,10 @@ class LoginTest extends ExtractorTestCase
                 'data' => [1,2,3]
             ])))
         ]);
-        $guzzle->getEmitter()->attach($mock);
-
         $history = new History();
-        $guzzle->getEmitter()->attach($history);
-
-        $restClient = new RestClient($guzzle, new NullLogger());
+        $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com/api'], [], []);
+        $restClient->getClient()->getEmitter()->attach($mock);
+        $restClient->getClient()->getEmitter()->attach($history);
         $attrs = ['first' => 1, 'second' => 'two'];
         $api = [
             'loginRequest' => [
@@ -85,7 +79,6 @@ class LoginTest extends ExtractorTestCase
 
     public function testAuthenticateClientWithFunctionInApiRequestHeaders()
     {
-        $guzzle = new Client(['base_url' => 'http://example.com/api']);
         $mock = new Mock([
             new Response(200, [], Stream::factory(json_encode((object) [ // auth
                 'tokens' => [
@@ -97,11 +90,11 @@ class LoginTest extends ExtractorTestCase
                 'data' => [1,2,3]
             ])))
         ]);
-        $guzzle->getEmitter()->attach($mock);
 
         $history = new History();
-        $guzzle->getEmitter()->attach($history);
-        $restClient = new RestClient($guzzle, new NullLogger());
+        $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com/api'], [], []);
+        $restClient->getClient()->getEmitter()->attach($mock);
+        $restClient->getClient()->getEmitter()->attach($history);
         $api = [
             'loginRequest' => [
                 'endpoint' => 'login',

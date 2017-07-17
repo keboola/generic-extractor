@@ -3,7 +3,6 @@
 namespace Keboola\GenericExtractor\Tests\Authentication;
 
 use Keboola\GenericExtractor\Authentication\OAuth20;
-use GuzzleHttp\Client;
 use Keboola\GenericExtractor\Tests\ExtractorTestCase;
 use Keboola\Juicer\Client\RestClient;
 use Psr\Log\NullLogger;
@@ -13,9 +12,8 @@ class OAuth20Test extends ExtractorTestCase
     public function testAuthenticateClientJson()
     {
         $config = json_decode(file_get_contents(__DIR__ . '/../data/oauth20bearer/config.json'), true);
-        $client = new Client(['base_url' => 'http://example.com']);
-        $client->setDefaultOption('headers', ['X-Test' => 'test']);
-        $restClient = new RestClient($client, new NullLogger());
+        $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com'], [], []);
+        $restClient->getClient()->setDefaultOption('headers', ['X-Test' => 'test']);
         $auth = new OAuth20(
             [],
             $config['authorization'],
@@ -23,8 +21,8 @@ class OAuth20Test extends ExtractorTestCase
         );
         $auth->authenticateClient($restClient);
 
-        $request = $client->createRequest('GET', '/');
-        $client->send($request);
+        $request = $restClient->getClient()->createRequest('GET', '/');
+        $restClient->getClient()->send($request);
 
         self::assertEquals('Bearer testToken', $request->getHeader('Authorization'));
         self::assertEquals('test', $request->getHeader('X-Test'));
@@ -33,8 +31,7 @@ class OAuth20Test extends ExtractorTestCase
     public function testMACAuth()
     {
         $config = json_decode(file_get_contents(__DIR__ . '/../data/oauth20mac/config.json'), true);
-        $client = new Client(['base_url' => 'http://example.com']);
-        $restClient = new RestClient($client, new NullLogger());
+        $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com'], [], []);
         $auth = new OAuth20(
             [],
             $config['authorization'],
@@ -42,8 +39,8 @@ class OAuth20Test extends ExtractorTestCase
         );
         $auth->authenticateClient($restClient);
 
-        $request = $client->createRequest('GET', '/resource?k=v');
-        self::sendRequest($client, $request);
+        $request = $restClient->getClient()->createRequest('GET', '/resource?k=v');
+        self::sendRequest($restClient->getClient(), $request);
 
         $authData = json_decode($config['authorization']['oauth_api']['credentials']['#data']);
 

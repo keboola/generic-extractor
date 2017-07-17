@@ -3,7 +3,6 @@
 namespace Keboola\GenericExtractor\Tests\Authentication;
 
 use Keboola\GenericExtractor\Authentication\OAuth20Login;
-use GuzzleHttp\Client;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Subscriber\Mock;
@@ -16,8 +15,6 @@ class OAuth20LoginTest extends ExtractorTestCase
 {
     public function testAuthenticateClient()
     {
-        $guzzle = new Client(['base_url' => 'http://example.com/api']);
-
         $mock = new Mock([
             new Response(200, [], Stream::factory(json_encode((object) [ // auth
                 'access_token' => 1234,
@@ -37,12 +34,11 @@ class OAuth20LoginTest extends ExtractorTestCase
                 'data' => [1,2,3]
             ])))
         ]);
-        $guzzle->getEmitter()->attach($mock);
-
         $history = new History();
-        $guzzle->getEmitter()->attach($history);
 
-        $restClient = new RestClient($guzzle, new NullLogger());
+        $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com/api'], [], []);
+        $restClient->getClient()->getEmitter()->attach($mock);
+        $restClient->getClient()->getEmitter()->attach($history);
 
         $oauthCredentials = [
             'appKey' => 1,

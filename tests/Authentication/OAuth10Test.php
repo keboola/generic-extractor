@@ -3,7 +3,6 @@
 namespace Keboola\GenericExtractor\Tests\Authentication;
 
 use Keboola\GenericExtractor\Authentication\OAuth10;
-use GuzzleHttp\Client;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Subscriber\Mock;
@@ -16,8 +15,7 @@ class OAuth10Test extends TestCase
 {
     public function testAuthenticateClient()
     {
-        $client = new Client;
-        $restClient = new RestClient($client, new NullLogger());
+        $restClient = new RestClient(new NullLogger(), [], [], []);
         $auth = new OAuth10([
             'oauth_api' => [
                 'credentials' => [
@@ -29,17 +27,17 @@ class OAuth10Test extends TestCase
         ]);
         $auth->authenticateClient($restClient);
 
-        self::assertEquals('oauth', $client->getDefaultOption('auth'));
+        self::assertEquals('oauth', $restClient->getClient()->getDefaultOption('auth'));
 
         $request = $restClient->createRequest(['endpoint' => '/']);
 
         $mock = new Mock([
             new Response(200, [], Stream::factory('{}'))
         ]);
-        $client->getEmitter()->attach($mock);
+        $restClient->getClient()->getEmitter()->attach($mock);
 
         $history = new History();
-        $client->getEmitter()->attach($history);
+        $restClient->getClient()->getEmitter()->attach($history);
 
         $restClient->download($request);
 

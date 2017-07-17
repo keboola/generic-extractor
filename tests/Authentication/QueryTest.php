@@ -3,7 +3,6 @@
 namespace Keboola\GenericExtractor\Tests\Authentication;
 
 use Keboola\GenericExtractor\Authentication\Query;
-use GuzzleHttp\Client;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Subscriber\Mock;
@@ -15,7 +14,6 @@ class QueryTest extends ExtractorTestCase
 {
     public function testAuthenticateClient()
     {
-        $client = new Client(['base_url' => 'http://example.com']);
         $authentication = [
             'query' => [
                 'paramOne' => (object) ['attr' => 'first'],
@@ -29,10 +27,11 @@ class QueryTest extends ExtractorTestCase
         $configAttributes = ['first' => 1, 'second' => 'two'];
 
         $auth = new Query($configAttributes, $authentication);
-        $auth->authenticateClient(new RestClient($client, new NullLogger()));
+        $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com'], [], []);
+        $auth->authenticateClient($restClient);
 
-        $request = $client->createRequest('GET', '/');
-        $client->send($request);
+        $request = $restClient->getClient()->createRequest('GET', '/');
+        $restClient->getClient()->send($request);
 
         self::assertEquals(
             'paramOne=1&paramTwo=' . md5($configAttributes['second']) . '&paramThree=string',
@@ -42,9 +41,8 @@ class QueryTest extends ExtractorTestCase
 
     public function testAuthenticateClientQuery()
     {
-        $client = new Client(['base_url' => 'http://example.com']);
         $auth = new Query([], ['query' => ['authParam' => 'secretCodeWow']]);
-        $restClient = new RestClient($client, new NullLogger());
+        $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com'], [], []);
         $auth->authenticateClient($restClient);
 
         $mock = new Mock([
@@ -52,10 +50,10 @@ class QueryTest extends ExtractorTestCase
                 'data' => [1,2,3]
             ])))
         ]);
-        $client->getEmitter()->attach($mock);
+        $restClient->getClient()->getEmitter()->attach($mock);
 
-        $request = $client->createRequest('GET', '/query?param=value');
-        $client->send($request);
+        $request = $restClient->getClient()->createRequest('GET', '/query?param=value');
+        $restClient->getClient()->send($request);
 
         self::assertEquals(
             'param=value&authParam=secretCodeWow',
@@ -65,7 +63,6 @@ class QueryTest extends ExtractorTestCase
 
     public function testRequestInfo()
     {
-        $client = new Client(['base_url' => 'http://example.com']);
         $urlTokenParam = (object) [
             'function' => 'concat',
             'args' => [
@@ -91,18 +88,19 @@ class QueryTest extends ExtractorTestCase
         ];
 
         $auth = new Query($configAttributes, $authentication);
-        $auth->authenticateClient(new RestClient($client, new NullLogger()));
+        $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com'], [], []);
+        $auth->authenticateClient($restClient);
 
         $mock = new Mock([
             new Response(200, [], Stream::factory(json_encode((object) [
                 'data' => [1,2,3]
             ])))
         ]);
-        $client->getEmitter()->attach($mock);
+        $restClient->getClient()->getEmitter()->attach($mock);
 
-        $request = $client->createRequest('GET', '/query?param=value');
+        $request = $restClient->getClient()->createRequest('GET', '/query?param=value');
         $originalUrl = $request->getUrl();
-        self::sendRequest($client, $request);
+        self::sendRequest($restClient->getClient(), $request);
         self::assertEquals(
             'param=value&urlTokenParamHash=' .
                 md5($originalUrl . $configAttributes['token'] . 'value') .

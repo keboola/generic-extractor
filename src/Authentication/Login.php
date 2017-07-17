@@ -75,7 +75,7 @@ class Login implements AuthInterface
         if (!empty($config['headers'])) {
             $config['headers'] = UserFunction::build($config['headers'], ['attr' => $this->configAttributes]);
         }
-        return RestRequest::create($config);
+        return new RestRequest($config);
     }
 
     /**
