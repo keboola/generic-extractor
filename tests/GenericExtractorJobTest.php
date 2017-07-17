@@ -4,12 +4,10 @@ namespace Keboola\GenericExtractor\Tests;
 
 use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\GenericExtractor\GenericExtractorJob;
-use Keboola\Json\Parser;
 use Keboola\Juicer\Client\RestRequest;
 use Keboola\Juicer\Config\JobConfig;
 use Keboola\Juicer\Pagination\NoScroller;
 use Keboola\Juicer\Pagination\ResponseUrlScroller;
-use Keboola\Juicer\Config\Config;
 use Keboola\Juicer\Client\RestClient;
 use Keboola\Juicer\Parser\Json;
 use Keboola\Temp\Temp;
@@ -141,15 +139,11 @@ class GenericExtractorJobTest extends ExtractorTestCase
         ]);
         $job = new GenericExtractorJob(
             $cfg,
-            RestClient::create(
+            new RestClient(
                 new NullLogger(),
                 ['base_url' => 'http://example.com/api/']
             ),
-            Json::create(
-                new Config(['jobs' => [['endpoint' => 'fooBar']]]),
-                new NullLogger(),
-                new Temp()
-            ),
+            new Json(new NullLogger(), new Temp()),
             new NullLogger(),
             new ResponseUrlScroller($config),
             [],
@@ -183,22 +177,25 @@ class GenericExtractorJobTest extends ExtractorTestCase
     {
         $cfg = new JobConfig([
             'endpoint' => 'fooBar',
-            'params' => \Keboola\Utils\jsonDecode('{
-                "timeframe": "this_24_hours",
-                "filters": {
-                    "function": "concat",
-                    "args": [
-                        {
-                            "function": "date",
-                            "args": ["Y-m-d"]
-                        },
+            'params' => [
+                "timeframe" => "this_24_hours",
+                "filters" => [
+                    "function" => "concat",
+                    "args" => [
+                        [
+                            "function" => "date",
+                            "args" => [
+                                "Y-m-d",
+                            ],
+                        ],
                         "string",
-                        {"attr": "das.attribute"}
+                        [
+                            "attr" => "das.attribute"
+                        ]
                     ]
-                }
-            }')
+                ]
+            ]
         ]);
-
         $job = $this->getJob(
             $cfg,
             ['das.attribute' => "something interesting"],
@@ -227,13 +224,12 @@ class GenericExtractorJobTest extends ExtractorTestCase
     {
         $cfg = new JobConfig([
             'endpoint' => 'fooBar',
-            'params' => \Keboola\Utils\jsonDecode('{
-                "filters": {
-                    "function": "date"
-                }
-            }')
+            'params' => [
+                "filters" => [
+                    "function" => "date"
+                ]
+            ]
         ]);
-
         $job = $this->getJob(
             $cfg,
             ['das.attribute' => "something interesting"],
@@ -244,9 +240,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 ]
             ]
         );
-        self::callMethod($job, 'buildParams', [
-            $cfg
-        ]);
+        self::callMethod($job, 'buildParams', [$cfg]);
     }
 
     public function testFilterResponse()
@@ -282,16 +276,11 @@ class GenericExtractorJobTest extends ExtractorTestCase
         $jobConfig = new JobConfig([
             'endpoint' => 'ep'
         ]);
-
-        $parser = Json::create(
-            new Config(['jobs' => [['endpoint' => 'fooBar']]]),
-            new NullLogger(),
-            new Temp()
-        );
+        $parser = new Json(new NullLogger(), new Temp());
 
         $client = self::createMock(RestClient::class);
         $client->method('download')->willReturn([(object) ['result' => 'data']]);
-        $client->method('createRequest')->willReturn(RestRequest::create($jobConfig->getConfig()));
+        $client->method('createRequest')->willReturn(new RestRequest($jobConfig->getConfig()));
 
         /** @var RestClient $client */
         $job = new GenericExtractorJob($jobConfig, $client, $parser, new NullLogger(), new NoScroller(), [], []);
@@ -312,12 +301,11 @@ class GenericExtractorJobTest extends ExtractorTestCase
     {
         return new GenericExtractorJob(
             $config,
-            RestClient::create(
+            new RestClient(
                 new NullLogger(),
                 ['base_url' => 'http://example.com/api/']
             ),
-            Json::create(
-                new Config(['jobs' => [['endpoint' => 'fooBar']]]),
+            new Json(
                 new NullLogger(),
                 new Temp()
             ),
@@ -326,40 +314,6 @@ class GenericExtractorJobTest extends ExtractorTestCase
             $attributes,
             $metadata
         );
-    }
-
-    public function testGetDataType()
-    {
-        $jobConfig = new JobConfig(['endpoint' => 'resources/res.json', 'dataType' => 'res']);
-
-        $job = new GenericExtractorJob(
-            $jobConfig,
-            RestClient::create(new NullLogger()),
-            new Json(Parser::create(new NullLogger()), new NullLogger()),
-            new NullLogger(),
-            new NoScroller(),
-            [],
-            []
-        );
-
-        self::assertEquals($jobConfig->getDataType(), self::callMethod($job, 'getDataType', []));
-    }
-
-    public function testGetDataTypeFromEndpoint()
-    {
-        $jobConfig = new JobConfig(['endpoint' => 'resources/res.json']);
-
-        $job = new GenericExtractorJob(
-            $jobConfig,
-            RestClient::create(new NullLogger()),
-            new Json(Parser::create(new NullLogger()), new NullLogger()),
-            new NullLogger(),
-            new NoScroller(),
-            [],
-            []
-        );
-
-        self::assertEquals($jobConfig->getEndpoint(), self::callMethod($job, 'getDataType', []));
     }
 
     /**

@@ -117,10 +117,6 @@ class GenericExtractorJob
         $this->jobId = $config->getJobId();
         $this->attributes = $attributes;
         $this->metadata = $metadata;
-        // If no dataType is set, save endpoint as dataType before replacing placeholders
-        if (empty($this->config->getConfig()['dataType']) && !empty($this->config->getConfig()['endpoint'])) {
-            $this->config->setDataType($this->getDataType());
-        }
     }
 
     /**
@@ -361,7 +357,7 @@ class GenericExtractorJob
      */
     private function parse(array $data, array $parentId = null)
     {
-        $this->parser->process($data, $this->getDataType(), $this->getParentCols($parentId));
+        $this->parser->process($data, $this->config->getDataType(), $this->getParentCols($parentId));
         $this->runChildJobs($data);
         return $data;
     }
@@ -505,18 +501,6 @@ class GenericExtractorJob
         }
 
         $this->userParentId = $id;
-    }
-
-    /**
-     * @return string
-     */
-    private function getDataType()
-    {
-        $config = $this->config->getConfig();
-        $type = !empty($config['dataType'])
-            ? $config['dataType']
-            : $config['endpoint'];
-        return $type;
     }
 
     /**

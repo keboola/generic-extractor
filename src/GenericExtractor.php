@@ -75,7 +75,7 @@ class GenericExtractor
 
     public function run(Config $config)
     {
-        $client = RestClient::create(
+        $client = new RestClient(
             $this->logger,
             [
                 'base_url' => $this->api->getBaseUrl(),
@@ -86,12 +86,9 @@ class GenericExtractor
                     )
                 ]
             ],
-            JuicerRest::convertRetry($this->api->getRetryConfig())
+            JuicerRest::convertRetry($this->api->getRetryConfig()),
+            $this->api->getDefaultRequestOptions()
         );
-
-        if (!empty($this->api->getDefaultRequestOptions())) {
-            $client->setDefaultRequestOptions($this->api->getDefaultRequestOptions());
-        }
 
         $this->api->getAuth()->authenticateClient($client);
         // Verbose Logging of all requests
@@ -174,7 +171,7 @@ class GenericExtractor
             return $this->parser;
         }
 
-        $parser = Json::create($config, $this->logger, $this->temp, $this->metadata);
+        $parser = new Json($this->logger, $this->temp, $this->metadata);
         $parser->getParser()->getStruct()->setAutoUpgradeToArray(true);
         $parser->getParser()->setCacheMemoryLimit('2M');
         $parser->getParser()->getAnalyzer()->setNestedArrayAsJson(true);
@@ -182,7 +179,7 @@ class GenericExtractor
         if (empty($config->getAttribute('mappings'))) {
             $this->parser = $parser;
         } else {
-            $this->parser = JsonMap::create($config, $this->logger, $parser);
+            $this->parser = new JsonMap($config, $this->logger, $parser);
         }
 
         return $this->parser;

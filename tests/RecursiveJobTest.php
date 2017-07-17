@@ -5,6 +5,7 @@ namespace Keboola\GenericExtractor\Tests;
 use Keboola\GenericExtractor\Configuration\Extractor;
 use Keboola\GenericExtractor\GenericExtractorJob;
 use Keboola\Juicer\Client\RestClient;
+use Keboola\Juicer\Config\JobConfig;
 use Keboola\Juicer\Pagination\NoScroller;
 use Keboola\Juicer\Parser\Json;
 use Keboola\Temp\Temp;
@@ -87,11 +88,13 @@ class RecursiveJobTest extends ExtractorTestCase
 
     public function testCreateChild()
     {
+        /** @var GenericExtractorJob $job */
         list($job, $parser, $jobConfig) = $this->getJob('recursive');
 
         $children = $jobConfig->getChildJobs();
         $child = reset($children);
 
+        /** @var GenericExtractorJob $childJob */
         $childJob = self::callMethod(
             $job,
             'createChild',
@@ -112,7 +115,9 @@ class RecursiveJobTest extends ExtractorTestCase
             self::getProperty($childJob, 'parentParams')
         );
 
-        self::assertEquals('comments', self::callMethod($childJob, 'getDataType', []));
+        /** @var JobConfig $config */
+        $config = self::getProperty($childJob, 'config');
+        self::assertEquals('comments', $config->getDataType());
 
         $grandChildren = $child->getChildJobs();
         $grandChild = reset($grandChildren);
@@ -130,7 +135,8 @@ class RecursiveJobTest extends ExtractorTestCase
         self::assertEquals(456, $values['id']['value']);
         self::assertEquals(123, $values['2:id']['value']);
         // Check the dataType from endpoint has placeholders not replaced by values
-        self::assertEquals('third/level/{2:id}/{id}.json', self::callMethod($grandChildJob, 'getDataType', []));
+        $config = self::getProperty($grandChildJob, 'config');
+        self::assertEquals('third/level/{2:id}/{id}.json', $config->getDataType());
 
         self::assertEquals('third/level/123/456.json', self::getProperty($grandChildJob, 'config')->getEndpoint());
     }
@@ -149,11 +155,8 @@ class RecursiveJobTest extends ExtractorTestCase
         $configuration = new Extractor(__DIR__ . '/data/' . $dir, new NullLogger());
 
         $jobConfig = array_values($configuration->getMultipleConfigs()[0]->getJobs())[0];
-
-        $parser = Json::create($configuration->getMultipleConfigs()[0], new NullLogger(), $temp);
-
-        $client = RestClient::create(new NullLogger());
-
+        $parser = new Json(new NullLogger(), $temp);
+        $client = new RestClient(new NullLogger(), [], [], []);
         $history = new History();
         $client->getClient()->getEmitter()->attach($history);
 
