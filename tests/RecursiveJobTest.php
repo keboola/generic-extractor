@@ -68,10 +68,7 @@ class RecursiveJobTest extends ExtractorTestCase
         );
     }
 
-    /**
-     * Test the correct placeholder is used if two levels have identical one
-     */
-    public function testSamePlaceholder()
+    public function testNestedPlaceholder()
     {
         $temp = new Temp();
         $jobConfig = new JobConfig([
@@ -93,6 +90,82 @@ class RecursiveJobTest extends ExtractorTestCase
                             "endpoint" => "first/{first-id}/second/{second-id}",
                             "placeholders" => [
                                 "second-id" => "id"
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+        $parser = new Json(new NullLogger(), $temp);
+        $client = self::createMock(RestClient::class);
+        $passes = 0;
+        $client->method('download')->willReturnCallback(function ($request) use (&$passes) {
+            /** @var RestRequest $request */
+            $passes++;
+            switch ($request->getEndpoint()) {
+                case 'first/':
+                    return \Keboola\Utils\arrayToObject(["data" => [["id" => 123, "1st" => 1]]]);
+                case 'first/123':
+                    return \Keboola\Utils\arrayToObject(
+                        ["data" => [["id" => 456, "2nd" => 2], ["id" => 789, "2nd" => 3]]]
+                    );
+                case 'first/123/second/456':
+                    return \Keboola\Utils\arrayToObject(["data" => [["3rd" => 4]]]);
+                case 'first/123/second/789':
+                    return \Keboola\Utils\arrayToObject(["data" => [["3rd" => 5]]]);
+                default:
+                    throw new \RuntimeException("Invalid request " . $request->getEndpoint());
+            }
+        });
+        $client->method('createRequest')->willReturnCallback(function ($config) {
+            return new RestRequest($config);
+        });
+        /** @var RestClient $client */
+        $job = new GenericExtractorJob($jobConfig, $client, $parser, new NullLogger(), new NoScroller(), [], []);
+        $job->run();
+        self::assertEquals(
+            ['first', 'second', 'third'],
+            array_keys($parser->getResults())
+        );
+
+        self::assertEquals(4, $passes);
+        self::assertEquals(
+            "\"id\",\"1st\"\n\"123\",\"1\"\n",
+            file_get_contents($parser->getResults()['first']->getPathname())
+        );
+        self::assertEquals(
+            "\"id\",\"2nd\",\"parent_id\"\n\"456\",\"2\",\"123\"\n\"789\",\"3\",\"123\"\n",
+            file_get_contents($parser->getResults()['second']->getPathname())
+        );
+        self::assertEquals(
+            "\"3rd\",\"parent_id\"\n\"4\",\"456\"\n\"5\",\"789\"\n",
+            file_get_contents($parser->getResults()['third']->getPathname())
+        );
+    }
+
+    public function testNestedSamePlaceholder()
+    {
+        $temp = new Temp();
+        $jobConfig = new JobConfig([
+            "id" => "first",
+            "endpoint" => "first/",
+            "dataType" => "first",
+            "children" => [
+                [
+                    "id" => "second",
+                    "endpoint" => "first/{1:id}",
+                    "dataType" => "second",
+                    "placeholders" => [
+                        "1:id" => "id"
+                    ],
+                    "children" => [
+                        [
+                            "id" => "third",
+                            "dataType" => "third",
+                            "endpoint" => "first/{2:id}/second/{1:id}",
+                            "placeholders" => [
+                                "2:id" => "id",
+                                "1:id" => "id"
                             ]
                         ]
                     ]
