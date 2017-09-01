@@ -170,11 +170,13 @@ class GenericExtractor
         if (!empty($this->parser) && $this->parser instanceof ParserInterface) {
             return $this->parser;
         }
+        if (empty($config->getAttribute('compatLevel'))) {
+            $compatLevel = Json::LATEST_VERSION;
+        } else {
+            $compatLevel = $config->getAttribute('compatLevel');
+        }
 
-        $parser = new Json($this->logger, $this->temp, $this->metadata);
-        $parser->getParser()->getStruct()->setAutoUpgradeToArray(true);
-        $parser->getParser()->setCacheMemoryLimit('2M');
-        $parser->getParser()->getAnalyzer()->setNestedArrayAsJson(true);
+        $parser = new Json($this->logger, $this->metadata, $compatLevel, 2000000);
 
         if (empty($config->getAttribute('mappings'))) {
             $this->parser = $parser;

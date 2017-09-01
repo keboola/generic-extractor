@@ -10,7 +10,6 @@ use Keboola\Juicer\Pagination\NoScroller;
 use Keboola\Juicer\Pagination\ResponseUrlScroller;
 use Keboola\Juicer\Client\RestClient;
 use Keboola\Juicer\Parser\Json;
-use Keboola\Temp\Temp;
 use Psr\Log\NullLogger;
 
 class GenericExtractorJobTest extends ExtractorTestCase
@@ -143,7 +142,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 new NullLogger(),
                 ['base_url' => 'http://example.com/api/']
             ),
-            new Json(new NullLogger(), new Temp()),
+            new Json(new NullLogger(), [], Json::LATEST_VERSION),
             new NullLogger(),
             new ResponseUrlScroller($config),
             [],
@@ -276,7 +275,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         $jobConfig = new JobConfig([
             'endpoint' => 'ep'
         ]);
-        $parser = new Json(new NullLogger(), new Temp());
+        $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
 
         $client = self::createMock(RestClient::class);
         $client->method('download')->willReturn([(object) ['result' => 'data']]);
@@ -307,7 +306,8 @@ class GenericExtractorJobTest extends ExtractorTestCase
             ),
             new Json(
                 new NullLogger(),
-                new Temp()
+                [],
+                Json::LATEST_VERSION
             ),
             new NullLogger(),
             new NoScroller(),
