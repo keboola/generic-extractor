@@ -2,6 +2,7 @@
 
 namespace Keboola\GenericExtractor\Tests\Response;
 
+use Keboola\GenericExtractor\GenericExtractor;
 use Keboola\GenericExtractor\Response\Filter;
 use Keboola\Juicer\Config\JobConfig;
 use PHPUnit\Framework\TestCase;
@@ -15,7 +16,7 @@ class FilterTest extends TestCase
             'responseFilter' => 'out.arr[].in'
         ]);
 
-        $filter = Filter::create($jobConfig);
+        $filter = Filter::create($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
 
         $data = [
             (object) [
@@ -60,7 +61,7 @@ class FilterTest extends TestCase
             'responseFilter' => 'out.arr[]'
         ]);
 
-        $filter = Filter::create($jobConfig);
+        $filter = Filter::create($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
 
         $data = [
             (object) [
@@ -103,7 +104,7 @@ class FilterTest extends TestCase
             'responseFilter' => 'out.arr[].in'
         ]);
 
-        $filter = Filter::create($jobConfig);
+        $filter = Filter::create($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
 
         $data = [
             (object) [
@@ -256,6 +257,342 @@ class FilterTest extends TestCase
                     ]
                 ]
             ]
+            ],
+            $filter->run($data)
+        );
+    }
+
+    public function testRunEmptyValuesLegacy()
+    {
+        $jobConfig = new JobConfig([
+            'endpoint' => 'ep',
+            'responseFilter' => 'data'
+        ]);
+
+        $filter = Filter::create($jobConfig, GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY);
+        $data = json_decode(
+            '[
+                {
+                    "id": 1,
+                    "data": false
+                },
+                {
+                    "id": 2,
+                    "data": 0
+                },
+                {
+                    "id": 3,
+                    "data": null
+                },
+                {
+                    "id": 4,
+                    "data": ""
+                },
+                {
+                    "id": 5,
+                    "data": []
+                },
+                {
+                    "id": 6,
+                    "data": ["something"]
+                },
+                {
+                    "id": 7,
+                    "data": [42]
+                }
+            ]'
+        );
+
+        self::assertEquals(
+            [
+                (object) [
+                    'id' => 1,
+                    'data' => false
+                ],
+                (object) [
+                    'id' => 2,
+                    'data' => 0
+                ],
+                (object) [
+                    'id' => 3,
+                    'data' => null
+                ],
+                (object) [
+                    'id' => 4,
+                    'data' => ""
+                ],
+                (object) [
+                    'id' => 5,
+                    'data' => []
+                ],
+                (object) [
+                    'id' => 6,
+                    'data' => "[\"something\"]"
+                ],
+                (object) [
+                    'id' => 7,
+                    'data' => "[42]"
+                ],
+            ],
+            $filter->run($data)
+        );
+    }
+
+    public function testRunEmptyValuesFilterScalar()
+    {
+        $jobConfig = new JobConfig([
+            'endpoint' => 'ep',
+            'responseFilter' => 'data'
+        ]);
+
+        $filter = Filter::create($jobConfig, GenericExtractor::COMPAT_LEVEL_FILTER_SCALAR);
+        $data = json_decode(
+            '[
+                {
+                    "id": 1,
+                    "data": false
+                },
+                {
+                    "id": 2,
+                    "data": 0
+                },
+                {
+                    "id": 3,
+                    "data": null
+                },
+                {
+                    "id": 4,
+                    "data": ""
+                },
+                {
+                    "id": 5,
+                    "data": []
+                },
+                {
+                    "id": 6,
+                    "data": ["something"]
+                },
+                {
+                    "id": 7,
+                    "data": [42]
+                }
+            ]'
+        );
+
+        self::assertEquals(
+            [
+                (object) [
+                    'id' => 1,
+                    'data' => false
+                ],
+                (object) [
+                    'id' => 2,
+                    'data' => 0
+                ],
+                (object) [
+                    'id' => 3,
+                    'data' => 'null'
+                ],
+                (object) [
+                    'id' => 4,
+                    'data' => ""
+                ],
+                (object) [
+                    'id' => 5,
+                    'data' => '[]'
+                ],
+                (object) [
+                    'id' => 6,
+                    'data' => "[\"something\"]"
+                ],
+                (object) [
+                    'id' => 7,
+                    'data' => "[42]"
+                ],
+            ],
+            $filter->run($data)
+        );
+    }
+
+    public function testRunEmptyValuesFilterLatest()
+    {
+        $jobConfig = new JobConfig([
+            'endpoint' => 'ep',
+            'responseFilter' => 'data'
+        ]);
+
+        $filter = Filter::create($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
+        $data = json_decode(
+            '[
+                {
+                    "id": 1,
+                    "data": false
+                },
+                {
+                    "id": 2,
+                    "data": 0
+                },
+                {
+                    "id": 3,
+                    "data": null
+                },
+                {
+                    "id": 4,
+                    "data": ""
+                },
+                {
+                    "id": 5,
+                    "data": []
+                },
+                {
+                    "id": 6,
+                    "data": ["something"]
+                },
+                {
+                    "id": 7,
+                    "data": [42]
+                }
+            ]'
+        );
+
+        self::assertEquals(
+            [
+                (object) [
+                    'id' => 1,
+                    'data' => 'false'
+                ],
+                (object) [
+                    'id' => 2,
+                    'data' => '0'
+                ],
+                (object) [
+                    'id' => 3,
+                    'data' => 'null'
+                ],
+                (object) [
+                    'id' => 4,
+                    'data' => '""'
+                ],
+                (object) [
+                    'id' => 5,
+                    'data' => '[]'
+                ],
+                (object) [
+                    'id' => 6,
+                    'data' => "[\"something\"]"
+                ],
+                (object) [
+                    'id' => 7,
+                    'data' => "[42]"
+                ],
+            ],
+            $filter->run($data)
+        );
+    }
+
+    public function testRunEmptyValuesArrayLegacy()
+    {
+        $jobConfig = new JobConfig([
+            'endpoint' => 'ep',
+            'responseFilter' => 'data[]'
+        ]);
+
+        $filter = Filter::create($jobConfig, GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY);
+        $data = json_decode(
+            '[
+                {
+                    "id": 1,
+                    "data": [0, false, []]
+                },
+                {
+                    "id": 2,
+                    "data": ["foo", 0, ["bar"]]
+                }
+            ]'
+        );
+
+        self::assertEquals(
+            [
+                (object) [
+                    'id' => 1,
+                    'data' => [0, false, '[]']
+                ],
+                (object) [
+                    'id' => 2,
+                    'data' => ["foo", 0, '["bar"]']
+                ],
+            ],
+            $filter->run($data)
+        );
+    }
+
+    public function testRunEmptyValuesArrayScalar()
+    {
+        $jobConfig = new JobConfig([
+            'endpoint' => 'ep',
+            'responseFilter' => 'data[]'
+        ]);
+
+        $filter = Filter::create($jobConfig, GenericExtractor::COMPAT_LEVEL_FILTER_SCALAR);
+        $data = json_decode(
+            '[
+                {
+                    "id": 1,
+                    "data": [0, false, []]
+                },
+                {
+                    "id": 2,
+                    "data": ["foo", 0, ["bar"]]
+                }
+            ]'
+        );
+
+        self::assertEquals(
+            [
+                (object) [
+                    'id' => 1,
+                    'data' => [0, false, '[]']
+                ],
+                (object) [
+                    'id' => 2,
+                    'data' => ["foo", 0, '["bar"]']
+                ],
+            ],
+            $filter->run($data)
+        );
+    }
+
+    public function testRunEmptyValuesArrayLatest()
+    {
+        $jobConfig = new JobConfig([
+            'endpoint' => 'ep',
+            'responseFilter' => 'data[]'
+        ]);
+
+        $filter = Filter::create($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
+        $data = json_decode(
+            '[
+                {
+                    "id": 1,
+                    "data": [0, false, []]
+                },
+                {
+                    "id": 2,
+                    "data": ["foo", 0, ["bar"]]
+                }
+            ]'
+        );
+
+        self::assertEquals(
+            [
+                (object) [
+                    'id' => 1,
+                    'data' => ['0', 'false', '[]']
+                ],
+                (object) [
+                    'id' => 2,
+                    'data' => ['"foo"', '0', '["bar"]']
+                ],
             ],
             $filter->run($data)
         );

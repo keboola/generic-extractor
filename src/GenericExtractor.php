@@ -20,6 +20,11 @@ use Psr\Log\LoggerInterface;
 
 class GenericExtractor
 {
+    const COMPAT_LEVEL_OLD_PARSER = 1;
+    const COMPAT_LEVEL_FILTER_EMPTY = 2;
+    const COMPAT_LEVEL_FILTER_SCALAR = 3;
+    const COMPAT_LEVEL_LATEST = 4;
+
     /**
      * @var ParserInterface
      */
@@ -132,7 +137,8 @@ class GenericExtractor
             $this->logger,
             $this->api->getNewScroller(),
             $config->getAttributes(),
-            $this->metadata
+            $this->metadata,
+            $this->getCompatLevel($config)
         );
         if (!empty($config->getAttribute('userData'))) {
             $job->setUserParentId(
@@ -163,6 +169,18 @@ class GenericExtractor
 
     /**
      * @param Config $config
+     * @return int
+     */
+    private function getCompatLevel(Config $config)
+    {
+        if (empty($config->getAttribute('compatLevel'))) {
+            return self::COMPAT_LEVEL_LATEST;
+        }
+        return (int)$config->getAttribute('compatLevel');
+    }
+
+    /**
+     * @param Config $config
      * @return ParserInterface
      */
     protected function initParser(Config $config)
@@ -170,12 +188,12 @@ class GenericExtractor
         if (!empty($this->parser) && $this->parser instanceof ParserInterface) {
             return $this->parser;
         }
-        if (empty($config->getAttribute('compatLevel'))) {
+
+        if ($this->getCompatLevel($config) <= self::COMPAT_LEVEL_OLD_PARSER) {
             $compatLevel = Json::LATEST_VERSION;
         } else {
-            $compatLevel = $config->getAttribute('compatLevel');
+            $compatLevel = 1;
         }
-
         $parser = new Json($this->logger, $this->metadata, $compatLevel, 2000000);
 
         if (empty($config->getAttribute('mappings'))) {

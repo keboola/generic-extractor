@@ -3,6 +3,7 @@
 namespace Keboola\GenericExtractor\Response;
 
 use Keboola\GenericExtractor\Exception\UserException;
+use Keboola\GenericExtractor\GenericExtractor;
 use Keboola\Juicer\Config\JobConfig;
 
 /**
@@ -27,17 +28,26 @@ class Filter
      */
     protected $delimiter;
 
-    public function __construct(array $filters, $delimiter = self::DEFAULT_DELIMITER)
+    /**
+     * Compatibility level
+     * @var int
+     */
+    private $compatLevel;
+
+    public function __construct(array $filters, $delimiter = self::DEFAULT_DELIMITER, $compatLevel = null)
     {
+        // TODO odstranit default values
         $this->filters = $filters;
         $this->delimiter = $delimiter;
+        $this->compatLevel = $compatLevel;
     }
 
     /**
      * @param JobConfig $config
+     * @param int $compatLevel
      * @return Filter
      */
-    public static function create(JobConfig $config)
+    public static function create(JobConfig $config, int $compatLevel)
     {
         $filters = empty($config->getConfig()['responseFilter'])
             ? []
@@ -49,7 +59,7 @@ class Filter
             ? self::DEFAULT_DELIMITER
             : $config->getConfig()['responseFilterDelimiter'];
 
-        return new self($filters, $delimiter);
+        return new self($filters, $delimiter, $compatLevel);
     }
 
     /**
@@ -89,8 +99,14 @@ class Filter
             $arr = false;
         }
 
-        if (empty($item->{$key})) {
-            return $item;
+        if ($this->compatLevel <= GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY) {
+            if (empty($item->{$key})) {
+                return $item;
+            }
+        } else {
+            if (!property_exists($item, $key)) {
+                return $item;
+            }
         }
 
         if ($arr) {
@@ -122,6 +138,10 @@ class Filter
      */
     protected function updateItem($item)
     {
-        return is_scalar($item) ? $item : json_encode($item);
+        if ($this->compatLevel <= GenericExtractor::COMPAT_LEVEL_FILTER_SCALAR) {
+            return is_scalar($item) ? $item : json_encode($item);
+        } else {
+            return json_encode($item);
+        }
     }
 }
