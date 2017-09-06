@@ -41,7 +41,7 @@ class FilterTest extends TestCase
                     'out' => (object) [
                         'arr' => [
                             (object) [
-                                'in' => 'string'
+                                'in' => '"string"'
                             ],
                             (object) [
                                 'in' => '[{"array":"of objects!"}]'
@@ -88,7 +88,7 @@ class FilterTest extends TestCase
                         'arr' => [
                             '{"in":"object"}',
                             '{"in":[{"array":"of objects!"}]}',
-                            "string"
+                            '"string"'
                         ]
                     ]
                 ]
@@ -132,10 +132,10 @@ class FilterTest extends TestCase
                     'out' => (object) [
                         'arr' => [
                             (object) [
-                                'in' => 'string'
+                                'in' => '"string"'
                             ],
                             (object) [
-                                'uh' => 'no "in" here!'
+                                'uh' => 'no "in" here!' // <- correct because this is not filtered prop!
                             ],
                             (object) [
                                 'in' => '["str","ing"]'
@@ -269,7 +269,7 @@ class FilterTest extends TestCase
             'responseFilter' => 'data'
         ]);
 
-        $filter = Filter::create($jobConfig, GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY);
+        $filter = Filter::create($jobConfig, GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY_SCALAR);
         $data = json_decode(
             '[
                 {
@@ -324,82 +324,6 @@ class FilterTest extends TestCase
                 (object) [
                     'id' => 5,
                     'data' => []
-                ],
-                (object) [
-                    'id' => 6,
-                    'data' => "[\"something\"]"
-                ],
-                (object) [
-                    'id' => 7,
-                    'data' => "[42]"
-                ],
-            ],
-            $filter->run($data)
-        );
-    }
-
-    public function testRunEmptyValuesFilterScalar()
-    {
-        $jobConfig = new JobConfig([
-            'endpoint' => 'ep',
-            'responseFilter' => 'data'
-        ]);
-
-        $filter = Filter::create($jobConfig, GenericExtractor::COMPAT_LEVEL_FILTER_SCALAR);
-        $data = json_decode(
-            '[
-                {
-                    "id": 1,
-                    "data": false
-                },
-                {
-                    "id": 2,
-                    "data": 0
-                },
-                {
-                    "id": 3,
-                    "data": null
-                },
-                {
-                    "id": 4,
-                    "data": ""
-                },
-                {
-                    "id": 5,
-                    "data": []
-                },
-                {
-                    "id": 6,
-                    "data": ["something"]
-                },
-                {
-                    "id": 7,
-                    "data": [42]
-                }
-            ]'
-        );
-
-        self::assertEquals(
-            [
-                (object) [
-                    'id' => 1,
-                    'data' => false
-                ],
-                (object) [
-                    'id' => 2,
-                    'data' => 0
-                ],
-                (object) [
-                    'id' => 3,
-                    'data' => 'null'
-                ],
-                (object) [
-                    'id' => 4,
-                    'data' => ""
-                ],
-                (object) [
-                    'id' => 5,
-                    'data' => '[]'
                 ],
                 (object) [
                     'id' => 6,
@@ -497,43 +421,7 @@ class FilterTest extends TestCase
             'responseFilter' => 'data[]'
         ]);
 
-        $filter = Filter::create($jobConfig, GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY);
-        $data = json_decode(
-            '[
-                {
-                    "id": 1,
-                    "data": [0, false, []]
-                },
-                {
-                    "id": 2,
-                    "data": ["foo", 0, ["bar"]]
-                }
-            ]'
-        );
-
-        self::assertEquals(
-            [
-                (object) [
-                    'id' => 1,
-                    'data' => [0, false, '[]']
-                ],
-                (object) [
-                    'id' => 2,
-                    'data' => ["foo", 0, '["bar"]']
-                ],
-            ],
-            $filter->run($data)
-        );
-    }
-
-    public function testRunEmptyValuesArrayScalar()
-    {
-        $jobConfig = new JobConfig([
-            'endpoint' => 'ep',
-            'responseFilter' => 'data[]'
-        ]);
-
-        $filter = Filter::create($jobConfig, GenericExtractor::COMPAT_LEVEL_FILTER_SCALAR);
+        $filter = Filter::create($jobConfig, GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY_SCALAR);
         $data = json_decode(
             '[
                 {

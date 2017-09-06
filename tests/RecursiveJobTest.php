@@ -2,6 +2,7 @@
 
 namespace Keboola\GenericExtractor\Tests;
 
+use Keboola\GenericExtractor\GenericExtractor;
 use Keboola\GenericExtractor\GenericExtractorJob;
 use Keboola\Juicer\Client\RestClient;
 use Keboola\Juicer\Client\RestRequest;
@@ -40,7 +41,16 @@ class RecursiveJobTest extends TestCase
         $client->method('download')->willReturn($response);
         $client->method('createRequest')->willReturn(new RestRequest($jobConfig->getConfig()));
         /** @var RestClient $client */
-        $job = new GenericExtractorJob($jobConfig, $client, $parser, new NullLogger(), new NoScroller(), [], []);
+        $job = new GenericExtractorJob(
+            $jobConfig,
+            $client,
+            $parser,
+            new NullLogger(),
+            new NoScroller(),
+            [],
+            [],
+            GenericExtractor::COMPAT_LEVEL_LATEST
+        );
         $job->run();
         self::assertEquals(
             ['tickets_export', 'tickets_export_c'],
@@ -117,7 +127,16 @@ class RecursiveJobTest extends TestCase
             return new RestRequest($config);
         });
         /** @var RestClient $client */
-        $job = new GenericExtractorJob($jobConfig, $client, $parser, new NullLogger(), new NoScroller(), [], []);
+        $job = new GenericExtractorJob(
+            $jobConfig,
+            $client,
+            $parser,
+            new NullLogger(),
+            new NoScroller(),
+            [],
+            [],
+            GenericExtractor::COMPAT_LEVEL_LATEST
+        );
         $job->run();
         self::assertEquals(
             ['first', 'second', 'third'],
@@ -195,7 +214,16 @@ class RecursiveJobTest extends TestCase
             return new RestRequest($config);
         });
         /** @var RestClient $client */
-        $job = new GenericExtractorJob($jobConfig, $client, $parser, new NullLogger(), new NoScroller(), [], []);
+        $job = new GenericExtractorJob(
+            $jobConfig,
+            $client,
+            $parser,
+            new NullLogger(),
+            new NoScroller(),
+            [],
+            [],
+            GenericExtractor::COMPAT_LEVEL_LATEST
+        );
         $job->run();
         self::assertEquals(
             ['first', 'second', 'third'],
@@ -273,7 +301,16 @@ class RecursiveJobTest extends TestCase
             return new RestRequest($config);
         });
         /** @var RestClient $client */
-        $job = new GenericExtractorJob($jobConfig, $client, $parser, new NullLogger(), new NoScroller(), [], []);
+        $job = new GenericExtractorJob(
+            $jobConfig,
+            $client,
+            $parser,
+            new NullLogger(),
+            new NoScroller(),
+            [],
+            [],
+            GenericExtractor::COMPAT_LEVEL_LATEST
+        );
         $job->run();
         self::assertEquals(
             ['first', 'second', 'third'],
@@ -351,7 +388,16 @@ class RecursiveJobTest extends TestCase
             return new RestRequest($config);
         });
         /** @var RestClient $client */
-        $job = new GenericExtractorJob($jobConfig, $client, $parser, new NullLogger(), new NoScroller(), [], []);
+        $job = new GenericExtractorJob(
+            $jobConfig,
+            $client,
+            $parser,
+            new NullLogger(),
+            new NoScroller(),
+            [],
+            [],
+            GenericExtractor::COMPAT_LEVEL_LATEST
+        );
         $job->run();
         self::assertEquals(
             ['first', 'second', 'third'],
@@ -381,7 +427,7 @@ class RecursiveJobTest extends TestCase
             "dataType" => "tickets_export",
             'userData' => ['column' => 'hello']
         ]);
-        $parser = new Json(new NullLogger(), [], 2);
+        $parser = new Json(new NullLogger(), [], GenericExtractor::COMPAT_LEVEL_OLD_PARSER);
         $response = json_decode('{
             "data": [
                 {
@@ -398,7 +444,16 @@ class RecursiveJobTest extends TestCase
         $client->method('download')->willReturn($response);
         $client->method('createRequest')->willReturn(new RestRequest($jobConfig->getConfig()));
         /** @var RestClient $client */
-        $job = new GenericExtractorJob($jobConfig, $client, $parser, new NullLogger(), new NoScroller(), [], []);
+        $job = new GenericExtractorJob(
+            $jobConfig,
+            $client,
+            $parser,
+            new NullLogger(),
+            new NoScroller(),
+            [],
+            [],
+            GenericExtractor::COMPAT_LEVEL_OLD_PARSER
+        );
         $job->run();
         self::assertEquals(
             ['tickets_export'],
@@ -438,7 +493,16 @@ class RecursiveJobTest extends TestCase
         $client->method('download')->willReturn($response);
         $client->method('createRequest')->willReturn(new RestRequest($jobConfig->getConfig()));
         /** @var RestClient $client */
-        $job = new GenericExtractorJob($jobConfig, $client, $parser, new NullLogger(), new NoScroller(), [], []);
+        $job = new GenericExtractorJob(
+            $jobConfig,
+            $client,
+            $parser,
+            new NullLogger(),
+            new NoScroller(),
+            [],
+            [],
+            GenericExtractor::COMPAT_LEVEL_LATEST
+        );
         $job->run();
         self::assertEquals(
             ['tickets_export'],
@@ -473,7 +537,16 @@ class RecursiveJobTest extends TestCase
         $client->method('download')->willReturn($response);
         $client->method('createRequest')->willReturn(new RestRequest($jobConfig->getConfig()));
         /** @var RestClient $client */
-        $job = new GenericExtractorJob($jobConfig, $client, $parser, new NullLogger(), new NoScroller(), [], []);
+        $job = new GenericExtractorJob(
+            $jobConfig,
+            $client,
+            $parser,
+            new NullLogger(),
+            new NoScroller(),
+            [],
+            [],
+            GenericExtractor::COMPAT_LEVEL_LATEST
+        );
         $job->run();
         self::assertEquals(
             ['tickets_export'],

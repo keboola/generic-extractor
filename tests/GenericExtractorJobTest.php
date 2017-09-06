@@ -3,6 +3,7 @@
 namespace Keboola\GenericExtractor\Tests;
 
 use Keboola\GenericExtractor\Exception\UserException;
+use Keboola\GenericExtractor\GenericExtractor;
 use Keboola\GenericExtractor\GenericExtractorJob;
 use Keboola\Juicer\Client\RestRequest;
 use Keboola\Juicer\Config\JobConfig;
@@ -146,7 +147,8 @@ class GenericExtractorJobTest extends ExtractorTestCase
             new NullLogger(),
             new ResponseUrlScroller($config),
             [],
-            []
+            [],
+            GenericExtractor::COMPAT_LEVEL_LATEST
         );
         self::callMethod($job, 'buildParams', [$cfg]);
 
@@ -282,7 +284,16 @@ class GenericExtractorJobTest extends ExtractorTestCase
         $client->method('createRequest')->willReturn(new RestRequest($jobConfig->getConfig()));
 
         /** @var RestClient $client */
-        $job = new GenericExtractorJob($jobConfig, $client, $parser, new NullLogger(), new NoScroller(), [], []);
+        $job = new GenericExtractorJob(
+            $jobConfig,
+            $client,
+            $parser,
+            new NullLogger(),
+            new NoScroller(),
+            [],
+            [],
+            GenericExtractor::COMPAT_LEVEL_LATEST
+        );
         /** @var GenericExtractorJob $job */
         $job->run();
 
@@ -312,7 +323,8 @@ class GenericExtractorJobTest extends ExtractorTestCase
             new NullLogger(),
             new NoScroller(),
             $attributes,
-            $metadata
+            $metadata,
+            GenericExtractor::COMPAT_LEVEL_LATEST
         );
     }
 

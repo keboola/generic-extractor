@@ -21,9 +21,8 @@ use Psr\Log\LoggerInterface;
 class GenericExtractor
 {
     const COMPAT_LEVEL_OLD_PARSER = 1;
-    const COMPAT_LEVEL_FILTER_EMPTY = 2;
-    const COMPAT_LEVEL_FILTER_SCALAR = 3;
-    const COMPAT_LEVEL_LATEST = 4;
+    const COMPAT_LEVEL_FILTER_EMPTY_SCALAR = 2;
+    const COMPAT_LEVEL_LATEST = 3;
 
     /**
      * @var ParserInterface
@@ -190,9 +189,9 @@ class GenericExtractor
         }
 
         if ($this->getCompatLevel($config) <= self::COMPAT_LEVEL_OLD_PARSER) {
-            $compatLevel = Json::LATEST_VERSION;
+            $compatLevel = Json::LEGACY_VERSION;
         } else {
-            $compatLevel = 1;
+            $compatLevel = Json::LATEST_VERSION;
         }
         $parser = new Json($this->logger, $this->metadata, $compatLevel, 2000000);
 

@@ -99,7 +99,7 @@ class Filter
             $arr = false;
         }
 
-        if ($this->compatLevel <= GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY) {
+        if ($this->compatLevel <= GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY_SCALAR) {
             if (empty($item->{$key})) {
                 return $item;
             }
@@ -138,7 +138,7 @@ class Filter
      */
     protected function updateItem($item)
     {
-        if ($this->compatLevel <= GenericExtractor::COMPAT_LEVEL_FILTER_SCALAR) {
+        if ($this->compatLevel <= GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY_SCALAR) {
             return is_scalar($item) ? $item : json_encode($item);
         } else {
             return json_encode($item);
