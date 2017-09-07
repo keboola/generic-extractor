@@ -6,7 +6,7 @@ services:
 before_script:
   - docker -v
   - docker-compose -v
-  - docker-compose build
+  - docker-compose build extractor tests
 
 script: 
   # Run tests
