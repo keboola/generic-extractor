@@ -427,7 +427,7 @@ class RecursiveJobTest extends TestCase
             "dataType" => "tickets_export",
             'userData' => ['column' => 'hello']
         ]);
-        $parser = new Json(new NullLogger(), [], GenericExtractor::COMPAT_LEVEL_OLD_PARSER);
+        $parser = new Json(new NullLogger(), [], Json::LEGACY_VERSION);
         $response = json_decode('{
             "data": [
                 {
@@ -465,6 +465,199 @@ class RecursiveJobTest extends TestCase
             '"hello","1",""' . "\n" .
             '"hello","2",""' . "\n",
             file_get_contents($parser->getResults()['tickets_export']->getPathname())
+        );
+    }
+
+    public function testUserDataAddLegacyMetadata()
+    {
+        $jobConfig = new JobConfig([
+            "id" => "multiCfg",
+            "endpoint" => "exports/tickets.json",
+            "dataType" => "tickets_export",
+            'userData' => ['column' => 'hello']
+        ]);
+        $metadata = [
+            "time" => [
+                "previousStart" => 1492606006
+            ],
+            "json_parser.struct" => [
+                "tickets_export" => [
+                    "column" => "scalar",
+                    "id" => "scalar",
+                    "modified" => "scalar"
+                ],
+            ],
+            "json_parser.structVersion" => 2,
+        ];
+        $parser = new Json(new NullLogger(), $metadata, Json::LATEST_VERSION);
+        $response = json_decode('{
+            "data": [
+                {
+                    "column": "first",
+                    "id": 1
+                },
+                {
+                    "column": "second",
+                    "id": 2
+                }
+            ]
+        }');
+        $client = self::createMock(RestClient::class);
+        $client->method('download')->willReturn($response);
+        $client->method('createRequest')->willReturn(new RestRequest($jobConfig->getConfig()));
+        /** @var RestClient $client */
+        $job = new GenericExtractorJob(
+            $jobConfig,
+            $client,
+            $parser,
+            new NullLogger(),
+            new NoScroller(),
+            [],
+            [],
+            GenericExtractor::COMPAT_LEVEL_OLD_PARSER
+        );
+        $job->run();
+        self::assertEquals(
+            ['tickets_export'],
+            array_keys($parser->getResults())
+        );
+        self::assertEquals(
+            '"column","id","modified","1afd32818d1c9525f82aff4c09efd254"' . "\n" .
+            '"hello","1","",""' . "\n" .
+            '"hello","2","",""' . "\n",
+            file_get_contents($parser->getResults()['tickets_export']->getPathname())
+        );
+        self::assertEquals(
+            [
+                'json_parser.struct' => [
+                    'tickets_export' => [
+                        'column' => 'scalar',
+                        'id' => 'scalar',
+                        'modified' => 'scalar'
+                    ]
+                ],
+                'json_parser.structVersion' => 2.0
+            ],
+            $parser->getMetadata()
+        );
+    }
+
+    public function testUserDataAddNewMetadata()
+    {
+        $jobConfig = new JobConfig([
+            "id" => "multiCfg",
+            "endpoint" => "exports/tickets.json",
+            "dataType" => "tickets_export",
+            'userData' => ['column' => 'hello']
+        ]);
+        $metadata = [
+            'json_parser.struct' => [
+                'data' => [
+                    '_tickets_export' => [
+                        '[]' => [
+                            'nodeType' => 'object',
+                            '_id' => [
+                                'nodeType' => 'scalar',
+                                'headerNames' => 'id',
+                            ],
+                            '_column' => [
+                                'nodeType' => 'scalar',
+                                'headerNames' => 'column'
+                            ],
+                            '_modified' => [
+                                'nodeType' => 'scalar',
+                                'headerNames' => 'modified',
+                            ],
+                            'headerNames' => 'data',
+                            '_column_u0' => [
+                                'nodeType' => 'scalar',
+                                'type' => 'parent',
+                                'headerNames' => 'column_u0'
+                            ]
+                        ],
+                        'nodeType' => 'array'
+                    ],
+                ],
+                'parent_aliases' => [
+                    'column' => 'column_u0',
+                ],
+            ],
+            'json_parser.structVersion' => 3
+        ];
+        $parser = new Json(new NullLogger(), $metadata, Json::LATEST_VERSION);
+        $response = json_decode('{
+            "data": [
+                {
+                    "column": "first",
+                    "id": 1
+                },
+                {
+                    "column": "second",
+                    "id": 2
+                }
+            ]
+        }');
+        $client = self::createMock(RestClient::class);
+        $client->method('download')->willReturn($response);
+        $client->method('createRequest')->willReturn(new RestRequest($jobConfig->getConfig()));
+        /** @var RestClient $client */
+        $job = new GenericExtractorJob(
+            $jobConfig,
+            $client,
+            $parser,
+            new NullLogger(),
+            new NoScroller(),
+            [],
+            [],
+            GenericExtractor::COMPAT_LEVEL_LATEST
+        );
+        $job->run();
+        self::assertEquals(
+            ['tickets_export'],
+            array_keys($parser->getResults())
+        );
+        self::assertEquals(
+            '"id","column","modified","column_u0"' . "\n" .
+            '"1","first","","hello"' . "\n" .
+            '"2","second","","hello"' . "\n",
+            file_get_contents($parser->getResults()['tickets_export']->getPathname())
+        );
+        self::assertEquals(
+            [
+                'json_parser.struct' => [
+                    'data' => [
+                        '_tickets_export' => [
+                            '[]' => [
+                                'nodeType' => 'object',
+                                '_id' => [
+                                    'nodeType' => 'scalar',
+                                    'headerNames' => 'id',
+                                ],
+                                '_modified' => [
+                                    'nodeType' => 'scalar',
+                                    'headerNames' => 'modified',
+                                ],
+                                '_column' => [
+                                    'nodeType' => 'scalar',
+                                    'headerNames' => 'column'
+                                ],
+                                'headerNames' => 'data',
+                                '_column_u0' => [
+                                    'nodeType' => 'scalar',
+                                    'type' => 'parent',
+                                    'headerNames' => 'column_u0'
+                                ]
+                            ],
+                            'nodeType' => 'array',
+                        ],
+                    ],
+                    'parent_aliases' => [
+                        'column' => 'column_u0',
+                    ],
+                ],
+                'json_parser.structVersion' => 3
+            ],
+            $parser->getMetadata()
         );
     }
 

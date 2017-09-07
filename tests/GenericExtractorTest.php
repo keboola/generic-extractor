@@ -20,8 +20,23 @@ class GenericExtractorTest extends TestCase
     {
         $meta = [
             'json_parser.struct' => [
-                'tickets.via' => ['channel' => 'scalar', 'source' => 'object']
+                'data' => [
+                    '_get' => [
+                        'nodeType' => 'array',
+                        '[]' => [
+                            'nodeType' => 'object',
+                            'headerNames' => 'data',
+                            '_channel' => [
+                                'nodeType' => 'scalar',
+                            ],
+                            '_source' => [
+                                'nodeType' => 'scalar',
+                            ],
+                        ],
+                    ],
+                ]
             ],
+            'json_parser.structVersion' => 3,
             'time' => [
                 'previousStart' => 123
             ]
@@ -46,19 +61,21 @@ class GenericExtractorTest extends TestCase
     {
         $meta = [
             'json_parser.struct' => [
-                '_get' => [
-                    'nodeType' => 'array',
-                    '[]' => [
-                        'nodeType' => 'object',
-                        'headerNames' => 'data',
-                        '_channel' => [
-                            'nodeType' => 'scalar',
-                        ],
-                        '_source' => [
-                            'nodeType' => 'scalar',
+                'data' => [
+                    '_get' => [
+                        'nodeType' => 'array',
+                        '[]' => [
+                            'nodeType' => 'object',
+                            'headerNames' => 'data',
+                            '_channel' => [
+                                'nodeType' => 'scalar',
+                            ],
+                            '_source' => [
+                                'nodeType' => 'scalar',
+                            ],
                         ],
                     ],
-                ],
+                ]
             ],
             'json_parser.structVersion' => 3,
             'time' => [
@@ -75,26 +92,33 @@ class GenericExtractorTest extends TestCase
         $after = $ex->getMetadata();
 
         $meta['json_parser.struct'] = [
-            '_get' => [
-                'nodeType' => 'array',
-                '[]' => [
-                    'nodeType' => 'object',
-                    'headerNames' => 'data',
-                    '_id' => [
-                        'nodeType' => 'scalar',
-                        'headerNames' => 'id',
-                    ],
-                    '_status' => [
-                        'nodeType' => 'scalar',
-                        'headerNames' => 'status',
-                    ],
-                    '_channel' => [
-                        'nodeType' => 'scalar',
-                    ],
-                    '_source' => [
-                        'nodeType' => 'scalar',
+            'data' => [
+                '_get' => [
+                    'nodeType' => 'array',
+                    '[]' => [
+                        'nodeType' => 'object',
+                        'headerNames' => 'data',
+                        '_id' => [
+                            'nodeType' => 'scalar',
+                            'headerNames' => 'id',
+                        ],
+                        '_status' => [
+                            'nodeType' => 'scalar',
+                            'headerNames' => 'status',
+                        ],
+                        '_channel' => [
+                            'nodeType' => 'scalar',
+                            'headerNames' => 'channel',
+                        ],
+                        '_source' => [
+                            'nodeType' => 'scalar',
+                            'headerNames' => 'source',
+                        ],
                     ],
                 ],
+            ],
+            'parent_aliases' => [
+
             ],
         ];
         self::assertEquals($meta['json_parser.struct'], $after['json_parser.struct']);
