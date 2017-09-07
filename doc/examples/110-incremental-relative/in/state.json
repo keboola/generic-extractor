@@ -1,1 +1,30 @@
-{"time":{"previousStart":1492606006},"json_parser.struct":{"users":{"id":"scalar","name":"scalar","modified":"scalar"}},"json_parser.structVersion":2}
+{
+	"time": {
+		"previousStart": 1492606006
+	},
+	"json_parser.struct": {
+		"data": {
+			"_users": {
+				"[]": {
+					"_id": {
+						"nodeType": "scalar",
+						"headerNames": "id"
+					},
+					"_name": {
+						"nodeType": "scalar",
+						"headerNames": "name"
+					},
+					"_previous": {
+						"nodeType": "scalar",
+						"headerNames": "previous"
+					},
+					"nodeType": "object",
+					"headerNames": "data"
+				},
+				"nodeType": "array"
+			}
+		},
+		"parent_aliases": []
+	},
+	"json_parser.structVersion": 3
+}

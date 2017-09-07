@@ -1,3 +1,3 @@
-"order_id","price","tag","78a5eb43deef9a7b5b9ce157b9d52ac4"
-"98765432","$10","development",""
-"23456765","$10","development",""
+"order_id","price","tag","price_u0"
+"98765432","$42","development","$10"
+"23456765","$24","development","$10"

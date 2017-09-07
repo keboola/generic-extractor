@@ -1,0 +1,18 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/121-inconsistent-object-legacy/"
+        },
+        "config": {
+            "debug": true,
+            "compatLevel": 2,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "responseFilter": "color"
+                }
+            ]
+        }
+    }
+}
