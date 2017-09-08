@@ -3,6 +3,7 @@
 namespace Keboola\GenericExtractor\Response;
 
 use Keboola\GenericExtractor\Exception\UserException;
+use Keboola\GenericExtractor\GenericExtractor;
 use Keboola\Juicer\Config\JobConfig;
 
 /**
@@ -27,29 +28,24 @@ class Filter
      */
     protected $delimiter;
 
-    public function __construct(array $filters, $delimiter = self::DEFAULT_DELIMITER)
-    {
-        $this->filters = $filters;
-        $this->delimiter = $delimiter;
-    }
-
     /**
-     * @param JobConfig $config
-     * @return Filter
+     * Compatibility level
+     * @var int
      */
-    public static function create(JobConfig $config)
+    private $compatLevel;
+
+    public function __construct(JobConfig $config, int $compatLevel)
     {
-        $filters = empty($config->getConfig()['responseFilter'])
+        $this->filters = empty($config->getConfig()['responseFilter'])
             ? []
             : (is_array($config->getConfig()['responseFilter'])
                 ? $config->getConfig()['responseFilter']
                 : [$config->getConfig()['responseFilter']]);
 
-        $delimiter = empty($config->getConfig()['responseFilterDelimiter'])
+        $this->delimiter = empty($config->getConfig()['responseFilterDelimiter'])
             ? self::DEFAULT_DELIMITER
             : $config->getConfig()['responseFilterDelimiter'];
-
-        return new self($filters, $delimiter);
+        $this->compatLevel = $compatLevel;
     }
 
     /**
@@ -89,8 +85,14 @@ class Filter
             $arr = false;
         }
 
-        if (empty($item->{$key})) {
-            return $item;
+        if ($this->compatLevel <= GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY_SCALAR) {
+            if (empty($item->{$key})) {
+                return $item;
+            }
+        } else {
+            if (!property_exists($item, $key)) {
+                return $item;
+            }
         }
 
         if ($arr) {
@@ -122,6 +124,10 @@ class Filter
      */
     protected function updateItem($item)
     {
-        return is_scalar($item) ? $item : json_encode($item);
+        if ($this->compatLevel <= GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY_SCALAR) {
+            return is_scalar($item) ? $item : json_encode($item);
+        } else {
+            return json_encode($item);
+        }
     }
 }

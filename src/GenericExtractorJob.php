@@ -92,6 +92,12 @@ class GenericExtractorJob
     private $parentResults = [];
 
     /**
+     * Compatibility level
+     * @var int
+     */
+    private $compatLevel;
+
+    /**
      * @param JobConfig $config
      * @param RestClient $client A client used to communicate with the API (wrapper for Guzzle)
      * @param ParserInterface $parser A parser to handle the result and convert it into CSV file(s)
@@ -99,6 +105,7 @@ class GenericExtractorJob
      * @param ScrollerInterface $scroller
      * @param array $attributes
      * @param array $metadata
+     * @param int $compatLevel Compatibility level, @see GenericExtractor
      */
     public function __construct(
         JobConfig $config,
@@ -107,7 +114,8 @@ class GenericExtractorJob
         LoggerInterface $logger,
         ScrollerInterface $scroller,
         array $attributes,
-        array $metadata
+        array $metadata,
+        int $compatLevel
     ) {
         $this->logger = $logger;
         $this->config = $config;
@@ -117,6 +125,7 @@ class GenericExtractorJob
         $this->jobId = $config->getJobId();
         $this->attributes = $attributes;
         $this->metadata = $metadata;
+        $this->compatLevel = $compatLevel;
     }
 
     /**
@@ -206,7 +215,8 @@ class GenericExtractorJob
             $this->logger,
             $scroller,
             $this->attributes,
-            $this->metadata
+            $this->metadata,
+            $this->compatLevel
         );
 
         $params = [];
@@ -448,7 +458,7 @@ class GenericExtractorJob
      */
     private function filterResponse(JobConfig $config, array $data)
     {
-        $filter = Filter::create($config);
+        $filter = new Filter($config, $this->compatLevel);
         return $filter->run($data);
     }
 

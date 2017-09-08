@@ -3,6 +3,7 @@
 namespace Keboola\GenericExtractor\Tests;
 
 use Keboola\GenericExtractor\Exception\UserException;
+use Keboola\GenericExtractor\GenericExtractor;
 use Keboola\GenericExtractor\GenericExtractorJob;
 use Keboola\Juicer\Client\RestRequest;
 use Keboola\Juicer\Config\JobConfig;
@@ -10,7 +11,6 @@ use Keboola\Juicer\Pagination\NoScroller;
 use Keboola\Juicer\Pagination\ResponseUrlScroller;
 use Keboola\Juicer\Client\RestClient;
 use Keboola\Juicer\Parser\Json;
-use Keboola\Temp\Temp;
 use Psr\Log\NullLogger;
 
 class GenericExtractorJobTest extends ExtractorTestCase
@@ -143,11 +143,12 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 new NullLogger(),
                 ['base_url' => 'http://example.com/api/']
             ),
-            new Json(new NullLogger(), new Temp()),
+            new Json(new NullLogger(), [], Json::LATEST_VERSION),
             new NullLogger(),
             new ResponseUrlScroller($config),
             [],
-            []
+            [],
+            GenericExtractor::COMPAT_LEVEL_LATEST
         );
         self::callMethod($job, 'buildParams', [$cfg]);
 
@@ -276,14 +277,23 @@ class GenericExtractorJobTest extends ExtractorTestCase
         $jobConfig = new JobConfig([
             'endpoint' => 'ep'
         ]);
-        $parser = new Json(new NullLogger(), new Temp());
+        $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
 
         $client = self::createMock(RestClient::class);
         $client->method('download')->willReturn([(object) ['result' => 'data']]);
         $client->method('createRequest')->willReturn(new RestRequest($jobConfig->getConfig()));
 
         /** @var RestClient $client */
-        $job = new GenericExtractorJob($jobConfig, $client, $parser, new NullLogger(), new NoScroller(), [], []);
+        $job = new GenericExtractorJob(
+            $jobConfig,
+            $client,
+            $parser,
+            new NullLogger(),
+            new NoScroller(),
+            [],
+            [],
+            GenericExtractor::COMPAT_LEVEL_LATEST
+        );
         /** @var GenericExtractorJob $job */
         $job->run();
 
@@ -307,12 +317,14 @@ class GenericExtractorJobTest extends ExtractorTestCase
             ),
             new Json(
                 new NullLogger(),
-                new Temp()
+                [],
+                Json::LATEST_VERSION
             ),
             new NullLogger(),
             new NoScroller(),
             $attributes,
-            $metadata
+            $metadata,
+            GenericExtractor::COMPAT_LEVEL_LATEST
         );
     }
 

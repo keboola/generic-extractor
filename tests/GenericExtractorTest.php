@@ -20,8 +20,23 @@ class GenericExtractorTest extends TestCase
     {
         $meta = [
             'json_parser.struct' => [
-                'tickets.via' => ['channel' => 'scalar', 'source' => 'object']
+                'data' => [
+                    '_get' => [
+                        'nodeType' => 'array',
+                        '[]' => [
+                            'nodeType' => 'object',
+                            'headerNames' => 'data',
+                            '_channel' => [
+                                'nodeType' => 'scalar',
+                            ],
+                            '_source' => [
+                                'nodeType' => 'scalar',
+                            ],
+                        ],
+                    ],
+                ]
             ],
+            'json_parser.structVersion' => 3,
             'time' => [
                 'previousStart' => 123
             ]
@@ -46,8 +61,23 @@ class GenericExtractorTest extends TestCase
     {
         $meta = [
             'json_parser.struct' => [
-                'tickets.via' => ['channel' => 'scalar', 'source' => 'object']
+                'data' => [
+                    '_get' => [
+                        'nodeType' => 'array',
+                        '[]' => [
+                            'nodeType' => 'object',
+                            'headerNames' => 'data',
+                            '_channel' => [
+                                'nodeType' => 'scalar',
+                            ],
+                            '_source' => [
+                                'nodeType' => 'scalar',
+                            ],
+                        ],
+                    ],
+                ]
             ],
+            'json_parser.structVersion' => 3,
             'time' => [
                 'previousStart' => 123
             ]
@@ -61,17 +91,45 @@ class GenericExtractorTest extends TestCase
         $ex->run($cfg);
         $after = $ex->getMetadata();
 
-        $meta['json_parser.struct']['get'] = ['id' => 'scalar', 'status' => 'scalar'];
+        $meta['json_parser.struct'] = [
+            'data' => [
+                '_get' => [
+                    'nodeType' => 'array',
+                    '[]' => [
+                        'nodeType' => 'object',
+                        'headerNames' => 'data',
+                        '_id' => [
+                            'nodeType' => 'scalar',
+                            'headerNames' => 'id',
+                        ],
+                        '_status' => [
+                            'nodeType' => 'scalar',
+                            'headerNames' => 'status',
+                        ],
+                        '_channel' => [
+                            'nodeType' => 'scalar',
+                            'headerNames' => 'channel',
+                        ],
+                        '_source' => [
+                            'nodeType' => 'scalar',
+                            'headerNames' => 'source',
+                        ],
+                    ],
+                ],
+            ],
+            'parent_aliases' => [
+
+            ],
+        ];
         self::assertEquals($meta['json_parser.struct'], $after['json_parser.struct']);
         self::assertArrayHasKey('time', $after);
     }
 
     public function testGetParser()
     {
-        $temp = new Temp();
-        $parser = new Json(new NullLogger(), $temp);
+        $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
         $api = new Api(new NullLogger(), ['baseUrl' => 'http://example.com'], [], []);
-        $extractor = new GenericExtractor($temp, new NullLogger(), $api);
+        $extractor = new GenericExtractor(new Temp(), new NullLogger(), $api);
         $extractor->setParser($parser);
         self::assertEquals($parser, $extractor->getParser());
     }

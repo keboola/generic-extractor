@@ -1,0 +1,5 @@
+"type","properties","primary","JSON_parentId"
+"address","{""street"":""Elm Street"",""city"":""New York""}","","users_d079b018173b1229bb0482d5c191c659"
+"email","john.doe@example.com","1","users_d079b018173b1229bb0482d5c191c659"
+"address","{""street"":""Bates Street"",""city"":""Chicago"",""state"":""USA""}","","users_71a10bd68f1f50242e784f7c4e205d15"
+"phone","123 456 789","1","users_71a10bd68f1f50242e784f7c4e205d15"

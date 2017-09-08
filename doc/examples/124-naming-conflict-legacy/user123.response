@@ -1,0 +1,10 @@
+{
+    "id": 123,
+    "name": "John Doe",
+    "parent_id": "admins",
+    "address": {
+        "city": "London",
+        "country": "UK",
+        "street": "Whitehaven Mansions"
+    }
+}

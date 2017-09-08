@@ -2,9 +2,10 @@
     "name": "keboola/ex-generic-v2",
     "license": "MIT",
     "type": "project",
+    "minimum-stability": "dev",
     "require": {
         "php": ">=7",
-        "keboola/juicer": "^3.0",
+        "keboola/juicer": "^4.0",
         "keboola/filter": "^1.0",
         "symfony/console": "^2.8",
         "symfony/finder": "^2.8",

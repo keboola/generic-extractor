@@ -1,0 +1,23 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/123-incremental-load-legacy/"
+        },
+        "config": {
+            "debug": true,
+            "incrementalOutput": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users",
+                    "params": {
+                        "modified_since": {
+                            "time": "previousStart"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

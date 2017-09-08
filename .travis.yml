@@ -6,11 +6,21 @@ services:
 before_script:
   - docker -v
   - docker-compose -v
-  - docker-compose build
+  - docker-compose build extractor tests
 
 script: 
+  # Run tests
   - docker-compose run --rm -e CODECLIMATE_REPO_TOKEN tests
-  - sh -c "cd doc && ./run-samples.sh"
+  - sh -c "cd doc && ./run-samples.sh"  
+  # Push master image
+  - docker pull quay.io/keboola/developer-portal-cli-v2:latest
+  - export REPOSITORY=`docker run --rm -e KBC_DEVELOPERPORTAL_USERNAME -e KBC_DEVELOPERPORTAL_PASSWORD -e KBC_DEVELOPERPORTAL_URL quay.io/keboola/developer-portal-cli-v2:latest ecr:get-repository $KBC_DEVELOPERPORTAL_VENDOR $KBC_DEVELOPERPORTAL_APP`
+  - docker tag ${KBC_APP_REPOSITORY}:latest ${REPOSITORY}:master
+  - eval $(docker run --rm -e KBC_DEVELOPERPORTAL_USERNAME -e KBC_DEVELOPERPORTAL_PASSWORD -e KBC_DEVELOPERPORTAL_URL quay.io/keboola/developer-portal-cli-v2:latest ecr:get-login $KBC_DEVELOPERPORTAL_VENDOR $KBC_DEVELOPERPORTAL_APP)
+  - docker push $REPOSITORY:master
+  # Run live test job on new master image
+  - docker pull quay.io/keboola/syrup-cli:latest
+  - docker run --rm -e KBC_STORAGE_TOKEN quay.io/keboola/syrup-cli:latest run-job $KBC_DEVELOPERPORTAL_APP $KBC_APP_TEST_CONFIG master
 
 after_success:
   - docker images
