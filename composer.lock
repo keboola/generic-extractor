@@ -621,16 +621,16 @@
         },
         {
             "name": "keboola/json-parser",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-jsonparser.git",
-                "reference": "36c24ef21d5a6e5bade2881faacd758f55ba2937"
+                "reference": "bb264abf2e517c63914c3edcf9e2f478966e3ed2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-jsonparser/zipball/36c24ef21d5a6e5bade2881faacd758f55ba2937",
-                "reference": "36c24ef21d5a6e5bade2881faacd758f55ba2937",
+                "url": "https://api.github.com/repos/keboola/php-jsonparser/zipball/bb264abf2e517c63914c3edcf9e2f478966e3ed2",
+                "reference": "bb264abf2e517c63914c3edcf9e2f478966e3ed2",
                 "shasum": ""
             },
             "require": {
@@ -670,7 +670,7 @@
                 "json2csv",
                 "parser"
             ],
-            "time": "2017-09-07T15:34:59+00:00"
+            "time": "2017-09-08T09:40:54+00:00"
         },
         {
             "name": "keboola/juicer",
@@ -1780,12 +1780,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/caching.git",
-                "reference": "d84d53281c9ff8b3a14d4c25e9f9fe1e9c5fede2"
+                "reference": "f80f16ae3be068cc75299328e8047cf030994d9f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/caching/zipball/d84d53281c9ff8b3a14d4c25e9f9fe1e9c5fede2",
-                "reference": "d84d53281c9ff8b3a14d4c25e9f9fe1e9c5fede2",
+                "url": "https://api.github.com/repos/nette/caching/zipball/f80f16ae3be068cc75299328e8047cf030994d9f",
+                "reference": "f80f16ae3be068cc75299328e8047cf030994d9f",
                 "shasum": ""
             },
             "require": {
@@ -1841,7 +1841,7 @@
                 "nette",
                 "sqlite"
             ],
-            "time": "2017-08-30T12:10:43+00:00"
+            "time": "2017-09-08T00:17:03+00:00"
         },
         {
             "name": "nette/di",
@@ -2168,12 +2168,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/utils.git",
-                "reference": "8afa2d81970a7ced5ebbd1cce3e3aaf6bb7dabaf"
+                "reference": "6201e3fee818023b2cb54aee50134ad0854d39a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/utils/zipball/8afa2d81970a7ced5ebbd1cce3e3aaf6bb7dabaf",
-                "reference": "8afa2d81970a7ced5ebbd1cce3e3aaf6bb7dabaf",
+                "url": "https://api.github.com/repos/nette/utils/zipball/6201e3fee818023b2cb54aee50134ad0854d39a0",
+                "reference": "6201e3fee818023b2cb54aee50134ad0854d39a0",
                 "shasum": ""
             },
             "require": {
@@ -2239,7 +2239,7 @@
                 "utility",
                 "validation"
             ],
-            "time": "2017-08-20T17:31:20+00:00"
+            "time": "2017-09-08T00:23:02+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -3796,12 +3796,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "a739358f6379b65e4ba163384d601d953bbac243"
+                "reference": "d89c1658ae3d2e783bae971618da8571160dfeb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/a739358f6379b65e4ba163384d601d953bbac243",
-                "reference": "a739358f6379b65e4ba163384d601d953bbac243",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/d89c1658ae3d2e783bae971618da8571160dfeb8",
+                "reference": "d89c1658ae3d2e783bae971618da8571160dfeb8",
                 "shasum": ""
             },
             "require": {
@@ -3811,7 +3811,7 @@
                 "php": ">=5.4.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.0"
+                "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0"
             },
             "bin": [
                 "bin/phpcs",
@@ -3839,7 +3839,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2017-09-06T22:40:53+00:00"
+            "time": "2017-09-08T05:45:35+00:00"
         },
         {
             "name": "symfony/config",
