@@ -458,7 +458,7 @@ class GenericExtractorJob
      */
     private function filterResponse(JobConfig $config, array $data)
     {
-        $filter = Filter::create($config, $this->compatLevel);
+        $filter = new Filter($config, $this->compatLevel);
         return $filter->run($data);
     }
 

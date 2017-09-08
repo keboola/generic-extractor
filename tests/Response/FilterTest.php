@@ -16,7 +16,7 @@ class FilterTest extends TestCase
             'responseFilter' => 'out.arr[].in'
         ]);
 
-        $filter = Filter::create($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
+        $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
 
         $data = [
             (object) [
@@ -61,7 +61,7 @@ class FilterTest extends TestCase
             'responseFilter' => 'out.arr[]'
         ]);
 
-        $filter = Filter::create($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
+        $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
 
         $data = [
             (object) [
@@ -104,7 +104,7 @@ class FilterTest extends TestCase
             'responseFilter' => 'out.arr[].in'
         ]);
 
-        $filter = Filter::create($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
+        $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
 
         $data = [
             (object) [
@@ -150,7 +150,11 @@ class FilterTest extends TestCase
 
     public function testMultipleFilters()
     {
-        $filter = new Filter(['out.arr[]', 'out.in']);
+        $jobConfig = new JobConfig([
+            'endpoint' => 'ep',
+            'responseFilter' => ['out.arr[]', 'out.in']
+        ]);
+        $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
 
         $data = [
             (object) [
@@ -189,7 +193,7 @@ class FilterTest extends TestCase
                             '{"in":"string"}',
                             '{"in":[{"array":"of objects!"}]}'
                         ],
-                        'in' => 'string'
+                        'in' => '"string"'
                     ]
                 ],
                 (object) [
@@ -208,7 +212,12 @@ class FilterTest extends TestCase
 
     public function testDelimiter()
     {
-        $filter = new Filter(['out/in'], '/');
+        $jobConfig = new JobConfig([
+            'endpoint' => 'ep',
+            'responseFilter' => 'out/in',
+            'responseFilterDelimiter' => '/'
+        ]);
+        $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
 
         $data = [
             (object) [
@@ -232,7 +241,11 @@ class FilterTest extends TestCase
 
     public function testNestedArrays()
     {
-        $filter = new Filter(['out.arr[].arr2[]']);
+        $jobConfig = new JobConfig([
+            'endpoint' => 'ep',
+            'responseFilter' => 'out.arr[].arr2[]'
+        ]);
+        $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
 
         $data = [
             (object) [
@@ -269,7 +282,7 @@ class FilterTest extends TestCase
             'responseFilter' => 'data'
         ]);
 
-        $filter = Filter::create($jobConfig, GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY_SCALAR);
+        $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY_SCALAR);
         $data = json_decode(
             '[
                 {
@@ -345,7 +358,7 @@ class FilterTest extends TestCase
             'responseFilter' => 'data'
         ]);
 
-        $filter = Filter::create($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
+        $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
         $data = json_decode(
             '[
                 {
@@ -421,7 +434,7 @@ class FilterTest extends TestCase
             'responseFilter' => 'data[]'
         ]);
 
-        $filter = Filter::create($jobConfig, GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY_SCALAR);
+        $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY_SCALAR);
         $data = json_decode(
             '[
                 {
@@ -457,7 +470,7 @@ class FilterTest extends TestCase
             'responseFilter' => 'data[]'
         ]);
 
-        $filter = Filter::create($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
+        $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
         $data = json_decode(
             '[
                 {

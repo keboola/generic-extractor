@@ -34,32 +34,18 @@ class Filter
      */
     private $compatLevel;
 
-    public function __construct(array $filters, $delimiter = self::DEFAULT_DELIMITER, $compatLevel = null)
+    public function __construct(JobConfig $config, int $compatLevel)
     {
-        // TODO odstranit default values
-        $this->filters = $filters;
-        $this->delimiter = $delimiter;
-        $this->compatLevel = $compatLevel;
-    }
-
-    /**
-     * @param JobConfig $config
-     * @param int $compatLevel
-     * @return Filter
-     */
-    public static function create(JobConfig $config, int $compatLevel)
-    {
-        $filters = empty($config->getConfig()['responseFilter'])
+        $this->filters = empty($config->getConfig()['responseFilter'])
             ? []
             : (is_array($config->getConfig()['responseFilter'])
                 ? $config->getConfig()['responseFilter']
                 : [$config->getConfig()['responseFilter']]);
 
-        $delimiter = empty($config->getConfig()['responseFilterDelimiter'])
+        $this->delimiter = empty($config->getConfig()['responseFilterDelimiter'])
             ? self::DEFAULT_DELIMITER
             : $config->getConfig()['responseFilterDelimiter'];
-
-        return new self($filters, $delimiter, $compatLevel);
+        $this->compatLevel = $compatLevel;
     }
 
     /**
