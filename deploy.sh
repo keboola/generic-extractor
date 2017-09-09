@@ -20,33 +20,33 @@ docker run --rm -e KBC_DEVELOPERPORTAL_USERNAME -e KBC_DEVELOPERPORTAL_PASSWORD 
     ecr ${REPOSITORY}
 
 # Update templated components using generic image
-declare -a components=(
-    "ex-adform"
-    "ex-impactradius"
-    "keboola.ex-babelforce"
-    "keboola.ex-flexibee"
-    "keboola.ex-gcalendar"
-    "keboola.ex-hubspot"
-    "keboola.ex-intercom-v2"
-    "keboola.ex-mailchimp"
-    "keboola.ex-mediamath"
-    "keboola.ex-pingdom"
-    "keboola.ex-pipedrive"
-    "keboola.ex-portadi"
-    "keboola.ex-github"
-    "keboola.ex-slack"
-    "keboola.ex-stripe"
-    "keboola.ex-telfa"
-    "keboola.ex-zendesk"
-)
-
-for component in "${components[@]}"
-do
-   docker run --rm -e KBC_DEVELOPERPORTAL_USERNAME -e KBC_DEVELOPERPORTAL_PASSWORD -e KBC_DEVELOPERPORTAL_URL \
-       quay.io/keboola/developer-portal-cli-v2:latest update-app-repository --configuration-format=json \
-       ${KBC_DEVELOPERPORTAL_VENDOR} ${component} ${TRAVIS_TAG} \
-       ecr ${REPOSITORY}
-done
+#declare -a components=(
+#    "ex-adform"
+#    "ex-impactradius"
+#    "keboola.ex-babelforce"
+#    "keboola.ex-flexibee"
+#    "keboola.ex-gcalendar"
+#    "keboola.ex-hubspot"
+#    "keboola.ex-intercom-v2"
+#    "keboola.ex-mailchimp"
+#    "keboola.ex-mediamath"
+#    "keboola.ex-pingdom"
+#    "keboola.ex-pipedrive"
+#    "keboola.ex-portadi"
+#    "keboola.ex-github"
+#    "keboola.ex-slack"
+#    "keboola.ex-stripe"
+#    "keboola.ex-telfa"
+#    "keboola.ex-zendesk"
+#)
+#
+#for component in "${components[@]}"
+#do
+#   docker run --rm -e KBC_DEVELOPERPORTAL_USERNAME -e KBC_DEVELOPERPORTAL_PASSWORD -e KBC_DEVELOPERPORTAL_URL \
+#       quay.io/keboola/developer-portal-cli-v2:latest update-app-repository --configuration-format=json \
+#       ${KBC_DEVELOPERPORTAL_VENDOR} ${component} ${TRAVIS_TAG} \
+#       ecr ${REPOSITORY}
+#done
 
 # deploy to Quay public repository
 docker login -u="$QUAY_USERNAME" -p="$QUAY_PASSWORD" quay.io
