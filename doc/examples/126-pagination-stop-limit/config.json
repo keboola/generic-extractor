@@ -1,0 +1,26 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/126-pagination-stop-limit/",
+            "pagination": {
+                "method": "offset",
+                "limitParam": "count",
+                "offsetParam": "skip",
+                "limit": "2",
+                "limitStop": {
+                    "field": "scroller.count"
+                }
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataField": "items"
+                }
+            ]
+        }
+    }
+}
