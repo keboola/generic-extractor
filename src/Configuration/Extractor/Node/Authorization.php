@@ -13,7 +13,7 @@ class Authorization
                 ->children()
                     ->arrayNode('credentials')
                         ->children()
-                            ->scalarNode('#data')->isRequired()
+                            ->scalarNode('#data')->isRequired()->end()
                             ->scalarNode('appKey')->isRequired()->end()
                             ->scalarNode('#appSecret')->isRequired()->end()
                         ->end()

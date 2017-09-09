@@ -2,7 +2,7 @@
     "name": "keboola/ex-generic-v2",
     "license": "MIT",
     "type": "project",
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
         "php": ">=7",
         "keboola/juicer": "^4.0",
