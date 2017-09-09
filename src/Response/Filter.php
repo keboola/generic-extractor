@@ -90,7 +90,7 @@ class Filter
                 return $item;
             }
         } else {
-            if (!property_exists($item, $key)) {
+            if (!is_object($item) || !property_exists($item, $key)) {
                 return $item;
             }
         }
