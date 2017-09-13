@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Event\BeforeEvent;
 use GuzzleHttp\Event\Emitter;
 use GuzzleHttp\Message\Request;
+use GuzzleHttp\Message\Response;
 use Keboola\GenericExtractor\Authentication\OAuth20;
 use Keboola\GenericExtractor\Authentication\OAuth20Login;
 use Keboola\GenericExtractor\Authentication\Query;
@@ -35,8 +36,10 @@ class ApiTest extends TestCase
         });
         $guzzleClientMock = self::createMock(Client::class);
         $guzzleClientMock->method('getEmitter')->willReturn($emitterMock);
+        $guzzleClientMock->method('send')->willReturn(new Response(200));
         $restClientMock = self::createMock(RestClient::class);
         $restClientMock->method('getClient')->willReturn($guzzleClientMock);
+        $restClientMock->method('getGuzzleRequest')->willReturn(new Request('POST', 'http://example.com'));
         return $restClientMock;
     }
 
@@ -155,7 +158,7 @@ class ApiTest extends TestCase
         $api = new Api(new NullLogger(), $config['parameters']['api'], [], $config['authorization']);
         $request = new Request('GET', 'http://example.com?foo=bar');
         $restClientMock = $this->getClientMock($request);
-        $restClientMock->method('download')->willReturn((object)['access_token' => 'baz']);
+        $restClientMock->method('getObjectFromResponse')->willReturn((object)['access_token' => 'baz']);
         /** @var RestClient $restClientMock */
         $api->getAuth()->authenticateClient($restClientMock);
         self::assertInstanceOf(OAuth20Login::class, $api->getAuth());
