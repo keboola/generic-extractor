@@ -43,8 +43,8 @@ class LoginTest extends ExtractorTestCase
                 'method' => 'POST'
             ],
             'apiRequest' => [
-                'headers' => ['X-Test-Auth' => 'headerToken'],
-                'query' => ['qToken' => 'queryToken']
+                'headers' => ['X-Test-Auth' => ['response' => 'headerToken']],
+                'query' => ['qToken' => ['response' => 'queryToken']]
             ],
             'expires' => ['response' => 'expiresIn', 'relative' => true]
         ];
@@ -75,6 +75,54 @@ class LoginTest extends ExtractorTestCase
         );
         self::assertGreaterThan($expires - 2, $expiry);
         self::assertLessThan($expires + 2, $expiry);
+    }
+
+    public function testAuthenticateClientText()
+    {
+        $mock = new Mock([
+            new Response(200, [], Stream::factory('someToken')),
+            new Response(200, [], Stream::factory(json_encode((object) [ // api call
+                'data' => [1,2,3]
+            ]))),
+            new Response(200, [], Stream::factory(json_encode((object) [ // api call
+                'data' => [1,2,3]
+            ])))
+        ]);
+        $history = new History();
+        $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com/api'], [], []);
+        $restClient->getClient()->getEmitter()->attach($mock);
+        $restClient->getClient()->getEmitter()->attach($history);
+        $attrs = ['first' => 1, 'second' => 'two'];
+        $api = [
+            'format' => 'text',
+            'loginRequest' => [
+                'endpoint' => 'login',
+                'params' => ['par' => ['attr' => 'first']],
+                'headers' => ['X-Header' => ['attr' => 'second']],
+                'method' => 'POST'
+            ],
+            'apiRequest' => [
+                'headers' => ['X-Test-Auth' => ['response' => 'data']],
+            ],
+        ];
+
+        $auth = new Login($attrs, $api);
+        $auth->authenticateClient($restClient);
+
+        $request = $restClient->createRequest(['endpoint' => '/']);
+        $restClient->download($request);
+        $restClient->download($request);
+
+        // test creation of the login request
+        self::assertEquals($attrs['second'], $history->getIterator()[0]['request']->getHeader('X-Header'));
+        self::assertEquals(
+            json_encode(['par' => $attrs['first']]),
+            (string) $history->getIterator()[0]['request']->getBody()
+        );
+
+        // test signature of the api request
+        self::assertEquals('someToken', $history->getIterator()[1]['request']->getHeader('X-Test-Auth'));
+        self::assertEquals('someToken', $history->getIterator()[2]['request']->getHeader('X-Test-Auth'));
     }
 
     public function testAuthenticateClientWithFunctionInApiRequestHeaders()
@@ -158,5 +206,59 @@ class LoginTest extends ExtractorTestCase
             json_encode(['data' => [1,2,3]]),
             (string) $history->getIterator()[1]['response']->getBody()
         );
+    }
+
+    /**
+     * @expectedException \Keboola\GenericExtractor\Exception\UserException
+     * @expectedExceptionMessage 'format' must be either 'json' or 'text'.
+     */
+    public function testInvalid1()
+    {
+        $api = [
+            'format' => 'js',
+        ];
+        new Login([], $api);
+    }
+
+    /**
+     * @expectedException \Keboola\GenericExtractor\Exception\UserException
+     * @expectedExceptionMessage 'loginRequest' is not configured for Login authentication
+     */
+    public function testInvalid2()
+    {
+        $api = [
+            'format' => 'json',
+        ];
+        new Login([], $api);
+    }
+
+    /**
+     * @expectedException \Keboola\GenericExtractor\Exception\UserException
+     * @expectedExceptionMessage Request endpoint must be set for the Login authentication method.
+     */
+    public function testInvalid3()
+    {
+        $api = [
+            'loginRequest' => [
+                'method' => 'POST'
+            ],
+        ];
+        new Login([], $api);
+    }
+
+    /**
+     * @expectedException \Keboola\GenericExtractor\Exception\UserException
+     * @expectedExceptionMessage The 'expires' attribute must be either an integer or an array with 'response' key containing a path in the response
+     */
+    public function testInvalid4()
+    {
+        $api = [
+            'loginRequest' => [
+                'method' => 'POST',
+                'endpoint' => 'dummy'
+            ],
+            'expires' => 'never'
+        ];
+        new Login([], $api);
     }
 }

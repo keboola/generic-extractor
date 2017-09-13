@@ -37,6 +37,11 @@ class Login implements AuthInterface
     protected $auth;
 
     /**
+     * @var string
+     */
+    protected $format;
+
+    /**
      * Login constructor.
      * @param array $configAttributes
      * @param array $authentication
@@ -46,6 +51,15 @@ class Login implements AuthInterface
     {
         $this->configAttributes = $configAttributes;
         $this->auth = $authentication;
+        if (empty($authentication['format'])) {
+            $this->format = 'json';
+        } else {
+            if (in_array($authentication['format'], ['json', 'text'])) {
+                $this->format = $authentication['format'];
+            } else {
+                throw new UserException("'format' must be either 'json' or 'text'.");
+            }
+        }
         if (empty($authentication['loginRequest'])) {
             throw new UserException("'loginRequest' is not configured for Login authentication");
         }
@@ -90,7 +104,12 @@ class Login implements AuthInterface
             function () use ($client, $loginRequest, $sub) {
                 // Need to bypass the subscriber for the login call
                 $client->getClient()->getEmitter()->detach($sub);
-                $response = $client->download($loginRequest);
+                $rawResponse = $client->getClient()->send($client->getGuzzleRequest($loginRequest));
+                if ($this->format == 'json') {
+                    $response = $client->getObjectFromResponse($rawResponse);
+                } else {
+                    $response = (object)['data' => (string)$rawResponse->getBody()];
+                }
                 $client->getClient()->getEmitter()->attach($sub);
 
                 return [

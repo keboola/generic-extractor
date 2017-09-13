@@ -671,16 +671,16 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "4.1.0",
+            "version": "4.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "2944378bd39a1bb80d2afec988aa47e0930c86a4"
+                "reference": "0fe2762dad58be2171288b95028442ce6c5d2f7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/2944378bd39a1bb80d2afec988aa47e0930c86a4",
-                "reference": "2944378bd39a1bb80d2afec988aa47e0930c86a4",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/0fe2762dad58be2171288b95028442ce6c5d2f7d",
+                "reference": "0fe2762dad58be2171288b95028442ce6c5d2f7d",
                 "shasum": ""
             },
             "require": {
@@ -724,7 +724,7 @@
                 "json",
                 "rest"
             ],
-            "time": "2017-09-08T21:30:18+00:00"
+            "time": "2017-09-13T07:47:51+00:00"
         },
         {
             "name": "keboola/php-csvtable",
@@ -1228,7 +1228,7 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v3.3.8",
+            "version": "v3.3.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
@@ -2430,16 +2430,16 @@
         },
         {
             "name": "phpdocumentor/reflection-common",
-            "version": "1.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionCommon.git",
-                "reference": "144c307535e82c8fdcaacbcfc1d6d8eeb896687c"
+                "reference": "21bdeb5f65d7ebf9f43b1b25d404f87deab5bfb6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionCommon/zipball/144c307535e82c8fdcaacbcfc1d6d8eeb896687c",
-                "reference": "144c307535e82c8fdcaacbcfc1d6d8eeb896687c",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionCommon/zipball/21bdeb5f65d7ebf9f43b1b25d404f87deab5bfb6",
+                "reference": "21bdeb5f65d7ebf9f43b1b25d404f87deab5bfb6",
                 "shasum": ""
             },
             "require": {
@@ -2480,7 +2480,7 @@
                 "reflection",
                 "static analysis"
             ],
-            "time": "2015-12-27T11:43:31+00:00"
+            "time": "2017-09-11T18:02:19+00:00"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -3874,7 +3874,7 @@
         },
         {
             "name": "symfony/stopwatch",
-            "version": "v3.3.8",
+            "version": "v3.3.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/stopwatch.git",
@@ -3923,7 +3923,7 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.3.8",
+            "version": "v3.3.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",

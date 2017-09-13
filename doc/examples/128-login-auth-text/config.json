@@ -1,0 +1,35 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/128-login-auth-text/",
+            "authentication": {
+                "type": "login",
+                "format": "text",
+                "loginRequest": {
+                    "endpoint": "login",
+                    "method": "GET",
+                    "headers": {
+                        "X-Login": "JohnDoe",
+                        "X-Password": "TopSecret"
+                    }
+                },
+                "apiRequest": {
+                    "headers": {
+                        "X-ApiToken": {
+                            "response": "data"
+                        }
+                    }
+                }
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users"
+                }
+            ]
+        }
+    }
+}
