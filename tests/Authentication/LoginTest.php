@@ -77,6 +77,54 @@ class LoginTest extends ExtractorTestCase
         self::assertLessThan($expires + 2, $expiry);
     }
 
+    public function testAuthenticateClientScalar()
+    {
+        $mock = new Mock([
+            new Response(200, [], Stream::factory(json_encode('someToken'))),
+            new Response(200, [], Stream::factory(json_encode((object) [ // api call
+                'data' => [1,2,3]
+            ]))),
+            new Response(200, [], Stream::factory(json_encode((object) [ // api call
+                'data' => [1,2,3]
+            ])))
+        ]);
+        $history = new History();
+        $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com/api'], [], []);
+        $restClient->getClient()->getEmitter()->attach($mock);
+        $restClient->getClient()->getEmitter()->attach($history);
+        $attrs = ['first' => 1, 'second' => 'two'];
+        $api = [
+            'format' => 'json',
+            'loginRequest' => [
+                'endpoint' => 'login',
+                'params' => ['par' => ['attr' => 'first']],
+                'headers' => ['X-Header' => ['attr' => 'second']],
+                'method' => 'POST'
+            ],
+            'apiRequest' => [
+                'headers' => ['X-Test-Auth' => ['response' => 'data']],
+            ],
+        ];
+
+        $auth = new Login($attrs, $api);
+        $auth->authenticateClient($restClient);
+
+        $request = $restClient->createRequest(['endpoint' => '/']);
+        $restClient->download($request);
+        $restClient->download($request);
+
+        // test creation of the login request
+        self::assertEquals($attrs['second'], $history->getIterator()[0]['request']->getHeader('X-Header'));
+        self::assertEquals(
+            json_encode(['par' => $attrs['first']]),
+            (string) $history->getIterator()[0]['request']->getBody()
+        );
+
+        // test signature of the api request
+        self::assertEquals('someToken', $history->getIterator()[1]['request']->getHeader('X-Test-Auth'));
+        self::assertEquals('someToken', $history->getIterator()[2]['request']->getHeader('X-Test-Auth'));
+    }
+
     public function testAuthenticateClientText()
     {
         $mock = new Mock([
