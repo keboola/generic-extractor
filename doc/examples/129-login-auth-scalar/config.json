@@ -1,0 +1,35 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/129-login-auth-scalar/",
+            "authentication": {
+                "type": "login",
+                "format": "json",
+                "loginRequest": {
+                    "endpoint": "login",
+                    "method": "GET",
+                    "headers": {
+                        "X-Login": "JohnDoe",
+                        "X-Password": "TopSecret"
+                    }
+                },
+                "apiRequest": {
+                    "headers": {
+                        "X-ApiToken": {
+                            "response": "data"
+                        }
+                    }
+                }
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users"
+                }
+            ]
+        }
+    }
+}
