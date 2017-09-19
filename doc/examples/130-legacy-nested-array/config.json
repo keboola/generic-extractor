@@ -1,0 +1,18 @@
+{
+  "parameters": {
+    "api": {
+      "baseUrl": "http://localhost:8888/130-legacy-nested-array/"
+    },
+    "config": {
+      "debug": true,
+      "compatLevel": 1,
+      "jobs": [
+        {
+          "endpoint": "rows",
+          "dataField": "rows",
+          "dataType": "rows"
+        }
+      ]
+    }
+  }
+}
