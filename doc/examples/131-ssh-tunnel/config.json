@@ -10,7 +10,7 @@
                     "public": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDawTcaNLLjlBh+H/aomeAe1lwpXTH3EfXhOI9RZL+I1agkE//AnLXlh03Z7d9b97jC11zCLQrzo3LkwpkO1O90/ZptRWoOdq14JxP9M4ULslp6D2+dFyQNBTnK4dTO5Y8qRK7/NJa6iDB7bp/xTdsBF8RIWJItlYl+6+WiAWDCDn/gEQ8ZAiSw3yEqdsSLkOcjlS9gFNgYN3TQNz2mt+2ecL8mA6N282FWMxrtk7GysYue4OwgNX/ONDlAvAFS6VUdxOTNTMRdXvABTwupdRTP28mXCq4yTlHAhuVp3u27Fw6DQjOfNDiV4tfbGctQXoCimBiJ+suo+Mj4KRwt9BIx dev"
                 }
             },
-            "baseUrl": "http://mock-server:80/131-ssh-tunnel/"
+            "baseUrl": "http://mock-server-behind-proxy:80/131-ssh-tunnel/"
         },
         "config": {
             "debug": true,
