@@ -83,13 +83,12 @@ class Executor
                 $outputBucket = "__kbc_default";
             }
 
-            $sshConfig = $api->getSshConfig();
-            $proxy = null;
-            if (!empty($sshConfig)) {
-                $proxy = $this->createSshTunnel($sshConfig);
-            }
-
-            $extractor = new GenericExtractor($temp, $this->logger, $api, $proxy);
+            $extractor = new GenericExtractor(
+                $temp,
+                $this->logger,
+                $api,
+                $api->getSshConfig() === null ? null : $this->createSshTunnel($api->getSshConfig())
+            );
 
             if ($cacheStorage) {
                 $extractor->enableCache($cacheStorage);

@@ -9,22 +9,6 @@ class SSH
 {
     const SSH_SERVER_ALIVE_INTERVAL = 15;
 
-    public function generateKeyPair()
-    {
-        $process = new Process("ssh-keygen -b 2048 -t rsa -f ./ssh.key -N '' -q");
-        $process->run();
-
-        $res = [
-            'private' => file_get_contents('./ssh.key'),
-            'public' => file_get_contents('./ssh.key.pub')
-        ];
-
-        @unlink('./ssh.key');
-        @unlink('./ssh.key.pub');
-
-        return $res;
-    }
-
     /**
      *
      * $user, $sshHost, $localPort, $remoteHost, $remotePort, $privateKey, $sshPort = '22'

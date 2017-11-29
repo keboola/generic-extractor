@@ -85,7 +85,6 @@ class GenericExtractor
 
     public function run(Config $config)
     {
-        var_dump($this->proxy);
         $client = new RestClient(
             $this->logger,
             [
@@ -128,26 +127,6 @@ class GenericExtractor
             // FIXME fallback from JsonMap
             $this->metadata = array_replace_recursive($this->metadata, $this->parser->getMetadata());
         }
-    }
-
-    private function resolveBaseUrl()
-    {
-        $baseUrl = $this->api->getBaseUrl();
-        if (empty($this->proxy)) {
-            return $baseUrl;
-        }
-
-        $baseUrlParsed = parse_url($baseUrl);
-        $baseUrlParsed['host'] = $this->proxy['host'];
-        $baseUrlParsed['port'] = $this->proxy['port'];
-
-        return sprintf(
-            "%s://%s:%s%s",
-            $baseUrlParsed['scheme'],
-            $baseUrlParsed['host'],
-            $baseUrlParsed['port'],
-            isset($baseUrlParsed['path']) ? $baseUrlParsed['path'] : null
-        );
     }
 
     /**
