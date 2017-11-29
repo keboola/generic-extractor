@@ -4,7 +4,6 @@ namespace Keboola\GenericExtractor;
 
 use Symfony\Component\Process\Process;
 
-
 class SSH
 {
     const SSH_SERVER_ALIVE_INTERVAL = 15;
@@ -75,7 +74,7 @@ class SSH
         if (empty($key)) {
             throw new SSHException("Key must not be empty");
         }
-        $fileName = tempnam('/tmp/',  'ssh-key-');
+        $fileName = tempnam('/tmp/', 'ssh-key-');
         file_put_contents($fileName, $key);
         chmod($fileName, 0600);
         return realpath($fileName);
