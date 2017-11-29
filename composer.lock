@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "66f0201ab41fd4fa91e13a93ff2b691e",
+    "content-hash": "08b5ca611f97c755780ea743d4d154a7",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -439,6 +439,7 @@
                 "json2csv",
                 "parser"
             ],
+            "abandoned": "keboola/json-parser",
             "time": "2017-08-31T19:19:32+00:00"
         },
         {
@@ -878,7 +879,7 @@
                     "email": "kachna@keboola.com"
                 },
                 {
-                    "name": "Ondřej Hlaváček",
+                    "name": "Ondrej Hlavacek",
                     "email": "ondrej.hlavacek@keboola.com"
                 }
             ],
@@ -887,6 +888,45 @@
                 "utility"
             ],
             "time": "2017-06-05T15:10:59+00:00"
+        },
+        {
+            "name": "keboola/ssh-tunnel",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/keboola/ssh-tunnel.git",
+                "reference": "10f5cf523a47e1067a2f20dcac9090cf2f67a839"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/keboola/ssh-tunnel/zipball/10f5cf523a47e1067a2f20dcac9090cf2f67a839",
+                "reference": "10f5cf523a47e1067a2f20dcac9090cf2f67a839",
+                "shasum": ""
+            },
+            "require": {
+                "symfony/process": "^3.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Keboola\\": "src/Keboola/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Miroslav Cillik",
+                    "email": "miro@keboola.com"
+                }
+            ],
+            "description": "Simple class for SSH tunneling",
+            "time": "2017-06-07T05:37:12+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -1382,6 +1422,55 @@
                 "shim"
             ],
             "time": "2017-06-14T15:44:48+00:00"
+        },
+        {
+            "name": "symfony/process",
+            "version": "v3.3.13",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/process.git",
+                "reference": "a56a3989fb762d7b19a0cf8e7693ee99a6ffb78d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/process/zipball/a56a3989fb762d7b19a0cf8e7693ee99a6ffb78d",
+                "reference": "a56a3989fb762d7b19a0cf8e7693ee99a6ffb78d",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.5.9|>=7.0.8"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Process\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Process Component",
+            "homepage": "https://symfony.com",
+            "time": "2017-11-13T15:31:11+00:00"
         }
     ],
     "packages-dev": [
@@ -2312,7 +2401,7 @@
             ],
             "authors": [
                 {
-                    "name": "Pádraic Brady",
+                    "name": "Padraic Brady",
                     "email": "padraic.brady@gmail.com",
                     "homepage": "http://blog.astrumfutura.com"
                 }

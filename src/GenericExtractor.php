@@ -55,16 +55,22 @@ class GenericExtractor
     private $api;
 
     /**
+     * @var array
+     */
+    private $baseUrlReplacement;
+
+    /**
      * GenericExtractor constructor.
      * @param Temp $temp
      * @param LoggerInterface $logger
      * @param Api $api
      */
-    public function __construct(Temp $temp, LoggerInterface $logger, Api $api)
+    public function __construct(Temp $temp, LoggerInterface $logger, Api $api, $baseUrlReplacement = null)
     {
         $this->temp = $temp;
         $this->logger = $logger;
         $this->api = $api;
+        $this->baseUrlReplacement = $baseUrlReplacement;
     }
 
     /**
@@ -82,7 +88,7 @@ class GenericExtractor
         $client = new RestClient(
             $this->logger,
             [
-                'base_url' => $this->api->getBaseUrl(),
+                'base_url' => $this->resolveBaseUrl(),
                 'defaults' => [
                     'headers' => UserFunction::build(
                         $this->api->getHeaders()->getHeaders(),
@@ -120,6 +126,26 @@ class GenericExtractor
             // FIXME fallback from JsonMap
             $this->metadata = array_replace_recursive($this->metadata, $this->parser->getMetadata());
         }
+    }
+
+    private function resolveBaseUrl()
+    {
+        $baseUrl = $this->api->getBaseUrl();
+        if (empty($this->baseUrlReplacement)) {
+            return $baseUrl;
+        }
+
+        $baseUrlParsed = parse_url($baseUrl);
+        $baseUrlParsed['host'] = $this->baseUrlReplacement['host'];
+        $baseUrlParsed['port'] = $this->baseUrlReplacement['port'];
+
+        return sprintf(
+            "%s://%s:%s%s",
+            $baseUrlParsed['scheme'],
+            $baseUrlParsed['host'],
+            $baseUrlParsed['port'],
+            isset($baseUrlParsed['path']) ? $baseUrlParsed['path'] : null
+        );
     }
 
     /**

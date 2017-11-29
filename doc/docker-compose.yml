@@ -13,6 +13,27 @@ services:
     environment:
         - KBC_EXAMPLES_DIR=/examples/
 
+  mock-server-behind-proxy:
+      container_name: mock-server-behind-proxy
+      image: quay.io/keboola/ex-generic-mock-server
+      tty: true
+      stdin_open: true
+      ports:
+        - "8889:80"
+      volumes:
+          - ./examples:/examples/
+      environment:
+          - KBC_EXAMPLES_DIR=/examples/
+
+  ssh-proxy:
+      build:
+        context: ..
+        dockerfile: Dockerfile-ssh-proxy
+      ports:
+        - "2222:22"
+      links:
+        - mock-server-behind-proxy
+
   extractor:
     build: ..
     image: keboola/generic-extractor
@@ -27,3 +48,4 @@ services:
       - "php /code/run.php --data=/examples/$$KBC_EXAMPLE_NAME"    
     links: 
       - mock-server
+      - ssh-proxy

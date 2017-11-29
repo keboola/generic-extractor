@@ -53,7 +53,13 @@ class Api
     /**
      * @var LoggerInterface
      */
+
     private $logger;
+
+    /**
+     * @var array
+     */
+    private $sshConfig;
 
     /**
      * Api constructor.
@@ -79,6 +85,10 @@ class Api
         }
         if (!empty($api['http']['defaultOptions'])) {
             $this->defaultRequestOptions = $api['http']['defaultOptions'];
+        }
+
+        if (!empty($api['ssh'])) {
+            $this->sshConfig = $api['ssh'];
         }
     }
 
@@ -213,5 +223,10 @@ class Api
     public function getRetryConfig() : array
     {
         return $this->retryConfig;
+    }
+
+    public function getSshConfig() : ?array
+    {
+        return $this->sshConfig;
     }
 }

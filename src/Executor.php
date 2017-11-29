@@ -12,6 +12,8 @@ use Monolog\Logger;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Keboola\SSHTunnel\SSH;
+use Keboola\SSHTunnel\SSHException;
 
 /**
  * Class Executor manages multiple configurations (created by iterations) and executes
@@ -74,6 +76,7 @@ class Executor
             $this->setLogLevel($config->getAttribute('debug'));
             $api = $configuration->getApi($config->getAttributes());
 
+
             if (!empty($config->getAttribute('outputBucket'))) {
                 $outputBucket = $config->getAttribute('outputBucket');
             } elseif ($config->getAttribute('id')) {
@@ -82,7 +85,13 @@ class Executor
                 $outputBucket = "__kbc_default";
             }
 
-            $extractor = new GenericExtractor($temp, $this->logger, $api);
+            $sshConfig = $api->getSshConfig();
+            $localHost = null;
+            if (!empty($sshConfig)) {
+                $localHost = $this->createSshTunnel($sshConfig, $api->getBaseUrl());
+            }
+
+            $extractor = new GenericExtractor($temp, $this->logger, $api, $localHost);
 
             if ($cacheStorage) {
                 $extractor->enableCache($cacheStorage);
@@ -135,5 +144,39 @@ class Executor
         $metadata['time']['previousStart'] = $metadata['time']['currentStart'];
         unset($metadata['time']['currentStart']);
         $configuration->saveConfigMetadata($metadata);
+    }
+
+    private function createSshTunnel($sshConfig, $baseUrl)
+    {
+        foreach (['keys', 'sshHost', 'user'] as $k) {
+            if (empty($sshConfig[$k])) {
+                throw new UserException(sprintf("Parameter '%s' is missing.", $k));
+            }
+        }
+
+        $localUrlParts = [
+            'host' => '127.0.0.1',
+            'port' =>  33006,
+        ];
+
+        $baseUrlParsed = parse_url($baseUrl);
+
+        $tunnelParams = [
+            'user' => $sshConfig['user'],
+            'sshHost' => $sshConfig['sshHost'],
+            'sshPort' => isset($sshConfig['sshPort']) ? $sshConfig['sshPort'] : 22,
+            'localPort' => $localUrlParts['port'],
+            'remoteHost' => $baseUrlParsed['host'],
+            'remotePort' => $baseUrlParsed['port'],
+            'privateKey' => $sshConfig['keys']['#private'],
+        ];
+        $this->logger->info("Creating SSH tunnel to '" . $tunnelParams['sshHost'] . "'");
+        try {
+            $ssh = new SSH();
+            $ssh->openTunnel($tunnelParams);
+        } catch (SSHException $e) {
+            throw new UserException($e->getMessage(), 0, $e);
+        }
+        return $localUrlParts;
     }
 }

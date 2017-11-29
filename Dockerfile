@@ -4,6 +4,7 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
+    ssh \
     unzip \
     && rm -r /var/lib/apt/lists/* \
     && cd /root/ \
