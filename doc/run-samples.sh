@@ -11,7 +11,7 @@ run_example() {
     EXAMPLE_NAME=$1
     rm -rf examples/$1/out/*
     mkdir -p examples/$1/out/tables/
-    docker-compose run -e "KBC_EXAMPLE_NAME=$EXAMPLE_NAME" extractor
+    docker-compose run --rm -e "KBC_EXAMPLE_NAME=$EXAMPLE_NAME" extractor
     if diff --brief --recursive examples/${EXAMPLE_NAME}/out/tables/ examples/${EXAMPLE_NAME}/_sample_out/ ; then
         printf "Example $EXAMPLE_NAME successful.\n"
     else
@@ -137,6 +137,7 @@ run_example "108-incremental-load-date"
 run_example "111-templates-example"
 run_example "112-iterations-params"
 run_example "113-iterations-headers"
+run_example "131-ssh-tunnel"
 
 # Stop mock server
 printf "\nAll examples successfull.\n"
