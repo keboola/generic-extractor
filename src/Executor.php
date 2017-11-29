@@ -12,8 +12,6 @@ use Monolog\Logger;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-use Keboola\SSHTunnel\SSH;
-use Keboola\SSHTunnel\SSHException;
 
 /**
  * Class Executor manages multiple configurations (created by iterations) and executes
@@ -86,12 +84,12 @@ class Executor
             }
 
             $sshConfig = $api->getSshConfig();
-            $localHost = null;
+            $proxy = null;
             if (!empty($sshConfig)) {
-                $localHost = $this->createSshTunnel($sshConfig, $api->getBaseUrl());
+                $proxy = $this->createSshTunnel($sshConfig);
             }
 
-            $extractor = new GenericExtractor($temp, $this->logger, $api, $localHost);
+            $extractor = new GenericExtractor($temp, $this->logger, $api, $proxy);
 
             if ($cacheStorage) {
                 $extractor->enableCache($cacheStorage);
@@ -146,7 +144,7 @@ class Executor
         $configuration->saveConfigMetadata($metadata);
     }
 
-    private function createSshTunnel($sshConfig, $baseUrl)
+    private function createSshTunnel($sshConfig)
     {
         foreach (['keys', 'sshHost', 'user'] as $k) {
             if (empty($sshConfig[$k])) {
@@ -159,15 +157,11 @@ class Executor
             'port' =>  33006,
         ];
 
-        $baseUrlParsed = parse_url($baseUrl);
-
         $tunnelParams = [
             'user' => $sshConfig['user'],
             'sshHost' => $sshConfig['sshHost'],
             'sshPort' => isset($sshConfig['sshPort']) ? $sshConfig['sshPort'] : 22,
             'localPort' => $localUrlParts['port'],
-            'remoteHost' => $baseUrlParsed['host'],
-            'remotePort' => $baseUrlParsed['port'],
             'privateKey' => $sshConfig['keys']['#private'],
         ];
         $this->logger->info("Creating SSH tunnel to '" . $tunnelParams['sshHost'] . "'");
@@ -177,6 +171,6 @@ class Executor
         } catch (SSHException $e) {
             throw new UserException($e->getMessage(), 0, $e);
         }
-        return $localUrlParts;
+        return sprintf('socks5h://%s:%s', $localUrlParts['host'], $localUrlParts['port']);
     }
 }

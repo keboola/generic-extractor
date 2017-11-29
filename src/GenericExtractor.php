@@ -57,7 +57,7 @@ class GenericExtractor
     /**
      * @var array
      */
-    private $baseUrlReplacement;
+    private $proxy;
 
     /**
      * GenericExtractor constructor.
@@ -65,12 +65,12 @@ class GenericExtractor
      * @param LoggerInterface $logger
      * @param Api $api
      */
-    public function __construct(Temp $temp, LoggerInterface $logger, Api $api, $baseUrlReplacement = null)
+    public function __construct(Temp $temp, LoggerInterface $logger, Api $api, $proxy = null)
     {
         $this->temp = $temp;
         $this->logger = $logger;
         $this->api = $api;
-        $this->baseUrlReplacement = $baseUrlReplacement;
+        $this->proxy = $proxy;
     }
 
     /**
@@ -85,15 +85,17 @@ class GenericExtractor
 
     public function run(Config $config)
     {
+        var_dump($this->proxy);
         $client = new RestClient(
             $this->logger,
             [
-                'base_url' => $this->resolveBaseUrl(),
+                'base_url' => $this->api->getBaseUrl(),
                 'defaults' => [
                     'headers' => UserFunction::build(
                         $this->api->getHeaders()->getHeaders(),
                         ['attr' => $config->getAttributes()]
-                    )
+                    ),
+                    'proxy' => $this->proxy,
                 ]
             ],
             JuicerRest::convertRetry($this->api->getRetryConfig()),
@@ -131,13 +133,13 @@ class GenericExtractor
     private function resolveBaseUrl()
     {
         $baseUrl = $this->api->getBaseUrl();
-        if (empty($this->baseUrlReplacement)) {
+        if (empty($this->proxy)) {
             return $baseUrl;
         }
 
         $baseUrlParsed = parse_url($baseUrl);
-        $baseUrlParsed['host'] = $this->baseUrlReplacement['host'];
-        $baseUrlParsed['port'] = $this->baseUrlReplacement['port'];
+        $baseUrlParsed['host'] = $this->proxy['host'];
+        $baseUrlParsed['port'] = $this->proxy['port'];
 
         return sprintf(
             "%s://%s:%s%s",

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "08b5ca611f97c755780ea743d4d154a7",
+    "content-hash": "bd2949fdb2a4f031f8968475bf7df37e",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -888,45 +888,6 @@
                 "utility"
             ],
             "time": "2017-06-05T15:10:59+00:00"
-        },
-        {
-            "name": "keboola/ssh-tunnel",
-            "version": "1.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/keboola/ssh-tunnel.git",
-                "reference": "10f5cf523a47e1067a2f20dcac9090cf2f67a839"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/keboola/ssh-tunnel/zipball/10f5cf523a47e1067a2f20dcac9090cf2f67a839",
-                "reference": "10f5cf523a47e1067a2f20dcac9090cf2f67a839",
-                "shasum": ""
-            },
-            "require": {
-                "symfony/process": "^3.1"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^5.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Keboola\\": "src/Keboola/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Miroslav Cillik",
-                    "email": "miro@keboola.com"
-                }
-            ],
-            "description": "Simple class for SSH tunneling",
-            "time": "2017-06-07T05:37:12+00:00"
         },
         {
             "name": "monolog/monolog",
