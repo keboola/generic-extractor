@@ -87,7 +87,7 @@ class Executor
                 $temp,
                 $this->logger,
                 $api,
-                $api->getSshConfig() === null ? null : $this->createSshTunnel($api->getSshConfig())
+                $api->getSshProxyConfig() === null ? null : $this->createSshTunnel($api->getSshProxyConfig())
             );
 
             if ($cacheStorage) {
@@ -145,7 +145,7 @@ class Executor
 
     private function createSshTunnel($sshConfig)
     {
-        foreach (['keys', 'sshHost', 'user'] as $k) {
+        foreach (['#privateKey', 'host', 'user'] as $k) {
             if (empty($sshConfig[$k])) {
                 throw new UserException(sprintf("Parameter '%s' is missing.", $k));
             }
@@ -158,10 +158,10 @@ class Executor
 
         $tunnelParams = [
             'user' => $sshConfig['user'],
-            'sshHost' => $sshConfig['sshHost'],
-            'sshPort' => isset($sshConfig['sshPort']) ? $sshConfig['sshPort'] : 22,
+            'sshHost' => $sshConfig['host'],
+            'sshPort' => isset($sshConfig['port']) ? $sshConfig['port'] : 22,
             'localPort' => $localUrlParts['port'],
-            'privateKey' => $sshConfig['keys']['#private'],
+            'privateKey' => $sshConfig['#privateKey'],
         ];
         $this->logger->info("Creating SSH tunnel to '" . $tunnelParams['sshHost'] . "'");
         try {

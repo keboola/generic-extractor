@@ -59,7 +59,7 @@ class Api
     /**
      * @var array
      */
-    private $sshConfig;
+    private $sshProxyConfig;
 
     /**
      * Api constructor.
@@ -87,8 +87,8 @@ class Api
             $this->defaultRequestOptions = $api['http']['defaultOptions'];
         }
 
-        if (!empty($api['ssh'])) {
-            $this->sshConfig = $api['ssh'];
+        if (!empty($api['sshProxy'])) {
+            $this->sshProxyConfig = $api['sshProxy'];
         }
     }
 
@@ -225,8 +225,8 @@ class Api
         return $this->retryConfig;
     }
 
-    public function getSshConfig() : ?array
+    public function getSshProxyConfig() : ?array
     {
-        return $this->sshConfig;
+        return $this->sshProxyConfig;
     }
 }
