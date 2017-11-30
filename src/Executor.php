@@ -174,7 +174,7 @@ class Executor
         }
     }
 
-    private function git destroySshTunnel()
+    private function destroySshTunnel()
     {
         (new Process('pkill ssh'))->mustRun();
     }
