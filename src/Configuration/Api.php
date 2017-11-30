@@ -56,6 +56,11 @@ class Api
     private $logger;
 
     /**
+     * @var array
+     */
+    private $ignoreErrors = [];
+
+    /**
      * Api constructor.
      * @param LoggerInterface $logger
      * @param array $api
@@ -72,6 +77,9 @@ class Api
         }
         if (!empty($api['retryConfig']) && is_array($api['retryConfig'])) {
             $this->retryConfig = $api['retryConfig'];
+        }
+        if (!empty($api['http']['ignoreErrors']) && is_array($api['http']['ignoreErrors'])) {
+            $this->ignoreErrors = $api['http']['ignoreErrors'];
         }
         $this->baseUrl = $this->createBaseUrl($api, $configAttributes);
         if (!empty($api['name'])) {
@@ -213,5 +221,10 @@ class Api
     public function getRetryConfig() : array
     {
         return $this->retryConfig;
+    }
+
+    public function getIgnoreErrors()
+    {
+        return $this->ignoreErrors;
     }
 }
