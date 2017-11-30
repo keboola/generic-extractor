@@ -21,7 +21,6 @@ class SSH
      *  - remotePort
      *  - privateKey
      *
-     * @return Process
      * @throws SSHException
      */
     public function openTunnel(array $config)
@@ -60,8 +59,6 @@ class SSH
                 $process->getErrorOutput()
             ));
         }
-
-        return $process;
     }
 
     /**

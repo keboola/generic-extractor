@@ -12,6 +12,7 @@ use Monolog\Logger;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Process\Process;
 
 /**
  * Class Executor manages multiple configurations (created by iterations) and executes
@@ -83,11 +84,12 @@ class Executor
                 $outputBucket = "__kbc_default";
             }
 
+            $sshProxy = $api->getSshProxyConfig() !== null ? $this->createSshTunnel($api->getSshProxyConfig()) : null;
             $extractor = new GenericExtractor(
                 $temp,
                 $this->logger,
                 $api,
-                $api->getSshProxyConfig() === null ? null : $this->createSshTunnel($api->getSshProxyConfig())
+                $sshProxy
             );
 
             if ($cacheStorage) {
@@ -100,6 +102,10 @@ class Executor
             $extractor->setMetadata($metadata);
 
             $extractor->run($config);
+
+            if ($sshProxy !== null) {
+                $this->destroySshTunnel();
+            }
 
             $metadata = $extractor->getMetadata();
 
@@ -143,7 +149,7 @@ class Executor
         $configuration->saveConfigMetadata($metadata);
     }
 
-    private function createSshTunnel($sshConfig)
+    private function createSshTunnel($sshConfig) : string
     {
         foreach (['#privateKey', 'host', 'user'] as $k) {
             if (empty($sshConfig[$k])) {
@@ -151,25 +157,25 @@ class Executor
             }
         }
 
-        $localUrlParts = [
-            'host' => '127.0.0.1',
-            'port' =>  33006,
-        ];
-
         $tunnelParams = [
             'user' => $sshConfig['user'],
             'sshHost' => $sshConfig['host'],
             'sshPort' => isset($sshConfig['port']) ? $sshConfig['port'] : 22,
-            'localPort' => $localUrlParts['port'],
+            'localPort' => 33006,
             'privateKey' => $sshConfig['#privateKey'],
         ];
         $this->logger->info("Creating SSH tunnel to '" . $tunnelParams['sshHost'] . "'");
         try {
             $ssh = new SSH();
             $ssh->openTunnel($tunnelParams);
+            return sprintf('socks5h://127.0.0.1:%s', $tunnelParams['localPort']);
         } catch (SSHException $e) {
             throw new UserException($e->getMessage(), 0, $e);
         }
-        return sprintf('socks5h://%s:%s', $localUrlParts['host'], $localUrlParts['port']);
+    }
+
+    private function git destroySshTunnel()
+    {
+        (new Process('pkill ssh'))->mustRun();
     }
 }
