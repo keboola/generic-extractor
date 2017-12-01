@@ -16,4 +16,3 @@ class SshProxy
             ->end();
     }
 }
-
