@@ -53,7 +53,6 @@ class Api
     /**
      * @var LoggerInterface
      */
-
     private $logger;
 
     /**
