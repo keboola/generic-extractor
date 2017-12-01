@@ -138,6 +138,7 @@ run_example "111-templates-example"
 run_example "112-iterations-params"
 run_example "113-iterations-headers"
 run_example "131-ssh-tunnel"
+run_example "133-ssh-tunnel-iterations-params"
 
 # Stop mock server
 printf "\nAll examples successfull.\n"
