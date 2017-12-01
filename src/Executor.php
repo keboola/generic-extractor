@@ -59,7 +59,6 @@ class Executor
             throw new UserException('Data folder not set.');
         }
 
-
         $configuration = new Extractor($arguments['data'], $this->logger);
         $configs = $configuration->getMultipleConfigs();
 
@@ -79,7 +78,6 @@ class Executor
         foreach ($configs as $config) {
             $this->setLogLevel($config->getAttribute('debug'));
             $api = $configuration->getApi($config->getAttributes());
-
 
             if (!empty($config->getAttribute('outputBucket'))) {
                 $outputBucket = $config->getAttribute('outputBucket');
