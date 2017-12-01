@@ -143,6 +143,14 @@ class Extractor
         return new Config($configuration);
     }
 
+    public function getSshProxy() : ?array
+    {
+        if (isset($this->config['parameters']['sshProxy'])) {
+            return $this->config['parameters']['sshProxy'];
+        }
+        return null;
+    }
+
     /**
      * @return array
      */

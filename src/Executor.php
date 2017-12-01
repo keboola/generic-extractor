@@ -12,7 +12,6 @@ use Monolog\Logger;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\Process\Process;
 
 /**
  * Class Executor manages multiple configurations (created by iterations) and executes
@@ -60,8 +59,14 @@ class Executor
             throw new UserException('Data folder not set.');
         }
 
+
         $configuration = new Extractor($arguments['data'], $this->logger);
         $configs = $configuration->getMultipleConfigs();
+
+        $sshProxy = null;
+        if ($configuration->getSshProxy() !== null) {
+            $sshProxy = $this->createSshTunnel($configuration->getSshProxy());
+        }
 
         $metadata = $configuration->getMetadata();
         $metadata['time']['previousStart'] =
@@ -84,7 +89,6 @@ class Executor
                 $outputBucket = "__kbc_default";
             }
 
-            $sshProxy = $api->getSshProxyConfig() !== null ? $this->createSshTunnel($api->getSshProxyConfig()) : null;
             $extractor = new GenericExtractor(
                 $temp,
                 $this->logger,
@@ -102,10 +106,6 @@ class Executor
             $extractor->setMetadata($metadata);
 
             $extractor->run($config);
-
-            if ($sshProxy !== null) {
-                $this->destroySshTunnel();
-            }
 
             $metadata = $extractor->getMetadata();
 
@@ -151,16 +151,10 @@ class Executor
 
     private function createSshTunnel($sshConfig) : string
     {
-        foreach (['#privateKey', 'host', 'user'] as $k) {
-            if (empty($sshConfig[$k])) {
-                throw new UserException(sprintf("Parameter '%s' is missing.", $k));
-            }
-        }
-
         $tunnelParams = [
             'user' => $sshConfig['user'],
             'sshHost' => $sshConfig['host'],
-            'sshPort' => isset($sshConfig['port']) ? $sshConfig['port'] : 22,
+            'sshPort' => $sshConfig['port'],
             'localPort' => 33006,
             'privateKey' => $sshConfig['#privateKey'],
         ];
@@ -174,8 +168,4 @@ class Executor
         }
     }
 
-    private function destroySshTunnel()
-    {
-        (new Process('pkill ssh'))->mustRun();
-    }
 }
