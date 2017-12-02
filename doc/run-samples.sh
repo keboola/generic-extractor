@@ -153,7 +153,7 @@ run_example "126-pagination-stop-limit"
 run_example "127-pagination-stop-field"
 run_example "128-login-auth-text"
 run_example "129-login-auth-scalar"
-run_example "130-legacy-nested-array"
+run_example "130-unsupported-nested-array"
 run_example "132-ignore-errors"
 
 # Stop mock server
