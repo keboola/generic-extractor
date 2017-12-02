@@ -1,0 +1,28 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/132-ignore-errors/",
+            "http": {
+                "ignoreErrors": [404]
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "children": [
+                        {
+                            "endpoint": "user/{user-id}",
+                            "dataField": ".",
+                            "placeholders": {
+                                "user-id": "id"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

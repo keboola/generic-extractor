@@ -6,6 +6,11 @@
         "config": {
             "debug": true,
             "outputBucket": "mock-server",
+            "compatLevel": 1,
+            "userData": {
+                "tag": "development",
+                "price": "$10"
+            },
             "incrementalOutput": true,
             "jobs": [
                 {

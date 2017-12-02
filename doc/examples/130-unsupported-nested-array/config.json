@@ -1,11 +1,10 @@
 {
   "parameters": {
     "api": {
-      "baseUrl": "http://localhost:8888/130-legacy-nested-array/"
+      "baseUrl": "http://mock-server:80/130-unsupported-nested-array/"
     },
     "config": {
       "debug": true,
-      "compatLevel": 1,
       "jobs": [
         {
           "endpoint": "rows",

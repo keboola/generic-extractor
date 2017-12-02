@@ -98,7 +98,8 @@ class GenericExtractor
                 ]
             ],
             JuicerRest::convertRetry($this->api->getRetryConfig()),
-            $this->api->getDefaultRequestOptions()
+            $this->api->getDefaultRequestOptions(),
+            $this->api->getIgnoreErrors()
         );
 
         $this->api->getAuth()->authenticateClient($client);
