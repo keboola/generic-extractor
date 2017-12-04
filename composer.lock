@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "84ba43173d37c4c692c973f585aaad78",
+    "content-hash": "60efaf39daca9b47ca7d1c87863d8e5c",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -879,7 +879,7 @@
                     "email": "kachna@keboola.com"
                 },
                 {
-                    "name": "Ondřej Hlaváček",
+                    "name": "Ondrej Hlavacek",
                     "email": "ondrej.hlavacek@keboola.com"
                 }
             ],
@@ -2365,7 +2365,7 @@
             ],
             "authors": [
                 {
-                    "name": "Pádraic Brady",
+                    "name": "Padraic Brady",
                     "email": "padraic.brady@gmail.com",
                     "homepage": "http://blog.astrumfutura.com"
                 }

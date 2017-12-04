@@ -2,11 +2,22 @@
 
 namespace Keboola\GenericExtractor;
 
+use Keboola\Temp\Temp;
 use Symfony\Component\Process\Process;
 
 class SSH
 {
     const SSH_SERVER_ALIVE_INTERVAL = 15;
+
+    /**
+     * @var Temp
+     */
+    private $temp;
+
+    public function __construct()
+    {
+        $this->temp = new Temp('ssh-tunnel');
+    }
 
     /**
      *
@@ -71,9 +82,9 @@ class SSH
         if (empty($key)) {
             throw new SSHException("Key must not be empty");
         }
-        $fileName = tempnam('/tmp/', 'ssh-key-');
-        file_put_contents($fileName, $key);
-        chmod($fileName, 0600);
-        return realpath($fileName);
+        $path = $this->temp->createFile('ssh-key')->getRealPath();
+        file_put_contents($path, $key);
+        chmod($path, 0600);
+        return $path;
     }
 }
