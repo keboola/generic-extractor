@@ -2,6 +2,7 @@
 
 namespace Keboola\GenericExtractor;
 
+use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\Temp\Temp;
 use Symfony\Component\Process\Process;
 
@@ -32,7 +33,7 @@ class SSH
      *  - remotePort
      *  - privateKey
      *
-     * @throws SSHException
+     * @throws UserException
      */
     public function openTunnel(array $config)
     {
@@ -42,7 +43,7 @@ class SSH
         );
 
         if (!empty($missingParams)) {
-            throw new SSHException(sprintf("Missing parameters '%s'", implode(',', $missingParams)));
+            throw new UserException(sprintf("Missing parameters '%s'", implode(',', $missingParams)));
         }
 
         $cmd = sprintf(
@@ -64,7 +65,7 @@ class SSH
         }
 
         if ($process->getExitCode() !== 0) {
-            throw new SSHException(sprintf(
+            throw new UserException(sprintf(
                 "Unable to create ssh tunnel. Output: %s ErrorOutput: %s",
                 $process->getOutput(),
                 $process->getErrorOutput()
@@ -75,12 +76,12 @@ class SSH
     /**
      * @param string $key
      * @return string
-     * @throws SSHException
+     * @throws UserException
      */
     private function writeKeyToFile($key)
     {
         if (empty($key)) {
-            throw new SSHException("Key must not be empty");
+            throw new UserException("Key must not be empty");
         }
         $path = $this->temp->createFile('ssh-key')->getRealPath();
         file_put_contents($path, $key);

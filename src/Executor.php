@@ -157,12 +157,7 @@ class Executor
             'privateKey' => $sshConfig['#privateKey'],
         ];
         $this->logger->info("Creating SSH tunnel to '" . $tunnelParams['sshHost'] . "'");
-        try {
-            $ssh = new SSH();
-            $ssh->openTunnel($tunnelParams);
-            return sprintf('socks5h://127.0.0.1:%s', $tunnelParams['localPort']);
-        } catch (SSHException $e) {
-            throw new UserException($e->getMessage(), 0, $e);
-        }
+        (new SSH())->openTunnel($tunnelParams);
+        return sprintf('socks5h://127.0.0.1:%s', $tunnelParams['localPort']);
     }
 }
