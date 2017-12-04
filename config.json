@@ -1,0 +1,23 @@
+{
+  "authorization": {
+    "oauth_api": {
+      "id": "333778867"
+    }
+  },
+  "parameters": {
+    "bucket": "out.c-spa.bingads_costs_export",
+    "#devKey": "ENCRYPTED",
+    "accountId": "ACC_ID",
+    "sinceLast": false,
+    "customerId": "CUST_ID",
+    "bulkRequests": {
+      "ads": false,
+      "adGroups": true,
+      "keywords": false,
+      "campaigns": false,
+      "campQualityScore": false,
+      "siteLinkAddExtensions": false
+    },
+    "reportRequests": []
+  }
+}

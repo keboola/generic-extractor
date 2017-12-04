@@ -5,6 +5,7 @@ namespace Keboola\GenericExtractor\Configuration\Extractor;
 use Keboola\GenericExtractor\Configuration\Extractor\Node\Api;
 use Keboola\GenericExtractor\Configuration\Extractor\Node\Authorization;
 use Keboola\GenericExtractor\Configuration\Extractor\Node\Config;
+use Keboola\GenericExtractor\Configuration\Extractor\Node\SshProxy;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -21,6 +22,8 @@ class ConfigFile implements ConfigurationInterface
         Config::configureNode($config);
         $authorization = $root->children()->arrayNode('authorization');
         Authorization::configureNode($authorization);
+        $sshProxy = $root->children()->arrayNode('sshProxy');
+        SshProxy::configureNode($sshProxy);
         return $treeBuilder;
     }
 }

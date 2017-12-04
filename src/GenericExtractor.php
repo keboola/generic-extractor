@@ -55,16 +55,22 @@ class GenericExtractor
     private $api;
 
     /**
+     * @var array
+     */
+    private $proxy;
+
+    /**
      * GenericExtractor constructor.
      * @param Temp $temp
      * @param LoggerInterface $logger
      * @param Api $api
      */
-    public function __construct(Temp $temp, LoggerInterface $logger, Api $api)
+    public function __construct(Temp $temp, LoggerInterface $logger, Api $api, $proxy = null)
     {
         $this->temp = $temp;
         $this->logger = $logger;
         $this->api = $api;
+        $this->proxy = $proxy;
     }
 
     /**
@@ -87,7 +93,8 @@ class GenericExtractor
                     'headers' => UserFunction::build(
                         $this->api->getHeaders()->getHeaders(),
                         ['attr' => $config->getAttributes()]
-                    )
+                    ),
+                    'proxy' => $this->proxy,
                 ]
             ],
             JuicerRest::convertRetry($this->api->getRetryConfig()),
