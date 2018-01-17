@@ -1,0 +1,42 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/134-user-data-in-mapping/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "userData": {
+                "country": "UK"
+            },
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users"
+                }
+            ],
+            "mappings": {
+                "users": {
+                    "id": {
+                        "type": "column",
+                        "mapping": {
+                            "destination": "id"
+                        }
+                    },
+                    "name": {
+                        "type": "column",
+                        "mapping": {
+                            "destination": "name"
+                        }
+                    },
+                    "country": {
+                        "type": "user",
+                        "mapping": {
+                            "destination": "country"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
