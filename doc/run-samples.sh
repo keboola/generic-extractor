@@ -157,6 +157,7 @@ run_example "130-unsupported-nested-array"
 run_example "132-ignore-errors"
 run_example "131-ssh-tunnel"
 run_example "133-ssh-tunnel-iterations-params"
+run_example "134-user-data-in-mapping"
 
 # Stop mock server
 printf "\nAll examples successfull.\n"
