@@ -17,7 +17,9 @@
                 },
                 "apiRequest": {
                     "headers": {
-                        "X-Access-Token": "credentials.access_token"
+                        "X-Access-Token": {
+                            "response": "credentials.access_token"
+                        }
                     }
                 }
             }
