@@ -444,21 +444,21 @@
         },
         {
             "name": "keboola/codebuilder",
-            "version": "0.4.0",
+            "version": "0.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-codebuilder.git",
-                "reference": "f59cddbfd3da9a00998a0374e96e3c1385e74eb3"
+                "reference": "437f36065121a04a41cfddc3442b41b89ffce9fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-codebuilder/zipball/f59cddbfd3da9a00998a0374e96e3c1385e74eb3",
-                "reference": "f59cddbfd3da9a00998a0374e96e3c1385e74eb3",
+                "url": "https://api.github.com/repos/keboola/php-codebuilder/zipball/437f36065121a04a41cfddc3442b41b89ffce9fe",
+                "reference": "437f36065121a04a41cfddc3442b41b89ffce9fe",
                 "shasum": ""
             },
             "require": {
                 "keboola/php-utils": "^2.1",
-                "php": ">=5.6.0"
+                "php": ">=7.0"
             },
             "require-dev": {
                 "codeclimate/php-test-reporter": "^0.4",
@@ -488,7 +488,7 @@
                 "user",
                 "user-script"
             ],
-            "time": "2017-12-20T16:10:32+00:00"
+            "time": "2018-03-14T20:32:14+00:00"
         },
         {
             "name": "keboola/csv",
@@ -672,23 +672,23 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "4.4.0",
+            "version": "4.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "02ffa7202fe51d123fcc82357130375cf0fabd59"
+                "reference": "e3241b01cc14201617e55985ef1025be678b718c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/02ffa7202fe51d123fcc82357130375cf0fabd59",
-                "reference": "02ffa7202fe51d123fcc82357130375cf0fabd59",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/e3241b01cc14201617e55985ef1025be678b718c",
+                "reference": "e3241b01cc14201617e55985ef1025be678b718c",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "^5.3",
                 "guzzlehttp/retry-subscriber": "dev-master#270393c",
                 "keboola-legacy/json-parser": "^2.1",
-                "keboola/codebuilder": "^0.4",
+                "keboola/codebuilder": "^0.5",
                 "keboola/csvmap": "^0.5",
                 "keboola/json-parser": "^2.1",
                 "keboola/php-csvtable": "^0.1",
@@ -699,8 +699,8 @@
             "require-dev": {
                 "codeclimate/php-test-reporter": "^0.4",
                 "monolog/monolog": "^1.22",
-                "phpstan/phpstan": "^0.7",
-                "phpunit/phpunit": "^6.2",
+                "phpstan/phpstan": "^0.9",
+                "phpunit/phpunit": "^7.0",
                 "squizlabs/php_codesniffer": "^3.0"
             },
             "type": "library",
@@ -725,7 +725,7 @@
                 "json",
                 "rest"
             ],
-            "time": "2017-12-21T10:52:10+00:00"
+            "time": "2018-03-14T20:57:52+00:00"
         },
         {
             "name": "keboola/php-csvtable",
