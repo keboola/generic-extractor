@@ -259,6 +259,8 @@ class GenericExtractorJob
                     $flatParameters[$i][$placeholderName] = $template;
                     $i++;
                 }
+            } else {
+                $flatParameters[$i][$placeholderName] = $template;
             }
         }
         return $flatParameters;
