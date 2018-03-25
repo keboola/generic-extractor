@@ -378,7 +378,7 @@ Example for **MAC** authentication:
     },
     "parameters": {
         "api": {
-            "baseUrl": "http://private-74f7c-extractormock.apiary-mock.com",
+            "baseUrl": "http://private-834388-extractormock.apiary-mock.com",
             "authentication": {
                 "type": "oauth20",
                 "format": "json",
