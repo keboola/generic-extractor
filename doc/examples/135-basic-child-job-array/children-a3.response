@@ -1,0 +1,9 @@
+{
+    "id": "a3",
+    "name": "Jimmy Doe",
+    "address": {
+        "city": "Scaryville",
+        "country": "Nowhere",
+        "street": "Cemetery Lane"
+    }
+}

@@ -190,8 +190,10 @@ class GenericExtractorJob
                 $parentResults = $this->parentResults;
                 array_unshift($parentResults, $result);
 
-                $childJob = $this->createChild($child, $parentResults);
-                $childJob->run();
+                $childJobs = $this->createChild($child, $parentResults);
+                foreach ($childJobs as $childJob) {
+                    $childJob->run();
+                }
             }
         }
     }
@@ -200,24 +202,13 @@ class GenericExtractorJob
      * Create a child job with current client and parser
      * @param JobConfig $config
      * @param array $parentResults
-     * @return static
+     * @return static[]
      */
-    private function createChild(JobConfig $config, array $parentResults)
+    private function createChild(JobConfig $config, array $parentResults) : array
     {
         // Clone and reset Scroller
         $scroller = clone $this->scroller;
         $scroller->reset();
-        // Clone the config to prevent overwriting the placeholder(s) in endpoint
-        $job = new static(
-            clone $config,
-            $this->client,
-            $this->parser,
-            $this->logger,
-            $scroller,
-            $this->attributes,
-            $this->metadata,
-            $this->compatLevel
-        );
 
         $params = [];
         $placeholders = !empty($config->getConfig()['placeholders']) ? $config->getConfig()['placeholders'] : [];
@@ -234,11 +225,45 @@ class GenericExtractorJob
         if (!empty($this->parentParams)) {
             $params = array_replace($this->parentParams, $params);
         }
+        $params = $this->flattenParameters($params);
 
-        $job->setParams($params);
-        $job->setParentResults($parentResults);
-        return $job;
+        $jobs = [];
+        foreach ($params as $index => $param) {
+            // Clone the config to prevent overwriting the placeholder(s) in endpoint
+            $job = new static(
+                clone $config,
+                $this->client,
+                $this->parser,
+                $this->logger,
+                $scroller,
+                $this->attributes,
+                $this->metadata,
+                $this->compatLevel
+            );
+            $job->setParams($param);
+            $job->setParentResults($parentResults);
+            $jobs[] = $job;
+        }
+        return $jobs;
     }
+
+    private function flattenParameters(array $params) : array
+    {
+        $flatParameters = [];
+        $i = 0;
+        foreach ($params as $placeholderName => $placeholder) {
+            $template = $placeholder;
+            if (is_array($placeholder['value'])) {
+                foreach ($placeholder['value'] as $value) {
+                    $template['value'] = $value;
+                    $flatParameters[$i][$placeholderName] = $template;
+                    $i++;
+                }
+            }
+        }
+        return $flatParameters;
+    }
+
 
     /**
      * @param string $placeholder

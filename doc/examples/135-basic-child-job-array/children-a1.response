@@ -1,0 +1,9 @@
+{
+    "id": "a1",
+    "name": "John Doe",
+    "address": {
+        "city": "London",
+        "country": "UK",
+        "street": "Whitehaven Mansions"
+    }
+}
