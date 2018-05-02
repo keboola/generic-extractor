@@ -2,11 +2,11 @@
 
 namespace Keboola\GenericExtractor\Configuration;
 
-use Keboola\GenericExtractor\Authentication\AuthInterface;
 use Keboola\GenericExtractor\Authentication;
+use Keboola\GenericExtractor\Authentication\AuthInterface;
 use Keboola\GenericExtractor\Exception\UserException;
-use Keboola\Juicer\Pagination\ScrollerInterface;
 use Keboola\Juicer\Pagination\ScrollerFactory;
+use Keboola\Juicer\Pagination\ScrollerInterface;
 use Keboola\Utils\Exception\JsonDecodeException;
 use Psr\Log\LoggerInterface;
 
@@ -153,7 +153,9 @@ class Api
 
         if (filter_var($api['baseUrl'], FILTER_VALIDATE_URL)) {
             return $api['baseUrl'];
-        } elseif (is_string($api['baseUrl'])) {
+        }
+
+        if (is_string($api['baseUrl'])) {
             // For backwards compatibility
             try {
                 $fn = \Keboola\Utils\jsonDecode($api['baseUrl']);
@@ -161,10 +163,19 @@ class Api
             } catch (JsonDecodeException $e) {
                 throw new UserException("The 'baseUrl' attribute in API configuration is not a valid URL");
             }
-            return UserFunction::build([$fn], ['attr' => $configAttributes])[0];
+            $baseUrl = UserFunction::build([$fn], ['attr' => $configAttributes])[0];
         } else {
-            return UserFunction::build([$api['baseUrl']], ['attr' => $configAttributes])[0];
+            $baseUrl = UserFunction::build([$api['baseUrl']], ['attr' => $configAttributes])[0];
         }
+
+        if (!filter_var($baseUrl, FILTER_VALIDATE_URL)) {
+            throw new UserException(sprintf(
+                'The "baseUrl" attribute in API configuration resulted in an invalid URL (%s)',
+                $baseUrl
+            ));
+        }
+
+        return $baseUrl;
     }
 
     /**

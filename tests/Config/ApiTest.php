@@ -165,4 +165,22 @@ class ApiTest extends TestCase
         self::assertEquals(['foo' => 'bar', 'oauth2_access_token' => 'baz'], $request->getQuery()->toArray());
         self::assertEquals(['Host' => ['example.com']], $request->getHeaders());
     }
+
+    public function testInvalidFunctionBaseUrlThrowsUserException()
+    {
+        $apiConfig = [
+            "baseUrl" => [
+                "function" => "concat",
+                "args" => [
+                    "http://",
+                    "/087-function-baseurl/",
+                ],
+            ],
+        ];
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage(
+            'The "baseUrl" attribute in API configuration resulted in an invalid URL (http:///087-function-baseurl/)'
+        );
+        new Api(new NullLogger(), $apiConfig, [], []);
+    }
 }
