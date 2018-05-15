@@ -5,7 +5,7 @@
             "authentication": {
                 "type": "login",
                 "loginRequest": {
-                    "endpoint": "login/form",
+                    "endpoint": "http://mock-server/080-login-auth-query/login/form",
                     "method": "FORM",
                     "params": {
                         "username": "JohnDoe",
