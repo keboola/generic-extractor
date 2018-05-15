@@ -154,10 +154,11 @@ run_example "127-pagination-stop-field"
 run_example "128-login-auth-text"
 run_example "129-login-auth-scalar"
 run_example "130-unsupported-nested-array"
-run_example "132-ignore-errors"
 run_example "131-ssh-tunnel"
+run_example "132-ignore-errors"
 run_example "133-ssh-tunnel-iterations-params"
 run_example "134-user-data-in-mapping"
+run_example "135-basic-child-job-array"
 
 # Stop mock server
 printf "\nAll examples successfull.\n"
