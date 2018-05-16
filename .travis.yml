@@ -8,7 +8,7 @@ before_script:
   - docker-compose -v
   - docker-compose build extractor tests
   # Run tests
-  - docker-compose run --rm -e CODECLIMATE_REPO_TOKEN tests
+  - docker-compose run --rm -e CC_TEST_REPORTER_ID tests
   - sh -c "cd doc && ./run-samples.sh"  
 
 script:
