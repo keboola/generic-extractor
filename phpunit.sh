@@ -9,6 +9,6 @@ chmod +x ./cc-test-reporter
 ./vendor/bin/phpcs --standard=psr2 --ignore=vendor -n . 
 ./vendor/bin/phpstan analyse --level=4 src
 ./vendor/bin/phpunit --coverage-clover ./build/logs/clover.xml
-./cc-test-reporter after-build
+./cc-test-reporter after-build --exit-code 0 --debug
 
 echo "Tests Finished" >&1
