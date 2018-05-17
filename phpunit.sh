@@ -3,9 +3,12 @@ set -e
 php --version
 
 echo "Starting tests" >&1
+curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+chmod +x ./cc-test-reporter
+./cc-test-reporter before-build
 ./vendor/bin/phpcs --standard=psr2 --ignore=vendor -n . 
 ./vendor/bin/phpstan analyse --level=4 src
 ./vendor/bin/phpunit --coverage-clover ./build/logs/clover.xml
-./vendor/bin/test-reporter
+./cc-test-reporter after-build
 
 echo "Tests Finished" >&1
