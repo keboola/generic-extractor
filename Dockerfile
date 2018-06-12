@@ -27,4 +27,8 @@ COPY . /code/
 # run normal composer - all deps are cached already
 RUN composer install $COMPOSER_FLAGS
 
+# add a a group with gid 501 and user with uid 501
+RUN groupadd app -g 501
+RUN useradd app -u 501 -g 501
+
 CMD php /code/run.php --data=/data
