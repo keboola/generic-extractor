@@ -1,0 +1,1 @@
+GET /500-infinite-loop/dates?output=json&page=1&session=mysession

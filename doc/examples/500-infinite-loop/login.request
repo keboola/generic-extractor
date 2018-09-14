@@ -1,0 +1,3 @@
+POST /500-infinite-loop/login
+
+{"login":"login","password":"pass"}

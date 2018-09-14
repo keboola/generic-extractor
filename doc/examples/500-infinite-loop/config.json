@@ -1,0 +1,47 @@
+{
+    "parameters": {
+        "api": {
+            "authentication": {
+                "type": "login",
+                "loginRequest": {
+                    "endpoint": "http://mock-server:80/500-infinite-loop/login",
+                    "method": "POST",
+                    "params": {
+                        "login": "login",
+                        "password": "pass"
+                    }
+                },
+                "format": "json",
+                "apiRequest": {
+                    "query": {
+                        "session": {
+                            "response": "data.session"
+                        }
+                    }
+                }
+            },
+            "baseUrl": "http://mock-server:80/500-infinite-loop/",
+            "http": {
+                "defaultOptions": {
+                    "params": {
+                        "output": "json"
+                    }
+                }
+            },
+            "pagination": {
+                "method": "pagenum",
+                "pageParam": "page"
+            }
+        },
+        "config": {
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "dates",
+                    "dataType": "available_periods",
+                    "dataField": "data.cz.monthly"
+                }
+            ]
+        }
+    }
+}
