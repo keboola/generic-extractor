@@ -1,0 +1,12 @@
+[
+    {
+        "id": 123,
+        "name": "John Doe",
+        "married": true        
+    },
+    {
+        "id": 234,
+        "name": "Jane Doe",
+        "married": false
+    }
+]

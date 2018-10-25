@@ -1,0 +1,18 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/136-data-mapping/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "data",
+                    "dataField": "data"
+                }
+            ]
+        }
+    }
+}
