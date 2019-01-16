@@ -1,0 +1,3 @@
+POST /034-post-request/getAccessLog
+
+{"filter":{"userName":"JohnDoe","company":"id-12"}}
