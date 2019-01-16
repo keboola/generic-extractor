@@ -1,0 +1,35 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/034-post-request/"
+        },
+        "config": {
+            "debug": true,
+            "userName": "JohnDoe",
+            "companyId": 12,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "getAccessLog",
+                    "method": "POST",
+                    "params": {
+                        "filter": {
+                            "userName": {
+                                "attr": "userName"
+                            },
+                            "company": {
+                                "function": "concat",
+                                "args": [
+                                    "id-",
+                                    {
+                                        "attr": "companyId"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            ]            
+        }
+    }
+}
