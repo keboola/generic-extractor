@@ -10,15 +10,17 @@ class MissingTableHelper
     public static function checkConfigs($configs, $dataDir)
     {
         foreach ($configs as $config) {
-            foreach ($config->getAttribute('mappings') as $name => $mapping) {
-                $destinationBase = $dataDir . '/out/tables/' . $config->getAttribute('outputBucket') . '.';
-                self::fillMissingTableMapping(
-                    $destinationBase,
-                    $config->getAttribute('outputBucket'),
-                    $config->getAttribute('incremental'),
-                    $name,
-                    $mapping
-                );
+            if ($config->getAttribute('mappings')) {
+                foreach ($config->getAttribute('mappings') as $name => $mapping) {
+                    $destinationBase = $dataDir . '/out/tables/' . $config->getAttribute('outputBucket') . '.';
+                    self::fillMissingTableMapping(
+                        $destinationBase,
+                        $config->getAttribute('outputBucket'),
+                        $config->getAttribute('incremental'),
+                        $name,
+                        $mapping
+                    );
+                }
             }
         }
     }

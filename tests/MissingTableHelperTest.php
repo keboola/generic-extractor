@@ -122,4 +122,75 @@ class MissingTableHelperTest extends TestCase
             json_decode(file_get_contents($baseDir . 'mock-server.users.manifest'), true)
         );
     }
+
+    public function testMissingTablesNoOverwrite()
+    {
+        $temp = new Temp();
+        $config = [
+            'jobs' => [
+                [
+                    'endpoint' => 'users',
+                    'dataType' => 'users',
+                ],
+            ],
+            'outputBucket' => 'mock-server',
+            'incremental' => true,
+            'mappings' => [
+                'users' => [
+                    'id' => [
+                        'type' => 'column',
+                        'mapping' => [
+                            'destination' => 'id',
+                            'primaryKey' => true,
+                        ],
+                    ],
+                    'name' => [
+                        'mapping' => [
+                            'destination' => 'name',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $configs = [new Config($config)];
+        $temp->initRunFolder();
+
+        mkdir($temp->getTmpFolder() . '/out/');
+        $baseDir = $temp->getTmpFolder() . '/out/tables/';
+        mkdir($baseDir);
+        file_put_contents($baseDir . 'mock-server.users', 'foo');
+        file_put_contents($baseDir . 'mock-server.users.manifest', 'bar');
+        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder());
+        self::assertFileExists($baseDir . 'mock-server.users');
+        self::assertFileExists($baseDir . 'mock-server.users.manifest');
+        self::assertEquals('foo', file_get_contents($baseDir . 'mock-server.users'));
+        self::assertEquals('bar', file_get_contents($baseDir . 'mock-server.users.manifest'));
+    }
+
+    public function testMissingMappings()
+    {
+        $temp = new Temp();
+        $config = [
+            'jobs' => [
+                [
+                    'endpoint' => 'users',
+                    'dataType' => 'users',
+                ],
+            ],
+            'outputBucket' => 'mock-server',
+            'incremental' => true,
+            'mappings' => null,
+        ];
+
+        $configs = [new Config($config)];
+        $temp->initRunFolder();
+
+        mkdir($temp->getTmpFolder() . '/out/');
+        $baseDir = $temp->getTmpFolder() . '/out/tables/';
+        mkdir($baseDir);
+        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder());
+        self::assertFileNotExists($baseDir . 'mock-server.users');
+        self::assertFileNotExists($baseDir . 'mock-server.users.manifest');
+    }
 }
