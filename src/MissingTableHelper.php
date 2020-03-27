@@ -36,10 +36,12 @@ class MissingTableHelper
         $columns = [];
         $primaryKey = [];
         foreach ($mapping as $itemName => $item) {
-            if (empty($item['type'])) {
-                $item['type'] = 'column';
-            }
-            if ($item['type'] === 'table') {
+            if (empty($item['type']) || (($item['type'] === 'column') || ($item['type'] === 'user'))) {
+                $columns[] = $item['mapping']['destination'];
+                if (!empty($item['mapping']['primaryKey'])) {
+                    $primaryKey[] = $item['mapping']['destination'];
+                }
+            } elseif ($item['type'] === 'table') {
                 self::fillMissingTableMapping(
                     $baseFileName,
                     $outputBucket,
@@ -48,11 +50,6 @@ class MissingTableHelper
                     $item['tableMapping'],
                     empty($item['parentKey']) ? ['destination' => $name . '_pk'] : $item['parentKey']
                 );
-            } elseif (($item['type'] === 'column') || ($item['type'] === 'user')) {
-                $columns[] = $item['mapping']['destination'];
-                if (!empty($item['mapping']['primaryKey'])) {
-                    $primaryKey[] = $item['mapping']['destination'];
-                }
             } else {
                 throw new UserException(sprintf('Invalid mapping type "%s".', $item['type']));
             }
