@@ -1,0 +1,69 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/067-mapping-tables-nested/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataType": "users"
+                }
+            ],
+            "mappings": {
+                "users": {
+                    "id": {
+                        "type": "column",
+                        "mapping": {
+                            "destination": "id"
+                        }
+                    },
+                    "name": {
+                        "type": "column",
+                        "mapping": {
+                            "destination": "name"
+                        }
+                    },
+                    "contacts": {
+                        "type": "table",
+                        "destination": "user-contact",
+                        "tableMapping": {
+                            "email": {
+                                "type": "column",
+                                "mapping": {
+                                    "destination": "email"
+                                }
+                            },
+                            "phone": {
+                                "type": "column",
+                                "mapping": {
+                                    "destination": "tel"
+                                }
+                            },
+                            "addresses": {
+                                "type": "table",
+                                "destination": "user-address",
+                                "tableMapping": {
+                                    "street": {
+                                        "type": "column",
+                                        "mapping": {
+                                            "destination": "street"
+                                        }
+                                    },
+                                    "country": {
+                                        "type": "column",
+                                        "mapping": {
+                                            "destination": "country"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

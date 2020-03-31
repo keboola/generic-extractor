@@ -142,6 +142,7 @@ class Executor
             $fs->remove($folders);
         }
 
+        MissingTableHelper::checkConfigs($configs, $arguments['data']);
         $metadata['time']['previousStart'] = $metadata['time']['currentStart'];
         unset($metadata['time']['currentStart']);
         $configuration->saveConfigMetadata($metadata);
