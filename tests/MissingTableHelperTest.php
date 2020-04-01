@@ -193,4 +193,64 @@ class MissingTableHelperTest extends TestCase
         self::assertFileNotExists($baseDir . 'mock-server.users');
         self::assertFileNotExists($baseDir . 'mock-server.users.manifest');
     }
+
+    public function testMissingTablesSimplifiedMapping()
+    {
+        $temp = new Temp();
+        $config = [
+            'jobs' => [
+                [
+                    'endpoint' => 'users',
+                    'dataType' => 'users',
+                ],
+            ],
+            'outputBucket' => 'mock-server',
+            'mappings' => [
+                'users' => [
+                    'id' => 'id',
+                    'name' => 'name',
+                    'contacts' => [
+                        'type' => 'table',
+                        'destination' => 'user-contact',
+                        'tableMapping' => [
+                            'email' => 'email',
+                            'phone' => 'phone',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $configs = [new Config($config)];
+        $temp->initRunFolder();
+
+        mkdir($temp->getTmpFolder() . '/out/');
+        $baseDir = $temp->getTmpFolder() . '/out/tables/';
+        mkdir($baseDir);
+        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder());
+        self::assertFileExists($baseDir . 'mock-server.user-contact');
+        self::assertFileExists($baseDir . 'mock-server.user-contact.manifest');
+        self::assertFileExists($baseDir . 'mock-server.users');
+        self::assertFileExists($baseDir . 'mock-server.users.manifest');
+
+        self::assertEquals(
+            '"email","phone","users_pk"',
+            trim(file_get_contents($baseDir . 'mock-server.user-contact'))
+        );
+        self::assertEquals(
+            [
+                'destination' => 'in.c-mock-server.user-contact',
+                'incremental' => false,
+            ],
+            json_decode(file_get_contents($baseDir . 'mock-server.user-contact.manifest'), true)
+        );
+        self::assertEquals(
+            '"id","name"',
+            trim(file_get_contents($baseDir . 'mock-server.users'))
+        );
+        self::assertEquals(
+            ['destination' => 'in.c-mock-server.users', 'incremental' => false],
+            json_decode(file_get_contents($baseDir . 'mock-server.users.manifest'), true)
+        );
+    }
 }

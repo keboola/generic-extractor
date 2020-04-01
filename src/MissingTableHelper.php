@@ -36,7 +36,9 @@ class MissingTableHelper
         $columns = [];
         $primaryKey = [];
         foreach ($mapping as $itemName => $item) {
-            if (empty($item['type']) || (($item['type'] === 'column') || ($item['type'] === 'user'))) {
+            if (!is_array($item)) {
+                $columns[] = $item;
+            } elseif (empty($item['type']) || (($item['type'] === 'column') || ($item['type'] === 'user'))) {
                 $columns[] = $item['mapping']['destination'];
                 if (!empty($item['mapping']['primaryKey'])) {
                     $primaryKey[] = $item['mapping']['destination'];
