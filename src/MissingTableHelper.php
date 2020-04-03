@@ -8,19 +8,19 @@ use Keboola\GenericExtractor\Exception\UserException;
 
 class MissingTableHelper
 {
-    public static function checkConfigs($configs, $dataDir, $name)
+    public static function checkConfigs($configs, $dataDir, Extractor $configuration)
     {
-        if (!$name) {
-            $name = "generic";
-        }
         foreach ($configs as $config) {
+            $api = $configuration->getApi($config->getAttributes());
+
             if (!empty($config->getAttribute('outputBucket'))) {
                 $outputBucket = $config->getAttribute('outputBucket');
             } elseif ($config->getAttribute('id')) {
-                $outputBucket = 'ex-api-' . $name . "-" . $config->getAttribute('id');
+                $outputBucket = 'ex-api-' . $api->getName() . "-" . $config->getAttribute('id');
             } else {
-                $outputBucket = '';
+                $outputBucket = "__kbc_default";
             }
+            $outputBucket = $outputBucket == "__kbc_default" ? null : $outputBucket;
 
             if ($config->getAttribute('mappings')) {
                 foreach ($config->getAttribute('mappings') as $name => $mapping) {
