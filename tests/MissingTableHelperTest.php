@@ -253,4 +253,62 @@ class MissingTableHelperTest extends TestCase
             json_decode(file_get_contents($baseDir . 'mock-server.users.manifest'), true)
         );
     }
+
+    public function testMissingTablesNoOutputBucket()
+    {
+        $temp = new Temp();
+        $config = [
+            'jobs' => [
+                [
+                    'endpoint' => 'users',
+                    'dataType' => 'users',
+                ],
+            ],
+            'mappings' => [
+                'users' => [
+                    'id' => 'id',
+                    'name' => 'name',
+                    'contacts' => [
+                        'type' => 'table',
+                        'destination' => 'user-contact',
+                        'tableMapping' => [
+                            'email' => 'email',
+                            'phone' => 'phone',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $configs = [new Config($config)];
+        $temp->initRunFolder();
+
+        mkdir($temp->getTmpFolder() . '/out/');
+        $baseDir = $temp->getTmpFolder() . '/out/tables/';
+        mkdir($baseDir);
+        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder());
+        self::assertFileExists($baseDir . 'user-contact');
+        self::assertFileExists($baseDir . 'user-contact.manifest');
+        self::assertFileExists($baseDir . 'users');
+        self::assertFileExists($baseDir . 'users.manifest');
+
+        self::assertEquals(
+            '"email","phone","users_pk"',
+            trim(file_get_contents($baseDir . 'user-contact'))
+        );
+        self::assertEquals(
+            [
+                'incremental' => false,
+            ],
+            json_decode(file_get_contents($baseDir . 'user-contact.manifest'), true)
+        );
+        self::assertEquals(
+            '"id","name"',
+            trim(file_get_contents($baseDir . 'users'))
+        );
+        self::assertEquals(
+            ['incremental' => false],
+            json_decode(file_get_contents($baseDir . 'users.manifest'), true)
+        );
+    }
 }

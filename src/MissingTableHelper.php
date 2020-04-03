@@ -12,7 +12,11 @@ class MissingTableHelper
         foreach ($configs as $config) {
             if ($config->getAttribute('mappings')) {
                 foreach ($config->getAttribute('mappings') as $name => $mapping) {
-                    $destinationBase = $dataDir . '/out/tables/' . $config->getAttribute('outputBucket') . '.';
+                    if ($config->getAttribute('outputBucket')) {
+                        $destinationBase = $dataDir . '/out/tables/' . $config->getAttribute('outputBucket') . '.';
+                    } else {
+                        $destinationBase = $dataDir . '/out/tables/';
+                    }
                     self::fillMissingTableMapping(
                         $destinationBase,
                         $config->getAttribute('outputBucket'),
@@ -70,9 +74,11 @@ class MissingTableHelper
             $csvFile = new CsvFile($baseFileName . $name);
             $csvFile->writeRow($columns);
             $manifest = [
-                'destination' => 'in.c-' . $outputBucket . '.' . $name,
                 'incremental' => $incremental,
             ];
+            if ($outputBucket) {
+                $manifest['destination'] = 'in.c-' . $outputBucket . '.' . $name;
+            }
             if ($primaryKey) {
                 $manifest['primary_key'] = $primaryKey;
             }
