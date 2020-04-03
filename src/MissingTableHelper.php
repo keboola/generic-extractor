@@ -3,17 +3,29 @@
 namespace Keboola\GenericExtractor;
 
 use Keboola\Csv\CsvFile;
+use Keboola\GenericExtractor\Configuration\Extractor;
 use Keboola\GenericExtractor\Exception\UserException;
 
 class MissingTableHelper
 {
-    public static function checkConfigs($configs, $dataDir)
+    public static function checkConfigs($configs, $dataDir, $name)
     {
+        if (!$name) {
+            $name = "generic";
+        }
         foreach ($configs as $config) {
+            if (!empty($config->getAttribute('outputBucket'))) {
+                $outputBucket = $config->getAttribute('outputBucket');
+            } elseif ($config->getAttribute('id')) {
+                $outputBucket = 'ex-api-' . $name . "-" . $config->getAttribute('id');
+            } else {
+                $outputBucket = '';
+            }
+
             if ($config->getAttribute('mappings')) {
                 foreach ($config->getAttribute('mappings') as $name => $mapping) {
-                    if ($config->getAttribute('outputBucket')) {
-                        $destinationBase = $dataDir . '/out/tables/' . $config->getAttribute('outputBucket') . '.';
+                    if ($outputBucket) {
+                        $destinationBase = $dataDir . '/out/tables/' . $outputBucket . '.';
                     } else {
                         $destinationBase = $dataDir . '/out/tables/';
                     }

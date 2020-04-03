@@ -85,7 +85,7 @@ class MissingTableHelperTest extends TestCase
         mkdir($temp->getTmpFolder() . '/out/');
         $baseDir = $temp->getTmpFolder() . '/out/tables/';
         mkdir($baseDir);
-        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder());
+        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), '');
         self::assertFileExists($baseDir . 'mock-server.primary-address');
         self::assertFileExists($baseDir . 'mock-server.primary-address.manifest');
         self::assertFileExists($baseDir . 'mock-server.user-contact');
@@ -161,7 +161,7 @@ class MissingTableHelperTest extends TestCase
         mkdir($baseDir);
         file_put_contents($baseDir . 'mock-server.users', 'foo');
         file_put_contents($baseDir . 'mock-server.users.manifest', 'bar');
-        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder());
+        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), '');
         self::assertFileExists($baseDir . 'mock-server.users');
         self::assertFileExists($baseDir . 'mock-server.users.manifest');
         self::assertEquals('foo', file_get_contents($baseDir . 'mock-server.users'));
@@ -189,7 +189,7 @@ class MissingTableHelperTest extends TestCase
         mkdir($temp->getTmpFolder() . '/out/');
         $baseDir = $temp->getTmpFolder() . '/out/tables/';
         mkdir($baseDir);
-        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder());
+        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), '');
         self::assertFileNotExists($baseDir . 'mock-server.users');
         self::assertFileNotExists($baseDir . 'mock-server.users.manifest');
     }
@@ -227,7 +227,7 @@ class MissingTableHelperTest extends TestCase
         mkdir($temp->getTmpFolder() . '/out/');
         $baseDir = $temp->getTmpFolder() . '/out/tables/';
         mkdir($baseDir);
-        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder());
+        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), '');
         self::assertFileExists($baseDir . 'mock-server.user-contact');
         self::assertFileExists($baseDir . 'mock-server.user-contact.manifest');
         self::assertFileExists($baseDir . 'mock-server.users');
@@ -286,7 +286,7 @@ class MissingTableHelperTest extends TestCase
         mkdir($temp->getTmpFolder() . '/out/');
         $baseDir = $temp->getTmpFolder() . '/out/tables/';
         mkdir($baseDir);
-        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder());
+        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), '');
         self::assertFileExists($baseDir . 'user-contact');
         self::assertFileExists($baseDir . 'user-contact.manifest');
         self::assertFileExists($baseDir . 'users');
@@ -309,6 +309,124 @@ class MissingTableHelperTest extends TestCase
         self::assertEquals(
             ['incremental' => false],
             json_decode(file_get_contents($baseDir . 'users.manifest'), true)
+        );
+    }
+
+    public function testMissingBucketPresentIdPresentName()
+    {
+        $temp = new Temp();
+        $config = [
+            'id' => 'config-id',
+            'jobs' => [
+                [
+                    'endpoint' => 'users',
+                    'dataType' => 'users',
+                ],
+            ],
+            'mappings' => [
+                'users' => [
+                    'id' => 'id',
+                    'name' => 'name',
+                    'contacts' => [
+                        'type' => 'table',
+                        'destination' => 'user-contact',
+                        'tableMapping' => [
+                            'email' => 'email',
+                            'phone' => 'phone',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $configs = [new Config($config)];
+        $temp->initRunFolder();
+
+        mkdir($temp->getTmpFolder() . '/out/');
+        $baseDir = $temp->getTmpFolder() . '/out/tables/';
+        mkdir($baseDir);
+        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), 'testName');
+        self::assertFileExists($baseDir . 'ex-api-testName-config-id.user-contact');
+        self::assertFileExists($baseDir . 'ex-api-testName-config-id.user-contact.manifest');
+        self::assertFileExists($baseDir . 'ex-api-testName-config-id.users');
+        self::assertFileExists($baseDir . 'ex-api-testName-config-id.users.manifest');
+
+        self::assertEquals(
+            '"email","phone","users_pk"',
+            trim(file_get_contents($baseDir . 'ex-api-testName-config-id.user-contact'))
+        );
+        self::assertEquals(
+            [
+                'incremental' => false,
+            ],
+            json_decode(file_get_contents($baseDir . 'ex-api-testName-config-id.user-contact.manifest'), true)
+        );
+        self::assertEquals(
+            '"id","name"',
+            trim(file_get_contents($baseDir . 'ex-api-testName-config-id.users'))
+        );
+        self::assertEquals(
+            ['incremental' => false],
+            json_decode(file_get_contents($baseDir . 'ex-api-testName-config-id.users.manifest'), true)
+        );
+    }
+
+    public function testMissingBucketPresentIdMissingName()
+    {
+        $temp = new Temp();
+        $config = [
+            'id' => 'config-id',
+            'jobs' => [
+                [
+                    'endpoint' => 'users',
+                    'dataType' => 'users',
+                ],
+            ],
+            'mappings' => [
+                'users' => [
+                    'id' => 'id',
+                    'name' => 'name',
+                    'contacts' => [
+                        'type' => 'table',
+                        'destination' => 'user-contact',
+                        'tableMapping' => [
+                            'email' => 'email',
+                            'phone' => 'phone',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $configs = [new Config($config)];
+        $temp->initRunFolder();
+
+        mkdir($temp->getTmpFolder() . '/out/');
+        $baseDir = $temp->getTmpFolder() . '/out/tables/';
+        mkdir($baseDir);
+        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), '');
+        self::assertFileExists($baseDir . 'ex-api-generic-config-id.user-contact');
+        self::assertFileExists($baseDir . 'ex-api-generic-config-id.user-contact.manifest');
+        self::assertFileExists($baseDir . 'ex-api-generic-config-id.users');
+        self::assertFileExists($baseDir . 'ex-api-generic-config-id.users.manifest');
+
+        self::assertEquals(
+            '"email","phone","users_pk"',
+            trim(file_get_contents($baseDir . 'ex-api-generic-config-id.user-contact'))
+        );
+        self::assertEquals(
+            [
+                'incremental' => false,
+            ],
+            json_decode(file_get_contents($baseDir . 'ex-api-generic-config-id.user-contact.manifest'), true)
+        );
+        self::assertEquals(
+            '"id","name"',
+            trim(file_get_contents($baseDir . 'ex-api-generic-config-id.users'))
+        );
+        self::assertEquals(
+            ['incremental' => false],
+            json_decode(file_get_contents($baseDir . 'ex-api-generic-config-id.users.manifest'), true)
         );
     }
 }
