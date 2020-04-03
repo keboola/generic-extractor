@@ -18,9 +18,8 @@ class MissingTableHelper
             } elseif ($config->getAttribute('id')) {
                 $outputBucket = 'ex-api-' . $api->getName() . "-" . $config->getAttribute('id');
             } else {
-                $outputBucket = "__kbc_default";
+                $outputBucket = '';
             }
-            $outputBucket = $outputBucket == "__kbc_default" ? null : $outputBucket;
 
             if ($config->getAttribute('mappings')) {
                 foreach ($config->getAttribute('mappings') as $name => $mapping) {
