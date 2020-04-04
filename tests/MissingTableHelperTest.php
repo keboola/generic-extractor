@@ -2,10 +2,12 @@
 
 namespace Keboola\GenericExtractor\Tests;
 
+use Keboola\GenericExtractor\Configuration\Extractor;
 use Keboola\GenericExtractor\MissingTableHelper;
 use Keboola\Juicer\Config\Config;
 use Keboola\Temp\Temp;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 
 class MissingTableHelperTest extends TestCase
 {
@@ -13,64 +15,69 @@ class MissingTableHelperTest extends TestCase
     {
         $temp = new Temp();
         $config = [
-            'jobs' => [
-                [
-                    'endpoint' => 'users',
-                    'dataType' => 'users',
-                ],
-            ],
-            'outputBucket' => 'mock-server',
-            'incremental' => true,
-            'mappings' => [
-                'users' => [
-                    'id' => [
-                        'type' => 'column',
-                        'mapping' => [
-                            'destination' => 'id',
-                            'primaryKey' => true,
+            'parameters' => [
+                'api' => ['baseUrl' => 'https://dummy'],
+                'config' => [
+                    'jobs' => [
+                        [
+                            'endpoint' => 'users',
+                            'dataType' => 'users',
                         ],
                     ],
-                    'name' => [
-                        'mapping' => [
-                            'destination' => 'name',
-                        ],
-                    ],
-                    'contacts' => [
-                        'type' => 'table',
-                        'destination' => 'user-contact',
-                        'parentKey' => [
-                            'primaryKey' => true,
-                            'destination' => 'userId',
-                        ],
-                        'tableMapping' => [
-                            'email' => [
+                    'outputBucket' => 'mock-server',
+                    'incremental' => true,
+                    'mappings' => [
+                        'users' => [
+                            'id' => [
                                 'type' => 'column',
                                 'mapping' => [
-                                    'destination' => 'email',
+                                    'destination' => 'id',
+                                    'primaryKey' => true,
                                 ],
                             ],
-                            'phone' => [
-                                'type' => 'column',
+                            'name' => [
                                 'mapping' => [
-                                    'destination' => 'phone',
+                                    'destination' => 'name',
                                 ],
                             ],
-                        ],
-                    ],
-                    'contacts.addresses.0' => [
-                        'type' => 'table',
-                        'destination' => 'primary-address',
-                        'tableMapping' => [
-                            'street' => [
-                                'type' => 'column',
-                                'mapping' => [
-                                    'destination' => 'street',
+                            'contacts' => [
+                                'type' => 'table',
+                                'destination' => 'user-contact',
+                                'parentKey' => [
+                                    'primaryKey' => true,
+                                    'destination' => 'userId',
+                                ],
+                                'tableMapping' => [
+                                    'email' => [
+                                        'type' => 'column',
+                                        'mapping' => [
+                                            'destination' => 'email',
+                                        ],
+                                    ],
+                                    'phone' => [
+                                        'type' => 'column',
+                                        'mapping' => [
+                                            'destination' => 'phone',
+                                        ],
+                                    ],
                                 ],
                             ],
-                            'country' => [
-                                'type' => 'column',
-                                'mapping' => [
-                                    'destination' => 'country',
+                            'contacts.addresses.0' => [
+                                'type' => 'table',
+                                'destination' => 'primary-address',
+                                'tableMapping' => [
+                                    'street' => [
+                                        'type' => 'column',
+                                        'mapping' => [
+                                            'destination' => 'street',
+                                        ],
+                                    ],
+                                    'country' => [
+                                        'type' => 'column',
+                                        'mapping' => [
+                                            'destination' => 'country',
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],
@@ -78,14 +85,15 @@ class MissingTableHelperTest extends TestCase
                 ],
             ],
         ];
-
-        $configs = [new Config($config)];
         $temp->initRunFolder();
 
         mkdir($temp->getTmpFolder() . '/out/');
         $baseDir = $temp->getTmpFolder() . '/out/tables/';
         mkdir($baseDir);
-        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder());
+        file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
+        $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
+        $configs = $configuration->getMultipleConfigs();
+        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
         self::assertFileExists($baseDir . 'mock-server.primary-address');
         self::assertFileExists($baseDir . 'mock-server.primary-address.manifest');
         self::assertFileExists($baseDir . 'mock-server.user-contact');
@@ -127,41 +135,47 @@ class MissingTableHelperTest extends TestCase
     {
         $temp = new Temp();
         $config = [
-            'jobs' => [
-                [
-                    'endpoint' => 'users',
-                    'dataType' => 'users',
-                ],
-            ],
-            'outputBucket' => 'mock-server',
-            'incremental' => true,
-            'mappings' => [
-                'users' => [
-                    'id' => [
-                        'type' => 'column',
-                        'mapping' => [
-                            'destination' => 'id',
-                            'primaryKey' => true,
+            'parameters' => [
+                'api' => ['baseUrl' => 'https://dummy'],
+                'config' => [
+                    'jobs' => [
+                        [
+                            'endpoint' => 'users',
+                            'dataType' => 'users',
                         ],
                     ],
-                    'name' => [
-                        'mapping' => [
-                            'destination' => 'name',
+                    'outputBucket' => 'mock-server',
+                    'incremental' => true,
+                    'mappings' => [
+                        'users' => [
+                            'id' => [
+                                'type' => 'column',
+                                'mapping' => [
+                                    'destination' => 'id',
+                                    'primaryKey' => true,
+                                ],
+                            ],
+                            'name' => [
+                                'mapping' => [
+                                    'destination' => 'name',
+                                ],
+                            ],
                         ],
                     ],
                 ],
             ],
         ];
-
-        $configs = [new Config($config)];
         $temp->initRunFolder();
 
         mkdir($temp->getTmpFolder() . '/out/');
         $baseDir = $temp->getTmpFolder() . '/out/tables/';
         mkdir($baseDir);
+        file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
+        $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
+        $configs = $configuration->getMultipleConfigs();
         file_put_contents($baseDir . 'mock-server.users', 'foo');
         file_put_contents($baseDir . 'mock-server.users.manifest', 'bar');
-        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder());
+        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
         self::assertFileExists($baseDir . 'mock-server.users');
         self::assertFileExists($baseDir . 'mock-server.users.manifest');
         self::assertEquals('foo', file_get_contents($baseDir . 'mock-server.users'));
@@ -172,24 +186,30 @@ class MissingTableHelperTest extends TestCase
     {
         $temp = new Temp();
         $config = [
-            'jobs' => [
-                [
-                    'endpoint' => 'users',
-                    'dataType' => 'users',
+            'parameters' => [
+                'api' => ['baseUrl' => 'https://dummy'],
+                'config' => [
+                    'jobs' => [
+                        [
+                            'endpoint' => 'users',
+                            'dataType' => 'users',
+                        ],
+                    ],
+                    'outputBucket' => 'mock-server',
+                    'incremental' => true,
+                    'mappings' => null,
                 ],
             ],
-            'outputBucket' => 'mock-server',
-            'incremental' => true,
-            'mappings' => null,
         ];
-
-        $configs = [new Config($config)];
         $temp->initRunFolder();
 
         mkdir($temp->getTmpFolder() . '/out/');
         $baseDir = $temp->getTmpFolder() . '/out/tables/';
         mkdir($baseDir);
-        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder());
+        file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
+        $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
+        $configs = $configuration->getMultipleConfigs();
+        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
         self::assertFileNotExists($baseDir . 'mock-server.users');
         self::assertFileNotExists($baseDir . 'mock-server.users.manifest');
     }
@@ -198,36 +218,43 @@ class MissingTableHelperTest extends TestCase
     {
         $temp = new Temp();
         $config = [
-            'jobs' => [
-                [
-                    'endpoint' => 'users',
-                    'dataType' => 'users',
-                ],
-            ],
-            'outputBucket' => 'mock-server',
-            'mappings' => [
-                'users' => [
-                    'id' => 'id',
-                    'name' => 'name',
-                    'contacts' => [
-                        'type' => 'table',
-                        'destination' => 'user-contact',
-                        'tableMapping' => [
-                            'email' => 'email',
-                            'phone' => 'phone',
+            'parameters' => [
+                'api' => ['baseUrl' => 'https://dummy'],
+                'config' => [
+                    'jobs' => [
+                        [
+                            'endpoint' => 'users',
+                            'dataType' => 'users',
+                        ],
+                    ],
+                    'outputBucket' => 'mock-server',
+                    'mappings' => [
+                        'users' => [
+                            'id' => 'id',
+                            'name' => 'name',
+                            'contacts' => [
+                                'type' => 'table',
+                                'destination' => 'user-contact',
+                                'tableMapping' => [
+                                    'email' => 'email',
+                                    'phone' => 'phone',
+                                ],
+                            ],
                         ],
                     ],
                 ],
             ],
         ];
-
-        $configs = [new Config($config)];
         $temp->initRunFolder();
 
         mkdir($temp->getTmpFolder() . '/out/');
         $baseDir = $temp->getTmpFolder() . '/out/tables/';
         mkdir($baseDir);
-        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder());
+        file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
+        $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
+        $configs = $configuration->getMultipleConfigs();
+        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
+
         self::assertFileExists($baseDir . 'mock-server.user-contact');
         self::assertFileExists($baseDir . 'mock-server.user-contact.manifest');
         self::assertFileExists($baseDir . 'mock-server.users');
@@ -258,35 +285,42 @@ class MissingTableHelperTest extends TestCase
     {
         $temp = new Temp();
         $config = [
-            'jobs' => [
-                [
-                    'endpoint' => 'users',
-                    'dataType' => 'users',
-                ],
-            ],
-            'mappings' => [
-                'users' => [
-                    'id' => 'id',
-                    'name' => 'name',
-                    'contacts' => [
-                        'type' => 'table',
-                        'destination' => 'user-contact',
-                        'tableMapping' => [
-                            'email' => 'email',
-                            'phone' => 'phone',
+            'parameters' => [
+                'api' => ['baseUrl' => 'https://dummy'],
+                'config' => [
+                    'jobs' => [
+                        [
+                            'endpoint' => 'users',
+                            'dataType' => 'users',
+                        ],
+                    ],
+                    'mappings' => [
+                        'users' => [
+                            'id' => 'id',
+                            'name' => 'name',
+                            'contacts' => [
+                                'type' => 'table',
+                                'destination' => 'user-contact',
+                                'tableMapping' => [
+                                    'email' => 'email',
+                                    'phone' => 'phone',
+                                ],
+                            ],
                         ],
                     ],
                 ],
             ],
         ];
-
-        $configs = [new Config($config)];
         $temp->initRunFolder();
 
         mkdir($temp->getTmpFolder() . '/out/');
         $baseDir = $temp->getTmpFolder() . '/out/tables/';
         mkdir($baseDir);
-        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder());
+        file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
+        $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
+        $configs = $configuration->getMultipleConfigs();
+        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
+
         self::assertFileExists($baseDir . 'user-contact');
         self::assertFileExists($baseDir . 'user-contact.manifest');
         self::assertFileExists($baseDir . 'users');
@@ -309,6 +343,138 @@ class MissingTableHelperTest extends TestCase
         self::assertEquals(
             ['incremental' => false],
             json_decode(file_get_contents($baseDir . 'users.manifest'), true)
+        );
+    }
+
+    public function testMissingBucketPresentIdPresentName()
+    {
+        $temp = new Temp();
+        $config = [
+            'parameters' => [
+                'api' => ['baseUrl' => 'https://dummy', 'name' => 'testName'],
+                'config' => [
+                    'id' => 'config-id',
+                    'jobs' => [
+                        [
+                            'endpoint' => 'users',
+                            'dataType' => 'users',
+                        ],
+                    ],
+                    'mappings' => [
+                        'users' => [
+                            'id' => 'id',
+                            'name' => 'name',
+                            'contacts' => [
+                                'type' => 'table',
+                                'destination' => 'user-contact',
+                                'tableMapping' => [
+                                    'email' => 'email',
+                                    'phone' => 'phone',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $temp->initRunFolder();
+
+        mkdir($temp->getTmpFolder() . '/out/');
+        $baseDir = $temp->getTmpFolder() . '/out/tables/';
+        mkdir($baseDir);
+        file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
+        $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
+        $configs = $configuration->getMultipleConfigs();
+        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
+
+        self::assertFileExists($baseDir . 'ex-api-testName-config-id.user-contact');
+        self::assertFileExists($baseDir . 'ex-api-testName-config-id.user-contact.manifest');
+        self::assertFileExists($baseDir . 'ex-api-testName-config-id.users');
+        self::assertFileExists($baseDir . 'ex-api-testName-config-id.users.manifest');
+
+        self::assertEquals(
+            '"email","phone","users_pk"',
+            trim(file_get_contents($baseDir . 'ex-api-testName-config-id.user-contact'))
+        );
+        self::assertEquals(
+            [
+                'incremental' => false,
+            ],
+            json_decode(file_get_contents($baseDir . 'ex-api-testName-config-id.user-contact.manifest'), true)
+        );
+        self::assertEquals(
+            '"id","name"',
+            trim(file_get_contents($baseDir . 'ex-api-testName-config-id.users'))
+        );
+        self::assertEquals(
+            ['incremental' => false],
+            json_decode(file_get_contents($baseDir . 'ex-api-testName-config-id.users.manifest'), true)
+        );
+    }
+
+    public function testMissingBucketPresentIdMissingName()
+    {
+        $temp = new Temp();
+        $config = [
+            'parameters' => [
+                'api' => ['baseUrl' => 'https://dummy'],
+                'config' => [
+                    'id' => 'config-id',
+                    'jobs' => [
+                        [
+                            'endpoint' => 'users',
+                            'dataType' => 'users',
+                        ],
+                    ],
+                    'mappings' => [
+                        'users' => [
+                            'id' => 'id',
+                            'name' => 'name',
+                            'contacts' => [
+                                'type' => 'table',
+                                'destination' => 'user-contact',
+                                'tableMapping' => [
+                                    'email' => 'email',
+                                    'phone' => 'phone',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $temp->initRunFolder();
+
+        mkdir($temp->getTmpFolder() . '/out/');
+        $baseDir = $temp->getTmpFolder() . '/out/tables/';
+        mkdir($baseDir);
+        file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
+        $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
+        $configs = $configuration->getMultipleConfigs();
+        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
+
+        self::assertFileExists($baseDir . 'ex-api-generic-config-id.user-contact');
+        self::assertFileExists($baseDir . 'ex-api-generic-config-id.user-contact.manifest');
+        self::assertFileExists($baseDir . 'ex-api-generic-config-id.users');
+        self::assertFileExists($baseDir . 'ex-api-generic-config-id.users.manifest');
+
+        self::assertEquals(
+            '"email","phone","users_pk"',
+            trim(file_get_contents($baseDir . 'ex-api-generic-config-id.user-contact'))
+        );
+        self::assertEquals(
+            [
+                'incremental' => false,
+            ],
+            json_decode(file_get_contents($baseDir . 'ex-api-generic-config-id.user-contact.manifest'), true)
+        );
+        self::assertEquals(
+            '"id","name"',
+            trim(file_get_contents($baseDir . 'ex-api-generic-config-id.users'))
+        );
+        self::assertEquals(
+            ['incremental' => false],
+            json_decode(file_get_contents($baseDir . 'ex-api-generic-config-id.users.manifest'), true)
         );
     }
 }
