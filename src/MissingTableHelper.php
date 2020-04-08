@@ -30,7 +30,7 @@ class MissingTableHelper
                     }
                     self::fillMissingTableMapping(
                         $destinationBase,
-                        $config->getAttribute('outputBucket'),
+                        $outputBucket,
                         $config->getAttribute('incremental'),
                         $name,
                         $mapping
@@ -59,13 +59,21 @@ class MissingTableHelper
                     $primaryKey[] = $item['mapping']['destination'];
                 }
             } elseif ($item['type'] === 'table') {
+                if (empty($item['parentKey'])) {
+                    $parentKeyParam = ['destination' => $name . '_pk'];
+                } elseif (empty($item['parentKey']['destination'])) {
+                    $parentKeyParam = $item['parentKey'];
+                    $parentKeyParam['destination'] = $name . '_pk';
+                } else {
+                    $parentKeyParam = $item['parentKey'];
+                }
                 self::fillMissingTableMapping(
                     $baseFileName,
                     $outputBucket,
                     $incremental,
                     $item['destination'],
-                    $item['tableMapping'],
-                    empty($item['parentKey']) ? ['destination' => $name . '_pk'] : $item['parentKey']
+                    $item['tableMapping'] ?? [],
+                    $parentKeyParam
                 );
             } else {
                 throw new UserException(sprintf('Invalid mapping type "%s".', $item['type']));
