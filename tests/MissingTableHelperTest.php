@@ -4,7 +4,6 @@ namespace Keboola\GenericExtractor\Tests;
 
 use Keboola\GenericExtractor\Configuration\Extractor;
 use Keboola\GenericExtractor\MissingTableHelper;
-use Keboola\Juicer\Config\Config;
 use Keboola\Temp\Temp;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
@@ -399,6 +398,7 @@ class MissingTableHelperTest extends TestCase
         self::assertEquals(
             [
                 'incremental' => false,
+                'destination' => 'in.c-ex-api-testName-config-id.user-contact',
             ],
             json_decode(file_get_contents($baseDir . 'ex-api-testName-config-id.user-contact.manifest'), true)
         );
@@ -407,7 +407,10 @@ class MissingTableHelperTest extends TestCase
             trim(file_get_contents($baseDir . 'ex-api-testName-config-id.users'))
         );
         self::assertEquals(
-            ['incremental' => false],
+            [
+                'incremental' => false,
+                'destination' => 'in.c-ex-api-testName-config-id.users',
+            ],
             json_decode(file_get_contents($baseDir . 'ex-api-testName-config-id.users.manifest'), true)
         );
     }
@@ -465,6 +468,7 @@ class MissingTableHelperTest extends TestCase
         self::assertEquals(
             [
                 'incremental' => false,
+                'destination' => 'in.c-ex-api-generic-config-id.user-contact'
             ],
             json_decode(file_get_contents($baseDir . 'ex-api-generic-config-id.user-contact.manifest'), true)
         );
@@ -473,8 +477,138 @@ class MissingTableHelperTest extends TestCase
             trim(file_get_contents($baseDir . 'ex-api-generic-config-id.users'))
         );
         self::assertEquals(
-            ['incremental' => false],
+            [
+                'incremental' => false,
+                'destination' => 'in.c-ex-api-generic-config-id.users',
+            ],
             json_decode(file_get_contents($baseDir . 'ex-api-generic-config-id.users.manifest'), true)
         );
+    }
+
+    public function testMissingParentKeyDestination()
+    {
+        $temp = new Temp();
+        $config = [
+            'parameters' => [
+                'api' => ['baseUrl' => 'https://dummy'],
+                'config' => [
+                    'jobs' => [
+                        [
+                            'endpoint' => 'users',
+                            'dataType' => 'users',
+                        ],
+                    ],
+                    'outputBucket' => 'mock-server',
+                    'mappings' => [
+                        'users' => [
+                            'name' => [
+                                'mapping' => [
+                                    'destination' => 'name',
+                                ],
+                            ],
+                            'contacts' => [
+                                'type' => 'table',
+                                'destination' => 'user-contact',
+                                'parentKey' => [
+                                    'primaryKey' => true,
+                                ],
+                                'tableMapping' => [
+                                    'email' => [
+                                        'type' => 'column',
+                                        'mapping' => [
+                                            'destination' => 'email',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $temp->initRunFolder();
+
+        mkdir($temp->getTmpFolder() . '/out/');
+        $baseDir = $temp->getTmpFolder() . '/out/tables/';
+        mkdir($baseDir);
+        file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
+        $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
+        $configs = $configuration->getMultipleConfigs();
+        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
+        self::assertFileExists($baseDir . 'mock-server.user-contact');
+        self::assertFileExists($baseDir . 'mock-server.user-contact.manifest');
+        self::assertFileExists($baseDir . 'mock-server.users');
+        self::assertFileExists($baseDir . 'mock-server.users.manifest');
+
+        self::assertEquals(
+            '"email","users_pk"',
+            trim(file_get_contents($baseDir . 'mock-server.user-contact'))
+        );
+        self::assertEquals(
+            [
+                'destination' => 'in.c-mock-server.user-contact',
+                'incremental' => false,
+                'primary_key' => ['users_pk'],
+            ],
+            json_decode(file_get_contents($baseDir . 'mock-server.user-contact.manifest'), true)
+        );
+        self::assertEquals(
+            '"name"',
+            trim(file_get_contents($baseDir . 'mock-server.users'))
+        );
+        self::assertEquals(
+            ['destination' => 'in.c-mock-server.users', 'incremental' => false],
+            json_decode(file_get_contents($baseDir . 'mock-server.users.manifest'), true)
+        );
+    }
+
+    public function testMissingParentKeyDisable()
+    {
+        $temp = new Temp();
+        $config = [
+            'parameters' => [
+                'api' => ['baseUrl' => 'https://dummy'],
+                'config' => [
+                    'jobs' => [
+                        [
+                            'endpoint' => 'users',
+                            'dataType' => 'users',
+                        ],
+                    ],
+                    'outputBucket' => 'mock-server',
+                    "mappings" => [
+                        "users" => [
+                            'name' => [
+                                'mapping' => [
+                                    'destination' => 'name',
+                                ],
+                            ],
+                            "children" => [
+                                "type" => "table",
+                                "destination" => "users",
+                                "parentKey" => [
+                                    "disable" => true,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $temp->initRunFolder();
+
+        mkdir($temp->getTmpFolder() . '/out/');
+        $baseDir = $temp->getTmpFolder() . '/out/tables/';
+        mkdir($baseDir);
+        file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
+        $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
+        $configs = $configuration->getMultipleConfigs();
+        file_put_contents($baseDir . 'mock-server.users', 'foo');
+        file_put_contents($baseDir . 'mock-server.users.manifest', 'bar');
+        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
+        self::assertFileExists($baseDir . 'mock-server.users');
+        self::assertFileExists($baseDir . 'mock-server.users.manifest');
+        self::assertEquals('foo', file_get_contents($baseDir . 'mock-server.users'));
+        self::assertEquals('bar', file_get_contents($baseDir . 'mock-server.users.manifest'));
     }
 }
