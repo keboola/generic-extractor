@@ -611,4 +611,67 @@ class MissingTableHelperTest extends TestCase
         self::assertEquals('foo', file_get_contents($baseDir . 'mock-server.users'));
         self::assertEquals('bar', file_get_contents($baseDir . 'mock-server.users.manifest'));
     }
+
+    public function testTableMapping()
+    {
+        $temp = new Temp();
+        $config = [
+            'parameters' => [
+                'api' => ['baseUrl' => 'https://dummy'],
+                'config' => [
+                    'jobs' => [
+                        [
+                            'endpoint' => 'users',
+                            'dataType' => 'users',
+                        ],
+                    ],
+                    'outputBucket' => 'mock-server',
+                    'incremental' => true,
+                    'mappings' => [
+                        'contacts' => [
+                            'type' => 'table',
+                            'destination' => 'user-contact',
+                            'tableMapping' => [
+                                'email' => [
+                                    'type' => 'column',
+                                    'mapping' => [
+                                        'destination' => 'email',
+                                    ],
+                                ],
+                                'phone' => [
+                                    'type' => 'column',
+                                    'mapping' => [
+                                        'destination' => 'phone',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $temp->initRunFolder();
+
+        mkdir($temp->getTmpFolder() . '/out/');
+        $baseDir = $temp->getTmpFolder() . '/out/tables/';
+        mkdir($baseDir);
+        file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
+        $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
+        $configs = $configuration->getMultipleConfigs();
+        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
+        self::assertFileExists($baseDir . 'mock-server.user-contact');
+        self::assertFileExists($baseDir . 'mock-server.user-contact.manifest');
+
+        self::assertEquals(
+            '"email","phone","contacts_pk"',
+            trim(file_get_contents($baseDir . 'mock-server.user-contact'))
+        );
+        self::assertEquals(
+            [
+                'destination' => 'in.c-mock-server.user-contact',
+                'incremental' => true,
+            ],
+            json_decode(file_get_contents($baseDir . 'mock-server.user-contact.manifest'), true)
+        );
+    }
 }

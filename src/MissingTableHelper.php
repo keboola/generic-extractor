@@ -22,12 +22,12 @@ class MissingTableHelper
             }
 
             if ($config->getAttribute('mappings')) {
+                if ($outputBucket) {
+                    $destinationBase = $dataDir . '/out/tables/' . $outputBucket . '.';
+                } else {
+                    $destinationBase = $dataDir . '/out/tables/';
+                }
                 foreach ($config->getAttribute('mappings') as $name => $mapping) {
-                    if ($outputBucket) {
-                        $destinationBase = $dataDir . '/out/tables/' . $outputBucket . '.';
-                    } else {
-                        $destinationBase = $dataDir . '/out/tables/';
-                    }
                     self::fillMissingTableMapping(
                         $destinationBase,
                         $outputBucket,
@@ -50,7 +50,11 @@ class MissingTableHelper
     ) {
         $columns = [];
         $primaryKey = [];
-        foreach ($mapping as $itemName => $item) {
+        if (!empty($mapping['type']) && ($mapping['type'] === 'table')) {
+            // special case of root table mapping which is one level higher than any other mapping
+            $mapping = [$mapping];
+        }
+        foreach ($mapping as $item) {
             if (!is_array($item)) {
                 $columns[] = $item;
             } elseif (empty($item['type']) || (($item['type'] === 'column') || ($item['type'] === 'user'))) {
