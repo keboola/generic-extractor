@@ -655,7 +655,6 @@ class MissingTableHelperTest extends TestCase
         mkdir($temp->getTmpFolder() . '/out/');
         $baseDir = $temp->getTmpFolder() . '/out/tables/';
         mkdir($baseDir);
-        var_export(json_encode($config));
         file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
         $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
         $configs = $configuration->getMultipleConfigs();
