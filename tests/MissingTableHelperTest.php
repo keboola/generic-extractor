@@ -24,7 +24,7 @@ class MissingTableHelperTest extends TestCase
                         ],
                     ],
                     'outputBucket' => 'mock-server',
-                    'incremental' => true,
+                    'incrementalOutput' => true,
                     'mappings' => [
                         'users' => [
                             'id' => [
@@ -144,7 +144,7 @@ class MissingTableHelperTest extends TestCase
                         ],
                     ],
                     'outputBucket' => 'mock-server',
-                    'incremental' => true,
+                    'incrementalOutput' => true,
                     'mappings' => [
                         'users' => [
                             'id' => [
@@ -195,7 +195,7 @@ class MissingTableHelperTest extends TestCase
                         ],
                     ],
                     'outputBucket' => 'mock-server',
-                    'incremental' => true,
+                    'incrementalOutput' => true,
                     'mappings' => null,
                 ],
             ],
@@ -626,7 +626,7 @@ class MissingTableHelperTest extends TestCase
                         ],
                     ],
                     'outputBucket' => 'mock-server',
-                    'incremental' => true,
+                    'incrementalOutput' => true,
                     'mappings' => [
                         'contacts' => [
                             'type' => 'table',

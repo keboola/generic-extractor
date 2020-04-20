@@ -31,7 +31,7 @@ class MissingTableHelper
                     self::fillMissingTableMapping(
                         $destinationBase,
                         $outputBucket,
-                        $config->getAttribute('incremental'),
+                        $config->getAttribute('incrementalOutput'),
                         $name,
                         $mapping
                     );
