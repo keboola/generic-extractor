@@ -612,6 +612,97 @@ class MissingTableHelperTest extends TestCase
         self::assertEquals('bar', file_get_contents($baseDir . 'mock-server.users.manifest'));
     }
 
+    public function testParentKeyDisableTableMapping()
+    {
+        $temp = new Temp();
+        $config = [
+            'parameters' => [
+                'api' => ['baseUrl' => 'https://dummy'],
+                'config' => [
+                    'jobs' => [
+                        [
+                            'endpoint' => 'users',
+                            'dataType' => 'users',
+                        ],
+                    ],
+                    'outputBucket' => 'mock-server',
+                    'incrementalOutput' => true,
+                    'mappings' => [
+                        'users' => [
+                            'id' => [
+                                'type' => 'column',
+                                'mapping' => [
+                                    'destination' => 'id',
+                                    'primaryKey' => true,
+                                ],
+                            ],
+                            'name' => [
+                                'mapping' => [
+                                    'destination' => 'name',
+                                ],
+                            ],
+                            'contacts' => [
+                                'type' => 'table',
+                                'destination' => 'user-contact',
+                                'parentKey' => [
+                                    'disable' => true,
+                                ],
+                                'tableMapping' => [
+                                    'email' => [
+                                        'type' => 'column',
+                                        'mapping' => [
+                                            'destination' => 'email',
+                                        ],
+                                    ],
+                                    'phone' => [
+                                        'type' => 'column',
+                                        'mapping' => [
+                                            'destination' => 'phone',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $temp->initRunFolder();
+
+        mkdir($temp->getTmpFolder() . '/out/');
+        $baseDir = $temp->getTmpFolder() . '/out/tables/';
+        mkdir($baseDir);
+        file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
+        $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
+        $configs = $configuration->getMultipleConfigs();
+        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
+        self::assertFileExists($baseDir . 'mock-server.user-contact');
+        self::assertFileExists($baseDir . 'mock-server.user-contact.manifest');
+        self::assertFileExists($baseDir . 'mock-server.users');
+        self::assertFileExists($baseDir . 'mock-server.users.manifest');
+
+        // no userId - parentKey is disabled
+        self::assertEquals(
+            '"email","phone"',
+            trim(file_get_contents($baseDir . 'mock-server.user-contact'))
+        );
+        self::assertEquals(
+            [
+                'destination' => 'in.c-mock-server.user-contact',
+                'incremental' => true,
+            ],
+            json_decode(file_get_contents($baseDir . 'mock-server.user-contact.manifest'), true)
+        );
+        self::assertEquals(
+            '"id","name"',
+            trim(file_get_contents($baseDir . 'mock-server.users'))
+        );
+        self::assertEquals(
+            ['destination' => 'in.c-mock-server.users', 'incremental' => true, 'primary_key' => ['id']],
+            json_decode(file_get_contents($baseDir . 'mock-server.users.manifest'), true)
+        );
+    }
+
     public function testTableMapping()
     {
         $temp = new Temp();
