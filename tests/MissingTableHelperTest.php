@@ -562,7 +562,7 @@ class MissingTableHelperTest extends TestCase
         );
     }
 
-    public function testMissingParentKeyDisable()
+    public function testParentKeyDisableTableMapping()
     {
         $temp = new Temp();
         $config = [
@@ -576,18 +576,40 @@ class MissingTableHelperTest extends TestCase
                         ],
                     ],
                     'outputBucket' => 'mock-server',
-                    "mappings" => [
-                        "users" => [
+                    'incrementalOutput' => true,
+                    'mappings' => [
+                        'users' => [
+                            'id' => [
+                                'type' => 'column',
+                                'mapping' => [
+                                    'destination' => 'id',
+                                    'primaryKey' => true,
+                                ],
+                            ],
                             'name' => [
                                 'mapping' => [
                                     'destination' => 'name',
                                 ],
                             ],
-                            "children" => [
-                                "type" => "table",
-                                "destination" => "users",
-                                "parentKey" => [
-                                    "disable" => true,
+                            'contacts' => [
+                                'type' => 'table',
+                                'destination' => 'user-contact',
+                                'parentKey' => [
+                                    'disable' => true,
+                                ],
+                                'tableMapping' => [
+                                    'email' => [
+                                        'type' => 'column',
+                                        'mapping' => [
+                                            'destination' => 'email',
+                                        ],
+                                    ],
+                                    'phone' => [
+                                        'type' => 'column',
+                                        'mapping' => [
+                                            'destination' => 'phone',
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],
@@ -603,13 +625,32 @@ class MissingTableHelperTest extends TestCase
         file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
         $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
         $configs = $configuration->getMultipleConfigs();
-        file_put_contents($baseDir . 'mock-server.users', 'foo');
-        file_put_contents($baseDir . 'mock-server.users.manifest', 'bar');
         MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
+        self::assertFileExists($baseDir . 'mock-server.user-contact');
+        self::assertFileExists($baseDir . 'mock-server.user-contact.manifest');
         self::assertFileExists($baseDir . 'mock-server.users');
         self::assertFileExists($baseDir . 'mock-server.users.manifest');
-        self::assertEquals('foo', file_get_contents($baseDir . 'mock-server.users'));
-        self::assertEquals('bar', file_get_contents($baseDir . 'mock-server.users.manifest'));
+
+        // no userId - parentKey is disabled
+        self::assertEquals(
+            '"email","phone"',
+            trim(file_get_contents($baseDir . 'mock-server.user-contact'))
+        );
+        self::assertEquals(
+            [
+                'destination' => 'in.c-mock-server.user-contact',
+                'incremental' => true,
+            ],
+            json_decode(file_get_contents($baseDir . 'mock-server.user-contact.manifest'), true)
+        );
+        self::assertEquals(
+            '"id","name"',
+            trim(file_get_contents($baseDir . 'mock-server.users'))
+        );
+        self::assertEquals(
+            ['destination' => 'in.c-mock-server.users', 'incremental' => true, 'primary_key' => ['id']],
+            json_decode(file_get_contents($baseDir . 'mock-server.users.manifest'), true)
+        );
     }
 
     public function testTableMapping()

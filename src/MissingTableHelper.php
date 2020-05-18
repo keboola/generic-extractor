@@ -85,7 +85,7 @@ class MissingTableHelper
         }
         /* this is intentionally after to produce consistent results with generic, where parent key
             is appended to the end of the table */
-        if ($parentKey) {
+        if ($parentKey && !$parentKey['disable']) {
             $columns[] = $parentKey['destination'];
             if (!empty($parentKey['primaryKey'])) {
                 $primaryKey[] = $parentKey['destination'];
