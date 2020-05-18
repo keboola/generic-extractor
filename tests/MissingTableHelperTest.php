@@ -562,56 +562,6 @@ class MissingTableHelperTest extends TestCase
         );
     }
 
-    public function testMissingParentKeyDisable()
-    {
-        $temp = new Temp();
-        $config = [
-            'parameters' => [
-                'api' => ['baseUrl' => 'https://dummy'],
-                'config' => [
-                    'jobs' => [
-                        [
-                            'endpoint' => 'users',
-                            'dataType' => 'users',
-                        ],
-                    ],
-                    'outputBucket' => 'mock-server',
-                    "mappings" => [
-                        "users" => [
-                            'name' => [
-                                'mapping' => [
-                                    'destination' => 'name',
-                                ],
-                            ],
-                            "children" => [
-                                "type" => "table",
-                                "destination" => "users",
-                                "parentKey" => [
-                                    "disable" => true,
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ];
-        $temp->initRunFolder();
-
-        mkdir($temp->getTmpFolder() . '/out/');
-        $baseDir = $temp->getTmpFolder() . '/out/tables/';
-        mkdir($baseDir);
-        file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
-        $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
-        $configs = $configuration->getMultipleConfigs();
-        file_put_contents($baseDir . 'mock-server.users', 'foo');
-        file_put_contents($baseDir . 'mock-server.users.manifest', 'bar');
-        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
-        self::assertFileExists($baseDir . 'mock-server.users');
-        self::assertFileExists($baseDir . 'mock-server.users.manifest');
-        self::assertEquals('foo', file_get_contents($baseDir . 'mock-server.users'));
-        self::assertEquals('bar', file_get_contents($baseDir . 'mock-server.users.manifest'));
-    }
-
     public function testParentKeyDisableTableMapping()
     {
         $temp = new Temp();
