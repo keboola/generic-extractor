@@ -140,12 +140,15 @@ class GenericExtractorJob
         $this->config->setParams($this->buildParams($this->config));
 
         $parentId = $this->getParentId();
-
+        $this->logger->debug(sprintf('Parent id for the job "%s"', $parentId));
         $request = $this->firstPage($this->config);
+        $countPages = 0;
         while ($request !== false) {
+            $countPages++;
             $response = $this->download($request);
 
             $responseHash = sha1(serialize($response));
+            $this->logger->debug(sprintf("Response hash '%s'", $responseHash));
             if ($responseHash == $this->lastResponseHash) {
                 $this->logger->debug(sprintf(
                     "Job '%s' finished when last response matched the previous!",
@@ -160,9 +163,9 @@ class GenericExtractorJob
 
                 $this->lastResponseHash = $responseHash;
             }
-
             $request = $this->nextPage($this->config, $response, $data);
         }
+        $this->logger->debug(sprintf('Download "%s" pages', $countPages));
     }
 
     /**
@@ -171,6 +174,7 @@ class GenericExtractorJob
      */
     private function runChildJobs(array $data)
     {
+        $this->logger->debug('Start processing child jobs');
         foreach ($this->config->getChildJobs() as $jobId => $child) {
             $filter = null;
             if (!empty($child->getConfig()['recursionFilter'])) {
@@ -196,6 +200,7 @@ class GenericExtractorJob
                 }
             }
         }
+        $this->logger->debug('Finished processing child jobs');
     }
 
     /**
