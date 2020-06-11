@@ -1,7 +1,7 @@
 {
     "id": 123,
     "name": "John Doe",
-    "userRole": "junior",
-    "userType": "administrator",
+    "userRole": "parent",
+    "userType": "admin",
     "description": "Father John"
 }
