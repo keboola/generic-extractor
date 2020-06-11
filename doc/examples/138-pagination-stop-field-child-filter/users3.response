@@ -1,0 +1,23 @@
+{
+    "items": [
+         {
+            "id": 789,
+            "name": "Martin Doe",
+            "role": "child",
+            "type": "user"
+        },
+        {
+            "id": 7899,
+            "name": "Olive Doe",
+            "role": "child",
+            "type": "user"
+        }
+    ],
+    "paginator": {
+         "totalCount": 6,
+         "page": 3,
+         "pageCount": 3,
+         "itemsOnPage": 2,
+         "itemsPerPage": 2
+     }
+}

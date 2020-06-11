@@ -1,0 +1,38 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/138-pagination-stop-field-child-filter/",
+            "pagination": {
+                "method": "pagenum",
+                "pageParam": "page",
+                "limit": 2,
+                "limitParam": "itemsPerPage",
+                "limitStop": {
+                    "field": "paginator.totalCount"
+                },
+                "firstPage": 1,
+                "firstPageParams": false
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataField": "items",
+                    "children": [
+                        {
+                            "endpoint": "user/{user-id}",
+                            "dataField": ".",
+                            "dataType": "user-detail",
+                            "placeholders": {
+                                "user-id": "id"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

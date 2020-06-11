@@ -1,0 +1,7 @@
+"id","name","role","type"
+"123","John Doe","parent","admin"
+"234","Jane Doe","junior","administrator"
+"345","Jimmy Doe","child","user"
+"456","Janet Doe","child","user"
+"789","Martin Doe","child","user"
+"7899","Olive Doe","child","user"
