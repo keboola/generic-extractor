@@ -1,0 +1,36 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/140-pagination-forcestop-child-filter/",
+            "pagination": {
+                "forceStop": {
+                    "pages": 3,
+                    "volume": 169
+                },
+                "method": "offset",
+                "firstPageParams": false,
+                "limit": "2"
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataField": "items",
+                    "children": [
+                        {
+                            "endpoint": "user/{user-id}",
+                            "dataField": ".",
+                            "dataType": "user-detail",
+                            "placeholders": {
+                                "user-id": "id"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

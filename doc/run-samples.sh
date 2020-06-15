@@ -161,6 +161,7 @@ run_example "134-user-data-in-mapping"
 run_example "135-basic-child-job-array"
 run_example "138-pagination-stop-field-child-filter"
 run_example "139-pagination-hasmore-child-filter"
+run_example "140-pagination-forcestop-child-filter"
 
 # Stop mock server
 printf "\nAll examples successfull.\n"
