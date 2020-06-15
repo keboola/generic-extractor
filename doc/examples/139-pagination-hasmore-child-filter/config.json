@@ -1,0 +1,36 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "http://mock-server:80/139-pagination-hasmore-child-filter/",
+            "pagination": {
+                "nextPageFlag": {
+                    "field": "hasMore",
+                    "stopOn": false
+                },
+                "method": "offset",
+                "firstPageParams": false,
+                "limit": "2"
+            }
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users",
+                    "dataField": "items",
+                    "children": [
+                        {
+                            "endpoint": "user/{user-id}",
+                            "dataField": ".",
+                            "dataType": "user-detail",
+                            "placeholders": {
+                                "user-id": "id"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
