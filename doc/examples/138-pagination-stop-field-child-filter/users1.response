@@ -1,0 +1,23 @@
+{
+    "items": [
+        {
+                "id": 123,
+                "name": "John Doe",
+                "role": "parent",
+                "type": "admin"
+            },
+            {
+                "id": 234,
+                "name": "Jane Doe",
+                "role": "junior",
+                "type": "administrator"
+            }
+    ],
+    "paginator": {
+         "totalCount": 6,
+         "page": 1,
+         "pageCount": 3,
+         "itemsOnPage": 2,
+         "itemsPerPage": 2
+     }
+}

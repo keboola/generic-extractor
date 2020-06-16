@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cda3423e9ce928a3d520b232a6002222",
+    "content-hash": "df20a73de06275a141dace7aa1a48044",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -288,6 +288,7 @@
                 "http",
                 "retry"
             ],
+            "abandoned": true,
             "time": "2016-04-04T06:49:59+00:00"
         },
         {
@@ -339,6 +340,7 @@
                 }
             ],
             "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
+            "abandoned": true,
             "time": "2018-07-31T13:22:33+00:00"
         },
         {
@@ -389,6 +391,7 @@
                 "Guzzle",
                 "stream"
             ],
+            "abandoned": true,
             "time": "2014-10-12T19:18:40+00:00"
         },
         {
@@ -673,16 +676,16 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "4.6.0",
+            "version": "4.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "780e7900ccd23082ed234cc2c51b279a4223e9f5"
+                "reference": "00fd262514f95be5e6512061e1158e73eb94bdc4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/780e7900ccd23082ed234cc2c51b279a4223e9f5",
-                "reference": "780e7900ccd23082ed234cc2c51b279a4223e9f5",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/00fd262514f95be5e6512061e1158e73eb94bdc4",
+                "reference": "00fd262514f95be5e6512061e1158e73eb94bdc4",
                 "shasum": ""
             },
             "require": {
@@ -725,7 +728,7 @@
                 "json",
                 "rest"
             ],
-            "time": "2019-01-16T17:12:30+00:00"
+            "time": "2020-06-12T14:25:53+00:00"
         },
         {
             "name": "keboola/php-csvtable",
@@ -3017,6 +3020,7 @@
                 "mock",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2018-08-09T05:50:03+00:00"
         },
         {
@@ -3732,5 +3736,6 @@
     "platform": {
         "php": ">=7"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }

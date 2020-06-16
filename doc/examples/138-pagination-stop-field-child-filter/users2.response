@@ -1,0 +1,23 @@
+{
+    "items": [
+         {
+            "id": 345,
+            "name": "Jimmy Doe",
+            "role": "child",
+            "type": "user"
+        },
+        {
+            "id": 456,
+            "name": "Janet Doe",
+            "role": "child",
+            "type": "user"
+        }
+    ],
+    "paginator": {
+         "totalCount": 6,
+         "page": 2,
+         "pageCount": 3,
+         "itemsOnPage": 2,
+         "itemsPerPage": 2
+     }
+}
