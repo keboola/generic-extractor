@@ -5,7 +5,7 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=7",
-        "keboola/juicer": "^4.7",
+        "keboola/juicer": "^4.8",
         "keboola/php-utils": "^2.1",
         "keboola/filter": "^1.1",
         "symfony/config": "^3.3",
