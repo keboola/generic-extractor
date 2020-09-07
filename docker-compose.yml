@@ -35,4 +35,4 @@ services:
       - -c
       - "composer install --no-interaction && /code/phpunit.sh"
     tty: true
-    stdin_open: true    
+    stdin_open: true

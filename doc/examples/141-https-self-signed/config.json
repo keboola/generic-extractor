@@ -1,0 +1,17 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "https://mock-server-https-self-signed-proxy:443/141-https-self-signed/",
+            "caCertificate": "-----BEGIN CERTIFICATE-----\nMIIDNDCCAhwCCQCSteKUCHafQTANBgkqhkiG9w0BAQsFADBcMQswCQYDVQQGEwJV\nUzEPMA0GA1UECAwGRGVuaWFsMRQwEgYDVQQHDAtTcHJpbmdmaWVsZDEQMA4GA1UE\nCgwHRGlzUm9vdDEUMBIGA1UEAwwLQ29tcGFueVJvb3QwHhcNMjAwOTA3MTMzNDAy\nWhcNMjMwNjI4MTMzNDAyWjBcMQswCQYDVQQGEwJVUzEPMA0GA1UECAwGRGVuaWFs\nMRQwEgYDVQQHDAtTcHJpbmdmaWVsZDEQMA4GA1UECgwHRGlzUm9vdDEUMBIGA1UE\nAwwLQ29tcGFueVJvb3QwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDQ\n5NSB5495dFt4X3TGrIV5iyqe//bHFOUcGM9eCL385csgskPFsX6HTHOMy4EhaNnD\nADy9xEJ9MMeeoN8y+K63LbHKvkaqH0O7AAF0WLtiBPozkta8InPa3qHyZKSHDlQT\niNKolFmWrAiGC25Wz95KNrX3XMwQKAHfclnsK0tKF4N0H4e4Eox81KNzUuNmfcJ0\n/WAF2XBldiaj8ggIJAK56pdHk3+RdV0MhLqVeCjzv216KyL/2upjAu0wbqLdfrHR\n9GjNBT/dIYGXXRZI6P4pivyTpTrovIGpO1gc0OVrfk569P5jo0ZH0M0l52m0QSXD\nvJteV6lf6OF2Dge6+ImdAgMBAAEwDQYJKoZIhvcNAQELBQADggEBAAnHmwrzodgS\n9rmjIZTuQdvKJcNGD7GZbxKtSOLwSe0G4/BDC+42TarYV6CBliOdMbLTflQmpYRJ\nfrQ94vtf4QoF0SvZnFs5EgO6152uii4W/1cgHbgX1zXOrQht9K64Nc4r7T0YEriE\n0mg14G9auB7kTrvSGRbMZ81QQ55tJCx0/7pg/9Xn+cLmjUpAnBlMgNgx/jMjYF1O\nFP01Z3rtCcO9hvVpWkp5duhmDWkS5fEoC2hklXRheH298SWPa/ld2ZT/Lyr5dhJ5\n7we+/PtzXBkwPdkrsVd4LNTVnmQTuvXIjDKxa0L4ZGHWNAI02yYwz5OfT64nsbAI\nFhUCy6kGY60=\n-----END CERTIFICATE-----\n"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users"
+                }
+            ]
+        }
+    }
+}

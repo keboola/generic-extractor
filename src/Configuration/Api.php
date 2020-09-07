@@ -4,6 +4,7 @@ namespace Keboola\GenericExtractor\Configuration;
 
 use Keboola\GenericExtractor\Authentication;
 use Keboola\GenericExtractor\Authentication\AuthInterface;
+use Keboola\GenericExtractor\Exception\ApplicationException;
 use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\Juicer\Pagination\ScrollerFactory;
 use Keboola\Juicer\Pagination\ScrollerInterface;
@@ -29,6 +30,11 @@ class Api
      * @var AuthInterface
      */
     private $auth;
+
+    /**
+     * @var string|null
+     */
+    private $caCertificate;
 
     /**
      * @var array
@@ -71,6 +77,7 @@ class Api
     {
         $this->logger = $logger;
         $this->auth = $this->createAuth($api, $configAttributes, $authorization);
+        $this->caCertificate = $api['caCertificate'] ?? null;
         $this->headers = new Headers($api, $configAttributes);
         if (!empty($api['pagination']) && is_array($api['pagination'])) {
             $this->scrollerConfig = $api['pagination'];
@@ -208,6 +215,27 @@ class Api
     public function getAuth() : AuthInterface
     {
         return $this->auth;
+    }
+
+    public function hasCaCertificate(): bool
+    {
+        return $this->caCertificate !== null;
+    }
+
+    public function getCaCertificate(): string
+    {
+        if (!$this->hasCaCertificate()) {
+            throw new ApplicationException('Key "api.caCertificate" is not configured.');
+        }
+
+        return $this->caCertificate;
+    }
+
+    public function getCaCertificateFile(): string
+    {
+        $filePath = 'generic-extractor-ca-certificate-' . uniqid(rand(), true) . '.crt';
+        file_put_contents($filePath, $this->getCaCertificate());
+        return $filePath;
     }
 
     /**

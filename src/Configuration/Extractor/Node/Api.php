@@ -8,6 +8,10 @@ class Api
 {
     public static function configureNode(ArrayNodeDefinition $node)
     {
-        // TODO
+        $node
+            ->ignoreExtraKeys() // TODO add missing sub-nodes
+            ->children()
+                ->scalarNode('caCertificate')->cannotBeEmpty()->end()
+            ->end();
     }
 }
