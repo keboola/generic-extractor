@@ -164,6 +164,7 @@ run_example "137-mapping-tables-nested-empty"
 run_example "138-pagination-stop-field-child-filter"
 run_example "139-pagination-hasmore-child-filter"
 run_example "140-pagination-forcestop-child-filter"
+run_example "141-https-self-signed"
 
 # Stop mock server
 printf "\nAll examples successfull.\n"

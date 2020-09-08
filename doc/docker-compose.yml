@@ -25,6 +25,16 @@ services:
       environment:
           - KBC_EXAMPLES_DIR=/examples/
 
+  mock-server-https-self-signed-proxy:
+    image: outrigger/https-proxy:1.0
+    volumes:
+      - ./examples/141-https-self-signed/https/ca:/etc/nginx/ca
+      - ./examples/141-https-self-signed/https/certs:/etc/nginx/certs
+    environment:
+      UPSTREAM_DOMAIN: mock-server
+      UPSTREAM_PORT: 80
+      PROXY_DOMAIN: mock-server-https-self-signed-proxy
+
   ssh-proxy:
       build:
         context: ..
@@ -48,4 +58,5 @@ services:
       - "php /code/run.php --data=/examples/$$KBC_EXAMPLE_NAME"    
     links: 
       - mock-server
+      - mock-server-https-self-signed-proxy
       - ssh-proxy

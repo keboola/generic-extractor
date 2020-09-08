@@ -11,6 +11,7 @@ use Keboola\GenericExtractor\Authentication\OAuth20;
 use Keboola\GenericExtractor\Authentication\OAuth20Login;
 use Keboola\GenericExtractor\Authentication\Query;
 use Keboola\GenericExtractor\Configuration\Api;
+use Keboola\GenericExtractor\Exception\ApplicationException;
 use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\GenericExtractor\Subscriber\AbstractSignature;
 use Keboola\Juicer\Client\RestClient;
@@ -164,6 +165,35 @@ class ApiTest extends TestCase
         self::assertInstanceOf(OAuth20Login::class, $api->getAuth());
         self::assertEquals(['foo' => 'bar', 'oauth2_access_token' => 'baz'], $request->getQuery()->toArray());
         self::assertEquals(['Host' => ['example.com']], $request->getHeaders());
+    }
+
+    public function testNoCaCertificate()
+    {
+        $apiConfig = [
+            'baseUrl' => 'http://example.com',
+        ];
+
+        $api = new Api(new NullLogger(), $apiConfig, [], []);
+        self::assertFalse($api->hasCaCertificate());
+
+        $this->expectException(ApplicationException::class);
+        $this->expectExceptionMessage('Key "api.caCertificate" is not configured.');
+        $api->getCaCertificate();
+    }
+
+
+    public function testCustomCaCertificate()
+    {
+        $crtContent = "-----BEGIN CERTIFICATE-----\nMIIFazCCA1OgAwIBAgIUGzl\n....\n-----END CERTIFICATE-----\n";
+        $apiConfig = [
+            'baseUrl' => 'http://example.com',
+            'caCertificate' => $crtContent,
+        ];
+
+        $api = new Api(new NullLogger(), $apiConfig, [], []);
+        self::assertTrue($api->hasCaCertificate());
+        self::assertSame($crtContent, $api->getCaCertificate());
+        self::assertSame($crtContent, file_get_contents($api->getCaCertificateFile()));
     }
 
     public function testInvalidFunctionBaseUrlThrowsUserException()
