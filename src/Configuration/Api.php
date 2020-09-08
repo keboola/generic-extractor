@@ -233,7 +233,7 @@ class Api
 
     public function getCaCertificateFile(): string
     {
-        $filePath = 'generic-extractor-ca-certificate-' . uniqid(rand(), true) . '.crt';
+        $filePath = '/tmp/generic-extractor-ca-certificate-' . uniqid((string) rand(), true) . '.crt';
         file_put_contents($filePath, $this->getCaCertificate());
         return $filePath;
     }
