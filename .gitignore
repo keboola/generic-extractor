@@ -2,6 +2,7 @@ vendor/
 /data/
 .idea/
 .tmp
+.phpunit.result.cache
 /cc-test-reporter
 /doc/examples/*/out/state.json
 /doc/examples/*/out/tables/*
