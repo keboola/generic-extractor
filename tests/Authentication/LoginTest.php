@@ -7,6 +7,7 @@ use GuzzleHttp\Message\Response;
 use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Subscriber\Mock;
 use GuzzleHttp\Subscriber\History;
+use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\GenericExtractor\Tests\ExtractorTestCase;
 use Keboola\Juicer\Client\RestClient;
 use Psr\Log\NullLogger;
@@ -256,34 +257,26 @@ class LoginTest extends ExtractorTestCase
         );
     }
 
-    /**
-     * @expectedException \Keboola\GenericExtractor\Exception\UserException
-     * @expectedExceptionMessage 'format' must be either 'json' or 'text'.
-     */
     public function testInvalid1()
     {
         $api = [
             'format' => 'js',
         ];
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage("'format' must be either 'json' or 'text'");
         new Login([], $api);
     }
 
-    /**
-     * @expectedException \Keboola\GenericExtractor\Exception\UserException
-     * @expectedExceptionMessage 'loginRequest' is not configured for Login authentication
-     */
     public function testInvalid2()
     {
         $api = [
             'format' => 'json',
         ];
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage("loginRequest' is not configured for Login authentication");
         new Login([], $api);
     }
 
-    /**
-     * @expectedException \Keboola\GenericExtractor\Exception\UserException
-     * @expectedExceptionMessage Request endpoint must be set for the Login authentication method.
-     */
     public function testInvalid3()
     {
         $api = [
@@ -291,13 +284,11 @@ class LoginTest extends ExtractorTestCase
                 'method' => 'POST'
             ],
         ];
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage("Request endpoint must be set for the Login authentication method.");
         new Login([], $api);
     }
 
-    /**
-     * @expectedException \Keboola\GenericExtractor\Exception\UserException
-     * @expectedExceptionMessage The 'expires' attribute must be either an integer or an array with 'response' key containing a path in the response
-     */
     public function testInvalid4()
     {
         $api = [
@@ -307,6 +298,8 @@ class LoginTest extends ExtractorTestCase
             ],
             'expires' => 'never'
         ];
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage("The 'expires' attribute must be either an integer or an array with 'response' key containing a path in the response");
         new Login([], $api);
     }
 }

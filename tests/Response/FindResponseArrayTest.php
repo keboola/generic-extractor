@@ -2,6 +2,7 @@
 
 namespace Keboola\GenericExtractor\Tests\Response;
 
+use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\GenericExtractor\Response\FindResponseArray;
 use Keboola\Juicer\Config\JobConfig;
 use PHPUnit\Framework\TestCase;
@@ -53,10 +54,6 @@ class FindResponseArrayTest extends TestCase
         $this->assertEquals($response->data->results, $data);
     }
 
-    /**
-     * @expectedException \Keboola\GenericExtractor\Exception\UserException
-     * @expectedExceptionMessage More than one array found in response! Use 'dataField' parameter to specify a key to the data array. (endpoint: a, arrays in response root: results, otherArray)
-     */
     public function testMultipleArraysException()
     {
         $cfg = new JobConfig([
@@ -73,6 +70,11 @@ class FindResponseArrayTest extends TestCase
             'otherArray' => ['a','b']
         ];
 
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage(
+            "More than one array found in response! Use 'dataField' parameter to specify a key to the data array. " .
+            "(endpoint: a, arrays in response root: results, otherArray)"
+        );
         $module->process($response, $cfg);
     }
 }

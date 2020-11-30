@@ -17,7 +17,7 @@ class CacheTest extends TestCase
         // first execution
         exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/requestCacheTTL/', $output);
 
-        self::assertContains('Extractor finished successfully.', implode("\n", $output));
+        self::assertStringContainsString('Extractor finished successfully.', implode("\n", $output));
         self::assertFileExists($filePath);
         $csv = new CsvFile($filePath);
         self::assertEquals(3, $csv->getColumnsCount());
@@ -34,7 +34,7 @@ class CacheTest extends TestCase
         // second execution
         exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/requestCacheTTL', $output);
 
-        self::assertContains('Extractor finished successfully', implode("\n", $output));
+        self::assertStringContainsString('Extractor finished successfully', implode("\n", $output));
         self::assertFileExists($filePath);
         $csv = new CsvFile($filePath);
         self::assertEquals(3, $csv->getColumnsCount());
@@ -53,7 +53,7 @@ class CacheTest extends TestCase
         // third execution
         exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/requestCacheTTL', $output);
 
-        self::assertContains('Extractor finished successfully.', implode("\n", $output));
+        self::assertStringContainsString('Extractor finished successfully.', implode("\n", $output));
         self::assertFileExists($filePath);
         $csv = new CsvFile($filePath);
         self::assertEquals(3, $csv->getColumnsCount());
@@ -95,7 +95,7 @@ class CacheTest extends TestCase
         // first execution
         exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/requestCache', $output);
 
-        self::assertContains('Extractor finished successfully', implode("\n", $output));
+        self::assertStringContainsString('Extractor finished successfully', implode("\n", $output));
         self::assertFileExists($filePath);
         $csv = new CsvFile($filePath);
         self::assertEquals(3, $csv->getColumnsCount());
@@ -112,7 +112,7 @@ class CacheTest extends TestCase
         // second execution
         exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/requestCache', $output);
 
-        self::assertContains('Extractor finished successfully', implode("\n", $output));
+        self::assertStringContainsString('Extractor finished successfully', implode("\n", $output));
         self::assertFileExists($filePath);
         $csv = new CsvFile($filePath);
         self::assertEquals(3, $csv->getColumnsCount());
@@ -138,7 +138,7 @@ class CacheTest extends TestCase
         // first execution
         exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/noCache', $output);
 
-        self::assertContains('Extractor finished successfully', implode("\n", $output));
+        self::assertStringContainsString('Extractor finished successfully', implode("\n", $output));
         self::assertFileExists($filePath);
         $csv = new CsvFile($filePath);
         self::assertEquals(3, $csv->getColumnsCount());
@@ -154,7 +154,7 @@ class CacheTest extends TestCase
 
         // second execution
         exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/noCache', $output);
-        self::assertContains('Extractor finished successfully', implode("\n", $output));
+        self::assertStringContainsString('Extractor finished successfully', implode("\n", $output));
         self::assertFileExists($filePath);
 
         $csv = new CsvFile($filePath);

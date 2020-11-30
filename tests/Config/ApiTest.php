@@ -64,7 +64,7 @@ class ApiTest extends TestCase
             new Api(new NullLogger(), ['baseUrl' => 'htt//this is not valid'], [], []);
             self::fail("Invalid URL must fail");
         } catch (UserException $e) {
-            self::assertContains('is not a valid URL', $e->getMessage());
+            self::assertStringContainsString('is not a valid URL', $e->getMessage());
         }
     }
 
@@ -82,9 +82,6 @@ class ApiTest extends TestCase
         self::assertEquals('https://keboola.example.com/', $api->getBaseUrl());
     }
 
-    /**
-     * @expectedException \Keboola\GenericExtractor\Exception\UserException
-     */
     public function testCreateBaseUrlFunctionError()
     {
         $fn = [
@@ -94,6 +91,7 @@ class ApiTest extends TestCase
                 (object) ['attr' => 'path']
             ]
         ];
+        $this->expectException(UserException::class);
         new Api(new NullLogger(), ['baseUrl' => $fn], [], []);
     }
 
