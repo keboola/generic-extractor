@@ -10,6 +10,8 @@ use Keboola\Juicer\Pagination\ScrollerFactory;
 use Keboola\Juicer\Pagination\ScrollerInterface;
 use Keboola\Utils\Exception\JsonDecodeException;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Validator\Constraints\Url;
+use Symfony\Component\Validator\Validation;
 
 /**
  * API Description
@@ -158,7 +160,7 @@ class Api
             throw new UserException("The 'baseUrl' attribute must be set in API configuration");
         }
 
-        if (filter_var($api['baseUrl'], FILTER_VALIDATE_URL)) {
+        if (self::isValidUrl($api['baseUrl'])) {
             return $api['baseUrl'];
         }
 
@@ -175,7 +177,7 @@ class Api
             $baseUrl = UserFunction::build([$api['baseUrl']], ['attr' => $configAttributes])[0];
         }
 
-        if (!filter_var($baseUrl, FILTER_VALIDATE_URL)) {
+        if (!self::isValidUrl($baseUrl)) {
             throw new UserException(sprintf(
                 'The "baseUrl" attribute in API configuration resulted in an invalid URL (%s)',
                 $baseUrl
@@ -265,5 +267,20 @@ class Api
     public function getIgnoreErrors()
     {
         return $this->ignoreErrors;
+    }
+
+    /**
+     * @param mixed $url
+     */
+    public static function isValidUrl($url): bool
+    {
+        if (!is_string($url)) {
+            return false;
+        }
+
+        $constraint = new Url();
+        $validator = Validation::createValidator();
+        $errors = $validator->validate($url, $constraint);
+        return $errors->count() === 0;
     }
 }

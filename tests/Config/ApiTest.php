@@ -51,6 +51,13 @@ class ApiTest extends TestCase
         self::assertEquals($string, $api->getBaseUrl());
     }
 
+    public function testCreateBaseUrlStringWithUnderscore()
+    {
+        $string = 'https://foo_export.test.example.com';
+        $api = new Api(new NullLogger(), ['baseUrl' => $string], [], []);
+        self::assertEquals($string, $api->getBaseUrl());
+    }
+
     public function testCreateInvalidUrlString()
     {
         try {
