@@ -217,10 +217,6 @@ class GenericExtractorJobTest extends ExtractorTestCase
         ], $params);
     }
 
-    /**
-     * @expectedException \Keboola\GenericExtractor\Exception\UserException
-     * @expectedExceptionMessage User script error: date() expects at least 1 parameter, 0 given
-     */
     public function testBuildParamsException()
     {
         $cfg = new JobConfig([
@@ -241,6 +237,8 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 ]
             ]
         );
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage('User script error: date() expects at least 1 parameter, 0 given');
         self::callMethod($job, 'buildParams', [$cfg]);
     }
 

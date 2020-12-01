@@ -162,7 +162,7 @@ class ConfigurationTest extends ExtractorTestCase
             new Extractor($temp->getTmpFolder(), new NullLogger());
             self::fail("Invalid JSON must cause exception");
         } catch (ApplicationException $e) {
-            self::assertContains('Configuration file is not a valid JSON: Syntax error', $e->getMessage());
+            self::assertStringContainsString('Configuration file is not a valid JSON: Syntax error', $e->getMessage());
         }
     }
 
