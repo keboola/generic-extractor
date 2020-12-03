@@ -85,20 +85,25 @@ class GenericExtractor
 
     public function run(Config $config)
     {
+        $defaults = [
+            'headers' => UserFunction::build(
+                $this->api->getHeaders()->getHeaders(),
+                ['attr' => $config->getAttributes()]
+            ),
+            'proxy' => $this->proxy,
+            // http://docs.guzzlephp.org/en/stable/request-options.html#verify-option
+            'verify' => $this->api->hasCaCertificate() ? $this->api->getCaCertificateFile() : true,
+        ];
+
+        if ($this->api->hasPemCertificate()) {
+            $defaults['cert'] = $this->api->getPemCertificateFile();
+        }
+
         $client = new RestClient(
             $this->logger,
             [
                 'base_url' => $this->api->getBaseUrl(),
-                'defaults' => [
-                    'headers' => UserFunction::build(
-                        $this->api->getHeaders()->getHeaders(),
-                        ['attr' => $config->getAttributes()]
-                    ),
-                    'proxy' => $this->proxy,
-                    // http://docs.guzzlephp.org/en/stable/request-options.html#verify-option
-                    'verify' => $this->api->hasCaCertificate() ? $this->api->getCaCertificateFile() : true,
-                    'cert' => $this->api->hasPemCertificate() ? $this->api->getPemCertificateFile() : true
-                ]
+                'defaults' => $defaults
             ],
             JuicerRest::convertRetry($this->api->getRetryConfig()),
             $this->api->getDefaultRequestOptions(),
