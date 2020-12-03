@@ -96,7 +96,8 @@ class GenericExtractor
                     ),
                     'proxy' => $this->proxy,
                     // http://docs.guzzlephp.org/en/stable/request-options.html#verify-option
-                    'verify' => $this->api->hasCaCertificate() ? $this->api->getCaCertificateFile() : true
+                    'verify' => $this->api->hasCaCertificate() ? $this->api->getCaCertificateFile() : true,
+                    'cert' => $this->api->hasPemCertificate() ? $this->api->getPemCertificateFile() : true
                 ]
             ],
             JuicerRest::convertRetry($this->api->getRetryConfig()),
