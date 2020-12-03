@@ -206,7 +206,7 @@ class ApiTest extends TestCase
         $crtContent = "-----BEGIN CERTIFICATE-----\nMIIFazCCA1OgAwIBAgIUGzl\n....\n-----END CERTIFICATE-----\n-----BEGIN RSA PRIVATE KEY-----\nMIIFazCCA1OgAwIBAgIUGzl\n-----END RSA PRIVATE KEY-----";
         $apiConfig = [
             'baseUrl' => 'http://example.com',
-            'cert' => $crtContent,
+            'clientCertificate' => $crtContent,
         ];
 
         $api = new Api(new NullLogger(), $apiConfig, [], []);
