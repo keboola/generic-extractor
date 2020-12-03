@@ -95,8 +95,8 @@ class GenericExtractor
             'verify' => $this->api->hasCaCertificate() ? $this->api->getCaCertificateFile() : true,
         ];
 
-        if ($this->api->hasPemCertificate()) {
-            $defaults['cert'] = $this->api->getPemCertificateFile();
+        if ($this->api->hasClientCertificate()) {
+            $defaults['cert'] = $this->api->getClientCertificateFile();
         }
 
         $client = new RestClient(

@@ -201,7 +201,7 @@ class ApiTest extends TestCase
         self::assertSame($crtContent, file_get_contents($api->getCaCertificateFile()));
     }
 
-    public function testCustomPemCertificate()
+    public function testCustomClientCertificate()
     {
         $crtContent = "-----BEGIN CERTIFICATE-----\nMIIFazCCA1OgAwIBAgIUGzl\n....\n-----END CERTIFICATE-----\n-----BEGIN RSA PRIVATE KEY-----\nMIIFazCCA1OgAwIBAgIUGzl\n-----END RSA PRIVATE KEY-----";
         $apiConfig = [
@@ -210,9 +210,9 @@ class ApiTest extends TestCase
         ];
 
         $api = new Api(new NullLogger(), $apiConfig, [], []);
-        self::assertTrue($api->hasPemCertificate());
-        self::assertSame($crtContent, $api->getPemCertificate());
-        self::assertSame($crtContent, file_get_contents($api->getPemCertificateFile()));
+        self::assertTrue($api->hasClientCertificate());
+        self::assertSame($crtContent, $api->getClientCertificate());
+        self::assertSame($crtContent, file_get_contents($api->getClientCertificateFile()));
     }
 
     public function testInvalidFunctionBaseUrlThrowsUserException()

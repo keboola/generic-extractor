@@ -69,7 +69,7 @@ class Api
     private $ignoreErrors = [];
 
     /** @var string|null */
-    private $pemCertificate;
+    private $clientCertificate;
 
     /**
      * Api constructor.
@@ -83,7 +83,7 @@ class Api
         $this->logger = $logger;
         $this->auth = $this->createAuth($api, $configAttributes, $authorization);
         $this->caCertificate = $api['caCertificate'] ?? null;
-        $this->pemCertificate = $api['cert'] ?? null;
+        $this->clientCertificate = $api['clientCertificate'] ?? null;
         $this->headers = new Headers($api, $configAttributes);
         if (!empty($api['pagination']) && is_array($api['pagination'])) {
             $this->scrollerConfig = $api['pagination'];
@@ -245,24 +245,24 @@ class Api
     }
 
 
-    public function hasPemCertificate(): bool
+    public function hasClientCertificate(): bool
     {
-        return $this->pemCertificate !== null;
+        return $this->clientCertificate !== null;
     }
 
-    public function getPemCertificate(): string
+    public function getClientCertificate(): string
     {
-        if (!$this->hasPemCertificate()) {
-            throw new ApplicationException('Key "api.cert" is not configured.');
+        if (!$this->hasClientCertificate()) {
+            throw new ApplicationException('Key "api.clientCertificate" is not configured.');
         }
 
-        return $this->pemCertificate;
+        return $this->clientCertificate;
     }
 
-    public function getPemCertificateFile(): string
+    public function getClientCertificateFile(): string
     {
-        $filePath = '/tmp/generic-extractor-pem-certificate-' . uniqid((string) rand(), true) . '.pem';
-        file_put_contents($filePath, $this->getPemCertificate());
+        $filePath = '/tmp/generic-extractor-client-certificate-' . uniqid((string) rand(), true) . '.pem';
+        file_put_contents($filePath, $this->getClientCertificate());
         return $filePath;
     }
 
