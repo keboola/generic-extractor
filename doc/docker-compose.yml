@@ -3,7 +3,7 @@ version: '2'
 services:
   mock-server:
     container_name: mock-server
-    image: quay.io/keboola/ex-generic-mock-server 
+    image: quay.io/keboola/ex-generic-mock-server
     tty: true
     stdin_open: true
     ports:
@@ -35,6 +35,18 @@ services:
       UPSTREAM_PORT: 80
       PROXY_DOMAIN: mock-server-https-self-signed-proxy
 
+  mock-server-https-client-cert-proxy:
+    image: outrigger/https-proxy:1.0
+    volumes:
+      - ./examples/142-https-client-cert/https/ca:/etc/nginx/ca
+      - ./examples/142-https-client-cert/https/certs:/etc/nginx/certs
+      - ./examples/142-https-client-cert/https/client_ca:/etc/nginx/client_ca
+      - ./examples/142-https-client-cert/https/nginx.conf.tmpl:/etc/confd/templates/nginx.conf.tmpl
+    environment:
+      UPSTREAM_DOMAIN: mock-server
+      UPSTREAM_PORT: 80
+      PROXY_DOMAIN: mock-server-https-client-cert-proxy
+
   ssh-proxy:
       build:
         context: ..
@@ -49,14 +61,15 @@ services:
     image: keboola/generic-extractor
     volumes:
       - .tmp:/tmp
-      - ./examples/:/examples/      
+      - ./examples/:/examples/
     tty: true
     stdin_open: true
     command:
-      - /bin/sh 
+      - /bin/sh
       - -c
-      - "php /code/run.php --data=/examples/$$KBC_EXAMPLE_NAME"    
-    links: 
+      - "php /code/run.php --data=/examples/$$KBC_EXAMPLE_NAME"
+    links:
       - mock-server
       - mock-server-https-self-signed-proxy
+      - mock-server-https-client-cert-proxy
       - ssh-proxy
