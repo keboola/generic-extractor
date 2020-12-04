@@ -68,6 +68,9 @@ class Api
      */
     private $ignoreErrors = [];
 
+    /** @var string|null */
+    private $clientCertificate;
+
     /**
      * Api constructor.
      * @param LoggerInterface $logger
@@ -80,6 +83,7 @@ class Api
         $this->logger = $logger;
         $this->auth = $this->createAuth($api, $configAttributes, $authorization);
         $this->caCertificate = $api['caCertificate'] ?? null;
+        $this->clientCertificate = $api['clientCertificate'] ?? null;
         $this->headers = new Headers($api, $configAttributes);
         if (!empty($api['pagination']) && is_array($api['pagination'])) {
             $this->scrollerConfig = $api['pagination'];
@@ -237,6 +241,28 @@ class Api
     {
         $filePath = '/tmp/generic-extractor-ca-certificate-' . uniqid((string) rand(), true) . '.crt';
         file_put_contents($filePath, $this->getCaCertificate());
+        return $filePath;
+    }
+
+
+    public function hasClientCertificate(): bool
+    {
+        return $this->clientCertificate !== null;
+    }
+
+    public function getClientCertificate(): string
+    {
+        if (!$this->hasClientCertificate()) {
+            throw new ApplicationException('Key "api.clientCertificate" is not configured.');
+        }
+
+        return $this->clientCertificate;
+    }
+
+    public function getClientCertificateFile(): string
+    {
+        $filePath = '/tmp/generic-extractor-client-certificate-' . uniqid((string) rand(), true) . '.pem';
+        file_put_contents($filePath, $this->getClientCertificate());
         return $filePath;
     }
 

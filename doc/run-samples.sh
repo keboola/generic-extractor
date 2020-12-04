@@ -165,6 +165,7 @@ run_example "138-pagination-stop-field-child-filter"
 run_example "139-pagination-hasmore-child-filter"
 run_example "140-pagination-forcestop-child-filter"
 run_example "141-https-self-signed"
+run_example "142-https-client-cert"
 
 # Stop mock server
 printf "\nAll examples successfull.\n"

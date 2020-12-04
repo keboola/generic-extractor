@@ -12,6 +12,7 @@ class Api
             ->ignoreExtraKeys() // TODO add missing sub-nodes
             ->children()
                 ->scalarNode('caCertificate')->cannotBeEmpty()->end()
+                ->scalarNode('clientCertificate')->cannotBeEmpty()->end()
             ->end();
     }
 }

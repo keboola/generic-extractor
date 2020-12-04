@@ -201,6 +201,20 @@ class ApiTest extends TestCase
         self::assertSame($crtContent, file_get_contents($api->getCaCertificateFile()));
     }
 
+    public function testCustomClientCertificate()
+    {
+        $crtContent = "-----BEGIN CERTIFICATE-----\nMIIFazCCA1OgAwIBAgIUGzl\n....\n-----END CERTIFICATE-----\n-----BEGIN RSA PRIVATE KEY-----\nMIIFazCCA1OgAwIBAgIUGzl\n-----END RSA PRIVATE KEY-----";
+        $apiConfig = [
+            'baseUrl' => 'http://example.com',
+            'clientCertificate' => $crtContent,
+        ];
+
+        $api = new Api(new NullLogger(), $apiConfig, [], []);
+        self::assertTrue($api->hasClientCertificate());
+        self::assertSame($crtContent, $api->getClientCertificate());
+        self::assertSame($crtContent, file_get_contents($api->getClientCertificateFile()));
+    }
+
     public function testInvalidFunctionBaseUrlThrowsUserException()
     {
         $apiConfig = [
