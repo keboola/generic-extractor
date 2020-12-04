@@ -83,7 +83,7 @@ class Api
         $this->logger = $logger;
         $this->auth = $this->createAuth($api, $configAttributes, $authorization);
         $this->caCertificate = $api['caCertificate'] ?? null;
-        $this->clientCertificate = $api['clientCertificate'] ?? null;
+        $this->clientCertificate = $api['#clientCertificate'] ?? null;
         $this->headers = new Headers($api, $configAttributes);
         if (!empty($api['pagination']) && is_array($api['pagination'])) {
             $this->scrollerConfig = $api['pagination'];
