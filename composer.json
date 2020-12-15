@@ -5,6 +5,7 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=7",
+        "ext-json": "*",
         "keboola/juicer": "^4.9",
         "keboola/php-utils": "^2.1",
         "keboola/filter": "^1.1",
