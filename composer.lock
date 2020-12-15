@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f7852297efcf59846642af484ea9a859",
+    "content-hash": "e32d865d6cb05c31a279be6239cbe48a",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -676,16 +676,16 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "4.8.0",
+            "version": "4.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "7fa55e9f190738e69379338ca94171855ee18157"
+                "reference": "6b1e1bf24fbede2a667ccfe5fd66b110f1649674"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/7fa55e9f190738e69379338ca94171855ee18157",
-                "reference": "7fa55e9f190738e69379338ca94171855ee18157",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/6b1e1bf24fbede2a667ccfe5fd66b110f1649674",
+                "reference": "6b1e1bf24fbede2a667ccfe5fd66b110f1649674",
                 "shasum": ""
             },
             "require": {
@@ -702,7 +702,7 @@
             },
             "require-dev": {
                 "monolog/monolog": "^1.22",
-                "phpstan/phpstan": "^0.9",
+                "phpstan/phpstan": "^0.12",
                 "phpunit/phpunit": "^7.0",
                 "squizlabs/php_codesniffer": "^3.0"
             },
@@ -728,7 +728,11 @@
                 "json",
                 "rest"
             ],
-            "time": "2020-08-05T09:33:48+00:00"
+            "support": {
+                "issues": "https://github.com/keboola/juicer/issues",
+                "source": "https://github.com/keboola/juicer/tree/4.9.0"
+            },
+            "time": "2020-12-15T09:58:02+00:00"
         },
         {
             "name": "keboola/php-csvtable",
