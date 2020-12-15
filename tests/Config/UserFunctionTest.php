@@ -3,6 +3,7 @@
 namespace Keboola\GenericExtractor\Tests\Config;
 
 use Keboola\GenericExtractor\Configuration\UserFunction;
+use Keboola\GenericExtractor\Exception\UserException;
 use PHPUnit\Framework\TestCase;
 
 class UserFunctionTest extends TestCase
@@ -30,5 +31,14 @@ class UserFunctionTest extends TestCase
             ],
             UserFunction::build($functions, $data)
         );
+    }
+
+    public function testInvalidType()
+    {
+        $functions = 'not array';
+
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage("Expected 'object' type, given 'string' type, value '\"not array\"'.");
+        UserFunction::build($functions, []);
     }
 }
