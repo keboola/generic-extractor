@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7dfca933b6a96f48e4016c65877e79f3",
+    "content-hash": "9291bf0f56cd4321750337f4232a0718",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -676,16 +676,16 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "4.9.0",
+            "version": "4.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "6b1e1bf24fbede2a667ccfe5fd66b110f1649674"
+                "reference": "403a91e725f98275bcea825cd74e0d268fd1136f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/6b1e1bf24fbede2a667ccfe5fd66b110f1649674",
-                "reference": "6b1e1bf24fbede2a667ccfe5fd66b110f1649674",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/403a91e725f98275bcea825cd74e0d268fd1136f",
+                "reference": "403a91e725f98275bcea825cd74e0d268fd1136f",
                 "shasum": ""
             },
             "require": {
@@ -730,9 +730,9 @@
             ],
             "support": {
                 "issues": "https://github.com/keboola/juicer/issues",
-                "source": "https://github.com/keboola/juicer/tree/4.9.0"
+                "source": "https://github.com/keboola/juicer/tree/4.9.1"
             },
-            "time": "2020-12-15T09:58:02+00:00"
+            "time": "2020-12-15T18:35:44+00:00"
         },
         {
             "name": "keboola/php-csvtable",
