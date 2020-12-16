@@ -4,7 +4,7 @@
     "type": "project",
     "minimum-stability": "stable",
     "require": {
-        "php": ">=7",
+        "php": ">=7.4",
         "ext-json": "*",
         "keboola/juicer": "^4.9.1",
         "keboola/php-utils": "^2.1",
