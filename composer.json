@@ -6,13 +6,13 @@
     "require": {
         "php": ">=7.4",
         "ext-json": "*",
-        "keboola/juicer": "^4.9.1",
-        "keboola/php-utils": "^2.1",
+        "keboola/juicer": "^4.10",
+        "keboola/php-utils": "^2.2",
         "keboola/filter": "^1.1",
-        "symfony/config": "^3.3",
-        "symfony/console": "^2.8",
-        "symfony/finder": "^3.4",
-        "symfony/process": "^3.3",
+        "symfony/config": "^5.2",
+        "symfony/console": "^5.2",
+        "symfony/finder": "^5.2",
+        "symfony/process": "^5.2",
         "keboola/php-temp": "^1.0",
         "guzzlehttp/oauth-subscriber": "^0.2",
         "guzzlehttp/cache-subscriber": "dev-master#aaab195",
@@ -20,9 +20,9 @@
         "symfony/validator": "^5.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.5",
-        "squizlabs/php_codesniffer": "^3.0",
-        "phpstan/phpstan": "^0.8"
+        "phpunit/phpunit": "^9.5",
+        "keboola/coding-standard": ">=9.0",
+        "phpstan/phpstan": "^0.12"
     },
     "autoload": {
         "psr-4": {
