@@ -10,10 +10,7 @@ class SSH
 {
     const SSH_SERVER_ALIVE_INTERVAL = 15;
 
-    /**
-     * @var Temp
-     */
-    private $temp;
+    private Temp $temp;
 
     public function __construct()
     {
@@ -56,7 +53,7 @@ class SSH
             self::SSH_SERVER_ALIVE_INTERVAL
         );
 
-        $process = new Process($cmd);
+        $process = Process::fromShellCommandline($cmd);
         $process->setTimeout(60);
         $process->start();
 
@@ -74,11 +71,9 @@ class SSH
     }
 
     /**
-     * @param string $key
-     * @return string
      * @throws UserException
      */
-    private function writeKeyToFile($key)
+    private function writeKeyToFile(string $key): string
     {
         if (empty($key)) {
             throw new UserException("Key must not be empty");

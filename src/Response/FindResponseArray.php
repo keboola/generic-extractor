@@ -8,15 +8,8 @@ use Psr\Log\LoggerInterface;
 
 class FindResponseArray
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private LoggerInterface $logger;
 
-    /**
-     * FindResponseArray constructor.
-     * @param LoggerInterface $logger
-     */
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
@@ -26,11 +19,9 @@ class FindResponseArray
      * Try to find the data array within $response.
      *
      * @param array|object $response
-     * @param JobConfig $jobConfig
-     * @return array
      * @throws UserException
      */
-    public function process($response, JobConfig $jobConfig)
+    public function process($response, JobConfig $jobConfig): array
     {
         $config = $jobConfig->getConfig();
         $separator = ".";

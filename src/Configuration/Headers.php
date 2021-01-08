@@ -9,26 +9,12 @@ use Keboola\GenericExtractor\Exception\UserException;
  */
 class Headers
 {
-    /**
-     * @var array
-     */
-    private $apiHeaders = [];
+    private array $apiHeaders = [];
 
-    /**
-     * @var array
-     */
-    private $configHeaders = [];
+    private array $configHeaders = [];
 
-    /**
-     * @var array
-     */
-    private $requiredHeaders = [];
+    private array $requiredHeaders = [];
 
-    /**
-     * Headers constructor.
-     * @param array $api
-     * @param array $configAttributes
-     */
     public function __construct(array $api, array $configAttributes)
     {
         if (!empty($api['http']['headers']) && is_array($api['http']['headers'])) {
@@ -42,7 +28,6 @@ class Headers
     }
 
     /**
-     * @param array $configAttributes
      * @throws UserException
      */
     private function loadConfig(array $configAttributes)
@@ -64,10 +49,7 @@ class Headers
         $this->configHeaders = $configHeaders;
     }
 
-    /**
-     * @return array
-     */
-    public function getHeaders()
+    public function getHeaders(): array
     {
         return array_replace($this->apiHeaders, $this->configHeaders);
     }

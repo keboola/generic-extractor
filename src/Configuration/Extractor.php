@@ -22,31 +22,14 @@ class Extractor
 {
     const CACHE_TTL = 604800;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private LoggerInterface $logger;
 
-    /**
-     * @var array
-     */
-    private $config;
+    private array $config;
 
-    /**
-     * @var array
-     */
-    private $state;
+    private array $state;
 
-    /**
-     * @var string
-     */
-    private $dataDir;
+    private string $dataDir;
 
-    /**
-     * Extractor constructor.
-     * @param $dataDir
-     * @param LoggerInterface $logger
-     */
     public function __construct(string $dataDir, LoggerInterface $logger)
     {
         $this->logger = $logger;
@@ -55,11 +38,6 @@ class Extractor
         $this->dataDir = $dataDir;
     }
 
-    /**
-     * @param string $dataDir
-     * @param string $name
-     * @return array
-     */
     private function loadJSONFile(string $dataDir, string $name) : array
     {
         $fileName = $dataDir . DIRECTORY_SEPARATOR . $name;
@@ -73,10 +51,6 @@ class Extractor
         return $data;
     }
 
-    /**
-     * @param string $dataDir
-     * @return array
-     */
     private function loadConfigFile(string $dataDir) : array
     {
         $data = $this->loadJSONFile($dataDir, 'config.json');
@@ -90,10 +64,6 @@ class Extractor
         return $data;
     }
 
-    /**
-     * @param string $dataDir
-     * @return array
-     */
     private function loadStateFile(string $dataDir) : array
     {
         try {
@@ -130,8 +100,6 @@ class Extractor
     }
 
     /**
-     * @param array $params Values to override those in the config
-     * @return Config
      * @throws UserException
      */
     private function getConfig(array $params) : Config
@@ -151,17 +119,11 @@ class Extractor
         return null;
     }
 
-    /**
-     * @return array
-     */
     public function getMetadata() : array
     {
         return $this->state;
     }
 
-    /**
-     * @return CacheStorage|null
-     */
     public function getCache() : ?CacheStorage
     {
         if (empty($this->config['parameters']['cache'])) {
@@ -173,10 +135,6 @@ class Extractor
         return new CacheStorage(new FilesystemCache($this->dataDir . DIRECTORY_SEPARATOR . 'cache'), null, $ttl);
     }
 
-    /**
-     * @param array $configAttributes
-     * @return Api
-     */
     public function getApi(array $configAttributes) : Api
     {
         if (!empty($this->config['authorization'])) {
@@ -190,9 +148,6 @@ class Extractor
         return new Api($this->logger, $this->config['parameters']['api'], $configAttributes, $authorization);
     }
 
-    /**
-     * @param array $data
-     */
     public function saveConfigMetadata(array $data)
     {
         $dirPath = $this->dataDir . DIRECTORY_SEPARATOR . 'out';
@@ -204,12 +159,11 @@ class Extractor
 
     /**
      * @param Table[] $csvFiles
-     * @param string $bucketName
      * @param bool $sapiPrefix whether to prefix the output bucket with "in.c-"
      * @param bool $incremental Set the incremental flag in manifest
      * TODO: revisit this
      */
-    public function storeResults(array $csvFiles, $bucketName = null, $sapiPrefix = true, $incremental = false)
+    public function storeResults(array $csvFiles, string $bucketName = null, bool $sapiPrefix = true, bool $incremental = false)
     {
         $path = "{$this->dataDir}/out/tables/";
 
@@ -231,7 +185,9 @@ class Extractor
                 $manifest['destination'] = "{$bucketName}.{$key}";
             }
 
-            $manifest['incremental'] = is_null($file->getIncremental())
+            /** @var bool|null $fileIncremental */
+            $fileIncremental = $file->getIncremental();
+            $manifest['incremental'] = is_null($fileIncremental)
                 ? $incremental
                 : $file->getIncremental();
 

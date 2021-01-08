@@ -18,66 +18,28 @@ use Symfony\Component\Validator\Validation;
  */
 class Api
 {
-    /**
-     * @var string
-     */
-    private $baseUrl;
+    private string $baseUrl;
 
-    /**
-     * @var string
-     */
-    private $name = 'generic';
+    private string $name = 'generic';
 
-    /**
-     * @var AuthInterface
-     */
-    private $auth;
+    private AuthInterface $auth;
 
-    /**
-     * @var string|null
-     */
-    private $caCertificate;
+    private ?string $caCertificate = null;
 
-    /**
-     * @var array
-     */
-    private $scrollerConfig = [];
+    private array $scrollerConfig = [];
 
-    /**
-     * @var Headers
-     */
-    private $headers;
+    private Headers $headers;
 
-    /**
-     * @var array
-     */
-    private $defaultRequestOptions = [];
+    private array $defaultRequestOptions = [];
 
-    /**
-     * @var array
-     */
-    private $retryConfig = [];
+    private array $retryConfig = [];
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private LoggerInterface $logger;
 
-    /**
-     * @var array
-     */
-    private $ignoreErrors = [];
+    private array $ignoreErrors = [];
 
-    /** @var string|null */
-    private $clientCertificate;
+    private ?string $clientCertificate = null;
 
-    /**
-     * Api constructor.
-     * @param LoggerInterface $logger
-     * @param array $api
-     * @param array $configAttributes
-     * @param array $authorization
-     */
     public function __construct(LoggerInterface $logger, array $api, array $configAttributes, array $authorization)
     {
         $this->logger = $logger;
@@ -105,11 +67,6 @@ class Api
 
     /**
      * Create Authentication class that accepts a Guzzle client.
-     *
-     * @param array $api
-     * @param array $configAttributes
-     * @param array $authorization
-     * @return AuthInterface
      * @throws UserException
      */
     private function createAuth(array $api, array $configAttributes, array $authorization) : AuthInterface
@@ -125,7 +82,6 @@ class Api
                     $this->logger->warning("Using deprecated 'password', use '#password' instead.");
                 }
                 return new Authentication\Basic($configAttributes);
-                break;
             /** @noinspection PhpMissingBreakStatementInspection */
             case 'url.query':
                 $this->logger->warning("Method 'url.query' auth is deprecated, use 'query'.");
@@ -136,10 +92,8 @@ class Api
                     $api['authentication']['query'] = $api['query'];
                 }
                 return new Authentication\Query($configAttributes, $api['authentication']);
-                break;
             case 'login':
                 return new Authentication\Login($configAttributes, $api['authentication']);
-                break;
             case 'oauth10':
                 return new Authentication\OAuth10($authorization);
             case 'oauth20':
@@ -148,15 +102,11 @@ class Api
                 return new Authentication\OAuth20Login($configAttributes, $authorization, $api['authentication']);
             default:
                 throw new UserException("Unknown authorization type '{$api['authentication']['type']}'.");
-                break;
         }
     }
 
     /**
-     * @param array $api
-     * @param array $configAttributes
      * @throws UserException
-     * @return string
      */
     private function createBaseUrl(array $api, array $configAttributes) : string
     {
@@ -191,33 +141,21 @@ class Api
         return $baseUrl;
     }
 
-    /**
-     * @return string
-     */
     public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
     public function getBaseUrl() : string
     {
         return $this->baseUrl;
     }
 
-    /**
-     * @return ScrollerInterface
-     */
     public function getNewScroller() : ScrollerInterface
     {
         return ScrollerFactory::getScroller($this->scrollerConfig);
     }
 
-    /**
-     * @return AuthInterface
-     */
     public function getAuth() : AuthInterface
     {
         return $this->auth;
@@ -266,25 +204,16 @@ class Api
         return $filePath;
     }
 
-    /**
-     * @return Headers
-     */
     public function getHeaders() : Headers
     {
         return $this->headers;
     }
 
-    /**
-     * @return array
-     */
     public function getDefaultRequestOptions() : array
     {
         return $this->defaultRequestOptions;
     }
 
-    /**
-     * @return array
-     */
     public function getRetryConfig() : array
     {
         return $this->retryConfig;

@@ -25,21 +25,11 @@ use Keboola\Utils\Exception\JsonDecodeException;
  */
 class OAuth20Login extends Login
 {
-    /**
-     * @var array
-     */
-    protected $params;
+    protected array $params;
+
+    protected array $auth;
 
     /**
-     * @var array
-     */
-    protected $auth;
-
-    /**
-     * OAuth20Login constructor.
-     * @param array $configAttributes
-     * @param array $authorization
-     * @param array $authentication
      * @throws UserException
      */
     public function __construct(array $configAttributes, array $authorization, array $authentication)

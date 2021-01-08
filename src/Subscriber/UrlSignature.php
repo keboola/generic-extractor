@@ -10,9 +10,6 @@ use GuzzleHttp\Message\RequestInterface;
  */
 class UrlSignature extends AbstractSignature implements SubscriberInterface
 {
-    /**
-     * @param RequestInterface $request
-     */
     protected function addSignature(RequestInterface $request)
     {
         $authQuery = call_user_func($this->generator, $this->getRequestAndQuery($request));

@@ -8,9 +8,8 @@ class MockExecutionTest extends TestCase
 {
     /**
      * @dataProvider configProvider
-     * @param string $configDir
      */
-    public function testRun($configDir)
+    public function testRun(string $configDir): void
     {
         $this->rmDir(__DIR__ . "/data/{$configDir}/out");
         exec("php " . __DIR__ . "/../run.php --data=" . __DIR__ . "/data/{$configDir} 2>&1", $output, $retval);
@@ -39,21 +38,21 @@ class MockExecutionTest extends TestCase
         ];
     }
 
-    public function testDefaultRequestOptions()
+    public function testDefaultRequestOptions(): void
     {
         exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/defaultOptions', $output);
-        self::assertRegexp('/GET \/defaultOptions\?param=value/', implode("\n", $output));
+        self::assertMatchesRegularExpression('/GET \/defaultOptions\?param=value/', implode("\n", $output));
         $this->rmDir(__DIR__ . '/data/defaultOptions/out');
     }
 
-    public function testEmptyCfg()
+    public function testEmptyCfg(): void
     {
         exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/emptyCfg 2>&1', $output, $retval);
         self::assertStringContainsString('is not a valid JSON: Syntax error', implode("\n", $output));
         self::assertEquals(2, $retval);
     }
 
-    public function testDynamicUserData()
+    public function testDynamicUserData(): void
     {
         exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/dynamicUserData 2>&1', $output, $retval);
         $expectedFile = file(__DIR__ . '/data/dynamicUserData/expected/tables/get');

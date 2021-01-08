@@ -17,10 +17,8 @@ class GenericExtractorJobTest extends ExtractorTestCase
 {
     /**
      * @dataProvider parentIdProvider
-     * @param JobConfig $cfg
-     * @param string $expected
      */
-    public function testGetParentId(JobConfig $cfg, $expected)
+    public function testGetParentId(JobConfig $cfg, ?array $expected): void
     {
         $job = $this->getJob($cfg, [], []);
 
@@ -75,7 +73,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         ];
     }
 
-    public function testUserParentId()
+    public function testUserParentId(): void
     {
         $value = ['parent' => 'val'];
         $job = $this->getJob(new JobConfig([
@@ -86,7 +84,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         self::assertEquals($value, self::callMethod($job, 'getParentId', []));
     }
 
-    public function testUserParentIdMerge()
+    public function testUserParentIdMerge(): void
     {
         $job = $this->getJob(new JobConfig([
             'endpoint' => 'ep',
@@ -110,7 +108,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         );
     }
 
-    public function testFirstPage()
+    public function testFirstPage(): void
     {
         $cfg = new JobConfig([
             'endpoint' => 'ep',
@@ -126,10 +124,8 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     /**
      * @dataProvider nextPageProvider
-     * @param array $config
-     * @param array $expectedParams
      */
-    public function testNextPage($config, $expectedParams)
+    public function testNextPage(array $config, array $expectedParams): void
     {
         $cfg = new JobConfig([
             'endpoint' => 'ep',
@@ -174,7 +170,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         ];
     }
 
-    public function testBuildParams()
+    public function testBuildParams(): void
     {
         $cfg = new JobConfig([
             'endpoint' => 'fooBar',
@@ -217,7 +213,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         ], $params);
     }
 
-    public function testBuildParamsException()
+    public function testBuildParamsException(): void
     {
         $cfg = new JobConfig([
             'endpoint' => 'fooBar',
@@ -242,7 +238,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         self::callMethod($job, 'buildParams', [$cfg]);
     }
 
-    public function testFilterResponse()
+    public function testFilterResponse(): void
     {
         $cfg = new JobConfig([
             'endpoint' => 'fooBar',
@@ -270,7 +266,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         self::assertEquals($data[0]->anotherItem, $filtered[0]->anotherItem);
     }
 
-    public function testRun()
+    public function testRun(): void
     {
         $jobConfig = new JobConfig([
             'endpoint' => 'ep'
@@ -299,13 +295,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         self::assertContainsOnlyInstancesOf('\Keboola\CsvTable\Table', $parser->getResults());
     }
 
-    /**
-     * @param JobConfig $config
-     * @param array $attributes
-     * @param array $metadata
-     * @return GenericExtractorJob
-     */
-    protected function getJob(JobConfig $config, array $attributes, array $metadata)
+    protected function getJob(JobConfig $config, array $attributes, array $metadata): GenericExtractorJob
     {
         return new GenericExtractorJob(
             $config,
@@ -328,10 +318,10 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     /**
      * @dataProvider placeholderProvider
-     * @param $field
-     * @param $expectedValue
+     * @param mixed $field
+     * @param mixed $expectedValue
      */
-    public function testGetPlaceholder($field, $expectedValue)
+    public function testGetPlaceholder($field, $expectedValue): void
     {
         $job = $this->getMockBuilder(GenericExtractorJob::class)
             ->disableOriginalConstructor()
@@ -384,10 +374,10 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     /**
      * @dataProvider placeholderValueProvider
-     * @param $level
-     * @param $expected
+     * @param mixed $level
+     * @param mixed $expected
      */
-    public function testGetPlaceholderValue($level, $expected)
+    public function testGetPlaceholderValue($level, $expected): void
     {
         $job = $this->getMockBuilder(GenericExtractorJob::class)
             ->disableOriginalConstructor()
@@ -412,10 +402,10 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     /**
      * @dataProvider placeholderErrorValueProvider
-     * @param $data
-     * @param $message
+     * @param mixed $data
+     * @param mixed $message
      */
-    public function testGetPlaceholderValueError($data, $message)
+    public function testGetPlaceholderValueError($data, $message): void
     {
         $job = $this->getMockBuilder(GenericExtractorJob::class)
             ->disableOriginalConstructor()

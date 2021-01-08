@@ -12,7 +12,7 @@ use Psr\Log\NullLogger;
 
 class QueryTest extends ExtractorTestCase
 {
-    public function testAuthenticateClient()
+    public function testAuthenticateClient(): void
     {
         $authentication = [
             'query' => [
@@ -39,7 +39,7 @@ class QueryTest extends ExtractorTestCase
         );
     }
 
-    public function testAuthenticateClientQuery()
+    public function testAuthenticateClientQuery(): void
     {
         $auth = new Query([], ['query' => ['authParam' => 'secretCodeWow']]);
         $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com'], [], []);
@@ -61,7 +61,7 @@ class QueryTest extends ExtractorTestCase
         );
     }
 
-    public function testRequestInfo()
+    public function testRequestInfo(): void
     {
         $urlTokenParam = (object) [
             'function' => 'concat',

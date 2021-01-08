@@ -13,7 +13,7 @@ use Psr\Log\NullLogger;
 
 class OAuth20LoginTest extends ExtractorTestCase
 {
-    public function testAuthenticateClient()
+    public function testAuthenticateClient(): void
     {
         $mock = new Mock([
             new Response(200, [], Stream::factory(json_encode((object) [ // auth

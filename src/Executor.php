@@ -19,24 +19,14 @@ use Symfony\Component\Finder\SplFileInfo;
  */
 class Executor
 {
-    /**
-     * @var Logger
-     */
-    private $logger;
+    private Logger $logger;
 
-    /**
-     * Executor constructor.
-     * @param Logger $logger
-     */
     public function __construct(Logger $logger)
     {
         $this->logger = $logger;
     }
 
-    /**
-     * @param bool $debug
-     */
-    private function setLogLevel($debug)
+    private function setLogLevel(bool $debug)
     {
         /** @var AbstractHandler $handler */
         foreach ($this->logger->getHandlers() as $handler) {
@@ -74,7 +64,7 @@ class Executor
         $cacheStorage = $configuration->getCache();
 
         $results = [];
-        /** @var Config[] $configs */
+
         foreach ($configs as $config) {
             $this->setLogLevel($config->getAttribute('debug'));
             $api = $configuration->getApi($config->getAttributes());

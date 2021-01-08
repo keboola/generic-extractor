@@ -18,21 +18,14 @@ class Filter
 {
     const DEFAULT_DELIMITER = '.';
 
-    /**
-     * @var array
-     */
-    protected $filters;
+    protected array $filters;
 
-    /**
-     * @var string
-     */
-    protected $delimiter;
+    protected string $delimiter;
 
     /**
      * Compatibility level
-     * @var int
      */
-    private $compatLevel;
+    private int $compatLevel;
 
     public function __construct(JobConfig $config, int $compatLevel)
     {
@@ -52,11 +45,8 @@ class Filter
      * Filters the $data array according to
      * $config->getConfig()['responseFilter'] and
      * returns the filtered array
-     *
-     * @param array $data
-     * @return array
      */
-    public function run(array $data)
+    public function run(array $data): array
     {
         foreach ($this->filters as $path) {
             foreach ($data as &$item) {
@@ -68,12 +58,10 @@ class Filter
     }
 
     /**
-     * @param \stdClass $item
-     * @param string $path
-     * @throws UserException
-     * @return \stdClass
+     * @param mixed $item
+     * @return mixed
      */
-    protected function filterItem($item, $path)
+    protected function filterItem($item, string $path)
     {
         $currentPath = explode($this->delimiter, $path, 2);
 
@@ -120,9 +108,8 @@ class Filter
 
     /**
      * @param mixed $item
-     * @return string
      */
-    protected function updateItem($item)
+    protected function updateItem($item): string
     {
         if ($this->compatLevel <= GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY_SCALAR) {
             return is_scalar($item) ? $item : json_encode($item);

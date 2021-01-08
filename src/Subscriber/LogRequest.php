@@ -12,7 +12,7 @@ use Psr\Log\LoggerInterface;
  */
 class LogRequest implements SubscriberInterface
 {
-    private $logger;
+    private LoggerInterface $logger;
 
     public function __construct(LoggerInterface $logger)
     {

@@ -6,11 +6,8 @@ class JuicerRest
 {
     /**
      * Convert structure of config from Juicer 8 => 9
-     *
-     * @param array $config
-     * @return array
      */
-    public static function convertRetry(array $config)
+    public static function convertRetry(array $config): array
     {
         // TODO: add deprecation
         if (isset($config['curlCodes'])) {

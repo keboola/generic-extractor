@@ -10,7 +10,7 @@ use Psr\Log\NullLogger;
 
 class FindResponseArrayTest extends TestCase
 {
-    public function testSingleArray()
+    public function testSingleArray(): void
     {
         $cfg = new JobConfig([
             'endpoint' => 'a',
@@ -31,7 +31,7 @@ class FindResponseArrayTest extends TestCase
         $this->assertEquals($response->{$cfg->getConfig()['dataField']}, $data);
     }
 
-    public function testNestedArray()
+    public function testNestedArray(): void
     {
         $cfg = new JobConfig([
             'endpoint' => 'a',
@@ -54,7 +54,7 @@ class FindResponseArrayTest extends TestCase
         $this->assertEquals($response->data->results, $data);
     }
 
-    public function testMultipleArraysException()
+    public function testMultipleArraysException(): void
     {
         $cfg = new JobConfig([
             'endpoint' => 'a'

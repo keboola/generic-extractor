@@ -6,9 +6,6 @@ use GuzzleHttp\Event\BeforeEvent;
 use GuzzleHttp\Event\RequestEvents;
 use GuzzleHttp\Message\RequestInterface;
 
-/**
- *
- */
 abstract class AbstractSignature
 {
     /**
@@ -28,9 +25,6 @@ abstract class AbstractSignature
         $this->addSignature($request);
     }
 
-    /**
-     * @param RequestInterface $request
-     */
     abstract protected function addSignature(RequestInterface $request);
 
     /**
@@ -42,10 +36,9 @@ abstract class AbstractSignature
     }
 
     /**
-     * @param RequestInterface $request
      * @return array ['query' => ..., 'request' => ...]
      */
-    protected function getRequestAndQuery(RequestInterface $request)
+    protected function getRequestAndQuery(RequestInterface $request): array
     {
         $query = [];
         foreach ($request->getQuery() as $param => $val) {

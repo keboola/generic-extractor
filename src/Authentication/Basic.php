@@ -10,19 +10,11 @@ use Keboola\Juicer\Client\RestClient;
  */
 class Basic implements AuthInterface
 {
-    /**
-     * @var string
-     */
-    protected $username;
+    protected string $username;
+
+    protected string $password;
 
     /**
-     * @var string
-     */
-    protected $password;
-
-    /**
-     * Basic constructor.
-     * @param array $config
      * @throws UserException
      */
     public function __construct(array $config)

@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class CacheTest extends TestCase
 {
-    public function testCacheTTL()
+    public function testCacheTTL(): void
     {
         $this->rmDir(__DIR__ . '/data/requestCacheTTL/out');
         $this->rmDir(__DIR__ . '/data/requestCacheTTL/cache');
@@ -86,7 +86,7 @@ class CacheTest extends TestCase
         rmdir($dirPath);
     }
 
-    public function testCache()
+    public function testCache(): void
     {
         $this->rmDir(__DIR__ . '/data/requestCache/out');
         $this->rmDir(__DIR__ . '/data/requestCache/cache');
@@ -129,7 +129,7 @@ class CacheTest extends TestCase
         $this->rmDir(__DIR__ . '/data/requestCache/cache');
     }
 
-    public function testNoCache()
+    public function testNoCache(): void
     {
         $this->rmDir(__DIR__ . '/data/noCache/out');
         $this->rmDir(__DIR__ . '/data/noCache/cache');

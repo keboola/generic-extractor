@@ -26,25 +26,13 @@ use Keboola\Utils\Exception\NoDataFoundException;
  */
 class Login implements AuthInterface
 {
-    /**
-     * @var array
-     */
-    protected $configAttributes;
+    protected array $configAttributes;
+
+    protected array $auth;
+
+    protected ?string $format = null;
 
     /**
-     * @var array
-     */
-    protected $auth;
-
-    /**
-     * @var string
-     */
-    protected $format;
-
-    /**
-     * Login constructor.
-     * @param array $configAttributes
-     * @param array $authentication
      * @throws UserException
      */
     public function __construct(array $configAttributes, array $authentication)
@@ -77,9 +65,7 @@ class Login implements AuthInterface
     }
 
     /**
-     * @param array $config
      * @throws UserException
-     * @return RestRequest
      */
     protected function getAuthRequest(array $config) : RestRequest
     {
@@ -106,6 +92,7 @@ class Login implements AuthInterface
                 $client->getClient()->getEmitter()->detach($sub);
                 $rawResponse = $client->getClient()->send($client->getGuzzleRequest($loginRequest));
                 if ($this->format == 'json') {
+                    /** @var array|object|mixed $response */
                     $response = $client->getObjectFromResponse($rawResponse);
                     if (is_scalar($response)) {
                         $response = (object)['data' => $response];
@@ -128,13 +115,9 @@ class Login implements AuthInterface
 
     /**
      * Maps data from login result into $type (header/query)
-     *
-     * @param \stdClass $response
-     * @param string $type
-     * @return array
      * @throws UserException
      */
-    protected function getResults(\stdClass $response, $type) : array
+    protected function getResults(\stdClass $response, string $type) : array
     {
         $result = [];
         if (!empty($this->auth['apiRequest'][$type])) {
@@ -158,8 +141,6 @@ class Login implements AuthInterface
     }
 
     /**
-     * @param \stdClass $response
-     * @return int|null
      * @throws UserException
      */
     protected function getExpiry(\stdClass $response) : ?int

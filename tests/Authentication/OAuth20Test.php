@@ -9,7 +9,7 @@ use Psr\Log\NullLogger;
 
 class OAuth20Test extends ExtractorTestCase
 {
-    public function testAuthenticateClientJson()
+    public function testAuthenticateClientJson(): void
     {
         $config = json_decode(file_get_contents(__DIR__ . '/../data/oauth20bearer/config.json'), true);
         $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com'], [], []);
@@ -28,7 +28,7 @@ class OAuth20Test extends ExtractorTestCase
         self::assertEquals('test', $request->getHeader('X-Test'));
     }
 
-    public function testMACAuth()
+    public function testMACAuth(): void
     {
         $config = json_decode(file_get_contents(__DIR__ . '/../data/oauth20mac/config.json'), true);
         $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com'], [], []);

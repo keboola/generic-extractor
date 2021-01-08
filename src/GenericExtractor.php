@@ -24,47 +24,21 @@ class GenericExtractor
     const COMPAT_LEVEL_FILTER_EMPTY_SCALAR = 2;
     const COMPAT_LEVEL_LATEST = 3;
 
-    /**
-     * @var ParserInterface
-     */
-    protected $parser;
+    protected ?ParserInterface $parser = null;
 
-    /**
-     * @var CacheStorage
-     */
-    protected $cache;
+    protected ?CacheStorage $cache = null;
 
-    /**
-     * @var Temp
-     */
-    protected $temp;
+    protected Temp $temp;
 
-    /**
-     * @var array
-     */
-    protected $metadata = [];
+    protected array $metadata = [];
 
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
+    protected LoggerInterface $logger;
 
-    /**
-     * @var Api
-     */
-    private $api;
+    private Api $api;
 
-    /**
-     * @var array
-     */
+    /** @var array|string|null */
     private $proxy;
 
-    /**
-     * GenericExtractor constructor.
-     * @param Temp $temp
-     * @param LoggerInterface $logger
-     * @param Api $api
-     */
     public function __construct(Temp $temp, LoggerInterface $logger, Api $api, $proxy = null)
     {
         $this->temp = $temp;
@@ -73,11 +47,7 @@ class GenericExtractor
         $this->proxy = $proxy;
     }
 
-    /**
-     * @param CacheStorage $cache
-     * @return $this
-     */
-    public function enableCache(CacheStorage $cache)
+    public function enableCache(CacheStorage $cache): self
     {
         $this->cache = $cache;
         return $this;
@@ -120,9 +90,7 @@ class GenericExtractor
                 [
                     'storage' => $this->cache,
                     'validate' => false,
-                    'can_cache' => function (RequestInterface $requestInterface) {
-                        return true;
-                    }
+                    'can_cache' => fn(RequestInterface $requestInterface) => true
                 ]
             );
         }
@@ -138,12 +106,7 @@ class GenericExtractor
         }
     }
 
-    /**
-     * @param JobConfig $jobConfig
-     * @param RestClient $client
-     * @param Config $config
-     */
-    protected function runJob($jobConfig, $client, $config)
+    protected function runJob(JobConfig $jobConfig, RestClient $client, Config $config)
     {
         $job = new GenericExtractorJob(
             $jobConfig,
@@ -166,27 +129,21 @@ class GenericExtractor
         $job->run();
     }
 
-    /**
-     * @param ParserInterface $parser
-     */
     public function setParser(ParserInterface $parser)
     {
         $this->parser = $parser;
     }
 
-    /**
-     * @return ParserInterface
-     */
-    public function getParser()
+    public function getParser(): ParserInterface
     {
+        if (!$this->parser) {
+            throw new \LogicException('Parser is not set.');
+        }
+
         return $this->parser;
     }
 
-    /**
-     * @param Config $config
-     * @return int
-     */
-    private function getCompatLevel(Config $config)
+    private function getCompatLevel(Config $config): int
     {
         if (empty($config->getAttribute('compatLevel'))) {
             return self::COMPAT_LEVEL_LATEST;
@@ -194,11 +151,7 @@ class GenericExtractor
         return (int)$config->getAttribute('compatLevel');
     }
 
-    /**
-     * @param Config $config
-     * @return ParserInterface
-     */
-    protected function initParser(Config $config)
+    protected function initParser(Config $config): ParserInterface
     {
         if (!empty($this->parser) && $this->parser instanceof ParserInterface) {
             return $this->parser;

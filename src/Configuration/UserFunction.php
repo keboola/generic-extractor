@@ -15,10 +15,10 @@ class UserFunction
      * @param array|\stdClass $functions
      * @param array $params ['attr' => $attributesArray, ...]
      * @throws UserException
-     * @return array
      */
-    public static function build($functions, array $params = [])
+    public static function build($functions, array $params = []): array
     {
+        /** @var array|\stdClass|mixed $functions */
         if (!is_object($functions) && !is_array($functions)) {
             throw new UserException(sprintf(
                 "Expected 'object' type, given '%s' type, value '%s'.",

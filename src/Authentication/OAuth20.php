@@ -37,36 +37,17 @@ class OAuth20 implements AuthInterface
      */
     protected $data;
 
-    /**
-     * @var string
-     */
-    protected $clientId;
+    protected string $clientId;
+
+    protected string $clientSecret;
+
+    protected array $headers;
+
+    protected array $query;
+
+    protected array $configAttributes;
 
     /**
-     * @var string
-     */
-    protected $clientSecret;
-
-    /**
-     * @var array
-     */
-    protected $headers;
-
-    /**
-     * @var array
-     */
-    protected $query;
-
-    /**
-     * @var array
-     */
-    protected $configAttributes;
-
-    /**
-     * OAuth20 constructor.
-     * @param array $authorization
-     * @param array $authentication
-     * @param array $configAttributes
      * @throws UserException
      */
     public function __construct(array $configAttributes, array $authorization, array $authentication)
@@ -150,11 +131,9 @@ class OAuth20 implements AuthInterface
     }
 
     /**
-     * @param AbstractSignature $subscriber
      * @param array|object $definitions
-     * @param array $authorization
      */
-    protected function addGenerator($subscriber, $definitions, $authorization)
+    protected function addGenerator(AbstractSignature $subscriber, $definitions, array $authorization)
     {
         // Create array of objects instead of arrays from YML
         $q = (array) \Keboola\Utils\arrayToObject($definitions);

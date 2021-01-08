@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class UrlSignatureTest extends TestCase
 {
-    public function testAddSignature()
+    public function testAddSignature(): void
     {
         $request = new Request('GET', '/endpoint');
         $transaction = new Transaction(new Client(), $request);
@@ -19,16 +19,14 @@ class UrlSignatureTest extends TestCase
 
         $subscriber = new UrlSignature();
         $subscriber->setSignatureGenerator(
-            function () {
-                return ['token' => 'tokenValue'];
-            }
+            fn() => ['token' => 'tokenValue']
         );
 
         $subscriber->onBefore($event);
         self::assertEquals('tokenValue', $request->getQuery()->get('token'));
     }
 
-    public function testKeepSignature()
+    public function testKeepSignature(): void
     {
         $request = new Request('GET', '/endpoint?token=originalValue');
         $transaction = new Transaction(new Client(), $request);
@@ -36,9 +34,7 @@ class UrlSignatureTest extends TestCase
 
         $subscriber = new UrlSignature();
         $subscriber->setSignatureGenerator(
-            function () {
-                return ['token' => 'tokenValue'];
-            }
+            fn() => ['token' => 'tokenValue']
         );
 
         $subscriber->onBefore($event);

@@ -12,20 +12,11 @@ use Keboola\GenericExtractor\Subscriber\UrlSignature;
  */
 class Query implements AuthInterface
 {
-    /**
-     * @var array
-     */
-    protected $query;
+    protected array $query;
+
+    protected array $configAttributes;
 
     /**
-     * @var array
-     */
-    protected $configAttributes;
-
-    /**
-     * Query constructor.
-     * @param array $configAttributes
-     * @param array $authentication
      * @throws UserException
      */
     public function __construct(array $configAttributes, array $authentication)
@@ -39,9 +30,6 @@ class Query implements AuthInterface
         $this->configAttributes = $configAttributes;
     }
 
-    /**
-     * @param RestClient $client
-     */
     public function authenticateClient(RestClient $client)
     {
         $sub = new UrlSignature();

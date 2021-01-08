@@ -14,7 +14,7 @@ use Psr\Log\NullLogger;
 
 class LoginTest extends ExtractorTestCase
 {
-    public function testAuthenticateClient()
+    public function testAuthenticateClient(): void
     {
         $expiresIn = 5000;
         $expires = time() + $expiresIn;
@@ -78,7 +78,7 @@ class LoginTest extends ExtractorTestCase
         self::assertLessThan($expires + 2, $expiry);
     }
 
-    public function testAuthenticateClientScalar()
+    public function testAuthenticateClientScalar(): void
     {
         $mock = new Mock([
             new Response(200, [], Stream::factory(json_encode('someToken'))),
@@ -126,7 +126,7 @@ class LoginTest extends ExtractorTestCase
         self::assertEquals('someToken', $history->getIterator()[2]['request']->getHeader('X-Test-Auth'));
     }
 
-    public function testAuthenticateClientText()
+    public function testAuthenticateClientText(): void
     {
         $mock = new Mock([
             new Response(200, [], Stream::factory('someToken')),
@@ -174,7 +174,7 @@ class LoginTest extends ExtractorTestCase
         self::assertEquals('someToken', $history->getIterator()[2]['request']->getHeader('X-Test-Auth'));
     }
 
-    public function testAuthenticateClientWithFunctionInApiRequestHeaders()
+    public function testAuthenticateClientWithFunctionInApiRequestHeaders(): void
     {
         $mock = new Mock([
             new Response(200, [], Stream::factory(json_encode((object) [ // auth
@@ -257,7 +257,7 @@ class LoginTest extends ExtractorTestCase
         );
     }
 
-    public function testInvalid1()
+    public function testInvalid1(): void
     {
         $api = [
             'format' => 'js',
@@ -267,7 +267,7 @@ class LoginTest extends ExtractorTestCase
         new Login([], $api);
     }
 
-    public function testInvalid2()
+    public function testInvalid2(): void
     {
         $api = [
             'format' => 'json',
@@ -277,7 +277,7 @@ class LoginTest extends ExtractorTestCase
         new Login([], $api);
     }
 
-    public function testInvalid3()
+    public function testInvalid3(): void
     {
         $api = [
             'loginRequest' => [
@@ -289,7 +289,7 @@ class LoginTest extends ExtractorTestCase
         new Login([], $api);
     }
 
-    public function testInvalid4()
+    public function testInvalid4(): void
     {
         $api = [
             'loginRequest' => [
