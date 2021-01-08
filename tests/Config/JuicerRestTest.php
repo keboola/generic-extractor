@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class JuicerRestTest extends TestCase
 {
-    public function testConvert()
+    public function testConvert(): void
     {
         $oldConfig = [
             'maxRetries' => 6,

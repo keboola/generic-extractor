@@ -15,8 +15,6 @@ class Basic implements AuthInterface
     protected string $password;
 
     /**
-     * Basic constructor.
-     * @param array $config
      * @throws UserException
      */
     public function __construct(array $config)

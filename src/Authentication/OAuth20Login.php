@@ -30,10 +30,6 @@ class OAuth20Login extends Login
     protected array $auth;
 
     /**
-     * OAuth20Login constructor.
-     * @param array $configAttributes
-     * @param array $authorization
-     * @param array $authentication
      * @throws UserException
      */
     public function __construct(array $configAttributes, array $authorization, array $authentication)

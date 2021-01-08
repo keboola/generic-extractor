@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class UserFunctionTest extends TestCase
 {
-    public function testBuild()
+    public function testBuild(): void
     {
         $functions = [
             'str' => 'aaa',
@@ -33,7 +33,7 @@ class UserFunctionTest extends TestCase
         );
     }
 
-    public function testInvalidType()
+    public function testInvalidType(): void
     {
         $functions = 'not array';
 

@@ -65,13 +65,8 @@ class GenericExtractorJob
     private int $compatLevel;
 
     /**
-     * @param JobConfig $config
      * @param RestClient $client A client used to communicate with the API (wrapper for Guzzle)
      * @param ParserInterface $parser A parser to handle the result and convert it into CSV file(s)
-     * @param LoggerInterface $logger
-     * @param ScrollerInterface $scroller
-     * @param array $attributes
-     * @param array $metadata
      * @param int $compatLevel Compatibility level, @see GenericExtractor
      */
     public function __construct(
@@ -133,7 +128,6 @@ class GenericExtractorJob
     }
 
     /**
-     * @param array $data
      * @throws UserException
      */
     private function runChildJobs(array $data)
@@ -167,8 +161,6 @@ class GenericExtractorJob
 
     /**
      * Create a child job with current client and parser
-     * @param JobConfig $config
-     * @param array $parentResults
      * @return static[]
      */
     private function createChild(JobConfig $config, array $parentResults) : array
@@ -237,13 +229,11 @@ class GenericExtractorJob
 
 
     /**
-     * @param string $placeholder
      * @param string|object|array $field Path or a function with a path
-     * @param array $parentResults
      * @return array ['placeholder', 'field', 'value']
      * @throws UserException
      */
-    private function getPlaceholder($placeholder, $field, $parentResults)
+    private function getPlaceholder(string $placeholder, $field, array $parentResults): array
     {
         // TODO allow using a descriptive ID(level) by storing the result by `task(job) id` in $parentResults
         $level = strpos($placeholder, ':') === false
@@ -279,14 +269,10 @@ class GenericExtractorJob
     }
 
     /**
-     * @param string $field
-     * @param array $parentResults
-     * @param int $level
-     * @param string $placeholder
      * @return mixed
      * @throws UserException
      */
-    private function getPlaceholderValue($field, $parentResults, $level, $placeholder)
+    private function getPlaceholderValue(string $field, array $parentResults, int $level, string $placeholder)
     {
         try {
             if (!array_key_exists($level, $parentResults)) {
@@ -317,9 +303,7 @@ class GenericExtractorJob
     /**
      *  Download an URL from REST or SOAP API and return its body as an object.
      * should handle the API call, backoff and response decoding
-     *
-     * @param RestRequest $request
-     * @return \StdClass $response
+     * @return mixed Raw response as it comes from the client
      */
     private function download(RestRequest $request)
     {
@@ -331,12 +315,10 @@ class GenericExtractorJob
      * Create subsequent requests for pagination (usually based on $response from previous request)
      * Return a download request OR false if no next page exists
      *
-     * @param JobConfig $config
      * @param mixed $response
-     * @param array|null $data
      * @return RestRequest | false
      */
-    private function nextPage(JobConfig $config, $response, $data)
+    private function nextPage(JobConfig $config, $response, ?array $data)
     {
         return $this->getScroller()->getNextRequest($this->client, $config, $response, $data);
     }
@@ -345,7 +327,6 @@ class GenericExtractorJob
      * Create the first download request.
      * Return a download request
      *
-     * @param JobConfig $config
      * @return RestRequest|bool
      */
     private function firstPage(JobConfig $config)
@@ -357,21 +338,17 @@ class GenericExtractorJob
      * Parse the result into a CSV (either using any of built-in parsers, or using own methods).
      *
      * Create subsequent jobs for recursive endpoints. Uses "children" section of the job config
-     * @param array $data
      * @param array $parentId ID (or list thereof) to be passed to parser
      * @return array
      */
-    private function parse(array $data, array $parentId = null)
+    private function parse(array $data, array $parentId = null): array
     {
         $this->parser->process($data, $this->config->getDataType(), $this->getParentCols($parentId));
         $this->runChildJobs($data);
         return $data;
     }
 
-    /**
-     * @return ScrollerInterface
-     */
-    private function getScroller()
+    private function getScroller(): ScrollerInterface
     {
         if (empty($this->scroller)) {
             $this->scroller = new NoScroller;
@@ -380,10 +357,7 @@ class GenericExtractorJob
         return $this->scroller;
     }
 
-    /**
-     * @return null|array
-     */
-    private function getParentId()
+    private function getParentId(): ?array
     {
         if (!empty($this->config->getConfig()['userData'])) {
             if (!is_array($this->config->getConfig()['userData'])) {
@@ -412,11 +386,7 @@ class GenericExtractorJob
         );
     }
 
-    /**
-     * @param array $parentIdCols
-     * @return array
-     */
-    private function getParentCols(array $parentIdCols = null)
+    private function getParentCols(array $parentIdCols = null): array
     {
         // Add parent values to the result
         $parentCols = is_null($parentIdCols) ? [] : $parentIdCols;
@@ -427,11 +397,7 @@ class GenericExtractorJob
         return $parentCols;
     }
 
-    /**
-     * @param JobConfig $config
-     * @return array
-     */
-    private function buildParams(JobConfig $config)
+    private function buildParams(JobConfig $config): array
     {
         $params = UserFunction::build(
             $config->getParams(),
@@ -447,12 +413,8 @@ class GenericExtractorJob
      * Filters the $data array according to
      * $config->getConfig()['responseFilter'] and
      * returns the filtered array
-     *
-     * @param JobConfig $config
-     * @param array $data
-     * @return array
      */
-    private function filterResponse(JobConfig $config, array $data)
+    private function filterResponse(JobConfig $config, array $data): array
     {
         $filter = new Filter($config, $this->compatLevel);
         return $filter->run($data);
@@ -460,10 +422,8 @@ class GenericExtractorJob
 
     /**
      * @param array|object $response
-     * @param JobConfig $jobConfig
-     * @return array
      */
-    private function runResponseModules($response, JobConfig $jobConfig)
+    private function runResponseModules($response, JobConfig $jobConfig): array
     {
         $responseModule = new FindResponseArray($this->logger);
         return $responseModule->process($response, $jobConfig);
@@ -472,7 +432,6 @@ class GenericExtractorJob
     /**
      * Add parameters from parent call to the Endpoint.
      * The parameter name in the config's endpoint has to be enclosed in {}
-     * @param array $params
      */
     public function setParams(array $params)
     {
@@ -486,11 +445,7 @@ class GenericExtractorJob
     }
 
 
-    /**
-     * @param string $string
-     * @return string
-     */
-    private function prependParent($string)
+    private function prependParent(string $string): string
     {
         return (substr($string, 0, 7) == "parent_") ? $string : "parent_{$string}";
     }
@@ -509,10 +464,7 @@ class GenericExtractorJob
         $this->userParentId = $id;
     }
 
-    /**
-     * @return string
-     */
-    public function getJobId()
+    public function getJobId(): string
     {
         return $this->jobId;
     }

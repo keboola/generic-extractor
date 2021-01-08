@@ -131,11 +131,9 @@ class OAuth20 implements AuthInterface
     }
 
     /**
-     * @param AbstractSignature $subscriber
      * @param array|object $definitions
-     * @param array $authorization
      */
-    protected function addGenerator($subscriber, $definitions, $authorization)
+    protected function addGenerator(AbstractSignature $subscriber, $definitions, array $authorization)
     {
         // Create array of objects instead of arrays from YML
         $q = (array) \Keboola\Utils\arrayToObject($definitions);

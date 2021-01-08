@@ -21,19 +21,12 @@ class Executor
 {
     private Logger $logger;
 
-    /**
-     * Executor constructor.
-     * @param Logger $logger
-     */
     public function __construct(Logger $logger)
     {
         $this->logger = $logger;
     }
 
-    /**
-     * @param bool $debug
-     */
-    private function setLogLevel($debug)
+    private function setLogLevel(bool $debug)
     {
         /** @var AbstractHandler $handler */
         foreach ($this->logger->getHandlers() as $handler) {

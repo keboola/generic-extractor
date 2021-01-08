@@ -14,7 +14,7 @@ use Psr\Log\NullLogger;
 
 class RecursiveJobTest extends TestCase
 {
-    public function testParse()
+    public function testParse(): void
     {
         $jobConfig = new JobConfig([
             "id" => "multiCfg",
@@ -75,7 +75,7 @@ class RecursiveJobTest extends TestCase
         );
     }
 
-    public function testNestedPlaceholder()
+    public function testNestedPlaceholder(): void
     {
         $jobConfig = new JobConfig([
             "id" => "first",
@@ -159,7 +159,7 @@ class RecursiveJobTest extends TestCase
     /**
      * Differently named placeholders, order 2-1, parent_id in result contains 2nd level id
      */
-    public function testNestedSamePlaceholder1()
+    public function testNestedSamePlaceholder1(): void
     {
         $jobConfig = new JobConfig([
             "id" => "first",
@@ -244,7 +244,7 @@ class RecursiveJobTest extends TestCase
     /**
      * Differently named placeholders, order 1-2, parent_id in result contains 1st level id
      */
-    public function testNestedSamePlaceholder2()
+    public function testNestedSamePlaceholder2(): void
     {
         $jobConfig = new JobConfig([
             "id" => "first",
@@ -329,7 +329,7 @@ class RecursiveJobTest extends TestCase
     /**
      * Same named placeholders, order 2-1, parent_id in result contains 1st level id (order does not matter)
      */
-    public function testNestedSamePlaceholder3()
+    public function testNestedSamePlaceholder3(): void
     {
         $jobConfig = new JobConfig([
             "id" => "first",
@@ -411,7 +411,7 @@ class RecursiveJobTest extends TestCase
         );
     }
 
-    public function testUserDataAddLegacy()
+    public function testUserDataAddLegacy(): void
     {
         $jobConfig = new JobConfig([
             "id" => "multiCfg",
@@ -460,7 +460,7 @@ class RecursiveJobTest extends TestCase
         );
     }
 
-    public function testUserDataAddLegacyMetadata()
+    public function testUserDataAddLegacyMetadata(): void
     {
         $jobConfig = new JobConfig([
             "id" => "multiCfg",
@@ -534,7 +534,7 @@ class RecursiveJobTest extends TestCase
         );
     }
 
-    public function testUserDataAddNewMetadata()
+    public function testUserDataAddNewMetadata(): void
     {
         $jobConfig = new JobConfig([
             "id" => "multiCfg",
@@ -653,7 +653,7 @@ class RecursiveJobTest extends TestCase
         );
     }
 
-    public function testUserDataAdd()
+    public function testUserDataAdd(): void
     {
         $jobConfig = new JobConfig([
             "id" => "multiCfg",
@@ -702,7 +702,7 @@ class RecursiveJobTest extends TestCase
         );
     }
 
-    public function testObject()
+    public function testObject(): void
     {
         $jobConfig = new JobConfig([
             'id' => 'multiCfg',

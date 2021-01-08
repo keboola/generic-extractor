@@ -10,7 +10,7 @@ use Psr\Log\NullLogger;
 
 class MissingTableHelperTest extends TestCase
 {
-    public function testMissingTables()
+    public function testMissingTables(): void
     {
         $temp = new Temp();
         $config = [
@@ -130,7 +130,7 @@ class MissingTableHelperTest extends TestCase
         );
     }
 
-    public function testMissingTablesNoOverwrite()
+    public function testMissingTablesNoOverwrite(): void
     {
         $temp = new Temp();
         $config = [
@@ -181,7 +181,7 @@ class MissingTableHelperTest extends TestCase
         self::assertEquals('bar', file_get_contents($baseDir . 'mock-server.users.manifest'));
     }
 
-    public function testMissingMappings()
+    public function testMissingMappings(): void
     {
         $temp = new Temp();
         $config = [
@@ -213,7 +213,7 @@ class MissingTableHelperTest extends TestCase
         self::assertFileDoesNotExist($baseDir . 'mock-server.users.manifest');
     }
 
-    public function testMissingTablesSimplifiedMapping()
+    public function testMissingTablesSimplifiedMapping(): void
     {
         $temp = new Temp();
         $config = [
@@ -280,7 +280,7 @@ class MissingTableHelperTest extends TestCase
         );
     }
 
-    public function testMissingTablesNoOutputBucket()
+    public function testMissingTablesNoOutputBucket(): void
     {
         $temp = new Temp();
         $config = [
@@ -345,7 +345,7 @@ class MissingTableHelperTest extends TestCase
         );
     }
 
-    public function testMissingBucketPresentIdPresentName()
+    public function testMissingBucketPresentIdPresentName(): void
     {
         $temp = new Temp();
         $config = [
@@ -415,7 +415,7 @@ class MissingTableHelperTest extends TestCase
         );
     }
 
-    public function testMissingBucketPresentIdMissingName()
+    public function testMissingBucketPresentIdMissingName(): void
     {
         $temp = new Temp();
         $config = [
@@ -485,7 +485,7 @@ class MissingTableHelperTest extends TestCase
         );
     }
 
-    public function testMissingParentKeyDestination()
+    public function testMissingParentKeyDestination(): void
     {
         $temp = new Temp();
         $config = [
@@ -562,7 +562,7 @@ class MissingTableHelperTest extends TestCase
         );
     }
 
-    public function testParentKeyDisableTableMapping()
+    public function testParentKeyDisableTableMapping(): void
     {
         $temp = new Temp();
         $config = [
@@ -653,7 +653,7 @@ class MissingTableHelperTest extends TestCase
         );
     }
 
-    public function testTableMapping()
+    public function testTableMapping(): void
     {
         $temp = new Temp();
         $config = [

@@ -17,9 +17,6 @@ class Query implements AuthInterface
     protected array $configAttributes;
 
     /**
-     * Query constructor.
-     * @param array $configAttributes
-     * @param array $authentication
      * @throws UserException
      */
     public function __construct(array $configAttributes, array $authentication)
@@ -33,9 +30,6 @@ class Query implements AuthInterface
         $this->configAttributes = $configAttributes;
     }
 
-    /**
-     * @param RestClient $client
-     */
     public function authenticateClient(RestClient $client)
     {
         $sub = new UrlSignature();

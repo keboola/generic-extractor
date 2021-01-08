@@ -14,7 +14,7 @@ class BasicTest extends TestCase
      * @param array $credentials
      * @dataProvider credentialsProvider
      */
-    public function testAuthenticateClient($credentials)
+    public function testAuthenticateClient($credentials): void
     {
         $auth = new Basic($credentials);
         $restClient = new RestClient(new NullLogger(), []);

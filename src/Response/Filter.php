@@ -45,11 +45,8 @@ class Filter
      * Filters the $data array according to
      * $config->getConfig()['responseFilter'] and
      * returns the filtered array
-     *
-     * @param array $data
-     * @return array
      */
-    public function run(array $data)
+    public function run(array $data): array
     {
         foreach ($this->filters as $path) {
             foreach ($data as &$item) {
@@ -60,13 +57,7 @@ class Filter
         return $data;
     }
 
-    /**
-     * @param \stdClass $item
-     * @param string $path
-     * @throws UserException
-     * @return \stdClass
-     */
-    protected function filterItem($item, $path)
+    protected function filterItem(\stdClass $item, string $path): \stdClass
     {
         $currentPath = explode($this->delimiter, $path, 2);
 
@@ -113,9 +104,8 @@ class Filter
 
     /**
      * @param mixed $item
-     * @return string
      */
-    protected function updateItem($item)
+    protected function updateItem($item): string
     {
         if ($this->compatLevel <= GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY_SCALAR) {
             return is_scalar($item) ? $item : json_encode($item);

@@ -16,7 +16,7 @@ class GenericExtractorTest extends TestCase
     /**
      * No change to JSON parser structure should happen when nothing is parsed!
      */
-    public function testRunMetadataNoUpdate()
+    public function testRunMetadataNoUpdate(): void
     {
         $meta = [
             'json_parser.struct' => [
@@ -57,7 +57,7 @@ class GenericExtractorTest extends TestCase
         self::assertArrayHasKey('time', $after);
     }
 
-    public function testRunMetadataUpdate()
+    public function testRunMetadataUpdate(): void
     {
         $meta = [
             'json_parser.struct' => [
@@ -125,7 +125,7 @@ class GenericExtractorTest extends TestCase
         self::assertArrayHasKey('time', $after);
     }
 
-    public function testGetParser()
+    public function testGetParser(): void
     {
         $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
         $api = new Api(new NullLogger(), ['baseUrl' => 'http://example.com'], [], []);

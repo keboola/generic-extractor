@@ -52,7 +52,7 @@ class LoginSubscriber implements SubscriberInterface
      * @return array ['headers' => .., 'query' => ..]
      * @todo consider just setting RestClient and loginRequest here
      */
-    protected function logIn()
+    protected function logIn(): array
     {
         $result = call_user_func($this->loginFunction);
         $this->expires = $result['expires'];

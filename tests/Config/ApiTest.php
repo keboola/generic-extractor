@@ -44,21 +44,21 @@ class ApiTest extends TestCase
         return $restClientMock;
     }
 
-    public function testCreateBaseUrlString()
+    public function testCreateBaseUrlString(): void
     {
         $string = 'https://third.second.com/TEST/Something/';
         $api = new Api(new NullLogger(), ['baseUrl' => $string], [], []);
         self::assertEquals($string, $api->getBaseUrl());
     }
 
-    public function testCreateBaseUrlStringWithUnderscore()
+    public function testCreateBaseUrlStringWithUnderscore(): void
     {
         $string = 'https://foo_export.test.example.com';
         $api = new Api(new NullLogger(), ['baseUrl' => $string], [], []);
         self::assertEquals($string, $api->getBaseUrl());
     }
 
-    public function testCreateInvalidUrlString()
+    public function testCreateInvalidUrlString(): void
     {
         try {
             new Api(new NullLogger(), ['baseUrl' => 'htt//this is not valid'], [], []);
@@ -68,7 +68,7 @@ class ApiTest extends TestCase
         }
     }
 
-    public function testCreateBaseUrlFunction()
+    public function testCreateBaseUrlFunction(): void
     {
         $fn = [
             'function' => 'concat',
@@ -82,7 +82,7 @@ class ApiTest extends TestCase
         self::assertEquals('https://keboola.example.com/', $api->getBaseUrl());
     }
 
-    public function testCreateBaseUrlFunctionError()
+    public function testCreateBaseUrlFunctionError(): void
     {
         $fn = [
             'function' => 'concat',
@@ -95,7 +95,7 @@ class ApiTest extends TestCase
         new Api(new NullLogger(), ['baseUrl' => $fn], [], []);
     }
 
-    public function testCreateAuthQueryDeprecated()
+    public function testCreateAuthQueryDeprecated(): void
     {
         $attributes = ['key' => 'val'];
         // Deprecated way
@@ -119,7 +119,7 @@ class ApiTest extends TestCase
         self::assertInstanceOf(Query::class, $api->getAuth());
     }
 
-    public function testCreateAuthQuery()
+    public function testCreateAuthQuery(): void
     {
         $apiConfig = [
             'baseUrl' => 'http://example.com',
@@ -142,7 +142,7 @@ class ApiTest extends TestCase
         self::assertInstanceOf(Query::class, $api->getAuth());
     }
 
-    public function testCreateAuthOAuth20Bearer()
+    public function testCreateAuthOAuth20Bearer(): void
     {
         $config = json_decode(file_get_contents(__DIR__ . '/../data/oauth20bearer/config.json'), true);
         $api = new Api(new NullLogger(), $config['parameters']['api'], [], $config['authorization']);
@@ -158,7 +158,7 @@ class ApiTest extends TestCase
         );
     }
 
-    public function testCreateOauth2Login()
+    public function testCreateOauth2Login(): void
     {
         $config = json_decode(file_get_contents(__DIR__ . '/../data/oauth20login/config.json'), true);
         $api = new Api(new NullLogger(), $config['parameters']['api'], [], $config['authorization']);
@@ -172,7 +172,7 @@ class ApiTest extends TestCase
         self::assertEquals(['Host' => ['example.com']], $request->getHeaders());
     }
 
-    public function testNoCaCertificate()
+    public function testNoCaCertificate(): void
     {
         $apiConfig = [
             'baseUrl' => 'http://example.com',
@@ -187,7 +187,7 @@ class ApiTest extends TestCase
     }
 
 
-    public function testCustomCaCertificate()
+    public function testCustomCaCertificate(): void
     {
         $crtContent = "-----BEGIN CERTIFICATE-----\nMIIFazCCA1OgAwIBAgIUGzl\n....\n-----END CERTIFICATE-----\n";
         $apiConfig = [
@@ -201,7 +201,7 @@ class ApiTest extends TestCase
         self::assertSame($crtContent, file_get_contents($api->getCaCertificateFile()));
     }
 
-    public function testCustomClientCertificate()
+    public function testCustomClientCertificate(): void
     {
         $crtContent = "-----BEGIN CERTIFICATE-----\nMIIFazCCA1OgAwIBAgIUGzl\n....\n-----END CERTIFICATE-----\n-----BEGIN RSA PRIVATE KEY-----\nMIIFazCCA1OgAwIBAgIUGzl\n-----END RSA PRIVATE KEY-----";
         $apiConfig = [
@@ -215,7 +215,7 @@ class ApiTest extends TestCase
         self::assertSame($crtContent, file_get_contents($api->getClientCertificateFile()));
     }
 
-    public function testInvalidFunctionBaseUrlThrowsUserException()
+    public function testInvalidFunctionBaseUrlThrowsUserException(): void
     {
         $apiConfig = [
             "baseUrl" => [

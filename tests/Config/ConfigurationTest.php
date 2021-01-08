@@ -13,21 +13,21 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ConfigurationTest extends ExtractorTestCase
 {
-    public function testStoreResults()
+    public function testStoreResults(): void
     {
         $temp = new Temp();
         $resultsPath = $temp->getTmpFolder() . DIRECTORY_SEPARATOR . 'data';
         $this->storeResults($resultsPath, 'full', false);
     }
 
-    public function testIncrementalResults()
+    public function testIncrementalResults(): void
     {
         $temp = new Temp();
         $resultsPath = $temp->getTmpFolder() . DIRECTORY_SEPARATOR . 'data';
         $this->storeResults($resultsPath, 'incremental', true);
     }
 
-    public function testDefaultBucketResults()
+    public function testDefaultBucketResults(): void
     {
         $temp = new Temp();
         $resultsPath = $temp->getTmpFolder() . DIRECTORY_SEPARATOR . 'data';
@@ -81,7 +81,7 @@ class ConfigurationTest extends ExtractorTestCase
         $this->rmDir($resultsPath);
     }
 
-    public function testGetConfigMetadata()
+    public function testGetConfigMetadata(): void
     {
         $path = __DIR__ . '/../data/metadataTest';
         $configuration = new Extractor($path, new NullLogger());
@@ -93,7 +93,7 @@ class ConfigurationTest extends ExtractorTestCase
         self::assertEquals([], $noConfiguration->getMetadata());
     }
 
-    public function testSaveConfigMetadata()
+    public function testSaveConfigMetadata(): void
     {
         $temp = new Temp();
         $resultsPath = $temp->getTmpFolder() . DIRECTORY_SEPARATOR . 'data';
@@ -114,7 +114,7 @@ class ConfigurationTest extends ExtractorTestCase
         $this->rmDir($resultsPath);
     }
 
-    public function testGetMultipleConfigs()
+    public function testGetMultipleConfigs(): void
     {
         $configuration = new Extractor(__DIR__ . '/../data/iterations', new NullLogger());
         $configs = $configuration->getMultipleConfigs();
@@ -138,7 +138,7 @@ class ConfigurationTest extends ExtractorTestCase
         self::assertEquals($json['parameters']['config']['outputBucket'], $configs[0]->getAttribute('outputBucket'));
     }
 
-    public function testGetMultipleConfigsSingle()
+    public function testGetMultipleConfigsSingle(): void
     {
         $configuration = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
         $configs = $configuration->getMultipleConfigs();
@@ -146,14 +146,14 @@ class ConfigurationTest extends ExtractorTestCase
         self::assertCount(1, $configs);
     }
 
-    public function testGetJson()
+    public function testGetJson(): void
     {
         $configuration = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
         $configs = $configuration->getMultipleConfigs();
         self::assertEquals('multiCfg', $configs[0]->getAttribute('id'));
     }
 
-    public function testGetInvalidConfig()
+    public function testGetInvalidConfig(): void
     {
         $temp = new Temp();
         $fs = new Filesystem();

@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class FilterTest extends TestCase
 {
-    public function testRun()
+    public function testRun(): void
     {
         $jobConfig = new JobConfig([
             'endpoint' => 'ep',
@@ -54,7 +54,7 @@ class FilterTest extends TestCase
         );
     }
 
-    public function testArray()
+    public function testArray(): void
     {
         $jobConfig = new JobConfig([
             'endpoint' => 'ep',
@@ -97,7 +97,7 @@ class FilterTest extends TestCase
         );
     }
 
-    public function testMissingData()
+    public function testMissingData(): void
     {
         $jobConfig = new JobConfig([
             'endpoint' => 'ep',
@@ -148,7 +148,7 @@ class FilterTest extends TestCase
         );
     }
 
-    public function testMultipleFilters()
+    public function testMultipleFilters(): void
     {
         $jobConfig = new JobConfig([
             'endpoint' => 'ep',
@@ -210,7 +210,7 @@ class FilterTest extends TestCase
         );
     }
 
-    public function testDelimiter()
+    public function testDelimiter(): void
     {
         $jobConfig = new JobConfig([
             'endpoint' => 'ep',
@@ -239,7 +239,7 @@ class FilterTest extends TestCase
         );
     }
 
-    public function testNestedArrays()
+    public function testNestedArrays(): void
     {
         $jobConfig = new JobConfig([
             'endpoint' => 'ep',
@@ -275,7 +275,7 @@ class FilterTest extends TestCase
         );
     }
 
-    public function testRunEmptyValuesLegacy()
+    public function testRunEmptyValuesLegacy(): void
     {
         $jobConfig = new JobConfig([
             'endpoint' => 'ep',
@@ -351,7 +351,7 @@ class FilterTest extends TestCase
         );
     }
 
-    public function testRunEmptyValuesFilterLatest()
+    public function testRunEmptyValuesFilterLatest(): void
     {
         $jobConfig = new JobConfig([
             'endpoint' => 'ep',
@@ -427,7 +427,7 @@ class FilterTest extends TestCase
         );
     }
 
-    public function testRunEmptyValuesArrayLegacy()
+    public function testRunEmptyValuesArrayLegacy(): void
     {
         $jobConfig = new JobConfig([
             'endpoint' => 'ep',
@@ -463,7 +463,7 @@ class FilterTest extends TestCase
         );
     }
 
-    public function testRunEmptyValuesArrayLatest()
+    public function testRunEmptyValuesArrayLatest(): void
     {
         $jobConfig = new JobConfig([
             'endpoint' => 'ep',

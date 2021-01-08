@@ -71,11 +71,9 @@ class SSH
     }
 
     /**
-     * @param string $key
-     * @return string
      * @throws UserException
      */
-    private function writeKeyToFile($key)
+    private function writeKeyToFile(string $key): string
     {
         if (empty($key)) {
             throw new UserException("Key must not be empty");

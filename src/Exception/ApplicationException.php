@@ -12,10 +12,7 @@ class ApplicationException extends \RuntimeException
         $this->data = $data;
     }
 
-    /**
-     * @return array
-     */
-    public function getData()
+    public function getData(): ?array
     {
         return $this->data;
     }

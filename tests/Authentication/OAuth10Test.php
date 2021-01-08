@@ -13,7 +13,7 @@ use Psr\Log\NullLogger;
 
 class OAuth10Test extends TestCase
 {
-    public function testAuthenticateClient()
+    public function testAuthenticateClient(): void
     {
         $restClient = new RestClient(new NullLogger(), [], [], []);
         $auth = new OAuth10([

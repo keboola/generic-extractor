@@ -67,11 +67,6 @@ class Api
 
     /**
      * Create Authentication class that accepts a Guzzle client.
-     *
-     * @param array $api
-     * @param array $configAttributes
-     * @param array $authorization
-     * @return AuthInterface
      * @throws UserException
      */
     private function createAuth(array $api, array $configAttributes, array $authorization) : AuthInterface
@@ -111,10 +106,7 @@ class Api
     }
 
     /**
-     * @param array $api
-     * @param array $configAttributes
      * @throws UserException
-     * @return string
      */
     private function createBaseUrl(array $api, array $configAttributes) : string
     {
@@ -149,33 +141,21 @@ class Api
         return $baseUrl;
     }
 
-    /**
-     * @return string
-     */
     public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
     public function getBaseUrl() : string
     {
         return $this->baseUrl;
     }
 
-    /**
-     * @return ScrollerInterface
-     */
     public function getNewScroller() : ScrollerInterface
     {
         return ScrollerFactory::getScroller($this->scrollerConfig);
     }
 
-    /**
-     * @return AuthInterface
-     */
     public function getAuth() : AuthInterface
     {
         return $this->auth;
@@ -224,25 +204,16 @@ class Api
         return $filePath;
     }
 
-    /**
-     * @return Headers
-     */
     public function getHeaders() : Headers
     {
         return $this->headers;
     }
 
-    /**
-     * @return array
-     */
     public function getDefaultRequestOptions() : array
     {
         return $this->defaultRequestOptions;
     }
 
-    /**
-     * @return array
-     */
     public function getRetryConfig() : array
     {
         return $this->retryConfig;
