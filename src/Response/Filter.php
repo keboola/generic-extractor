@@ -57,7 +57,11 @@ class Filter
         return $data;
     }
 
-    protected function filterItem(\stdClass $item, string $path): \stdClass
+    /**
+     * @param mixed $item
+     * @return mixed
+     */
+    protected function filterItem($item, string $path)
     {
         $currentPath = explode($this->delimiter, $path, 2);
 
