@@ -53,7 +53,7 @@ class SSH
             self::SSH_SERVER_ALIVE_INTERVAL
         );
 
-        $process = new Process($cmd);
+        $process = Process::fromShellCommandline($cmd);
         $process->setTimeout(60);
         $process->start();
 
