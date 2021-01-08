@@ -197,7 +197,7 @@ class GenericExtractorJob
         $jobs = [];
         foreach ($params as $index => $param) {
             // Clone the config to prevent overwriting the placeholder(s) in endpoint
-            $job = new static(
+            $job = new self(
                 clone $config,
                 $this->client,
                 $this->parser,
@@ -211,6 +211,8 @@ class GenericExtractorJob
             $job->setParentResults($parentResults);
             $jobs[] = $job;
         }
+
+        /** @var static[] $jobs */
         return $jobs;
     }
 
@@ -237,7 +239,7 @@ class GenericExtractorJob
     /**
      * @param string $placeholder
      * @param string|object|array $field Path or a function with a path
-     * @param $parentResults
+     * @param array $parentResults
      * @return array ['placeholder', 'field', 'value']
      * @throws UserException
      */

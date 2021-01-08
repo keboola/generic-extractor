@@ -71,7 +71,7 @@ class Executor
         $cacheStorage = $configuration->getCache();
 
         $results = [];
-        /** @var Config[] $configs */
+
         foreach ($configs as $config) {
             $this->setLogLevel($config->getAttribute('debug'));
             $api = $configuration->getApi($config->getAttributes());

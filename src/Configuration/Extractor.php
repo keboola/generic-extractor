@@ -30,11 +30,6 @@ class Extractor
 
     private string $dataDir;
 
-    /**
-     * Extractor constructor.
-     * @param $dataDir
-     * @param LoggerInterface $logger
-     */
     public function __construct(string $dataDir, LoggerInterface $logger)
     {
         $this->logger = $logger;
@@ -219,7 +214,9 @@ class Extractor
                 $manifest['destination'] = "{$bucketName}.{$key}";
             }
 
-            $manifest['incremental'] = is_null($file->getIncremental())
+            /** @var bool|null $fileIncremental */
+            $fileIncremental = $file->getIncremental();
+            $manifest['incremental'] = is_null($fileIncremental)
                 ? $incremental
                 : $file->getIncremental();
 

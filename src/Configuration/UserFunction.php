@@ -19,6 +19,7 @@ class UserFunction
      */
     public static function build($functions, array $params = [])
     {
+        /** @var array|\stdClass|mixed $functions */
         if (!is_object($functions) && !is_array($functions)) {
             throw new UserException(sprintf(
                 "Expected 'object' type, given '%s' type, value '%s'.",

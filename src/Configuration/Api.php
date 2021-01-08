@@ -87,7 +87,6 @@ class Api
                     $this->logger->warning("Using deprecated 'password', use '#password' instead.");
                 }
                 return new Authentication\Basic($configAttributes);
-                break;
             /** @noinspection PhpMissingBreakStatementInspection */
             case 'url.query':
                 $this->logger->warning("Method 'url.query' auth is deprecated, use 'query'.");
@@ -98,10 +97,8 @@ class Api
                     $api['authentication']['query'] = $api['query'];
                 }
                 return new Authentication\Query($configAttributes, $api['authentication']);
-                break;
             case 'login':
                 return new Authentication\Login($configAttributes, $api['authentication']);
-                break;
             case 'oauth10':
                 return new Authentication\OAuth10($authorization);
             case 'oauth20':
@@ -110,7 +107,6 @@ class Api
                 return new Authentication\OAuth20Login($configAttributes, $authorization, $api['authentication']);
             default:
                 throw new UserException("Unknown authorization type '{$api['authentication']['type']}'.");
-                break;
         }
     }
 
