@@ -29,42 +29,18 @@ class GenericExtractor
      */
     protected $parser;
 
-    /**
-     * @var CacheStorage
-     */
-    protected $cache;
+    protected ?CacheStorage $cache = null;
 
-    /**
-     * @var Temp
-     */
-    protected $temp;
+    protected Temp $temp;
 
-    /**
-     * @var array
-     */
-    protected $metadata = [];
+    protected array $metadata = [];
 
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
+    protected LoggerInterface $logger;
 
-    /**
-     * @var Api
-     */
-    private $api;
+    private Api $api;
 
-    /**
-     * @var array
-     */
-    private $proxy;
+    private ?array $proxy;
 
-    /**
-     * GenericExtractor constructor.
-     * @param Temp $temp
-     * @param LoggerInterface $logger
-     * @param Api $api
-     */
     public function __construct(Temp $temp, LoggerInterface $logger, Api $api, $proxy = null)
     {
         $this->temp = $temp;
@@ -120,9 +96,7 @@ class GenericExtractor
                 [
                     'storage' => $this->cache,
                     'validate' => false,
-                    'can_cache' => function (RequestInterface $requestInterface) {
-                        return true;
-                    }
+                    'can_cache' => fn(RequestInterface $requestInterface) => true
                 ]
             );
         }

@@ -123,9 +123,7 @@ class RecursiveJobTest extends TestCase
                     throw new \RuntimeException("Invalid request " . $request->getEndpoint());
             }
         });
-        $client->method('createRequest')->willReturnCallback(function ($config) {
-            return new RestRequest($config);
-        });
+        $client->method('createRequest')->willReturnCallback(fn($config) => new RestRequest($config));
         /** @var RestClient $client */
         $job = new GenericExtractorJob(
             $jobConfig,
@@ -210,9 +208,7 @@ class RecursiveJobTest extends TestCase
                     throw new \RuntimeException("Invalid request " . $request->getEndpoint());
             }
         });
-        $client->method('createRequest')->willReturnCallback(function ($config) {
-            return new RestRequest($config);
-        });
+        $client->method('createRequest')->willReturnCallback(fn($config) => new RestRequest($config));
         /** @var RestClient $client */
         $job = new GenericExtractorJob(
             $jobConfig,
@@ -297,9 +293,7 @@ class RecursiveJobTest extends TestCase
                     throw new \RuntimeException("Invalid request " . $request->getEndpoint());
             }
         });
-        $client->method('createRequest')->willReturnCallback(function ($config) {
-            return new RestRequest($config);
-        });
+        $client->method('createRequest')->willReturnCallback(fn($config) => new RestRequest($config));
         /** @var RestClient $client */
         $job = new GenericExtractorJob(
             $jobConfig,
@@ -384,9 +378,7 @@ class RecursiveJobTest extends TestCase
                     throw new \RuntimeException("Invalid request " . $request->getEndpoint());
             }
         });
-        $client->method('createRequest')->willReturnCallback(function ($config) {
-            return new RestRequest($config);
-        });
+        $client->method('createRequest')->willReturnCallback(fn($config) => new RestRequest($config));
         /** @var RestClient $client */
         $job = new GenericExtractorJob(
             $jobConfig,

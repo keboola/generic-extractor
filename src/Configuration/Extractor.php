@@ -22,25 +22,13 @@ class Extractor
 {
     const CACHE_TTL = 604800;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private LoggerInterface $logger;
 
-    /**
-     * @var array
-     */
-    private $config;
+    private array $config;
 
-    /**
-     * @var array
-     */
-    private $state;
+    private array $state;
 
-    /**
-     * @var string
-     */
-    private $dataDir;
+    private string $dataDir;
 
     /**
      * Extractor constructor.

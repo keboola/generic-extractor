@@ -10,10 +10,7 @@ class SSH
 {
     const SSH_SERVER_ALIVE_INTERVAL = 15;
 
-    /**
-     * @var Temp
-     */
-    private $temp;
+    private Temp $temp;
 
     public function __construct()
     {

@@ -26,25 +26,13 @@ use Keboola\Utils\Exception\NoDataFoundException;
  */
 class Login implements AuthInterface
 {
-    /**
-     * @var array
-     */
-    protected $configAttributes;
+    protected array $configAttributes;
+
+    protected array $auth;
+
+    protected ?string $format = null;
 
     /**
-     * @var array
-     */
-    protected $auth;
-
-    /**
-     * @var string
-     */
-    protected $format;
-
-    /**
-     * Login constructor.
-     * @param array $configAttributes
-     * @param array $authentication
      * @throws UserException
      */
     public function __construct(array $configAttributes, array $authentication)

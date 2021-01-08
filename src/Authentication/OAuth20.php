@@ -37,36 +37,17 @@ class OAuth20 implements AuthInterface
      */
     protected $data;
 
-    /**
-     * @var string
-     */
-    protected $clientId;
+    protected string $clientId;
+
+    protected string $clientSecret;
+
+    protected array $headers;
+
+    protected array $query;
+
+    protected array $configAttributes;
 
     /**
-     * @var string
-     */
-    protected $clientSecret;
-
-    /**
-     * @var array
-     */
-    protected $headers;
-
-    /**
-     * @var array
-     */
-    protected $query;
-
-    /**
-     * @var array
-     */
-    protected $configAttributes;
-
-    /**
-     * OAuth20 constructor.
-     * @param array $authorization
-     * @param array $authentication
-     * @param array $configAttributes
      * @throws UserException
      */
     public function __construct(array $configAttributes, array $authorization, array $authentication)

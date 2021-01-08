@@ -19,9 +19,7 @@ class UrlSignatureTest extends TestCase
 
         $subscriber = new UrlSignature();
         $subscriber->setSignatureGenerator(
-            function () {
-                return ['token' => 'tokenValue'];
-            }
+            fn() => ['token' => 'tokenValue']
         );
 
         $subscriber->onBefore($event);
@@ -36,9 +34,7 @@ class UrlSignatureTest extends TestCase
 
         $subscriber = new UrlSignature();
         $subscriber->setSignatureGenerator(
-            function () {
-                return ['token' => 'tokenValue'];
-            }
+            fn() => ['token' => 'tokenValue']
         );
 
         $subscriber->onBefore($event);

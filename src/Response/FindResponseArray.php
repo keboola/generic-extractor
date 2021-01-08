@@ -8,10 +8,7 @@ use Psr\Log\LoggerInterface;
 
 class FindResponseArray
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
      * FindResponseArray constructor.

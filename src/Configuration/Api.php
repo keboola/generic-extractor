@@ -18,66 +18,28 @@ use Symfony\Component\Validator\Validation;
  */
 class Api
 {
-    /**
-     * @var string
-     */
-    private $baseUrl;
+    private string $baseUrl;
 
-    /**
-     * @var string
-     */
-    private $name = 'generic';
+    private string $name = 'generic';
 
-    /**
-     * @var AuthInterface
-     */
-    private $auth;
+    private AuthInterface $auth;
 
-    /**
-     * @var string|null
-     */
-    private $caCertificate;
+    private ?string $caCertificate = null;
 
-    /**
-     * @var array
-     */
-    private $scrollerConfig = [];
+    private array $scrollerConfig = [];
 
-    /**
-     * @var Headers
-     */
-    private $headers;
+    private Headers $headers;
 
-    /**
-     * @var array
-     */
-    private $defaultRequestOptions = [];
+    private array $defaultRequestOptions = [];
 
-    /**
-     * @var array
-     */
-    private $retryConfig = [];
+    private array $retryConfig = [];
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private LoggerInterface $logger;
 
-    /**
-     * @var array
-     */
-    private $ignoreErrors = [];
+    private array $ignoreErrors = [];
 
-    /** @var string|null */
-    private $clientCertificate;
+    private ?string $clientCertificate = null;
 
-    /**
-     * Api constructor.
-     * @param LoggerInterface $logger
-     * @param array $api
-     * @param array $configAttributes
-     * @param array $authorization
-     */
     public function __construct(LoggerInterface $logger, array $api, array $configAttributes, array $authorization)
     {
         $this->logger = $logger;

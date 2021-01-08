@@ -9,20 +9,11 @@ use Keboola\GenericExtractor\Exception\UserException;
  */
 class Headers
 {
-    /**
-     * @var array
-     */
-    private $apiHeaders = [];
+    private array $apiHeaders = [];
 
-    /**
-     * @var array
-     */
-    private $configHeaders = [];
+    private array $configHeaders = [];
 
-    /**
-     * @var array
-     */
-    private $requiredHeaders = [];
+    private array $requiredHeaders = [];
 
     /**
      * Headers constructor.

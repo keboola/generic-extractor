@@ -4,10 +4,7 @@ namespace Keboola\GenericExtractor\Exception;
 
 class ApplicationException extends \RuntimeException
 {
-    /**
-     * @var array
-     */
-    private $data;
+    private ?array $data = null;
 
     public function __construct($message = "", $code = 0, \Throwable $previous = null, array $data = null)
     {

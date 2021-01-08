@@ -18,21 +18,14 @@ class Filter
 {
     const DEFAULT_DELIMITER = '.';
 
-    /**
-     * @var array
-     */
-    protected $filters;
+    protected array $filters;
 
-    /**
-     * @var string
-     */
-    protected $delimiter;
+    protected string $delimiter;
 
     /**
      * Compatibility level
-     * @var int
      */
-    private $compatLevel;
+    private int $compatLevel;
 
     public function __construct(JobConfig $config, int $compatLevel)
     {

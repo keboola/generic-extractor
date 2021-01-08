@@ -10,29 +10,15 @@ use GuzzleHttp\Subscriber\Oauth\Oauth1;
  */
 class OAuth10 implements AuthInterface
 {
-    /**
-     * @var string
-     */
-    protected $token;
+    protected string $token;
+
+    protected string $tokenSecret;
+
+    protected string $consumerKey;
+
+    protected string $consumerSecret;
 
     /**
-     * @var string
-     */
-    protected $tokenSecret;
-
-    /**
-     * @var string
-     */
-    protected $consumerKey;
-
-    /**
-     * @var string
-     */
-    protected $consumerSecret;
-
-    /**
-     * OAuth10 constructor.
-     * @param array $authorization
      * @throws UserException
      */
     public function __construct(array $authorization)

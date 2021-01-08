@@ -29,73 +29,40 @@ use Psr\Log\LoggerInterface;
  */
 class GenericExtractorJob
 {
-    /**
-     * @var JobConfig
-     */
-    private $config;
+    private JobConfig $config;
 
-    /**
-     * @var RestClient
-     */
-    private $client;
+    private RestClient $client;
 
-    /**
-     * @var ParserInterface
-     */
-    private $parser;
+    private ParserInterface $parser;
 
-    /**
-     * @var ScrollerInterface
-     */
-    private $scroller;
+    private ScrollerInterface $scroller;
 
-    /**
-     * @var string
-     */
-    private $jobId;
+    private string $jobId;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private LoggerInterface $logger;
 
-    /**
-     * @var array
-     */
-    private $attributes = [];
+    private array $attributes = [];
 
-    /**
-     * @var array
-     */
-    private $metadata = [];
+    private array $metadata = [];
 
-    /**
-     * @var string
-     */
-    private $lastResponseHash;
+    private ?string $lastResponseHash = null;
 
     /**
      * Data to append to the root result
-     * @var array
      */
-    private $userParentId;
+    private ?array $userParentId = null;
 
     /**
      * Used to save necessary parents' data to child's output
-     * @var array
      */
-    private $parentParams = [];
+    private array $parentParams = [];
 
-    /**
-     * @var array
-     */
-    private $parentResults = [];
+    private array $parentResults = [];
 
     /**
      * Compatibility level
-     * @var int
      */
-    private $compatLevel;
+    private int $compatLevel;
 
     /**
      * @param JobConfig $config

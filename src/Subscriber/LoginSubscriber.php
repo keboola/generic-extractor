@@ -11,15 +11,9 @@ use GuzzleHttp\Event\SubscriberInterface;
  */
 class LoginSubscriber implements SubscriberInterface
 {
-    /**
-     * @var int|null
-     */
-    protected $expires;
+    protected ?int $expires = null;
 
-    /**
-     * @var bool
-     */
-    protected $loggedIn;
+    protected ?bool $loggedIn = null;
 
     /**
      * @var callable

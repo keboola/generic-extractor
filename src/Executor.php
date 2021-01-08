@@ -19,10 +19,7 @@ use Symfony\Component\Finder\SplFileInfo;
  */
 class Executor
 {
-    /**
-     * @var Logger
-     */
-    private $logger;
+    private Logger $logger;
 
     /**
      * Executor constructor.

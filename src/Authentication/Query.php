@@ -12,15 +12,9 @@ use Keboola\GenericExtractor\Subscriber\UrlSignature;
  */
 class Query implements AuthInterface
 {
-    /**
-     * @var array
-     */
-    protected $query;
+    protected array $query;
 
-    /**
-     * @var array
-     */
-    protected $configAttributes;
+    protected array $configAttributes;
 
     /**
      * Query constructor.
