@@ -11,10 +11,9 @@ class BasicTest extends TestCase
 {
 
     /**
-     * @param array $credentials
      * @dataProvider credentialsProvider
      */
-    public function testAuthenticateClient($credentials): void
+    public function testAuthenticateClient(array $credentials): void
     {
         $auth = new Basic($credentials);
         $restClient = new RestClient(new NullLogger(), []);
@@ -27,7 +26,7 @@ class BasicTest extends TestCase
         self::assertEquals(['Basic dGVzdDpwYXNz'], $request->getHeaders()['Authorization']);
     }
 
-    public static function credentialsProvider()
+    public function credentialsProvider()
     {
         return [
             [

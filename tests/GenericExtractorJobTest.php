@@ -17,10 +17,8 @@ class GenericExtractorJobTest extends ExtractorTestCase
 {
     /**
      * @dataProvider parentIdProvider
-     * @param JobConfig $cfg
-     * @param string $expected
      */
-    public function testGetParentId(JobConfig $cfg, $expected): void
+    public function testGetParentId(JobConfig $cfg, ?array $expected): void
     {
         $job = $this->getJob($cfg, [], []);
 
@@ -126,10 +124,8 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     /**
      * @dataProvider nextPageProvider
-     * @param array $config
-     * @param array $expectedParams
      */
-    public function testNextPage($config, $expectedParams): void
+    public function testNextPage(array $config, array $expectedParams): void
     {
         $cfg = new JobConfig([
             'endpoint' => 'ep',
@@ -299,13 +295,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         self::assertContainsOnlyInstancesOf('\Keboola\CsvTable\Table', $parser->getResults());
     }
 
-    /**
-     * @param JobConfig $config
-     * @param array $attributes
-     * @param array $metadata
-     * @return GenericExtractorJob
-     */
-    protected function getJob(JobConfig $config, array $attributes, array $metadata)
+    protected function getJob(JobConfig $config, array $attributes, array $metadata): GenericExtractorJob
     {
         return new GenericExtractorJob(
             $config,
@@ -328,8 +318,8 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     /**
      * @dataProvider placeholderProvider
-     * @param $field
-     * @param $expectedValue
+     * @param mixed $field
+     * @param mixed $expectedValue
      */
     public function testGetPlaceholder($field, $expectedValue): void
     {
@@ -384,8 +374,8 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     /**
      * @dataProvider placeholderValueProvider
-     * @param $level
-     * @param $expected
+     * @param mixed $level
+     * @param mixed $expected
      */
     public function testGetPlaceholderValue($level, $expected): void
     {
@@ -412,8 +402,8 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     /**
      * @dataProvider placeholderErrorValueProvider
-     * @param $data
-     * @param $message
+     * @param mixed $data
+     * @param mixed $message
      */
     public function testGetPlaceholderValueError($data, $message): void
     {

@@ -8,9 +8,8 @@ class MockExecutionTest extends TestCase
 {
     /**
      * @dataProvider configProvider
-     * @param string $configDir
      */
-    public function testRun($configDir): void
+    public function testRun(string $configDir): void
     {
         $this->rmDir(__DIR__ . "/data/{$configDir}/out");
         exec("php " . __DIR__ . "/../run.php --data=" . __DIR__ . "/data/{$configDir} 2>&1", $output, $retval);
