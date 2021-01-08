@@ -13,8 +13,8 @@ class ConfigFile implements ConfigurationInterface
 {
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $root = $treeBuilder->root('config-file');
+        $treeBuilder = new TreeBuilder('config-file');
+        $root = $treeBuilder->getRootNode();
         $parameters = $root->children()->arrayNode('parameters')->isRequired();
         $api = $parameters->children()->arrayNode('api')->isRequired();
         Api::configureNode($api);

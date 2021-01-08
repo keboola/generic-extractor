@@ -42,7 +42,7 @@ class MockExecutionTest extends TestCase
     public function testDefaultRequestOptions()
     {
         exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/defaultOptions', $output);
-        self::assertRegexp('/GET \/defaultOptions\?param=value/', implode("\n", $output));
+        self::assertMatchesRegularExpression('/GET \/defaultOptions\?param=value/', implode("\n", $output));
         $this->rmDir(__DIR__ . '/data/defaultOptions/out');
     }
 

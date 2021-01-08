@@ -209,8 +209,8 @@ class MissingTableHelperTest extends TestCase
         $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
         $configs = $configuration->getMultipleConfigs();
         MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
-        self::assertFileNotExists($baseDir . 'mock-server.users');
-        self::assertFileNotExists($baseDir . 'mock-server.users.manifest');
+        self::assertFileDoesNotExist($baseDir . 'mock-server.users');
+        self::assertFileDoesNotExist($baseDir . 'mock-server.users.manifest');
     }
 
     public function testMissingTablesSimplifiedMapping()

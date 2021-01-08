@@ -9,8 +9,8 @@ class StateFile implements ConfigurationInterface
 {
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $root = $treeBuilder->root('state-file');
+        $treeBuilder = new TreeBuilder('state-file');
+        $root = $treeBuilder->getRootNode();
         $root->children()->arrayNode('todo')->isRequired();
         return $treeBuilder;
     }
