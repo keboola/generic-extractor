@@ -6,7 +6,7 @@
     "require": {
         "php": ">=7.4",
         "ext-json": "*",
-        "keboola/juicer": "^4.10",
+        "keboola/juicer": "^4.10.1",
         "keboola/php-utils": "^2.2",
         "keboola/filter": "^1.1",
         "symfony/config": "^5.2",
