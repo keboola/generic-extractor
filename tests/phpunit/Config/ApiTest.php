@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace Keboola\GenericExtractor\Tests\Config;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Event\BeforeEvent;
-use GuzzleHttp\Event\Emitter;
-use GuzzleHttp\Message\Request;
-use GuzzleHttp\Message\Response;
 use Keboola\GenericExtractor\Authentication\OAuth20;
 use Keboola\GenericExtractor\Authentication\OAuth20Login;
 use Keboola\GenericExtractor\Authentication\Query;

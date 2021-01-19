@@ -45,8 +45,8 @@ class ConfigurationTest extends ExtractorTestCase
         $configuration = new Extractor($resultsPath, new NullLogger());
 
         $files = [
-            Table::create('first', ['col1', 'col2']),
-            Table::create('second', ['col11', 'col12']),
+            new Table('first', ['col1', 'col2']),
+            new Table('second', ['col11', 'col12']),
         ];
 
         $files[0]->writeRow(['a', 'b']);
@@ -71,8 +71,8 @@ class ConfigurationTest extends ExtractorTestCase
         $configuration = new Extractor($resultsPath, new NullLogger());
 
         $files = [
-            Table::create('first', ['col1', 'col2']),
-            Table::create('second', ['col11', 'col12']),
+            new Table('first', ['col1', 'col2']),
+            new Table('second', ['col11', 'col12']),
         ];
 
         $files[0]->writeRow(['a', 'b']);

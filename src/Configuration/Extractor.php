@@ -188,11 +188,9 @@ class Extractor
                 $manifest['destination'] = "{$bucketName}.{$key}";
             }
 
-            /** @var bool|null $fileIncremental */
-            $fileIncremental = $file->getIncremental();
-            $manifest['incremental'] = is_null($fileIncremental)
-                ? $incremental
-                : $file->getIncremental();
+            $manifest['incremental'] = $file->isIncrementalSet()
+                ? $file->getIncremental()
+                : $incremental;
 
             if (!empty($file->getPrimaryKey())) {
                 $manifest['primary_key'] = $file->getPrimaryKey(true);
