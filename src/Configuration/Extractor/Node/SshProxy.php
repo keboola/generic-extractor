@@ -10,11 +10,15 @@ class SshProxy
 {
     public static function configureNode(ArrayNodeDefinition $node): void
     {
-        $node->children()
-            ->scalarNode('host')->isRequired()->end()
-            ->scalarNode('port')->isRequired()->end()
-            ->scalarNode('user')->isRequired()->end()
-            ->scalarNode('#privateKey')->isRequired()->end()
+        // @formatter:off
+        /** @noinspection NullPointerExceptionInspection */
+        $node
+            ->children()
+                ->scalarNode('host')->isRequired()->end()
+                ->scalarNode('port')->isRequired()->end()
+                ->scalarNode('user')->isRequired()->end()
+                ->scalarNode('#privateKey')->isRequired()->end()
             ->end();
+        // @formatter:on
     }
 }

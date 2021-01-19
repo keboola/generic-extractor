@@ -10,11 +10,14 @@ class Api
 {
     public static function configureNode(ArrayNodeDefinition $node): void
     {
+        // @formatter:off
+        /** @noinspection NullPointerExceptionInspection */
         $node
             ->ignoreExtraKeys() // TODO add missing sub-nodes
             ->children()
-            ->scalarNode('caCertificate')->cannotBeEmpty()->end()
-            ->scalarNode('clientCertificate')->cannotBeEmpty()->end()
+                ->scalarNode('caCertificate')->cannotBeEmpty()->end()
+                ->scalarNode('clientCertificate')->cannotBeEmpty()->end()
             ->end();
+        // @formatter:on
     }
 }

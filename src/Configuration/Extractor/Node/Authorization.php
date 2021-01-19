@@ -10,18 +10,21 @@ class Authorization
 {
     public static function configureNode(ArrayNodeDefinition $node): void
     {
+        // @formatter:off
+        /** @noinspection NullPointerExceptionInspection */
         $node->children()
             ->arrayNode('oauth_api')
-            ->children()
-            ->arrayNode('credentials')
-            ->children()
-            ->scalarNode('#data')->isRequired()->end()
-            ->scalarNode('appKey')->isRequired()->end()
-            ->scalarNode('#appSecret')->isRequired()->end()
+                ->children()
+                    ->arrayNode('credentials')
+                        ->children()
+                            ->scalarNode('#data')->isRequired()->end()
+                            ->scalarNode('appKey')->isRequired()->end()
+                            ->scalarNode('#appSecret')->isRequired()->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
-            ->end()
-            ->end()
-            ->end()
-            ->end();
+        ->end();
+        // @formatter:on
     }
 }
