@@ -32,7 +32,7 @@
         "psr-4": { "Keboola\\GenericExtractor\\Tests\\": "tests/phpunit" }
     },
     "scripts": {
-        "tests-phpunit": "phpunit",
+        "tests-phpunit": "XDEBUG_MODE=coverage phpunit",
         "tests": [
             "@tests-phpunit"
         ],

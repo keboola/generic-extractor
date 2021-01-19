@@ -13,8 +13,10 @@ class MockExecutionTest extends TestCase
      */
     public function testRun(string $configDir): void
     {
-        $this->rmDir(__DIR__ . "/data/{$configDir}/out");
-        exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . "/data/{$configDir} 2>&1", $output, $retval);
+        $dataDir = __DIR__ . "/data/{$configDir}";
+        $runPhp = __DIR__ . '/../../src/run.php';
+        $this->rmDir(__DIR__ . "{$dataDir}/out");
+        exec("KBC_DATADIR=$dataDir php $runPhp  2>&1", $output, $retval);
 
         self::assertStringContainsString('Extractor finished successfully.', implode("\n", $output));
         self::assertDirectoryEquals(
@@ -42,21 +44,27 @@ class MockExecutionTest extends TestCase
 
     public function testDefaultRequestOptions(): void
     {
-        exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/defaultOptions', $output);
+        $dataDir = __DIR__ . '/data/defaultOptions';
+        $runPhp = __DIR__ . '/../../src/run.php';
+        exec("KBC_DATADIR=$dataDir php $runPhp  2>&1", $output, $retval);
         self::assertMatchesRegularExpression('/GET \/defaultOptions\?param=value/', implode("\n", $output));
         $this->rmDir(__DIR__ . '/data/defaultOptions/out');
     }
 
     public function testEmptyCfg(): void
     {
-        exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/emptyCfg 2>&1', $output, $retval);
+        $dataDir = __DIR__ . '/data/emptyCfg';
+        $runPhp = __DIR__ . '/../../src/run.php';
+        exec("KBC_DATADIR=$dataDir php $runPhp  2>&1", $output, $retval);
         self::assertStringContainsString('is not a valid JSON: Syntax error', implode("\n", $output));
         self::assertEquals(2, $retval);
     }
 
     public function testDynamicUserData(): void
     {
-        exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/dynamicUserData 2>&1', $output, $retval);
+        $dataDir = __DIR__ . '/data/dynamicUserData';
+        $runPhp = __DIR__ . '/../../src/run.php';
+        exec("KBC_DATADIR=$dataDir php $runPhp  2>&1", $output, $retval);
         /** @var array $expectedFile */
         $expectedFile = file(__DIR__ . '/data/dynamicUserData/expected/tables/get');
         foreach ($expectedFile as &$row) {

@@ -25,7 +25,4 @@
   <testsuite name="Main Test Suite">
     <directory>tests/phpunit</directory>
   </testsuite>
-  <php>
-    <env name="XDEBUG_MODE" value="coverage" force="true" />
-  </php>
 </phpunit>

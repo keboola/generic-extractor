@@ -65,7 +65,7 @@ class Executor
         $results = [];
 
         foreach ($configs as $config) {
-            $this->setLogLevel($config->getAttribute('debug'));
+            $this->setLogLevel((bool) $config->getAttribute('debug'));
             $api = $configuration->getApi($config->getAttributes());
 
             if (!empty($config->getAttribute('outputBucket'))) {
