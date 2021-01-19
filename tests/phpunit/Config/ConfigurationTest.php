@@ -49,6 +49,7 @@ class ConfigurationTest extends ExtractorTestCase
 
         $configuration->storeResults($files);
 
+        /** @var \SplFileInfo $file */
         foreach (new \FilesystemIterator(__DIR__ . '/../data/storeResultsDefaultBucket/out/tables/') as $file) {
             self::assertFileEquals($file->getPathname(), $resultsPath . '/out/tables/' . $file->getFilename());
         }
@@ -73,6 +74,7 @@ class ConfigurationTest extends ExtractorTestCase
 
         $configuration->storeResults($files, $name, true, $incremental);
 
+        /** @var \SplFileInfo $file */
         foreach (new \FilesystemIterator(__DIR__ . '/../data/storeResultsTest/out/tables/' . $name) as $file) {
             self::assertFileEquals(
                 $file->getPathname(),
@@ -122,7 +124,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $configuration = new Extractor(__DIR__ . '/../data/iterations', new NullLogger());
         $configs = $configuration->getMultipleConfigs();
-        $json = json_decode(file_get_contents(__DIR__ . '/../data/iterations/config.json'), true);
+        $json = json_decode((string) file_get_contents(__DIR__ . '/../data/iterations/config.json'), true);
 
         foreach ($json['parameters']['iterations'] as $i => $params) {
             self::assertEquals(

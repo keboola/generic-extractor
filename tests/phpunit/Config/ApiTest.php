@@ -36,7 +36,7 @@ class ApiTest extends TestCase
         $emitterMock = self::createMock(Emitter::class);
         $a = 1;
         $emitterMock->method('attach')->willReturnCallback(
-            function ($arg) use ($beforeEventMock, $request, &$a): void {
+            function ($arg) use ($beforeEventMock, &$a): void {
                 /**
             * @var AbstractSignature $arg
             */
@@ -160,7 +160,7 @@ class ApiTest extends TestCase
 
     public function testCreateAuthOAuth20Bearer(): void
     {
-        $config = json_decode(file_get_contents(__DIR__ . '/../data/oauth20bearer/config.json'), true);
+        $config = json_decode((string) file_get_contents(__DIR__ . '/../data/oauth20bearer/config.json'), true);
         $api = new Api(new NullLogger(), $config['parameters']['api'], [], $config['authorization']);
         $request = new Request('GET', 'http://example.com?foo=bar');
         $restClientMock = $this->getClientMock($request);
@@ -178,7 +178,7 @@ class ApiTest extends TestCase
 
     public function testCreateOauth2Login(): void
     {
-        $config = json_decode(file_get_contents(__DIR__ . '/../data/oauth20login/config.json'), true);
+        $config = json_decode((string) file_get_contents(__DIR__ . '/../data/oauth20login/config.json'), true);
         $api = new Api(new NullLogger(), $config['parameters']['api'], [], $config['authorization']);
         $request = new Request('GET', 'http://example.com?foo=bar');
         $restClientMock = $this->getClientMock($request);

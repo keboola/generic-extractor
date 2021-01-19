@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor;
 
+use GuzzleHttp\Message\RequestInterface;
 use Keboola\Filter\Exception\FilterException;
 use Keboola\Filter\FilterFactory;
 use Keboola\GenericExtractor\Configuration\UserFunction;
@@ -105,6 +106,7 @@ class GenericExtractorJob
 
         $parentId = $this->getParentId();
 
+        /** @var RestRequest $request */
         $request = $this->firstPage($this->config);
         while ($request !== false) {
             $response = $this->download($request);
@@ -233,7 +235,7 @@ class GenericExtractorJob
 
 
     /**
-     * @param  string|object|array $field Path or a function with a path
+     * @param  string|array $field Path or a function with a path
      * @return array ['placeholder', 'field', 'value']
      * @throws UserException
      */
@@ -242,7 +244,7 @@ class GenericExtractorJob
         // TODO allow using a descriptive ID(level) by storing the result by `task(job) id` in $parentResults
         $level = strpos($placeholder, ':') === false
             ? 0
-            : strtok($placeholder, ':') -1;
+            : (int) strtok($placeholder, ':') -1;
 
         if (!is_scalar($field)) {
             if (empty($field['path'])) {
@@ -252,7 +254,7 @@ class GenericExtractorJob
                 );
             }
 
-            $fn = \Keboola\Utils\arrayToObject($field);
+            $fn = (object) \Keboola\Utils\arrayToObject($field);
             $field = $field['path'];
             unset($fn->path);
         }
@@ -280,7 +282,7 @@ class GenericExtractorJob
     {
         try {
             if (!array_key_exists($level, $parentResults)) {
-                $maxLevel = empty($parentResults) ? 0 : max(array_keys($parentResults)) +1;
+                $maxLevel = empty($parentResults) ? 0 : (int) max(array_keys($parentResults)) +1;
                 throw new UserException(
                     'Level ' . ++$level . ' not found in parent results! Maximum level: ' . $maxLevel
                 );
@@ -321,9 +323,9 @@ class GenericExtractorJob
      * Return a download request OR false if no next page exists
      *
      * @param  mixed $response
-     * @return RestRequest | false
+     * @return RestRequest|false
      */
-    private function nextPage(JobConfig $config, $response, ?array $data): RestRequest
+    private function nextPage(JobConfig $config, $response, array $data)
     {
         return $this->getScroller()->getNextRequest($this->client, $config, $response, $data);
     }

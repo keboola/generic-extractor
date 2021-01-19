@@ -115,6 +115,10 @@ class GenericExtractor
 
     protected function runJob(JobConfig $jobConfig, RestClient $client, Config $config): void
     {
+        if (!$this->parser) {
+            throw new \UnexpectedValueException('Parser is not set.');
+        }
+
         $job = new GenericExtractorJob(
             $jobConfig,
             $client,

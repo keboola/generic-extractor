@@ -31,8 +31,8 @@ class Executor
     private function setLogLevel(bool $debug): void
     {
         /**
- * @var AbstractHandler $handler
-*/
+         * @var AbstractHandler $handler
+         */
         foreach ($this->logger->getHandlers() as $handler) {
             if ($handler instanceof AbstractHandler) {
                 if ($debug) {
@@ -47,13 +47,8 @@ class Executor
     public function run(): void
     {
         $temp = new Temp();
-
-        $arguments = getopt('d::', ['data::']);
-        if (!isset($arguments['data'])) {
-            throw new UserException('Data folder not set.');
-        }
-
-        $configuration = new Extractor($arguments['data'], $this->logger);
+        $dataDir = getenv('KBC_DATADIR') ?: '/data';
+        $configuration = new Extractor($dataDir, $this->logger);
         $configs = $configuration->getMultipleConfigs();
 
         $sshProxy = null;
@@ -108,12 +103,12 @@ class Executor
         foreach ($results as $bucket => $result) {
             $this->logger->debug("Processing results for {$bucket}.");
             /**
- * @var Json $parser
-*/
+             * @var Json $parser
+             */
             $parser = $result['parser'];
             $configuration->storeResults(
                 $parser->getResults(),
-                $bucket === '__kbc_default' ? null : $bucket,
+                $bucket === '__kbc_default' ? null : (string) $bucket,
                 true,
                 $result['incremental']
             );
@@ -121,19 +116,15 @@ class Executor
             // move files and flatten file structure
             $folderFinder = new Finder();
             $fs = new Filesystem();
-            $folders = $folderFinder->directories()->in($arguments['data'] . '/out/tables')->depth(0);
+            $folders = $folderFinder->directories()->in($dataDir . '/out/tables')->depth(0);
             foreach ($folders as $folder) {
-                /**
- * @var SplFileInfo $folder
-*/
+                /** @var SplFileInfo $folder */
                 $filesFinder = new Finder();
                 $files = $filesFinder->files()->in($folder->getPathname())->depth(0);
-                /**
- * @var SplFileInfo $file
-*/
+                /** @var SplFileInfo $file */
                 foreach ($files as $file) {
                     $destination =
-                        $arguments['data'] . '/out/tables/' . basename($folder->getPathname()) .
+                        $dataDir . '/out/tables/' . basename($folder->getPathname()) .
                         '.' . basename($file->getPathname());
                     // maybe move will be better?
                     $fs->rename($file->getPathname(), $destination);
@@ -142,7 +133,7 @@ class Executor
             $fs->remove($folders);
         }
 
-        MissingTableHelper::checkConfigs($configs, $arguments['data'], $configuration);
+        MissingTableHelper::checkConfigs($configs, $dataDir, $configuration);
         $metadata['time']['previousStart'] = $metadata['time']['currentStart'];
         unset($metadata['time']['currentStart']);
         $configuration->saveConfigMetadata($metadata);

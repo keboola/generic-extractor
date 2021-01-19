@@ -23,7 +23,7 @@ class OAuth20LoginTest extends ExtractorTestCase
                 200,
                 [],
                 Stream::factory(
-                    json_encode(
+                    (string) json_encode(
                         (object) [ // auth
                         'access_token' => 1234,
                         'expires_in' => 3,
@@ -35,7 +35,7 @@ class OAuth20LoginTest extends ExtractorTestCase
                 200,
                 [],
                 Stream::factory(
-                    json_encode(
+                    (string) json_encode(
                         (object) [ // api call
                         'data' => [1,2,3],
                         ]
@@ -46,7 +46,7 @@ class OAuth20LoginTest extends ExtractorTestCase
                 200,
                 [],
                 Stream::factory(
-                    json_encode(
+                    (string) json_encode(
                         (object) [ // api call
                         'data' => [1,2,3],
                         ]
@@ -57,7 +57,7 @@ class OAuth20LoginTest extends ExtractorTestCase
                 200,
                 [],
                 Stream::factory(
-                    json_encode(
+                    (string) json_encode(
                         (object) [ // auth
                         'access_token' => 4321,
                         'expires_in' => 3,
@@ -69,7 +69,7 @@ class OAuth20LoginTest extends ExtractorTestCase
                 200,
                 [],
                 Stream::factory(
-                    json_encode(
+                    (string) json_encode(
                         (object) [ // api call
                         'data' => [1,2,3],
                         ]
@@ -87,7 +87,7 @@ class OAuth20LoginTest extends ExtractorTestCase
         $oauthCredentials = [
             'appKey' => 1,
             '#appSecret' => 'two',
-            '#data' => json_encode(
+            '#data' => (string) json_encode(
                 [
                 'access_token' => '1234',
                 'refresh_token' => 'asdf',

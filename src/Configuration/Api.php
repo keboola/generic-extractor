@@ -172,7 +172,7 @@ class Api
 
     public function getCaCertificate(): string
     {
-        if (!$this->hasCaCertificate()) {
+        if (!$this->caCertificate) {
             throw new ApplicationException('Key "api.caCertificate" is not configured.');
         }
 
@@ -194,7 +194,7 @@ class Api
 
     public function getClientCertificate(): string
     {
-        if (!$this->hasClientCertificate()) {
+        if (!$this->clientCertificate) {
             throw new ApplicationException('Key "api.clientCertificate" is not configured.');
         }
 

@@ -1,3 +1,8 @@
 parameters:
+    checkMissingIterableValueType: false
     ignoreErrors:
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder#'
+        - '#Cannot call method .* on Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface\|null.#'
+        - '#Cannot access offset .* on Iterator#'
+        - '#MockObject is not subtype of native type#'
+        - '#Call to an undefined method .*::method\(\)#'

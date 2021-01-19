@@ -66,14 +66,17 @@ class OAuth20 implements AuthInterface
         if (empty($authentication['format'])) {
             $authentication['format'] = 'text';
         }
+
         switch ($authentication['format']) {
             case 'json':
                 // authorization: { data: key }
-                $this->data = \Keboola\Utils\jsonDecode($oauthApiDetails['#data']);
+                /** @var object $data */
+                $data = \Keboola\Utils\jsonDecode((string) $oauthApiDetails['#data']);
+                $this->data = $data;
                 break;
             case 'text':
                 // authorization: data
-                $this->data = $oauthApiDetails['#data'];
+                $this->data = (string) $oauthApiDetails['#data'];
                 break;
             default:
                 throw new UserException("Unknown OAuth data format '{$authentication['format']}'.");
@@ -129,10 +132,7 @@ class OAuth20 implements AuthInterface
         }
     }
 
-    /**
-     * @param array|object $definitions
-     */
-    protected function addGenerator(AbstractSignature $subscriber, $definitions, array $authorization): void
+    protected function addGenerator(AbstractSignature $subscriber, array $definitions, array $authorization): void
     {
         // Create array of objects instead of arrays from YML
         $q = (array) \Keboola\Utils\arrayToObject($definitions);

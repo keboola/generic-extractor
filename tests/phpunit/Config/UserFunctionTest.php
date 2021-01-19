@@ -37,6 +37,7 @@ class UserFunctionTest extends TestCase
 
     public function testInvalidType(): void
     {
+        /** @var array $functions */
         $functions = 'not array';
 
         $this->expectException(UserException::class);

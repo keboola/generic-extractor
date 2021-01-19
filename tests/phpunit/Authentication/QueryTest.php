@@ -53,7 +53,7 @@ class QueryTest extends ExtractorTestCase
                 200,
                 [],
                 Stream::factory(
-                    json_encode(
+                    (string) json_encode(
                         (object) [
                         'data' => [1,2,3],
                         ]
@@ -109,7 +109,7 @@ class QueryTest extends ExtractorTestCase
                 200,
                 [],
                 Stream::factory(
-                    json_encode(
+                    (string) json_encode(
                         (object) [
                         'data' => [1,2,3],
                         ]

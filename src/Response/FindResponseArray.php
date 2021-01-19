@@ -58,7 +58,7 @@ class FindResponseArray
         } elseif (is_object($response)) {
             // Find arrays in the response
             $arrays = [];
-            foreach ($response as $key => $value) {
+            foreach (get_object_vars($response) as $key => $value) {
                 if (is_array($value)) {
                     $arrays[$key] = $value;
                 } // TODO else {$this->metadata[$key] = json_encode($value);} ? return [$data,$metadata];

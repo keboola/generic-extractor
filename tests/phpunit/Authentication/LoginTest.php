@@ -26,7 +26,7 @@ class LoginTest extends ExtractorTestCase
                 200,
                 [],
                 Stream::factory(
-                    json_encode(
+                    (string) json_encode(
                         (object) [ // auth
                         'headerToken' => 1234,
                         'queryToken' => 4321,
@@ -39,7 +39,7 @@ class LoginTest extends ExtractorTestCase
                 200,
                 [],
                 Stream::factory(
-                    json_encode(
+                    (string) json_encode(
                         (object) [ // api call
                         'data' => [1,2,3],
                         ]
@@ -50,7 +50,7 @@ class LoginTest extends ExtractorTestCase
                 200,
                 [],
                 Stream::factory(
-                    json_encode(
+                    (string) json_encode(
                         (object) [ // api call
                         'data' => [1,2,3],
                         ]
@@ -88,7 +88,7 @@ class LoginTest extends ExtractorTestCase
         // test creation of the login request
         self::assertEquals($attrs['second'], $history->getIterator()[0]['request']->getHeader('X-Header'));
         self::assertEquals(
-            json_encode(['par' => $attrs['first']]),
+            (string) json_encode(['par' => $attrs['first']]),
             (string) $history->getIterator()[0]['request']->getBody()
         );
 
@@ -110,12 +110,12 @@ class LoginTest extends ExtractorTestCase
     {
         $mock = new Mock(
             [
-            new Response(200, [], Stream::factory(json_encode('someToken'))),
+            new Response(200, [], Stream::factory((string) json_encode('someToken'))),
             new Response(
                 200,
                 [],
                 Stream::factory(
-                    json_encode(
+                    (string) json_encode(
                         (object) [ // api call
                         'data' => [1,2,3],
                         ]
@@ -126,7 +126,7 @@ class LoginTest extends ExtractorTestCase
                 200,
                 [],
                 Stream::factory(
-                    json_encode(
+                    (string) json_encode(
                         (object) [ // api call
                         'data' => [1,2,3],
                         ]
@@ -163,7 +163,7 @@ class LoginTest extends ExtractorTestCase
         // test creation of the login request
         self::assertEquals($attrs['second'], $history->getIterator()[0]['request']->getHeader('X-Header'));
         self::assertEquals(
-            json_encode(['par' => $attrs['first']]),
+            (string) json_encode(['par' => $attrs['first']]),
             (string) $history->getIterator()[0]['request']->getBody()
         );
 
@@ -181,7 +181,7 @@ class LoginTest extends ExtractorTestCase
                 200,
                 [],
                 Stream::factory(
-                    json_encode(
+                    (string) json_encode(
                         (object) [ // api call
                         'data' => [1,2,3],
                         ]
@@ -192,7 +192,7 @@ class LoginTest extends ExtractorTestCase
                 200,
                 [],
                 Stream::factory(
-                    json_encode(
+                    (string) json_encode(
                         (object) [ // api call
                         'data' => [1,2,3],
                         ]
@@ -229,7 +229,7 @@ class LoginTest extends ExtractorTestCase
         // test creation of the login request
         self::assertEquals($attrs['second'], $history->getIterator()[0]['request']->getHeader('X-Header'));
         self::assertEquals(
-            json_encode(['par' => $attrs['first']]),
+            (string) json_encode(['par' => $attrs['first']]),
             (string) $history->getIterator()[0]['request']->getBody()
         );
 
@@ -246,7 +246,7 @@ class LoginTest extends ExtractorTestCase
                 200,
                 [],
                 Stream::factory(
-                    json_encode(
+                    (string) json_encode(
                         (object) [ // auth
                         'tokens' => [
                         'header' => 1234,
@@ -260,7 +260,7 @@ class LoginTest extends ExtractorTestCase
                 200,
                 [],
                 Stream::factory(
-                    json_encode(
+                    (string) json_encode(
                         (object) [ // api call
                         'data' => [1,2,3],
                         ]
@@ -334,7 +334,7 @@ class LoginTest extends ExtractorTestCase
             (string) $history->getIterator()[1]['request']->getQuery()
         );
         self::assertEquals(
-            json_encode(['data' => [1,2,3]]),
+            (string) json_encode(['data' => [1,2,3]]),
             (string) $history->getIterator()[1]['response']->getBody()
         );
     }

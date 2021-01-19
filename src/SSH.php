@@ -79,8 +79,8 @@ class SSH
         if (empty($key)) {
             throw new UserException('Key must not be empty');
         }
-        $path = $this->temp->createFile('ssh-key')->getRealPath();
-        file_put_contents($path, $key);
+        $path = (string) $this->temp->createFile('ssh-key')->getRealPath();
+        (string) file_put_contents($path, $key);
         chmod($path, 0600);
         return $path;
     }

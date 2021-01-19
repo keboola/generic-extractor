@@ -65,6 +65,7 @@ class Filter
      */
     protected function filterItem($item, string $path)
     {
+        /** @var array $currentPath */
         $currentPath = explode($this->delimiter, $path, 2);
 
         if (substr($currentPath[0], -2) === '[]') {
@@ -114,9 +115,9 @@ class Filter
     protected function updateItem($item): string
     {
         if ($this->compatLevel <= GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY_SCALAR) {
-            return is_scalar($item) ? $item : json_encode($item);
+            return is_scalar($item) ? (string) $item : (string) json_encode($item);
         } else {
-            return json_encode($item);
+            return (string) json_encode($item);
         }
     }
 }

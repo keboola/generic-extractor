@@ -46,7 +46,7 @@ class Extractor
         if (!file_exists($fileName)) {
             throw new ApplicationException("Configuration file '$fileName' not found.");
         }
-        $data = json_decode(file_get_contents($fileName), true);
+        $data = json_decode((string) file_get_contents($fileName), true);
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new ApplicationException('Configuration file is not a valid JSON: ' . json_last_error_msg());
         }
@@ -177,8 +177,8 @@ class Extractor
 
         if (!is_dir($path)) {
             mkdir($path, 0775, true);
-            chown($path, fileowner("{$this->dataDir}/out/tables/"));
-            chgrp($path, filegroup("{$this->dataDir}/out/tables/"));
+            chown($path, (int) fileowner("{$this->dataDir}/out/tables/"));
+            chgrp($path, (int) filegroup("{$this->dataDir}/out/tables/"));
         }
 
         foreach ($csvFiles as $key => $file) {

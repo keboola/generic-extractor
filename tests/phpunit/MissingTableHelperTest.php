@@ -104,15 +104,15 @@ class MissingTableHelperTest extends TestCase
 
         self::assertEquals(
             '"street","country","users_pk"',
-            trim(file_get_contents($baseDir . 'mock-server.primary-address'))
+            trim((string) file_get_contents($baseDir . 'mock-server.primary-address'))
         );
         self::assertEquals(
             ['destination' => 'in.c-mock-server.primary-address', 'incremental' => true],
-            json_decode(file_get_contents($baseDir . 'mock-server.primary-address.manifest'), true)
+            json_decode((string) file_get_contents($baseDir . 'mock-server.primary-address.manifest'), true)
         );
         self::assertEquals(
             '"email","phone","userId"',
-            trim(file_get_contents($baseDir . 'mock-server.user-contact'))
+            trim((string) file_get_contents($baseDir . 'mock-server.user-contact'))
         );
         self::assertEquals(
             [
@@ -120,15 +120,15 @@ class MissingTableHelperTest extends TestCase
                 'incremental' => true,
                 'primary_key' => ['userId'],
             ],
-            json_decode(file_get_contents($baseDir . 'mock-server.user-contact.manifest'), true)
+            json_decode((string) file_get_contents($baseDir . 'mock-server.user-contact.manifest'), true)
         );
         self::assertEquals(
             '"id","name"',
-            trim(file_get_contents($baseDir . 'mock-server.users'))
+            trim((string) file_get_contents($baseDir . 'mock-server.users'))
         );
         self::assertEquals(
             ['destination' => 'in.c-mock-server.users', 'incremental' => true, 'primary_key' => ['id']],
-            json_decode(file_get_contents($baseDir . 'mock-server.users.manifest'), true)
+            json_decode((string) file_get_contents($baseDir . 'mock-server.users.manifest'), true)
         );
     }
 
@@ -263,22 +263,22 @@ class MissingTableHelperTest extends TestCase
 
         self::assertEquals(
             '"email","phone","users_pk"',
-            trim(file_get_contents($baseDir . 'mock-server.user-contact'))
+            trim((string) file_get_contents($baseDir . 'mock-server.user-contact'))
         );
         self::assertEquals(
             [
                 'destination' => 'in.c-mock-server.user-contact',
                 'incremental' => false,
             ],
-            json_decode(file_get_contents($baseDir . 'mock-server.user-contact.manifest'), true)
+            json_decode((string) file_get_contents($baseDir . 'mock-server.user-contact.manifest'), true)
         );
         self::assertEquals(
             '"id","name"',
-            trim(file_get_contents($baseDir . 'mock-server.users'))
+            trim((string) file_get_contents($baseDir . 'mock-server.users'))
         );
         self::assertEquals(
             ['destination' => 'in.c-mock-server.users', 'incremental' => false],
-            json_decode(file_get_contents($baseDir . 'mock-server.users.manifest'), true)
+            json_decode((string) file_get_contents($baseDir . 'mock-server.users.manifest'), true)
         );
     }
 
@@ -329,21 +329,21 @@ class MissingTableHelperTest extends TestCase
 
         self::assertEquals(
             '"email","phone","users_pk"',
-            trim(file_get_contents($baseDir . 'user-contact'))
+            trim((string) file_get_contents($baseDir . 'user-contact'))
         );
         self::assertEquals(
             [
                 'incremental' => false,
             ],
-            json_decode(file_get_contents($baseDir . 'user-contact.manifest'), true)
+            json_decode((string) file_get_contents($baseDir . 'user-contact.manifest'), true)
         );
         self::assertEquals(
             '"id","name"',
-            trim(file_get_contents($baseDir . 'users'))
+            trim((string) file_get_contents($baseDir . 'users'))
         );
         self::assertEquals(
             ['incremental' => false],
-            json_decode(file_get_contents($baseDir . 'users.manifest'), true)
+            json_decode((string) file_get_contents($baseDir . 'users.manifest'), true)
         );
     }
 
@@ -395,25 +395,25 @@ class MissingTableHelperTest extends TestCase
 
         self::assertEquals(
             '"email","phone","users_pk"',
-            trim(file_get_contents($baseDir . 'ex-api-testName-config-id.user-contact'))
+            trim((string) file_get_contents($baseDir . 'ex-api-testName-config-id.user-contact'))
         );
         self::assertEquals(
             [
                 'incremental' => false,
                 'destination' => 'in.c-ex-api-testName-config-id.user-contact',
             ],
-            json_decode(file_get_contents($baseDir . 'ex-api-testName-config-id.user-contact.manifest'), true)
+            json_decode((string) file_get_contents($baseDir . 'ex-api-testName-config-id.user-contact.manifest'), true)
         );
         self::assertEquals(
             '"id","name"',
-            trim(file_get_contents($baseDir . 'ex-api-testName-config-id.users'))
+            trim((string) file_get_contents($baseDir . 'ex-api-testName-config-id.users'))
         );
         self::assertEquals(
             [
                 'incremental' => false,
                 'destination' => 'in.c-ex-api-testName-config-id.users',
             ],
-            json_decode(file_get_contents($baseDir . 'ex-api-testName-config-id.users.manifest'), true)
+            json_decode((string) file_get_contents($baseDir . 'ex-api-testName-config-id.users.manifest'), true)
         );
     }
 
@@ -465,25 +465,25 @@ class MissingTableHelperTest extends TestCase
 
         self::assertEquals(
             '"email","phone","users_pk"',
-            trim(file_get_contents($baseDir . 'ex-api-generic-config-id.user-contact'))
+            trim((string) file_get_contents($baseDir . 'ex-api-generic-config-id.user-contact'))
         );
         self::assertEquals(
             [
                 'incremental' => false,
                 'destination' => 'in.c-ex-api-generic-config-id.user-contact',
             ],
-            json_decode(file_get_contents($baseDir . 'ex-api-generic-config-id.user-contact.manifest'), true)
+            json_decode((string) file_get_contents($baseDir . 'ex-api-generic-config-id.user-contact.manifest'), true)
         );
         self::assertEquals(
             '"id","name"',
-            trim(file_get_contents($baseDir . 'ex-api-generic-config-id.users'))
+            trim((string) file_get_contents($baseDir . 'ex-api-generic-config-id.users'))
         );
         self::assertEquals(
             [
                 'incremental' => false,
                 'destination' => 'in.c-ex-api-generic-config-id.users',
             ],
-            json_decode(file_get_contents($baseDir . 'ex-api-generic-config-id.users.manifest'), true)
+            json_decode((string) file_get_contents($baseDir . 'ex-api-generic-config-id.users.manifest'), true)
         );
     }
 
@@ -544,7 +544,7 @@ class MissingTableHelperTest extends TestCase
 
         self::assertEquals(
             '"email","users_pk"',
-            trim(file_get_contents($baseDir . 'mock-server.user-contact'))
+            trim((string) file_get_contents($baseDir . 'mock-server.user-contact'))
         );
         self::assertEquals(
             [
@@ -552,15 +552,15 @@ class MissingTableHelperTest extends TestCase
                 'incremental' => false,
                 'primary_key' => ['users_pk'],
             ],
-            json_decode(file_get_contents($baseDir . 'mock-server.user-contact.manifest'), true)
+            json_decode((string) file_get_contents($baseDir . 'mock-server.user-contact.manifest'), true)
         );
         self::assertEquals(
             '"name"',
-            trim(file_get_contents($baseDir . 'mock-server.users'))
+            trim((string) file_get_contents($baseDir . 'mock-server.users'))
         );
         self::assertEquals(
             ['destination' => 'in.c-mock-server.users', 'incremental' => false],
-            json_decode(file_get_contents($baseDir . 'mock-server.users.manifest'), true)
+            json_decode((string) file_get_contents($baseDir . 'mock-server.users.manifest'), true)
         );
     }
 
@@ -636,22 +636,22 @@ class MissingTableHelperTest extends TestCase
         // no userId - parentKey is disabled
         self::assertEquals(
             '"email","phone"',
-            trim(file_get_contents($baseDir . 'mock-server.user-contact'))
+            trim((string) file_get_contents($baseDir . 'mock-server.user-contact'))
         );
         self::assertEquals(
             [
                 'destination' => 'in.c-mock-server.user-contact',
                 'incremental' => true,
             ],
-            json_decode(file_get_contents($baseDir . 'mock-server.user-contact.manifest'), true)
+            json_decode((string) file_get_contents($baseDir . 'mock-server.user-contact.manifest'), true)
         );
         self::assertEquals(
             '"id","name"',
-            trim(file_get_contents($baseDir . 'mock-server.users'))
+            trim((string) file_get_contents($baseDir . 'mock-server.users'))
         );
         self::assertEquals(
             ['destination' => 'in.c-mock-server.users', 'incremental' => true, 'primary_key' => ['id']],
-            json_decode(file_get_contents($baseDir . 'mock-server.users.manifest'), true)
+            json_decode((string) file_get_contents($baseDir . 'mock-server.users.manifest'), true)
         );
     }
 
@@ -707,14 +707,14 @@ class MissingTableHelperTest extends TestCase
 
         self::assertEquals(
             '"email","phone","contacts_pk"',
-            trim(file_get_contents($baseDir . 'mock-server.user-contact'))
+            trim((string) file_get_contents($baseDir . 'mock-server.user-contact'))
         );
         self::assertEquals(
             [
                 'destination' => 'in.c-mock-server.user-contact',
                 'incremental' => true,
             ],
-            json_decode(file_get_contents($baseDir . 'mock-server.user-contact.manifest'), true)
+            json_decode((string) file_get_contents($baseDir . 'mock-server.user-contact.manifest'), true)
         );
     }
 }

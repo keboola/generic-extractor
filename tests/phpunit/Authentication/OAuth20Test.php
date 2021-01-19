@@ -13,7 +13,7 @@ class OAuth20Test extends ExtractorTestCase
 {
     public function testAuthenticateClientJson(): void
     {
-        $config = json_decode(file_get_contents(__DIR__ . '/../data/oauth20bearer/config.json'), true);
+        $config = json_decode((string) file_get_contents(__DIR__ . '/../data/oauth20bearer/config.json'), true);
         $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com'], [], []);
         $restClient->getClient()->setDefaultOption('headers', ['X-Test' => 'test']);
         $auth = new OAuth20(
@@ -32,7 +32,7 @@ class OAuth20Test extends ExtractorTestCase
 
     public function testMACAuth(): void
     {
-        $config = json_decode(file_get_contents(__DIR__ . '/../data/oauth20mac/config.json'), true);
+        $config = json_decode((string) file_get_contents(__DIR__ . '/../data/oauth20mac/config.json'), true);
         $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com'], [], []);
         $auth = new OAuth20(
             [],

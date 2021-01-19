@@ -6,10 +6,11 @@ use Keboola\GenericExtractor\Exception\ApplicationException;
 use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\GenericExtractor\Executor;
 
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 // initialize logger
 $logger = new Monolog\Logger('logger');
+/** @var resource $stream */
 $stream = fopen('php://stdout', 'r');
 $logger->pushHandler(new \Monolog\Handler\StreamHandler($stream));
 //$logger->debug("Starting up");
