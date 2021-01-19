@@ -3,14 +3,16 @@ services:
   app:
     build: .
     image: keboola/generic-extractor
-    volumes:
-      - ./:/code
-      - ./data:/data
 
-  dev:
+  ci: &ci
     build:
       context: .
       dockerfile: Dockerfile-tests
+    command: composer ci
+
+  dev:
+    << : *ci
+    command: bash
     volumes:
       - ./:/code
       - ./data:/data

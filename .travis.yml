@@ -6,9 +6,9 @@ services:
 before_script:
   - docker -v
   - docker-compose -v
-  - docker-compose build extractor tests
-  # Run tests
-  - docker-compose run --rm -v $(pwd)/build:/code/build  dev composer ci
+  - docker-compose build app ci
+  # Run tests and generate code coverage
+  - docker-compose run --rm -v $(pwd)/build:/code/build ci
   - sh -c "cd doc && ./run-samples.sh"
 
 script:
