@@ -18,7 +18,7 @@ use Keboola\Juicer\Config\JobConfig;
  */
 class Filter
 {
-    const DEFAULT_DELIMITER = '.';
+    public const DEFAULT_DELIMITER = '.';
 
     protected array $filters;
 

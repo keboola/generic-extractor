@@ -28,7 +28,7 @@ class BasicTest extends TestCase
         self::assertEquals(['Basic dGVzdDpwYXNz'], $request->getHeaders()['Authorization']);
     }
 
-    public function credentialsProvider()
+    public function credentialsProvider(): array
     {
         return [
             [

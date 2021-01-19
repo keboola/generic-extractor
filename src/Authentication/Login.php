@@ -77,7 +77,7 @@ class Login implements AuthInterface
     /**
      * @inheritdoc
      */
-    public function authenticateClient(RestClient $client)
+    public function authenticateClient(RestClient $client): void
     {
         $loginRequest = $this->getAuthRequest($this->auth['loginRequest']);
         $sub = new LoginSubscriber();

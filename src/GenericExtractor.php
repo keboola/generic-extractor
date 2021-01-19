@@ -22,9 +22,9 @@ use Psr\Log\LoggerInterface;
 
 class GenericExtractor
 {
-    const COMPAT_LEVEL_OLD_PARSER = 1;
-    const COMPAT_LEVEL_FILTER_EMPTY_SCALAR = 2;
-    const COMPAT_LEVEL_LATEST = 3;
+    public const COMPAT_LEVEL_OLD_PARSER = 1;
+    public const COMPAT_LEVEL_FILTER_EMPTY_SCALAR = 2;
+    public const COMPAT_LEVEL_LATEST = 3;
 
     protected ?ParserInterface $parser = null;
 
@@ -43,6 +43,9 @@ class GenericExtractor
      */
     private $proxy;
 
+    /**
+     * @param array|string|null $proxy
+     */
     public function __construct(Temp $temp, LoggerInterface $logger, Api $api, $proxy = null)
     {
         $this->temp = $temp;
@@ -182,7 +185,7 @@ class GenericExtractor
         $this->metadata = $data;
     }
 
-    public function getMetadata()
+    public function getMetadata(): array
     {
         return $this->metadata;
     }

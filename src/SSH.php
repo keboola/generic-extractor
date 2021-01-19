@@ -10,7 +10,7 @@ use Symfony\Component\Process\Process;
 
 class SSH
 {
-    const SSH_SERVER_ALIVE_INTERVAL = 15;
+    public const SSH_SERVER_ALIVE_INTERVAL = 15;
 
     private Temp $temp;
 
@@ -45,7 +45,8 @@ class SSH
         }
 
         $cmd = sprintf(
-            'ssh -D %s %s@%s -p %s -i %s -fN -o ExitOnForwardFailure=yes -o StrictHostKeyChecking=no -o ServerAliveInterval=%d',
+            'ssh -D %s %s@%s -p %s -i %s -fN ' .
+            '-o ExitOnForwardFailure=yes -o StrictHostKeyChecking=no -o ServerAliveInterval=%d',
             $config['localPort'],
             $config['user'],
             $config['sshHost'],

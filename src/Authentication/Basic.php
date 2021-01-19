@@ -32,7 +32,7 @@ class Basic implements AuthInterface
     /**
      * @inheritdoc
      */
-    public function authenticateClient(RestClient $client)
+    public function authenticateClient(RestClient $client): void
     {
         $client->getClient()->setDefaultOption('auth', [$this->username, $this->password]);
     }

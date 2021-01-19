@@ -71,7 +71,7 @@ class CacheTest extends TestCase
         $this->rmDir(__DIR__ . '/data/requestCacheTTL/cache');
     }
 
-    protected function rmDir($dirPath): void
+    protected function rmDir(string $dirPath): void
     {
         if (!file_exists($dirPath)) {
             return;

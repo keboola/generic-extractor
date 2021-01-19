@@ -456,6 +456,9 @@ class GenericExtractorJob
         return (substr($string, 0, 7) === 'parent_') ? $string : "parent_{$string}";
     }
 
+    /**
+     * @param mixed $id
+     */
     public function setUserParentId($id): void
     {
         if (!is_array($id)) {

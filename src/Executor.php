@@ -148,7 +148,7 @@ class Executor
         $configuration->saveConfigMetadata($metadata);
     }
 
-    private function createSshTunnel($sshConfig): string
+    private function createSshTunnel(array $sshConfig): string
     {
         $tunnelParams = [
             'user' => $sshConfig['user'],

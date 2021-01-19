@@ -26,7 +26,7 @@ class MockExecutionTest extends TestCase
         $this->rmDir(__DIR__ . "/data/{$configDir}/out");
     }
 
-    public function configProvider()
+    public function configProvider(): array
     {
         return [
             ['responseUrlScroll'],
@@ -69,7 +69,7 @@ class MockExecutionTest extends TestCase
         $this->rmDir(__DIR__ . '/data/dynamicUserData/out');
     }
 
-    protected function rmDir($dirPath): void
+    protected function rmDir(string $dirPath): void
     {
         if (!file_exists($dirPath)) {
             return;
@@ -86,7 +86,7 @@ class MockExecutionTest extends TestCase
         rmdir($dirPath);
     }
 
-    protected function assertDirectoryEquals($pathToExpected, $pathToActual): void
+    protected function assertDirectoryEquals(string $pathToExpected, string $pathToActual): void
     {
         foreach (new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator(

@@ -381,7 +381,10 @@ class LoginTest extends ExtractorTestCase
             'expires' => 'never',
         ];
         $this->expectException(UserException::class);
-        $this->expectExceptionMessage("The 'expires' attribute must be either an integer or an array with 'response' key containing a path in the response");
+        $this->expectExceptionMessage(
+            "The 'expires' attribute must be either an integer ".
+            "or an array with 'response' key containing a path in the response"
+        );
         new Login([], $api);
     }
 }

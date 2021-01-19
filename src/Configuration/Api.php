@@ -223,7 +223,7 @@ class Api
         return $this->retryConfig;
     }
 
-    public function getIgnoreErrors()
+    public function getIgnoreErrors(): array
     {
         return $this->ignoreErrors;
     }

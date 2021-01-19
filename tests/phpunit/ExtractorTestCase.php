@@ -7,11 +7,15 @@ namespace Keboola\GenericExtractor\Tests;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Message\RequestInterface;
+use GuzzleHttp\Ring\Future\FutureInterface;
 use PHPUnit\Framework\TestCase;
 
 class ExtractorTestCase extends TestCase
 {
-    protected static function callMethod($obj, $name, array $args = [])
+    /**
+     * @return mixed
+     */
+    protected static function callMethod(object $obj, string $name, array $args = [])
     {
         $class = new \ReflectionClass($obj);
         $method = $class->getMethod($name);
@@ -20,7 +24,10 @@ class ExtractorTestCase extends TestCase
         return $method->invokeArgs($obj, $args);
     }
 
-    protected static function getProperty($obj, $name)
+    /**
+     * @return mixed
+     */
+    protected static function getProperty(object $obj, string $name)
     {
         $class = new \ReflectionClass($obj);
         $property = $class->getProperty($name);
@@ -28,7 +35,7 @@ class ExtractorTestCase extends TestCase
         return $property->getValue($obj);
     }
 
-    protected static function sendRequest(Client $client, RequestInterface $request)
+    protected static function sendRequest(Client $client, RequestInterface $request): ?FutureInterface
     {
         try {
             return $client->send($request);

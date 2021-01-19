@@ -21,7 +21,7 @@ class LogRequest implements SubscriberInterface
         $this->logger = $logger;
     }
 
-    public function getEvents()
+    public function getEvents(): array
     {
         return ['before' => ['onBefore', RequestEvents::LATE]];
     }

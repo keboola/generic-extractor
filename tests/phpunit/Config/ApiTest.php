@@ -17,12 +17,16 @@ use Keboola\GenericExtractor\Exception\ApplicationException;
 use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\GenericExtractor\Subscriber\AbstractSignature;
 use Keboola\Juicer\Client\RestClient;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
 class ApiTest extends TestCase
 {
-    private function getClientMock(Request $request)
+    /**
+     * @return RestClient|MockObject
+     */
+    private function getClientMock(Request $request): RestClient
     {
         $beforeEventMock = self::createMock(BeforeEvent::class);
         $beforeEventMock->method('getRequest')->willReturn($request);
@@ -219,7 +223,9 @@ class ApiTest extends TestCase
 
     public function testCustomClientCertificate(): void
     {
-        $crtContent = "-----BEGIN CERTIFICATE-----\nMIIFazCCA1OgAwIBAgIUGzl\n....\n-----END CERTIFICATE-----\n-----BEGIN RSA PRIVATE KEY-----\nMIIFazCCA1OgAwIBAgIUGzl\n-----END RSA PRIVATE KEY-----";
+        $crtContent =
+            "-----BEGIN CERTIFICATE-----\nMIIFazCCA1OgAwIBAgIUGzl\n...."."\n-----END CERTIFICATE-----\n".
+            "-----BEGIN RSA PRIVATE KEY-----\nMIIFazCCA1OgAwIBAgIUGzl\n-----END RSA PRIVATE KEY-----";
         $apiConfig = [
             'baseUrl' => 'http://example.com',
             '#clientCertificate' => $crtContent,

@@ -10,7 +10,7 @@ use Keboola\GenericExtractor\Exception\UserException;
 
 class MissingTableHelper
 {
-    public static function checkConfigs($configs, $dataDir, Extractor $configuration): void
+    public static function checkConfigs(array $configs, string $dataDir, Extractor $configuration): void
     {
         foreach ($configs as $config) {
             $api = $configuration->getApi($config->getAttributes());
@@ -43,12 +43,12 @@ class MissingTableHelper
     }
 
     private static function fillMissingTableMapping(
-        $baseFileName,
-        $outputBucket,
-        $incremental,
-        $name,
-        $mapping,
-        $parentKey = []
+        string $baseFileName,
+        string $outputBucket,
+        bool $incremental,
+        string $name,
+        array $mapping,
+        array $parentKey = []
     ): void {
         $columns = [];
         $primaryKey = [];

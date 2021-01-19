@@ -15,7 +15,7 @@ abstract class AbstractSignature
      */
     protected $generator;
 
-    public function getEvents()
+    public function getEvents(): array
     {
         return ['before' => ['onBefore', RequestEvents::SIGN_REQUEST]];
     }

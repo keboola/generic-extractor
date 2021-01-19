@@ -22,7 +22,7 @@ use Symfony\Component\Config\Definition\Processor;
  */
 class Extractor
 {
-    const CACHE_TTL = 604800;
+    public const CACHE_TTL = 604800;
 
     private LoggerInterface $logger;
 
@@ -162,8 +162,12 @@ class Extractor
      * @param bool    $incremental Set the incremental flag in manifest
      *                             TODO: revisit this
      */
-    public function storeResults(array $csvFiles, ?string $bucketName = null, bool $sapiPrefix = true, bool $incremental = false): void
-    {
+    public function storeResults(
+        array $csvFiles,
+        ?string $bucketName = null,
+        bool $sapiPrefix = true,
+        bool $incremental = false
+    ): void {
         $path = "{$this->dataDir}/out/tables/";
 
         if (!is_null($bucketName)) {

@@ -32,7 +32,7 @@ class LoginSubscriber implements SubscriberInterface
      */
     protected $headers;
 
-    public function getEvents()
+    public function getEvents(): array
     {
         return ['before' => ['onBefore', RequestEvents::SIGN_REQUEST]];
     }

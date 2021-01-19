@@ -56,7 +56,7 @@ class ConfigurationTest extends ExtractorTestCase
         $this->rmDir($resultsPath);
     }
 
-    protected function storeResults($resultsPath, $name, $incremental): void
+    protected function storeResults(string $resultsPath, string $name, bool $incremental): void
     {
         $config = '{"parameters":{}}';
         $fs = new Filesystem();
@@ -170,9 +170,17 @@ class ConfigurationTest extends ExtractorTestCase
         }
     }
 
-    protected function rmDir($dirPath)
+    protected function rmDir(string $dirPath): bool
     {
-        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dirPath, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST) as $path) {
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator(
+                $dirPath,
+                \FilesystemIterator::SKIP_DOTS
+            ),
+            \RecursiveIteratorIterator::CHILD_FIRST
+        );
+
+        foreach ($iterator as $path) {
             $path->isDir() && !$path->isLink() ? rmdir($path->getPathname()) : unlink($path->getPathname());
         }
         return rmdir($dirPath);

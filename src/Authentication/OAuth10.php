@@ -49,7 +49,7 @@ class OAuth10 implements AuthInterface
     /**
      * @inheritdoc
      */
-    public function authenticateClient(RestClient $client)
+    public function authenticateClient(RestClient $client): void
     {
         $sub = new Oauth1(
             [

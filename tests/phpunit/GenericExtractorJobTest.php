@@ -27,7 +27,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         self::assertEquals($expected, self::callMethod($job, 'getParentId', []));
     }
 
-    public function parentIdProvider()
+    public function parentIdProvider(): array
     {
         return [
             [
@@ -194,7 +194,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         self::assertEquals($expectedParams, $req->getParams());
     }
 
-    public function nextPageProvider()
+    public function nextPageProvider(): array
     {
         return [
             [['urlKey' => 'nextPage', 'includeParams' => true], ['first' => 1]],
@@ -403,7 +403,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         );
     }
 
-    public function placeholderProvider()
+    public function placeholderProvider(): array
     {
         return [
             [
@@ -479,7 +479,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         }
     }
 
-    public function placeholderErrorValueProvider()
+    public function placeholderErrorValueProvider(): array
     {
         return [
             [[], 'Level 1 not found in parent results! Maximum level: 0'],
@@ -487,7 +487,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         ];
     }
 
-    public function placeholderValueProvider()
+    public function placeholderValueProvider(): array
     {
         return [
             [
