@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Authentication;
 
 use Keboola\GenericExtractor\Configuration\UserFunction;
@@ -32,9 +34,6 @@ class Login implements AuthInterface
 
     protected ?string $format = null;
 
-    /**
-     * @throws UserException
-     */
     public function __construct(array $configAttributes, array $authentication)
     {
         $this->configAttributes = $configAttributes;
@@ -55,19 +54,16 @@ class Login implements AuthInterface
             throw new UserException('Request endpoint must be set for the Login authentication method.');
         }
         if (!empty($authentication['expires']) && (!filter_var($authentication['expires'], FILTER_VALIDATE_INT)
-                && empty($authentication['expires']['response']))
+            && empty($authentication['expires']['response']))
         ) {
             throw new UserException(
                 "The 'expires' attribute must be either an integer or an array with 'response' " .
-                "key containing a path in the response"
+                'key containing a path in the response'
             );
         }
     }
 
-    /**
-     * @throws UserException
-     */
-    protected function getAuthRequest(array $config) : RestRequest
+    protected function getAuthRequest(array $config): RestRequest
     {
         if (!empty($config['params'])) {
             $config['params'] = UserFunction::build($config['params'], ['attr' => $this->configAttributes]);
@@ -91,21 +87,23 @@ class Login implements AuthInterface
                 // Need to bypass the subscriber for the login call
                 $client->getClient()->getEmitter()->detach($sub);
                 $rawResponse = $client->getClient()->send($client->getGuzzleRequest($loginRequest));
-                if ($this->format == 'json') {
-                    /** @var array|object|mixed $response */
+                if ($this->format === 'json') {
+                    /**
+            * @var array|object|mixed $response
+            */
                     $response = $client->getObjectFromResponse($rawResponse);
                     if (is_scalar($response)) {
-                        $response = (object)['data' => $response];
+                        $response = (object) ['data' => $response];
                     }
                 } else {
-                    $response = (object)['data' => (string)$rawResponse->getBody()];
+                    $response = (object) ['data' => (string) $rawResponse->getBody()];
                 }
                 $client->getClient()->getEmitter()->attach($sub);
 
                 return [
                     'query' => $this->getResults($response, 'query'),
                     'headers' => $this->getResults($response, 'headers'),
-                    'expires' => $this->getExpiry($response)
+                    'expires' => $this->getExpiry($response),
                 ];
             }
         );
@@ -115,9 +113,10 @@ class Login implements AuthInterface
 
     /**
      * Maps data from login result into $type (header/query)
+     *
      * @throws UserException
      */
-    protected function getResults(\stdClass $response, string $type) : array
+    protected function getResults(\stdClass $response, string $type): array
     {
         $result = [];
         if (!empty($this->auth['apiRequest'][$type])) {
@@ -125,7 +124,7 @@ class Login implements AuthInterface
                 $this->auth['apiRequest'][$type],
                 [
                     'response' => \Keboola\Utils\objectToArray($response),
-                    'attr' => $this->configAttributes
+                    'attr' => $this->configAttributes,
                 ]
             );
             // for backward compatibility, check the values if they are a valid path within the response
@@ -140,10 +139,7 @@ class Login implements AuthInterface
         return $result;
     }
 
-    /**
-     * @throws UserException
-     */
-    protected function getExpiry(\stdClass $response) : ?int
+    protected function getExpiry(\stdClass $response): ?int
     {
         if (!isset($this->auth['expires'])) {
             return null;

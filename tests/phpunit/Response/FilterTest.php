@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Tests\Response;
 
 use Keboola\GenericExtractor\GenericExtractor;
@@ -11,10 +13,12 @@ class FilterTest extends TestCase
 {
     public function testRun(): void
     {
-        $jobConfig = new JobConfig([
+        $jobConfig = new JobConfig(
+            [
             'endpoint' => 'ep',
-            'responseFilter' => 'out.arr[].in'
-        ]);
+            'responseFilter' => 'out.arr[].in',
+            ]
+        );
 
         $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
 
@@ -24,14 +28,14 @@ class FilterTest extends TestCase
                 'out' => (object) [
                     'arr' => [
                         (object) [
-                            'in' => 'string'
+                            'in' => 'string',
                         ],
                         (object) [
-                            'in' => [(object) ['array' => 'of objects!']]
-                        ]
-                    ]
-                ]
-            ]
+                            'in' => [(object) ['array' => 'of objects!']],
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         self::assertEquals(
@@ -41,14 +45,14 @@ class FilterTest extends TestCase
                     'out' => (object) [
                         'arr' => [
                             (object) [
-                                'in' => '"string"'
+                                'in' => '"string"',
                             ],
                             (object) [
-                                'in' => '[{"array":"of objects!"}]'
-                            ]
-                        ]
-                    ]
-                ]
+                                'in' => '[{"array":"of objects!"}]',
+                            ],
+                        ],
+                    ],
+                ],
             ],
             $filter->run($data)
         );
@@ -56,10 +60,12 @@ class FilterTest extends TestCase
 
     public function testArray(): void
     {
-        $jobConfig = new JobConfig([
+        $jobConfig = new JobConfig(
+            [
             'endpoint' => 'ep',
-            'responseFilter' => 'out.arr[]'
-        ]);
+            'responseFilter' => 'out.arr[]',
+            ]
+        );
 
         $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
 
@@ -69,15 +75,15 @@ class FilterTest extends TestCase
                 'out' => (object) [
                     'arr' => [
                         (object) [
-                            'in' => 'object'
+                            'in' => 'object',
                         ],
                         (object) [
-                            'in' => [(object) ['array' => 'of objects!']]
+                            'in' => [(object) ['array' => 'of objects!']],
                         ],
-                        "string"
-                    ]
-                ]
-            ]
+                        'string',
+                    ],
+                ],
+            ],
         ];
 
         self::assertEquals(
@@ -88,10 +94,10 @@ class FilterTest extends TestCase
                         'arr' => [
                             '{"in":"object"}',
                             '{"in":[{"array":"of objects!"}]}',
-                            '"string"'
-                        ]
-                    ]
-                ]
+                            '"string"',
+                        ],
+                    ],
+                ],
             ],
             $filter->run($data)
         );
@@ -99,10 +105,12 @@ class FilterTest extends TestCase
 
     public function testMissingData(): void
     {
-        $jobConfig = new JobConfig([
+        $jobConfig = new JobConfig(
+            [
             'endpoint' => 'ep',
-            'responseFilter' => 'out.arr[].in'
-        ]);
+            'responseFilter' => 'out.arr[].in',
+            ]
+        );
 
         $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
 
@@ -112,17 +120,17 @@ class FilterTest extends TestCase
                 'out' => (object) [
                     'arr' => [
                         (object) [
-                            'in' => 'string'
+                            'in' => 'string',
                         ],
                         (object) [
-                            'uh' => 'no "in" here!'
+                            'uh' => 'no "in" here!',
                         ],
                         (object) [
-                            'in' => ['str','ing']
-                        ]
-                    ]
-                ]
-            ]
+                            'in' => ['str','ing'],
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         self::assertEquals(
@@ -132,17 +140,17 @@ class FilterTest extends TestCase
                     'out' => (object) [
                         'arr' => [
                             (object) [
-                                'in' => '"string"'
+                                'in' => '"string"',
                             ],
                             (object) [
-                                'uh' => 'no "in" here!' // <- correct because this is not filtered prop!
+                                'uh' => 'no "in" here!', // <- correct because this is not filtered prop!
                             ],
                             (object) [
-                                'in' => '["str","ing"]'
-                            ]
-                        ]
-                    ]
-                ]
+                                'in' => '["str","ing"]',
+                            ],
+                        ],
+                    ],
+                ],
             ],
             $filter->run($data)
         );
@@ -150,10 +158,12 @@ class FilterTest extends TestCase
 
     public function testMultipleFilters(): void
     {
-        $jobConfig = new JobConfig([
+        $jobConfig = new JobConfig(
+            [
             'endpoint' => 'ep',
-            'responseFilter' => ['out.arr[]', 'out.in']
-        ]);
+            'responseFilter' => ['out.arr[]', 'out.in'],
+            ]
+        );
         $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
 
         $data = [
@@ -162,26 +172,26 @@ class FilterTest extends TestCase
                 'out' => (object) [
                     'arr' => [
                         (object) [
-                            'in' => 'string'
+                            'in' => 'string',
                         ],
                         (object) [
-                            'in' => [(object) ['array' => 'of objects!']]
-                        ]
+                            'in' => [(object) ['array' => 'of objects!']],
+                        ],
                     ],
-                    'in' => 'string'
-                ]
+                    'in' => 'string',
+                ],
             ],
             (object) [
                 'id' => 2,
                 'out' => (object) [
                     'arr' => [
                         (object) [
-                            'something' => [(object) ['more' => 'objects!']]
-                        ]
+                            'something' => [(object) ['more' => 'objects!']],
+                        ],
                     ],
-                    'in' => (object) ['second' => 'object']
-                ]
-            ]
+                    'in' => (object) ['second' => 'object'],
+                ],
+            ],
         ];
 
         self::assertEquals(
@@ -191,20 +201,20 @@ class FilterTest extends TestCase
                     'out' => (object) [
                         'arr' => [
                             '{"in":"string"}',
-                            '{"in":[{"array":"of objects!"}]}'
+                            '{"in":[{"array":"of objects!"}]}',
                         ],
-                        'in' => '"string"'
-                    ]
+                        'in' => '"string"',
+                    ],
                 ],
                 (object) [
                     'id' => 2,
                     'out' => (object) [
                         'arr' => [
-                            '{"something":[{"more":"objects!"}]}'
+                            '{"something":[{"more":"objects!"}]}',
                         ],
-                        'in' => '{"second":"object"}'
-                    ]
-                ]
+                        'in' => '{"second":"object"}',
+                    ],
+                ],
             ],
             $filter->run($data)
         );
@@ -212,18 +222,20 @@ class FilterTest extends TestCase
 
     public function testDelimiter(): void
     {
-        $jobConfig = new JobConfig([
+        $jobConfig = new JobConfig(
+            [
             'endpoint' => 'ep',
             'responseFilter' => 'out/in',
-            'responseFilterDelimiter' => '/'
-        ]);
+            'responseFilterDelimiter' => '/',
+            ]
+        );
         $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
 
         $data = [
             (object) [
                 'i.d' => 1,
-                'out' => (object) ['in' => ['string']]
-            ]
+                'out' => (object) ['in' => ['string']],
+            ],
         ];
 
         self::assertEquals(
@@ -231,9 +243,9 @@ class FilterTest extends TestCase
                 (object) [
                     'i.d' => 1,
                     'out' => (object) [
-                        'in' => '["string"]'
-                    ]
-                ]
+                        'in' => '["string"]',
+                    ],
+                ],
             ],
             $filter->run($data)
         );
@@ -241,10 +253,12 @@ class FilterTest extends TestCase
 
     public function testNestedArrays(): void
     {
-        $jobConfig = new JobConfig([
+        $jobConfig = new JobConfig(
+            [
             'endpoint' => 'ep',
-            'responseFilter' => 'out.arr[].arr2[]'
-        ]);
+            'responseFilter' => 'out.arr[].arr2[]',
+            ]
+        );
         $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
 
         $data = [
@@ -252,11 +266,11 @@ class FilterTest extends TestCase
                 'out' => (object) [
                     'arr' => [
                         (object) [
-                            'arr2' => [1,[2],(object) ['three' => 3]]
-                        ]
-                    ]
-                ]
-            ]
+                            'arr2' => [1,[2],(object) ['three' => 3]],
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         self::assertEquals(
@@ -265,11 +279,11 @@ class FilterTest extends TestCase
                 'out' => (object) [
                     'arr' => [
                         (object) [
-                            'arr2' => [1,'[2]','{"three":3}']
-                        ]
-                    ]
-                ]
-            ]
+                            'arr2' => [1,'[2]','{"three":3}'],
+                        ],
+                    ],
+                ],
+            ],
             ],
             $filter->run($data)
         );
@@ -277,10 +291,12 @@ class FilterTest extends TestCase
 
     public function testRunEmptyValuesLegacy(): void
     {
-        $jobConfig = new JobConfig([
+        $jobConfig = new JobConfig(
+            [
             'endpoint' => 'ep',
-            'responseFilter' => 'data'
-        ]);
+            'responseFilter' => 'data',
+            ]
+        );
 
         $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY_SCALAR);
         $data = json_decode(
@@ -320,31 +336,31 @@ class FilterTest extends TestCase
             [
                 (object) [
                     'id' => 1,
-                    'data' => false
+                    'data' => false,
                 ],
                 (object) [
                     'id' => 2,
-                    'data' => 0
+                    'data' => 0,
                 ],
                 (object) [
                     'id' => 3,
-                    'data' => null
+                    'data' => null,
                 ],
                 (object) [
                     'id' => 4,
-                    'data' => ""
+                    'data' => '',
                 ],
                 (object) [
                     'id' => 5,
-                    'data' => []
+                    'data' => [],
                 ],
                 (object) [
                     'id' => 6,
-                    'data' => "[\"something\"]"
+                    'data' => '["something"]',
                 ],
                 (object) [
                     'id' => 7,
-                    'data' => "[42]"
+                    'data' => '[42]',
                 ],
             ],
             $filter->run($data)
@@ -353,10 +369,12 @@ class FilterTest extends TestCase
 
     public function testRunEmptyValuesFilterLatest(): void
     {
-        $jobConfig = new JobConfig([
+        $jobConfig = new JobConfig(
+            [
             'endpoint' => 'ep',
-            'responseFilter' => 'data'
-        ]);
+            'responseFilter' => 'data',
+            ]
+        );
 
         $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
         $data = json_decode(
@@ -396,31 +414,31 @@ class FilterTest extends TestCase
             [
                 (object) [
                     'id' => 1,
-                    'data' => 'false'
+                    'data' => 'false',
                 ],
                 (object) [
                     'id' => 2,
-                    'data' => '0'
+                    'data' => '0',
                 ],
                 (object) [
                     'id' => 3,
-                    'data' => 'null'
+                    'data' => 'null',
                 ],
                 (object) [
                     'id' => 4,
-                    'data' => '""'
+                    'data' => '""',
                 ],
                 (object) [
                     'id' => 5,
-                    'data' => '[]'
+                    'data' => '[]',
                 ],
                 (object) [
                     'id' => 6,
-                    'data' => "[\"something\"]"
+                    'data' => '["something"]',
                 ],
                 (object) [
                     'id' => 7,
-                    'data' => "[42]"
+                    'data' => '[42]',
                 ],
             ],
             $filter->run($data)
@@ -429,10 +447,12 @@ class FilterTest extends TestCase
 
     public function testRunEmptyValuesArrayLegacy(): void
     {
-        $jobConfig = new JobConfig([
+        $jobConfig = new JobConfig(
+            [
             'endpoint' => 'ep',
-            'responseFilter' => 'data[]'
-        ]);
+            'responseFilter' => 'data[]',
+            ]
+        );
 
         $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY_SCALAR);
         $data = json_decode(
@@ -452,11 +472,11 @@ class FilterTest extends TestCase
             [
                 (object) [
                     'id' => 1,
-                    'data' => [0, false, '[]']
+                    'data' => [0, false, '[]'],
                 ],
                 (object) [
                     'id' => 2,
-                    'data' => ["foo", 0, '["bar"]']
+                    'data' => ['foo', 0, '["bar"]'],
                 ],
             ],
             $filter->run($data)
@@ -465,10 +485,12 @@ class FilterTest extends TestCase
 
     public function testRunEmptyValuesArrayLatest(): void
     {
-        $jobConfig = new JobConfig([
+        $jobConfig = new JobConfig(
+            [
             'endpoint' => 'ep',
-            'responseFilter' => 'data[]'
-        ]);
+            'responseFilter' => 'data[]',
+            ]
+        );
 
         $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
         $data = json_decode(
@@ -488,11 +510,11 @@ class FilterTest extends TestCase
             [
                 (object) [
                     'id' => 1,
-                    'data' => ['0', 'false', '[]']
+                    'data' => ['0', 'false', '[]'],
                 ],
                 (object) [
                     'id' => 2,
-                    'data' => ['"foo"', '0', '["bar"]']
+                    'data' => ['"foo"', '0', '["bar"]'],
                 ],
             ],
             $filter->run($data)

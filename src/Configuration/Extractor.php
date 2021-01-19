@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Configuration;
 
 use Doctrine\Common\Cache\FilesystemCache;
@@ -38,7 +40,7 @@ class Extractor
         $this->dataDir = $dataDir;
     }
 
-    private function loadJSONFile(string $dataDir, string $name) : array
+    private function loadJSONFile(string $dataDir, string $name): array
     {
         $fileName = $dataDir . DIRECTORY_SEPARATOR . $name;
         if (!file_exists($fileName)) {
@@ -46,12 +48,12 @@ class Extractor
         }
         $data = json_decode(file_get_contents($fileName), true);
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new ApplicationException("Configuration file is not a valid JSON: " . json_last_error_msg());
+            throw new ApplicationException('Configuration file is not a valid JSON: ' . json_last_error_msg());
         }
         return $data;
     }
 
-    private function loadConfigFile(string $dataDir) : array
+    private function loadConfigFile(string $dataDir): array
     {
         $data = $this->loadJSONFile($dataDir, 'config.json');
         $processor = new Processor();
@@ -64,13 +66,13 @@ class Extractor
         return $data;
     }
 
-    private function loadStateFile(string $dataDir) : array
+    private function loadStateFile(string $dataDir): array
     {
         try {
             $data = $this->loadJSONFile($dataDir, 'in' . DIRECTORY_SEPARATOR . 'state.json');
         } catch (ApplicationException $e) {
             // state file is optional so only log the error
-            $this->logger->warning("State file not found " . $e->getMessage());
+            $this->logger->warning('State file not found ' . $e->getMessage());
             $data = [];
         }
         $processor = new Processor();
@@ -86,7 +88,7 @@ class Extractor
     /**
      * @return Config[]
      */
-    public function getMultipleConfigs() : array
+    public function getMultipleConfigs(): array
     {
         if (empty($this->config['parameters']['iterations'])) {
             return [$this->getConfig([])];
@@ -99,10 +101,7 @@ class Extractor
         return $configs;
     }
 
-    /**
-     * @throws UserException
-     */
-    private function getConfig(array $params) : Config
+    private function getConfig(array $params): Config
     {
         if (empty($this->config['parameters']['config'])) {
             throw new UserException("The 'config' section is required in the configuration.");
@@ -111,7 +110,7 @@ class Extractor
         return new Config($configuration);
     }
 
-    public function getSshProxy() : ?array
+    public function getSshProxy(): ?array
     {
         if (isset($this->config['parameters']['sshProxy'])) {
             return $this->config['parameters']['sshProxy'];
@@ -119,23 +118,23 @@ class Extractor
         return null;
     }
 
-    public function getMetadata() : array
+    public function getMetadata(): array
     {
         return $this->state;
     }
 
-    public function getCache() : ?CacheStorage
+    public function getCache(): ?CacheStorage
     {
         if (empty($this->config['parameters']['cache'])) {
             return null;
         }
 
         $ttl = !empty($this->config['parameters']['cache']['ttl']) ?
-            (int)$this->config['parameters']['cache']['ttl'] : self::CACHE_TTL;
+            (int) $this->config['parameters']['cache']['ttl'] : self::CACHE_TTL;
         return new CacheStorage(new FilesystemCache($this->dataDir . DIRECTORY_SEPARATOR . 'cache'), null, $ttl);
     }
 
-    public function getApi(array $configAttributes) : Api
+    public function getApi(array $configAttributes): Api
     {
         if (!empty($this->config['authorization'])) {
             $authorization = $this->config['authorization'];
@@ -148,7 +147,7 @@ class Extractor
         return new Api($this->logger, $this->config['parameters']['api'], $configAttributes, $authorization);
     }
 
-    public function saveConfigMetadata(array $data)
+    public function saveConfigMetadata(array $data): void
     {
         $dirPath = $this->dataDir . DIRECTORY_SEPARATOR . 'out';
         if (!is_dir($dirPath)) {
@@ -159,11 +158,11 @@ class Extractor
 
     /**
      * @param Table[] $csvFiles
-     * @param bool $sapiPrefix whether to prefix the output bucket with "in.c-"
-     * @param bool $incremental Set the incremental flag in manifest
-     * TODO: revisit this
+     * @param bool    $sapiPrefix  whether to prefix the output bucket with "in.c-"
+     * @param bool    $incremental Set the incremental flag in manifest
+     *                             TODO: revisit this
      */
-    public function storeResults(array $csvFiles, string $bucketName = null, bool $sapiPrefix = true, bool $incremental = false)
+    public function storeResults(array $csvFiles, ?string $bucketName = null, bool $sapiPrefix = true, bool $incremental = false): void
     {
         $path = "{$this->dataDir}/out/tables/";
 
@@ -185,7 +184,9 @@ class Extractor
                 $manifest['destination'] = "{$bucketName}.{$key}";
             }
 
-            /** @var bool|null $fileIncremental */
+            /**
+ * @var bool|null $fileIncremental
+*/
             $fileIncremental = $file->getIncremental();
             $manifest['incremental'] = is_null($fileIncremental)
                 ? $incremental

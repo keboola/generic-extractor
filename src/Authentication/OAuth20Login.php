@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Authentication;
 
 use Keboola\GenericExtractor\Configuration\UserFunction;
@@ -21,7 +23,6 @@ use Keboola\Utils\Exception\JsonDecodeException;
  * expires: int|array # # of seconds OR ['response' => 'path', 'relative' => false] (optional)
  *
  * The response MUST be a JSON object containing credentials
- *
  */
 class OAuth20Login extends Login
 {
@@ -29,14 +30,11 @@ class OAuth20Login extends Login
 
     protected array $auth;
 
-    /**
-     * @throws UserException
-     */
     public function __construct(array $configAttributes, array $authorization, array $authentication)
     {
         parent::__construct($configAttributes, $authentication);
         if (empty($authorization['oauth_api']['credentials'])) {
-            throw new UserException("OAuth API credentials not supplied in config");
+            throw new UserException('OAuth API credentials not supplied in config');
         }
 
         $oauthApiDetails = $authorization['oauth_api']['credentials'];
@@ -49,25 +47,25 @@ class OAuth20Login extends Login
         try {
             $oAuthData = \Keboola\Utils\jsonDecode($oauthApiDetails['#data'], true);
         } catch (JsonDecodeException $e) {
-            throw new UserException("The OAuth data is not a valid JSON");
+            throw new UserException('The OAuth data is not a valid JSON');
         }
 
         $consumerData = [
             'client_id' => $oauthApiDetails['appKey'],
-            'client_secret' => $oauthApiDetails['#appSecret']
+            'client_secret' => $oauthApiDetails['#appSecret'],
         ];
 
         $this->params = [
             'consumer' => $consumerData,
             'user' => $oAuthData,
-            'attr' => $this->configAttributes
+            'attr' => $this->configAttributes,
         ];
     }
 
     /**
      * @inheritdoc
      */
-    protected function getAuthRequest(array $config) : RestRequest
+    protected function getAuthRequest(array $config): RestRequest
     {
         if (!empty($config['params'])) {
             $config['params'] = UserFunction::build($config['params'], $this->params);

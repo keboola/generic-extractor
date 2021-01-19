@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Configuration\Extractor;
 
 use Keboola\GenericExtractor\Configuration\Extractor\Node\Api;
@@ -15,7 +17,9 @@ class ConfigFile implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('config-file');
-        /** @var ArrayNodeDefinition $root */
+        /**
+ * @var ArrayNodeDefinition $root
+*/
         $root = $treeBuilder->getRootNode();
         $parameters = $root->children()->arrayNode('parameters')->isRequired();
         $api = $parameters->children()->arrayNode('api')->isRequired();

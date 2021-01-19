@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Tests;
 
 use Keboola\GenericExtractor\Configuration\Extractor;
@@ -468,7 +470,7 @@ class MissingTableHelperTest extends TestCase
         self::assertEquals(
             [
                 'incremental' => false,
-                'destination' => 'in.c-ex-api-generic-config-id.user-contact'
+                'destination' => 'in.c-ex-api-generic-config-id.user-contact',
             ],
             json_decode(file_get_contents($baseDir . 'ex-api-generic-config-id.user-contact.manifest'), true)
         );

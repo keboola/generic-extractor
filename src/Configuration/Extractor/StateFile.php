@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Configuration\Extractor;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;

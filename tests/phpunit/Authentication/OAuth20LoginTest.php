@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Tests\Authentication;
 
 use Keboola\GenericExtractor\Authentication\OAuth20Login;
@@ -15,25 +17,67 @@ class OAuth20LoginTest extends ExtractorTestCase
 {
     public function testAuthenticateClient(): void
     {
-        $mock = new Mock([
-            new Response(200, [], Stream::factory(json_encode((object) [ // auth
-                'access_token' => 1234,
-                'expires_in' => 3
-            ]))),
-            new Response(200, [], Stream::factory(json_encode((object) [ // api call
-                'data' => [1,2,3]
-            ]))),
-            new Response(200, [], Stream::factory(json_encode((object) [ // api call
-                'data' => [1,2,3]
-            ]))),
-            new Response(200, [], Stream::factory(json_encode((object) [ // auth
-                'access_token' => 4321,
-                'expires_in' => 3
-            ]))),
-            new Response(200, [], Stream::factory(json_encode((object) [ // api call
-                'data' => [1,2,3]
-            ])))
-        ]);
+        $mock = new Mock(
+            [
+            new Response(
+                200,
+                [],
+                Stream::factory(
+                    json_encode(
+                        (object) [ // auth
+                        'access_token' => 1234,
+                        'expires_in' => 3,
+                        ]
+                    )
+                )
+            ),
+            new Response(
+                200,
+                [],
+                Stream::factory(
+                    json_encode(
+                        (object) [ // api call
+                        'data' => [1,2,3],
+                        ]
+                    )
+                )
+            ),
+            new Response(
+                200,
+                [],
+                Stream::factory(
+                    json_encode(
+                        (object) [ // api call
+                        'data' => [1,2,3],
+                        ]
+                    )
+                )
+            ),
+            new Response(
+                200,
+                [],
+                Stream::factory(
+                    json_encode(
+                        (object) [ // auth
+                        'access_token' => 4321,
+                        'expires_in' => 3,
+                        ]
+                    )
+                )
+            ),
+            new Response(
+                200,
+                [],
+                Stream::factory(
+                    json_encode(
+                        (object) [ // api call
+                        'data' => [1,2,3],
+                        ]
+                    )
+                )
+            ),
+            ]
+        );
         $history = new History();
 
         $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com/api'], [], []);
@@ -43,23 +87,25 @@ class OAuth20LoginTest extends ExtractorTestCase
         $oauthCredentials = [
             'appKey' => 1,
             '#appSecret' => 'two',
-            '#data' => json_encode([
+            '#data' => json_encode(
+                [
                 'access_token' => '1234',
                 'refresh_token' => 'asdf',
-                'expires_in' => 3600
-            ])
+                'expires_in' => 3600,
+                ]
+            ),
         ];
 
         $authentication = [
             'loginRequest' => [
                 'endpoint' => 'auth/refresh',
                 'params' => ['refresh_token' => ['user' => 'refresh_token']],
-                'method' => 'POST'
+                'method' => 'POST',
             ],
             'apiRequest' => [
-                'query' => ['access_token' => 'access_token']
+                'query' => ['access_token' => 'access_token'],
             ],
-            'expires' => ['response' => 'expires_in', 'relative' => true]
+            'expires' => ['response' => 'expires_in', 'relative' => true],
         ];
 
         $auth = new OAuth20Login([], ['oauth_api' => ['credentials' => $oauthCredentials]], $authentication);

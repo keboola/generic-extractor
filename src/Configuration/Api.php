@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Configuration;
 
 use Keboola\GenericExtractor\Authentication;
@@ -67,12 +69,13 @@ class Api
 
     /**
      * Create Authentication class that accepts a Guzzle client.
+     *
      * @throws UserException
      */
-    private function createAuth(array $api, array $configAttributes, array $authorization) : AuthInterface
+    private function createAuth(array $api, array $configAttributes, array $authorization): AuthInterface
     {
         if (empty($api['authentication']['type'])) {
-            $this->logger->debug("Using no authentication.");
+            $this->logger->debug('Using no authentication.');
             return new Authentication\NoAuth();
         }
         $this->logger->debug("Using '{$api['authentication']['type']}' authentication.");
@@ -82,7 +85,9 @@ class Api
                     $this->logger->warning("Using deprecated 'password', use '#password' instead.");
                 }
                 return new Authentication\Basic($configAttributes);
-            /** @noinspection PhpMissingBreakStatementInspection */
+            /**
+ * @noinspection PhpMissingBreakStatementInspection
+*/
             case 'url.query':
                 $this->logger->warning("Method 'url.query' auth is deprecated, use 'query'.");
                 // intentional, no break
@@ -105,10 +110,7 @@ class Api
         }
     }
 
-    /**
-     * @throws UserException
-     */
-    private function createBaseUrl(array $api, array $configAttributes) : string
+    private function createBaseUrl(array $api, array $configAttributes): string
     {
         if (empty($api['baseUrl'])) {
             throw new UserException("The 'baseUrl' attribute must be set in API configuration");
@@ -122,7 +124,7 @@ class Api
             // For backwards compatibility
             try {
                 $fn = \Keboola\Utils\jsonDecode($api['baseUrl']);
-                $this->logger->warning("Passing json-encoded baseUrl is deprecated.");
+                $this->logger->warning('Passing json-encoded baseUrl is deprecated.');
             } catch (JsonDecodeException $e) {
                 throw new UserException("The 'baseUrl' attribute in API configuration is not a valid URL");
             }
@@ -132,31 +134,33 @@ class Api
         }
 
         if (!self::isValidUrl($baseUrl)) {
-            throw new UserException(sprintf(
-                'The "baseUrl" attribute in API configuration resulted in an invalid URL (%s)',
-                $baseUrl
-            ));
+            throw new UserException(
+                sprintf(
+                    'The "baseUrl" attribute in API configuration resulted in an invalid URL (%s)',
+                    $baseUrl
+                )
+            );
         }
 
         return $baseUrl;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getBaseUrl() : string
+    public function getBaseUrl(): string
     {
         return $this->baseUrl;
     }
 
-    public function getNewScroller() : ScrollerInterface
+    public function getNewScroller(): ScrollerInterface
     {
         return ScrollerFactory::getScroller($this->scrollerConfig);
     }
 
-    public function getAuth() : AuthInterface
+    public function getAuth(): AuthInterface
     {
         return $this->auth;
     }
@@ -204,17 +208,17 @@ class Api
         return $filePath;
     }
 
-    public function getHeaders() : Headers
+    public function getHeaders(): Headers
     {
         return $this->headers;
     }
 
-    public function getDefaultRequestOptions() : array
+    public function getDefaultRequestOptions(): array
     {
         return $this->defaultRequestOptions;
     }
 
-    public function getRetryConfig() : array
+    public function getRetryConfig(): array
     {
         return $this->retryConfig;
     }

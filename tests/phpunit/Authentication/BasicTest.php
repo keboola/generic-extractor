@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Tests\Authentication;
 
 use Keboola\GenericExtractor\Authentication\Basic;
@@ -30,11 +32,11 @@ class BasicTest extends TestCase
     {
         return [
             [
-                ['username' => 'test', 'password' => 'pass']
+                ['username' => 'test', 'password' => 'pass'],
             ],
             [
-                ['#username' => 'test', '#password' => 'pass']
-            ]
+                ['#username' => 'test', '#password' => 'pass'],
+            ],
         ];
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Tests;
 
 use Keboola\GenericExtractor\GenericExtractor;
@@ -17,10 +19,10 @@ class RecursiveJobTest extends TestCase
     public function testParse(): void
     {
         $jobConfig = new JobConfig([
-            "id" => "multiCfg",
-            "endpoint" => "exports/tickets.json",
-            "dataType" => "tickets_export",
-            'userData' => ['userData' => 'hello']
+            'id' => 'multiCfg',
+            'endpoint' => 'exports/tickets.json',
+            'dataType' => 'tickets_export',
+            'userData' => ['userData' => 'hello'],
         ]);
         $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
         $response = json_decode('{
@@ -78,29 +80,29 @@ class RecursiveJobTest extends TestCase
     public function testNestedPlaceholder(): void
     {
         $jobConfig = new JobConfig([
-            "id" => "first",
-            "endpoint" => "first/",
-            "dataType" => "first",
-            "children" => [
+            'id' => 'first',
+            'endpoint' => 'first/',
+            'dataType' => 'first',
+            'children' => [
                 [
-                    "id" => "second",
-                    "endpoint" => "first/{first-id}",
-                    "dataType" => "second",
-                    "placeholders" => [
-                        "first-id" => "id"
+                    'id' => 'second',
+                    'endpoint' => 'first/{first-id}',
+                    'dataType' => 'second',
+                    'placeholders' => [
+                        'first-id' => 'id',
                     ],
-                    "children" => [
+                    'children' => [
                         [
-                            "id" => "third",
-                            "dataType" => "third",
-                            "endpoint" => "first/{first-id}/second/{second-id}",
-                            "placeholders" => [
-                                "second-id" => "id"
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                            'id' => 'third',
+                            'dataType' => 'third',
+                            'endpoint' => 'first/{first-id}/second/{second-id}',
+                            'placeholders' => [
+                                'second-id' => 'id',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ]);
         $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
         $client = self::createMock(RestClient::class);
@@ -110,17 +112,17 @@ class RecursiveJobTest extends TestCase
             $passes++;
             switch ($request->getEndpoint()) {
                 case 'first/':
-                    return \Keboola\Utils\arrayToObject(["data" => [["id" => 123, "1st" => 1]]]);
+                    return \Keboola\Utils\arrayToObject(['data' => [['id' => 123, '1st' => 1]]]);
                 case 'first/123':
                     return \Keboola\Utils\arrayToObject(
-                        ["data" => [["id" => 456, "2nd" => 2], ["id" => 789, "2nd" => 3]]]
+                        ['data' => [['id' => 456, '2nd' => 2], ['id' => 789, '2nd' => 3]]]
                     );
                 case 'first/123/second/456':
-                    return \Keboola\Utils\arrayToObject(["data" => [["3rd" => 4]]]);
+                    return \Keboola\Utils\arrayToObject(['data' => [['3rd' => 4]]]);
                 case 'first/123/second/789':
-                    return \Keboola\Utils\arrayToObject(["data" => [["3rd" => 5]]]);
+                    return \Keboola\Utils\arrayToObject(['data' => [['3rd' => 5]]]);
                 default:
-                    throw new \RuntimeException("Invalid request " . $request->getEndpoint());
+                    throw new \RuntimeException('Invalid request ' . $request->getEndpoint());
             }
         });
         $client->method('createRequest')->willReturnCallback(fn($config) => new RestRequest($config));
@@ -162,30 +164,30 @@ class RecursiveJobTest extends TestCase
     public function testNestedSamePlaceholder1(): void
     {
         $jobConfig = new JobConfig([
-            "id" => "first",
-            "endpoint" => "first/",
-            "dataType" => "first",
-            "children" => [
+            'id' => 'first',
+            'endpoint' => 'first/',
+            'dataType' => 'first',
+            'children' => [
                 [
-                    "id" => "second",
-                    "endpoint" => "first/{1:id}",
-                    "dataType" => "second",
-                    "placeholders" => [
-                        "1:id" => "id"
+                    'id' => 'second',
+                    'endpoint' => 'first/{1:id}',
+                    'dataType' => 'second',
+                    'placeholders' => [
+                        '1:id' => 'id',
                     ],
-                    "children" => [
+                    'children' => [
                         [
-                            "id" => "third",
-                            "dataType" => "third",
-                            "endpoint" => "first/{2:id}/second/{1:first-id}",
-                            "placeholders" => [
-                                "2:id" => "id",
-                                "1:first-id" => "id"
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                            'id' => 'third',
+                            'dataType' => 'third',
+                            'endpoint' => 'first/{2:id}/second/{1:first-id}',
+                            'placeholders' => [
+                                '2:id' => 'id',
+                                '1:first-id' => 'id',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ]);
         $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
         $client = self::createMock(RestClient::class);
@@ -195,17 +197,17 @@ class RecursiveJobTest extends TestCase
             $passes++;
             switch ($request->getEndpoint()) {
                 case 'first/':
-                    return \Keboola\Utils\arrayToObject(["data" => [["id" => 123, "1st" => 1]]]);
+                    return \Keboola\Utils\arrayToObject(['data' => [['id' => 123, '1st' => 1]]]);
                 case 'first/123':
                     return \Keboola\Utils\arrayToObject(
-                        ["data" => [["id" => 456, "2nd" => 2], ["id" => 789, "2nd" => 3]]]
+                        ['data' => [['id' => 456, '2nd' => 2], ['id' => 789, '2nd' => 3]]]
                     );
                 case 'first/123/second/456':
-                    return \Keboola\Utils\arrayToObject(["data" => [["3rd" => 4]]]);
+                    return \Keboola\Utils\arrayToObject(['data' => [['3rd' => 4]]]);
                 case 'first/123/second/789':
-                    return \Keboola\Utils\arrayToObject(["data" => [["3rd" => 5]]]);
+                    return \Keboola\Utils\arrayToObject(['data' => [['3rd' => 5]]]);
                 default:
-                    throw new \RuntimeException("Invalid request " . $request->getEndpoint());
+                    throw new \RuntimeException('Invalid request ' . $request->getEndpoint());
             }
         });
         $client->method('createRequest')->willReturnCallback(fn($config) => new RestRequest($config));
@@ -247,30 +249,30 @@ class RecursiveJobTest extends TestCase
     public function testNestedSamePlaceholder2(): void
     {
         $jobConfig = new JobConfig([
-            "id" => "first",
-            "endpoint" => "first/",
-            "dataType" => "first",
-            "children" => [
+            'id' => 'first',
+            'endpoint' => 'first/',
+            'dataType' => 'first',
+            'children' => [
                 [
-                    "id" => "second",
-                    "endpoint" => "first/{1:id}",
-                    "dataType" => "second",
-                    "placeholders" => [
-                        "1:id" => "id"
+                    'id' => 'second',
+                    'endpoint' => 'first/{1:id}',
+                    'dataType' => 'second',
+                    'placeholders' => [
+                        '1:id' => 'id',
                     ],
-                    "children" => [
+                    'children' => [
                         [
-                            "id" => "third",
-                            "dataType" => "third",
-                            "endpoint" => "first/{2:id}/second/{1:first-id}",
-                            "placeholders" => [
-                                "1:first-id" => "id",
-                                "2:id" => "id"
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                            'id' => 'third',
+                            'dataType' => 'third',
+                            'endpoint' => 'first/{2:id}/second/{1:first-id}',
+                            'placeholders' => [
+                                '1:first-id' => 'id',
+                                '2:id' => 'id',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ]);
         $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
         $client = self::createMock(RestClient::class);
@@ -280,17 +282,17 @@ class RecursiveJobTest extends TestCase
             $passes++;
             switch ($request->getEndpoint()) {
                 case 'first/':
-                    return \Keboola\Utils\arrayToObject(["data" => [["id" => 123, "1st" => 1]]]);
+                    return \Keboola\Utils\arrayToObject(['data' => [['id' => 123, '1st' => 1]]]);
                 case 'first/123':
                     return \Keboola\Utils\arrayToObject(
-                        ["data" => [["id" => 456, "2nd" => 2], ["id" => 789, "2nd" => 3]]]
+                        ['data' => [['id' => 456, '2nd' => 2], ['id' => 789, '2nd' => 3]]]
                     );
                 case 'first/123/second/456':
-                    return \Keboola\Utils\arrayToObject(["data" => [["3rd" => 4]]]);
+                    return \Keboola\Utils\arrayToObject(['data' => [['3rd' => 4]]]);
                 case 'first/123/second/789':
-                    return \Keboola\Utils\arrayToObject(["data" => [["3rd" => 5]]]);
+                    return \Keboola\Utils\arrayToObject(['data' => [['3rd' => 5]]]);
                 default:
-                    throw new \RuntimeException("Invalid request " . $request->getEndpoint());
+                    throw new \RuntimeException('Invalid request ' . $request->getEndpoint());
             }
         });
         $client->method('createRequest')->willReturnCallback(fn($config) => new RestRequest($config));
@@ -332,30 +334,30 @@ class RecursiveJobTest extends TestCase
     public function testNestedSamePlaceholder3(): void
     {
         $jobConfig = new JobConfig([
-            "id" => "first",
-            "endpoint" => "first/",
-            "dataType" => "first",
-            "children" => [
+            'id' => 'first',
+            'endpoint' => 'first/',
+            'dataType' => 'first',
+            'children' => [
                 [
-                    "id" => "second",
-                    "endpoint" => "first/{1:id}",
-                    "dataType" => "second",
-                    "placeholders" => [
-                        "1:id" => "id"
+                    'id' => 'second',
+                    'endpoint' => 'first/{1:id}',
+                    'dataType' => 'second',
+                    'placeholders' => [
+                        '1:id' => 'id',
                     ],
-                    "children" => [
+                    'children' => [
                         [
-                            "id" => "third",
-                            "dataType" => "third",
-                            "endpoint" => "first/{2:id}/second/{1:id}",
-                            "placeholders" => [
-                                "2:id" => "id",
-                                "1:id" => "id"
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                            'id' => 'third',
+                            'dataType' => 'third',
+                            'endpoint' => 'first/{2:id}/second/{1:id}',
+                            'placeholders' => [
+                                '2:id' => 'id',
+                                '1:id' => 'id',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ]);
         $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
         $client = self::createMock(RestClient::class);
@@ -365,17 +367,17 @@ class RecursiveJobTest extends TestCase
             $passes++;
             switch ($request->getEndpoint()) {
                 case 'first/':
-                    return \Keboola\Utils\arrayToObject(["data" => [["id" => 123, "1st" => 1]]]);
+                    return \Keboola\Utils\arrayToObject(['data' => [['id' => 123, '1st' => 1]]]);
                 case 'first/123':
                     return \Keboola\Utils\arrayToObject(
-                        ["data" => [["id" => 456, "2nd" => 2], ["id" => 789, "2nd" => 3]]]
+                        ['data' => [['id' => 456, '2nd' => 2], ['id' => 789, '2nd' => 3]]]
                     );
                 case 'first/123/second/456':
-                    return \Keboola\Utils\arrayToObject(["data" => [["3rd" => 4]]]);
+                    return \Keboola\Utils\arrayToObject(['data' => [['3rd' => 4]]]);
                 case 'first/123/second/789':
-                    return \Keboola\Utils\arrayToObject(["data" => [["3rd" => 5]]]);
+                    return \Keboola\Utils\arrayToObject(['data' => [['3rd' => 5]]]);
                 default:
-                    throw new \RuntimeException("Invalid request " . $request->getEndpoint());
+                    throw new \RuntimeException('Invalid request ' . $request->getEndpoint());
             }
         });
         $client->method('createRequest')->willReturnCallback(fn($config) => new RestRequest($config));
@@ -414,10 +416,10 @@ class RecursiveJobTest extends TestCase
     public function testUserDataAddLegacy(): void
     {
         $jobConfig = new JobConfig([
-            "id" => "multiCfg",
-            "endpoint" => "exports/tickets.json",
-            "dataType" => "tickets_export",
-            'userData' => ['column' => 'hello']
+            'id' => 'multiCfg',
+            'endpoint' => 'exports/tickets.json',
+            'dataType' => 'tickets_export',
+            'userData' => ['column' => 'hello'],
         ]);
         $parser = new Json(new NullLogger(), [], Json::LEGACY_VERSION);
         $response = json_decode('{
@@ -463,23 +465,23 @@ class RecursiveJobTest extends TestCase
     public function testUserDataAddLegacyMetadata(): void
     {
         $jobConfig = new JobConfig([
-            "id" => "multiCfg",
-            "endpoint" => "exports/tickets.json",
-            "dataType" => "tickets_export",
-            'userData' => ['column' => 'hello']
+            'id' => 'multiCfg',
+            'endpoint' => 'exports/tickets.json',
+            'dataType' => 'tickets_export',
+            'userData' => ['column' => 'hello'],
         ]);
         $metadata = [
-            "time" => [
-                "previousStart" => 1492606006
+            'time' => [
+                'previousStart' => 1492606006,
             ],
-            "json_parser.struct" => [
-                "tickets_export" => [
-                    "column" => "scalar",
-                    "id" => "scalar",
-                    "modified" => "scalar"
+            'json_parser.struct' => [
+                'tickets_export' => [
+                    'column' => 'scalar',
+                    'id' => 'scalar',
+                    'modified' => 'scalar',
                 ],
             ],
-            "json_parser.structVersion" => 2,
+            'json_parser.structVersion' => 2,
         ];
         $parser = new Json(new NullLogger(), $metadata, Json::LATEST_VERSION);
         $response = json_decode('{
@@ -525,10 +527,10 @@ class RecursiveJobTest extends TestCase
                     'tickets_export' => [
                         'column' => 'scalar',
                         'id' => 'scalar',
-                        'modified' => 'scalar'
-                    ]
+                        'modified' => 'scalar',
+                    ],
                 ],
-                'json_parser.structVersion' => 2.0
+                'json_parser.structVersion' => 2.0,
             ],
             $parser->getMetadata()
         );
@@ -537,10 +539,10 @@ class RecursiveJobTest extends TestCase
     public function testUserDataAddNewMetadata(): void
     {
         $jobConfig = new JobConfig([
-            "id" => "multiCfg",
-            "endpoint" => "exports/tickets.json",
-            "dataType" => "tickets_export",
-            'userData' => ['column' => 'hello']
+            'id' => 'multiCfg',
+            'endpoint' => 'exports/tickets.json',
+            'dataType' => 'tickets_export',
+            'userData' => ['column' => 'hello'],
         ]);
         $metadata = [
             'json_parser.struct' => [
@@ -554,7 +556,7 @@ class RecursiveJobTest extends TestCase
                             ],
                             '_column' => [
                                 'nodeType' => 'scalar',
-                                'headerNames' => 'column'
+                                'headerNames' => 'column',
                             ],
                             '_modified' => [
                                 'nodeType' => 'scalar',
@@ -564,17 +566,17 @@ class RecursiveJobTest extends TestCase
                             '_column_u0' => [
                                 'nodeType' => 'scalar',
                                 'type' => 'parent',
-                                'headerNames' => 'column_u0'
-                            ]
+                                'headerNames' => 'column_u0',
+                            ],
                         ],
-                        'nodeType' => 'array'
+                        'nodeType' => 'array',
                     ],
                 ],
                 'parent_aliases' => [
                     'column' => 'column_u0',
                 ],
             ],
-            'json_parser.structVersion' => 3
+            'json_parser.structVersion' => 3,
         ];
         $parser = new Json(new NullLogger(), $metadata, Json::LATEST_VERSION);
         $response = json_decode('{
@@ -631,14 +633,14 @@ class RecursiveJobTest extends TestCase
                                 ],
                                 '_column' => [
                                     'nodeType' => 'scalar',
-                                    'headerNames' => 'column'
+                                    'headerNames' => 'column',
                                 ],
                                 'headerNames' => 'data',
                                 '_column_u0' => [
                                     'nodeType' => 'scalar',
                                     'type' => 'parent',
-                                    'headerNames' => 'column_u0'
-                                ]
+                                    'headerNames' => 'column_u0',
+                                ],
                             ],
                             'nodeType' => 'array',
                         ],
@@ -647,7 +649,7 @@ class RecursiveJobTest extends TestCase
                         'column' => 'column_u0',
                     ],
                 ],
-                'json_parser.structVersion' => 3
+                'json_parser.structVersion' => 3,
             ],
             $parser->getMetadata()
         );
@@ -656,10 +658,10 @@ class RecursiveJobTest extends TestCase
     public function testUserDataAdd(): void
     {
         $jobConfig = new JobConfig([
-            "id" => "multiCfg",
-            "endpoint" => "exports/tickets.json",
-            "dataType" => "tickets_export",
-            'userData' => ['column' => 'hello']
+            'id' => 'multiCfg',
+            'endpoint' => 'exports/tickets.json',
+            'dataType' => 'tickets_export',
+            'userData' => ['column' => 'hello'],
         ]);
         $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
         $response = json_decode('{
@@ -709,7 +711,7 @@ class RecursiveJobTest extends TestCase
             'endpoint' => 'exports/tickets.json',
             'dataType' => 'tickets_export',
             'dataField' => '.',
-            'userData' => ['column' => 'hello']
+            'userData' => ['column' => 'hello'],
         ]);
         $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
         $response = json_decode('{

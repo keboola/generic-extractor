@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Tests;
 
 use Keboola\Csv\CsvFile;
@@ -26,7 +28,7 @@ class CacheTest extends TestCase
         $data = $csv->current();
         unset($csv);
 
-        $firstDateTime = (int)$data[1];
+        $firstDateTime = (int) $data[1];
         $this->rmDir(__DIR__ . '/data/requestCacheTTL/out');
 
         sleep(3);
@@ -43,7 +45,7 @@ class CacheTest extends TestCase
         $data = $csv->current();
         unset($csv);
 
-        $secondDateTime = (int)$data[1];
+        $secondDateTime = (int) $data[1];
         self::assertTrue($firstDateTime === $secondDateTime);
 
         $this->rmDir(__DIR__ . '/data/requestCacheTTL/out');
@@ -62,14 +64,14 @@ class CacheTest extends TestCase
         $data = $csv->current();
         unset($csv);
 
-        $thirdDateTime = (int)$data[1];
+        $thirdDateTime = (int) $data[1];
         self::assertTrue($secondDateTime < $thirdDateTime);
 
         $this->rmDir(__DIR__ . '/data/requestCacheTTL/out');
         $this->rmDir(__DIR__ . '/data/requestCacheTTL/cache');
     }
 
-    protected function rmDir($dirPath)
+    protected function rmDir($dirPath): void
     {
         if (!file_exists($dirPath)) {
             return;
@@ -104,7 +106,7 @@ class CacheTest extends TestCase
         $data = $csv->current();
         unset($csv);
 
-        $firstDateTime = (int)$data[1];
+        $firstDateTime = (int) $data[1];
         $this->rmDir(__DIR__ . '/data/requestCache/out');
 
         sleep(3);
@@ -121,7 +123,7 @@ class CacheTest extends TestCase
         $data = $csv->current();
         unset($csv);
 
-        $secondDateTime = (int)$data[1];
+        $secondDateTime = (int) $data[1];
         self::assertTrue($firstDateTime === $secondDateTime);
 
         $this->rmDir(__DIR__ . '/data/requestCache/out');
@@ -147,7 +149,7 @@ class CacheTest extends TestCase
         $data = $csv->current();
         unset($csv);
 
-        $firstDateTime = (int)$data[1];
+        $firstDateTime = (int) $data[1];
         $this->rmDir(__DIR__ . '/data/noCache/out');
 
         sleep(3);
@@ -164,7 +166,7 @@ class CacheTest extends TestCase
         $data = $csv->current();
         unset($csv);
 
-        $secondDateTime = (int)$data[1];
+        $secondDateTime = (int) $data[1];
         self::assertTrue($firstDateTime < $secondDateTime);
         $this->rmDir(__DIR__ . '/data/noCache/out');
     }

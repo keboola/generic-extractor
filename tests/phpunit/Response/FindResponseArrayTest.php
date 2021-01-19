@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Tests\Response;
 
 use Keboola\GenericExtractor\Exception\UserException;
@@ -12,19 +14,21 @@ class FindResponseArrayTest extends TestCase
 {
     public function testSingleArray(): void
     {
-        $cfg = new JobConfig([
+        $cfg = new JobConfig(
+            [
             'endpoint' => 'a',
-            'dataField' => 'results'
-        ]);
+            'dataField' => 'results',
+            ]
+        );
 
         $module = new FindResponseArray(new NullLogger());
 
         $response = (object) [
             'results' => [
                 (object) ['id' => 1],
-                (object) ['id' => 2]
+                (object) ['id' => 2],
             ],
-            'otherArray' => ['a','b']
+            'otherArray' => ['a','b'],
         ];
 
         $data = $module->process($response, $cfg);
@@ -33,10 +37,12 @@ class FindResponseArrayTest extends TestCase
 
     public function testNestedArray(): void
     {
-        $cfg = new JobConfig([
+        $cfg = new JobConfig(
+            [
             'endpoint' => 'a',
-            'dataField' => 'data.results'
-        ]);
+            'dataField' => 'data.results',
+            ]
+        );
 
         $module = new FindResponseArray(new NullLogger());
 
@@ -44,10 +50,10 @@ class FindResponseArrayTest extends TestCase
             'data' => (object) [
                 'results' => [
                     (object) ['id' => 1],
-                    (object) ['id' => 2]
-                ]
+                    (object) ['id' => 2],
+                ],
             ],
-            'otherArray' => ['a','b']
+            'otherArray' => ['a','b'],
         ];
 
         $data = $module->process($response, $cfg);
@@ -56,24 +62,26 @@ class FindResponseArrayTest extends TestCase
 
     public function testMultipleArraysException(): void
     {
-        $cfg = new JobConfig([
-            'endpoint' => 'a'
-        ]);
+        $cfg = new JobConfig(
+            [
+            'endpoint' => 'a',
+            ]
+        );
 
         $module = new FindResponseArray(new NullLogger());
 
         $response = (object) [
             'results' => [
                 (object) ['id' => 1],
-                (object) ['id' => 2]
+                (object) ['id' => 2],
             ],
-            'otherArray' => ['a','b']
+            'otherArray' => ['a','b'],
         ];
 
         $this->expectException(UserException::class);
         $this->expectExceptionMessage(
             "More than one array found in response! Use 'dataField' parameter to specify a key to the data array. " .
-            "(endpoint: a, arrays in response root: results, otherArray)"
+            '(endpoint: a, arrays in response root: results, otherArray)'
         );
         $module->process($response, $cfg);
     }

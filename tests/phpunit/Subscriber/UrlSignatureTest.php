@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Tests\Subscriber;
 
 use Keboola\GenericExtractor\Subscriber\UrlSignature;

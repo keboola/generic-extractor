@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor;
 
 use Keboola\Csv\CsvFile;
@@ -8,7 +10,7 @@ use Keboola\GenericExtractor\Exception\UserException;
 
 class MissingTableHelper
 {
-    public static function checkConfigs($configs, $dataDir, Extractor $configuration)
+    public static function checkConfigs($configs, $dataDir, Extractor $configuration): void
     {
         foreach ($configs as $config) {
             $api = $configuration->getApi($config->getAttributes());
@@ -16,7 +18,7 @@ class MissingTableHelper
             if (!empty($config->getAttribute('outputBucket'))) {
                 $outputBucket = $config->getAttribute('outputBucket');
             } elseif ($config->getAttribute('id')) {
-                $outputBucket = 'ex-api-' . $api->getName() . "-" . $config->getAttribute('id');
+                $outputBucket = 'ex-api-' . $api->getName() . '-' . $config->getAttribute('id');
             } else {
                 $outputBucket = '';
             }
@@ -47,7 +49,7 @@ class MissingTableHelper
         $name,
         $mapping,
         $parentKey = []
-    ) {
+    ): void {
         $columns = [];
         $primaryKey = [];
         if (!empty($mapping['type']) && ($mapping['type'] === 'table')) {

@@ -22,12 +22,37 @@
     "require-dev": {
         "phpunit/phpunit": "^9.5",
         "keboola/coding-standard": ">=9.0",
+        "php-parallel-lint/php-parallel-lint": "^1.2",
         "phpstan/phpstan": "^0.12"
     },
     "autoload": {
-        "psr-4": {
-            "Keboola\\GenericExtractor\\": "src/",
-            "Keboola\\GenericExtractor\\Tests\\": "tests/"
-        }
+        "psr-4": { "Keboola\\GenericExtractor\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "Keboola\\GenericExtractor\\Tests\\": "tests/phpunit" }
+    },
+    "scripts": {
+        "tests-phpunit": "XDEBUG_MODE=coverage phpunit",
+        "tests": [
+            "@tests-phpunit"
+        ],
+        "phpstan": "phpstan analyse ./src ./tests --level=max --no-progress -c phpstan.neon",
+        "phpcs": "phpcs -n --ignore=vendor --extensions=php .",
+        "phpcbf": "phpcbf -n --ignore=vendor --extensions=php .",
+        "phplint": "parallel-lint -j 10 --exclude vendor .",
+        "build": [
+            "@phplint",
+            "@phpcs",
+            "@phpstan",
+            "@tests"
+        ],
+        "ci": [
+            "@composer validate --no-check-publish --no-check-all",
+            "@build"
+        ]
+    },
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true
     }
 }

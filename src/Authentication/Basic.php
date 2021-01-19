@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Authentication;
 
 use Keboola\GenericExtractor\Exception\UserException;
@@ -14,9 +16,6 @@ class Basic implements AuthInterface
 
     protected string $password;
 
-    /**
-     * @throws UserException
-     */
     public function __construct(array $config)
     {
         if (empty($config['username']) && empty($config['#username'])) {

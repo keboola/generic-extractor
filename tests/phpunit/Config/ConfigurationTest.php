@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Tests\Config;
 
 use Keboola\GenericExtractor\Configuration\Extractor;
@@ -38,7 +40,7 @@ class ConfigurationTest extends ExtractorTestCase
 
         $files = [
             Table::create('first', ['col1', 'col2']),
-            Table::create('second', ['col11', 'col12'])
+            Table::create('second', ['col11', 'col12']),
         ];
 
         $files[0]->writeRow(['a', 'b']);
@@ -54,7 +56,7 @@ class ConfigurationTest extends ExtractorTestCase
         $this->rmDir($resultsPath);
     }
 
-    protected function storeResults($resultsPath, $name, $incremental)
+    protected function storeResults($resultsPath, $name, $incremental): void
     {
         $config = '{"parameters":{}}';
         $fs = new Filesystem();
@@ -63,7 +65,7 @@ class ConfigurationTest extends ExtractorTestCase
 
         $files = [
             Table::create('first', ['col1', 'col2']),
-            Table::create('second', ['col11', 'col12'])
+            Table::create('second', ['col11', 'col12']),
         ];
 
         $files[0]->writeRow(['a', 'b']);
@@ -102,12 +104,14 @@ class ConfigurationTest extends ExtractorTestCase
         $fs->dumpFile($resultsPath . DIRECTORY_SEPARATOR . 'config.json', $config);
         $configuration = new Extractor($resultsPath, new NullLogger());
 
-        $configuration->saveConfigMetadata([
+        $configuration->saveConfigMetadata(
+            [
             'some' => 'data',
             'more' => [
-                'woah' => 'such recursive'
+                'woah' => 'such recursive',
+            ],
             ]
-        ]);
+        );
 
         self::assertFileEquals(__DIR__ . '/../data/metadataTest/out/state.json', $resultsPath . '/out/state.json');
 
@@ -125,7 +129,7 @@ class ConfigurationTest extends ExtractorTestCase
                 array_replace(
                     [
                         'id' => $json['parameters']['config']['id'],
-                        'outputBucket' => $json['parameters']['config']['outputBucket']
+                        'outputBucket' => $json['parameters']['config']['outputBucket'],
                     ],
                     $params
                 ),
@@ -160,7 +164,7 @@ class ConfigurationTest extends ExtractorTestCase
         $fs->dumpFile($temp->getTmpFolder() . '/config.json', 'invalidJSON');
         try {
             new Extractor($temp->getTmpFolder(), new NullLogger());
-            self::fail("Invalid JSON must cause exception");
+            self::fail('Invalid JSON must cause exception');
         } catch (ApplicationException $e) {
             self::assertStringContainsString('Configuration file is not a valid JSON: Syntax error', $e->getMessage());
         }

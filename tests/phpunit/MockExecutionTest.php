@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Tests;
 
 use PHPUnit\Framework\TestCase;
@@ -12,7 +14,7 @@ class MockExecutionTest extends TestCase
     public function testRun(string $configDir): void
     {
         $this->rmDir(__DIR__ . "/data/{$configDir}/out");
-        exec("php " . __DIR__ . "/../run.php --data=" . __DIR__ . "/data/{$configDir} 2>&1", $output, $retval);
+        exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . "/data/{$configDir} 2>&1", $output, $retval);
 
         self::assertStringContainsString('Extractor finished successfully.', implode("\n", $output));
         self::assertDirectoryEquals(
@@ -34,7 +36,7 @@ class MockExecutionTest extends TestCase
             ['multipleOutputs'],
             ['multipleOutputsUserData'],
             ['defaultBucket'],
-            ['jsonMap']
+            ['jsonMap'],
         ];
     }
 
@@ -67,7 +69,7 @@ class MockExecutionTest extends TestCase
         $this->rmDir(__DIR__ . '/data/dynamicUserData/out');
     }
 
-    protected function rmDir($dirPath)
+    protected function rmDir($dirPath): void
     {
         if (!file_exists($dirPath)) {
             return;
@@ -84,7 +86,7 @@ class MockExecutionTest extends TestCase
         rmdir($dirPath);
     }
 
-    protected function assertDirectoryEquals($pathToExpected, $pathToActual)
+    protected function assertDirectoryEquals($pathToExpected, $pathToActual): void
     {
         foreach (new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator(

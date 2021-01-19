@@ -48,18 +48,17 @@ services:
       PROXY_DOMAIN: mock-server-https-client-cert-proxy
 
   ssh-proxy:
-      build:
-        context: ..
-        dockerfile: Dockerfile-ssh-proxy
-      ports:
-        - "2222:22"
-      links:
-        - mock-server-behind-proxy
+    image: keboola/db-component-ssh-proxy:latest
+    volumes:
+      - ssh-keys:/root/.ssh
+    links:
+      - mock-server-behind-proxy
 
   extractor:
     build: ..
     image: keboola/generic-extractor
     volumes:
+      - ssh-keys:/root/.ssh:ro
       - .tmp:/tmp
       - ./examples/:/examples/
     tty: true
@@ -73,3 +72,6 @@ services:
       - mock-server-https-self-signed-proxy
       - mock-server-https-client-cert-proxy
       - ssh-proxy
+
+volumes:
+  ssh-keys:

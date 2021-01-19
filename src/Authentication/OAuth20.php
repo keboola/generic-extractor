@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Authentication;
 
 use Keboola\GenericExtractor\Configuration\UserFunction;
@@ -47,13 +49,10 @@ class OAuth20 implements AuthInterface
 
     protected array $configAttributes;
 
-    /**
-     * @throws UserException
-     */
     public function __construct(array $configAttributes, array $authorization, array $authentication)
     {
         if (empty($authorization['oauth_api']['credentials'])) {
-            throw new UserException("OAuth API credentials not supplied in configuration.");
+            throw new UserException('OAuth API credentials not supplied in configuration.');
         }
 
         $oauthApiDetails = $authorization['oauth_api']['credentials'];
@@ -97,18 +96,18 @@ class OAuth20 implements AuthInterface
         $subscribers = [
             [
                 'subscriber' => new UrlSignature(),
-                'definitions' => $this->query
+                'definitions' => $this->query,
             ],
             [
                 'subscriber' => new HeaderSignature(),
-                'definitions' => $this->headers
-            ]
+                'definitions' => $this->headers,
+            ],
         ];
 
         $authorization = [
             'clientId' => $this->clientId,
             'nonce' => substr(sha1(uniqid(microtime(), true)), 0, 16),
-            'timestamp' => time()
+            'timestamp' => time(),
         ];
 
         if (!is_scalar($this->data)) {
@@ -133,7 +132,7 @@ class OAuth20 implements AuthInterface
     /**
      * @param array|object $definitions
      */
-    protected function addGenerator(AbstractSignature $subscriber, $definitions, array $authorization)
+    protected function addGenerator(AbstractSignature $subscriber, $definitions, array $authorization): void
     {
         // Create array of objects instead of arrays from YML
         $q = (array) \Keboola\Utils\arrayToObject($definitions);

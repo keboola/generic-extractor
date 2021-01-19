@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Subscriber;
 
 use GuzzleHttp\Event\BeforeEvent;
@@ -35,7 +37,7 @@ class LoginSubscriber implements SubscriberInterface
         return ['before' => ['onBefore', RequestEvents::SIGN_REQUEST]];
     }
 
-    public function onBefore(BeforeEvent $event)
+    public function onBefore(BeforeEvent $event): void
     {
         if (!$this->loggedIn || (!is_null($this->expires) && (time() > $this->expires))) {
             $details = $this->logIn();
@@ -50,7 +52,7 @@ class LoginSubscriber implements SubscriberInterface
 
     /**
      * @return array ['headers' => .., 'query' => ..]
-     * @todo consider just setting RestClient and loginRequest here
+     * @todo   consider just setting RestClient and loginRequest here
      */
     protected function logIn(): array
     {
@@ -63,7 +65,7 @@ class LoginSubscriber implements SubscriberInterface
     /**
      * @param callable $login A method that logs the user in
      */
-    public function setLoginMethod(callable $login)
+    public function setLoginMethod(callable $login): void
     {
         $this->loginFunction = $login;
     }

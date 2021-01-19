@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Response;
 
 use Keboola\GenericExtractor\Exception\UserException;
@@ -58,14 +60,14 @@ class Filter
     }
 
     /**
-     * @param mixed $item
+     * @param  mixed $item
      * @return mixed
      */
     protected function filterItem($item, string $path)
     {
         $currentPath = explode($this->delimiter, $path, 2);
 
-        if ('[]' == substr($currentPath[0], -2)) {
+        if (substr($currentPath[0], -2) === '[]') {
             $key = substr($currentPath[0], 0, -2);
             $arr = true;
         } else {
@@ -89,14 +91,14 @@ class Filter
             }
 
             foreach ($item->{$key} as &$subItem) {
-                if (count($currentPath) == 1) {
+                if (count($currentPath) === 1) {
                     $subItem = $this->updateItem($subItem);
                 } else {
                     $subItem = $this->filterItem($subItem, $currentPath[1]);
                 }
             }
         } else {
-            if (count($currentPath) == 1) {
+            if (count($currentPath) === 1) {
                 $item->{$key} = $this->updateItem($item->{$key});
             } else {
                 $item->{$key} = $this->filterItem($item->{$key}, $currentPath[1]);

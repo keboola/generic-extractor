@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor;
 
 use GuzzleHttp\Message\RequestInterface;
@@ -36,7 +38,9 @@ class GenericExtractor
 
     private Api $api;
 
-    /** @var array|string|null */
+    /**
+     * @var array|string|null
+     */
     private $proxy;
 
     public function __construct(Temp $temp, LoggerInterface $logger, Api $api, $proxy = null)
@@ -53,7 +57,7 @@ class GenericExtractor
         return $this;
     }
 
-    public function run(Config $config)
+    public function run(Config $config): void
     {
         $defaults = [
             'headers' => UserFunction::build(
@@ -73,7 +77,7 @@ class GenericExtractor
             $this->logger,
             [
                 'base_url' => $this->api->getBaseUrl(),
-                'defaults' => $defaults
+                'defaults' => $defaults,
             ],
             JuicerRest::convertRetry($this->api->getRetryConfig()),
             $this->api->getDefaultRequestOptions(),
@@ -90,7 +94,7 @@ class GenericExtractor
                 [
                     'storage' => $this->cache,
                     'validate' => false,
-                    'can_cache' => fn(RequestInterface $requestInterface) => true
+                    'can_cache' => fn(RequestInterface $requestInterface) => true,
                 ]
             );
         }
@@ -106,7 +110,7 @@ class GenericExtractor
         }
     }
 
-    protected function runJob(JobConfig $jobConfig, RestClient $client, Config $config)
+    protected function runJob(JobConfig $jobConfig, RestClient $client, Config $config): void
     {
         $job = new GenericExtractorJob(
             $jobConfig,
@@ -129,7 +133,7 @@ class GenericExtractor
         $job->run();
     }
 
-    public function setParser(ParserInterface $parser)
+    public function setParser(ParserInterface $parser): void
     {
         $this->parser = $parser;
     }
@@ -148,7 +152,7 @@ class GenericExtractor
         if (empty($config->getAttribute('compatLevel'))) {
             return self::COMPAT_LEVEL_LATEST;
         }
-        return (int)$config->getAttribute('compatLevel');
+        return (int) $config->getAttribute('compatLevel');
     }
 
     protected function initParser(Config $config): ParserInterface
@@ -173,7 +177,7 @@ class GenericExtractor
         return $this->parser;
     }
 
-    public function setMetadata(array $data)
+    public function setMetadata(array $data): void
     {
         $this->metadata = $data;
     }

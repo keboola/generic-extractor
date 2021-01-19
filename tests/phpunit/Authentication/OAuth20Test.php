@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Tests\Authentication;
 
 use Keboola\GenericExtractor\Authentication\OAuth20;
@@ -50,22 +52,25 @@ class OAuth20Test extends ExtractorTestCase
             $authHeader,
             $matches
         );
-        if (1 !== $match) {
-            throw new \Exception("MAC Header does not match the expected pattern");
+        if ($match !== 1) {
+            throw new \Exception('MAC Header does not match the expected pattern');
         }
 
         $timestamp = $matches[1];
         $nonce = $matches[2];
 
-        $macString = join("\n", [
+        $macString = join(
+            "\n",
+            [
             $timestamp,
             $nonce,
             strtoupper($request->getMethod()),
             $request->getResource(),
             $request->getHost(),
             $request->getPort(),
-            "\n"
-        ]);
+            "\n",
+            ]
+        );
 
         $expectedAuthHeader = sprintf(
             'MAC id="%s", ts="%s", nonce="%s", mac="%s"',

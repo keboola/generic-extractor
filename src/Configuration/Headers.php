@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Configuration;
 
 use Keboola\GenericExtractor\Exception\UserException;
@@ -27,10 +29,7 @@ class Headers
         $this->loadConfig($configAttributes);
     }
 
-    /**
-     * @throws UserException
-     */
-    private function loadConfig(array $configAttributes)
+    private function loadConfig(array $configAttributes): void
     {
         if (!empty($configAttributes['http']['headers']) && is_array($configAttributes['http']['headers'])) {
             $configHeaders = $configAttributes['http']['headers'];
