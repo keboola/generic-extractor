@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace Keboola\GenericExtractor\Tests\Authentication;
 
 use Keboola\GenericExtractor\Authentication\OAuth10;
-use GuzzleHttp\Message\Response;
-use GuzzleHttp\Stream\Stream;
-use GuzzleHttp\Subscriber\Mock;
-use GuzzleHttp\Subscriber\History;
 use Keboola\Juicer\Client\RestClient;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;

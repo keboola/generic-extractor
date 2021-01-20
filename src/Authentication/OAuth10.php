@@ -36,9 +36,7 @@ class OAuth10 implements AuthInterface
             }
         }
 
-        /**
- * @var \stdClass $data
-*/
+        /** @var \stdClass $data */
         $data = jsonDecode($oauthApiDetails['#data']);
         $this->token = $data->oauth_token;
         $this->tokenSecret = $data->oauth_token_secret;
@@ -51,16 +49,13 @@ class OAuth10 implements AuthInterface
      */
     public function attachToClient(RestClient $client): void
     {
-        $sub = new Oauth1(
+        $client->getHandlerStack()->push(new Oauth1(
             [
-            'consumer_key'    => $this->consumerKey,
-            'consumer_secret' => $this->consumerSecret,
-            'token'           => $this->token,
-            'token_secret'    => $this->tokenSecret,
+                'consumer_key'    => $this->consumerKey,
+                'consumer_secret' => $this->consumerSecret,
+                'token'           => $this->token,
+                'token_secret'    => $this->tokenSecret,
             ]
-        );
-
-        $client->getClient()->getEmitter()->attach($sub);
-        $client->getClient()->setDefaultOption('auth', 'oauth');
+        ));
     }
 }

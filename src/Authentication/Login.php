@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor\Authentication;
 
+use Keboola\GenericExtractor\Utils;
 use Keboola\Utils\Exception\NoDataFoundException;
 use LogicException;
 use GuzzleHttp\Middleware;
-use GuzzleHttp\Psr7\Uri;
 use Keboola\GenericExtractor\Configuration\UserFunction;
 use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\Juicer\Client\RestClient;
@@ -104,10 +104,13 @@ class Login implements AuthInterface
     private function addSignature(RequestInterface $request): RequestInterface
     {
         // Add query params
-        $request = $request->withUri(Uri::withQueryValues($request->getUri(), $this->signatureQuery));
+        $uri = $request->getUri();
+        $request = $request->withUri($uri->withQuery(
+            Utils::mergeQueries($uri->getQuery(), $this->signatureQuery)
+        ));
 
         // Add headers
-        foreach($this->signatureHeaders as $name => $value) {
+        foreach ($this->signatureHeaders as $name => $value) {
             $request = $request->withHeader($name, $value);
         }
 

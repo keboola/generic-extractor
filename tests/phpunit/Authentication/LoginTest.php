@@ -52,7 +52,6 @@ class LoginTest extends ExtractorTestCase
             ->addResponse200((string) json_encode((object) [
                 'data' => [4, 5, 6],
             ]))
-            ->setGuzzleConfig(['base_url' => 'http://example.com/api'])
             ->setHistoryContainer($history)
             ->setInitCallback(function (RestClient $restClient) use ($auth): void {
                 $auth->attachToClient($restClient);
@@ -69,7 +68,7 @@ class LoginTest extends ExtractorTestCase
             $restClient->download($restClient->createRequest([
                 'endpoint' => '/api/get',
                 'params' => ['foo1' => 'bar1'],
-                'headers' => ['X-Request-Param' => 'bar2']
+                'headers' => ['X-Request-Param' => 'bar2'],
             ]))
         );
 
@@ -89,7 +88,6 @@ class LoginTest extends ExtractorTestCase
         self::assertEquals(1234, $apiCall2->getRequest()->getHeaderLine('X-Test-Auth'));
         self::assertEquals('bar2', $apiCall2->getRequest()->getHeaderLine('X-Request-Param'));
         self::assertEquals('foo1=bar1&qToken=4321', $apiCall2->getRequest()->getUri()->getQuery());
-        self::assertEquals('/api/get?foo1=bar1&qToken=4321', (string) $apiCall2->getRequest()->getUri());
 
         // No more history items
         self::assertTrue($history->isEmpty());
@@ -149,7 +147,6 @@ class LoginTest extends ExtractorTestCase
             ->addResponse200((string) json_encode((object) [
                 'data' => [7, 8, 9],
             ]))
-            ->setGuzzleConfig(['base_url' => 'http://example.com/api'])
             ->setHistoryContainer($history)
             ->setInitCallback(function (RestClient $restClient) use ($auth): void {
                 $auth->attachToClient($restClient);
@@ -226,7 +223,6 @@ class LoginTest extends ExtractorTestCase
             ->addResponse200((string) json_encode((object) [
                 'data' => [4, 5, 6],
             ]))
-            ->setGuzzleConfig(['base_url' => 'http://example.com/api'])
             ->setHistoryContainer($history)
             ->setInitCallback(function (RestClient $restClient) use ($auth): void {
                 $auth->attachToClient($restClient);
@@ -287,7 +283,6 @@ class LoginTest extends ExtractorTestCase
             ->addResponse200((string) json_encode((object) [
                 'data' => [4, 5, 6],
             ]))
-            ->setGuzzleConfig(['base_url' => 'http://example.com/api'])
             ->setHistoryContainer($history)
             ->setInitCallback(function (RestClient $restClient) use ($auth): void {
                 $auth->attachToClient($restClient);
@@ -382,7 +377,6 @@ class LoginTest extends ExtractorTestCase
             ->addResponse200((string) json_encode((object) [
                 'data' => [4, 5, 6],
             ]))
-            ->setGuzzleConfig(['base_url' => 'http://example.com/api'])
             ->setHistoryContainer($history)
             ->setInitCallback(function (RestClient $restClient) use ($auth): void {
                 $auth->attachToClient($restClient);

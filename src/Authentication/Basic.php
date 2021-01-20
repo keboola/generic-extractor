@@ -8,7 +8,6 @@ use GuzzleHttp\Middleware;
 use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\Juicer\Client\RestClient;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 
 /**
  * Basic HTTP Authentication using name and password
