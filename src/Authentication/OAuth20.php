@@ -94,7 +94,7 @@ class OAuth20 implements AuthInterface
     /**
      * @inheritdoc
      */
-    public function authenticateClient(RestClient $client): void
+    public function attachToClient(RestClient $client): void
     {
         $subscribers = [
             [

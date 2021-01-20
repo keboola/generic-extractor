@@ -30,7 +30,7 @@ class QueryTest extends ExtractorTestCase
 
         $auth = new Query($configAttributes, $authentication);
         $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com'], [], []);
-        $auth->authenticateClient($restClient);
+        $auth->attachToClient($restClient);
 
         $request = $restClient->getClient()->createRequest('GET', '/');
         $restClient->getClient()->send($request);
@@ -45,7 +45,7 @@ class QueryTest extends ExtractorTestCase
     {
         $auth = new Query([], ['query' => ['authParam' => 'secretCodeWow']]);
         $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com'], [], []);
-        $auth->authenticateClient($restClient);
+        $auth->attachToClient($restClient);
 
         $mock = new Mock(
             [
@@ -101,7 +101,7 @@ class QueryTest extends ExtractorTestCase
 
         $auth = new Query($configAttributes, $authentication);
         $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com'], [], []);
-        $auth->authenticateClient($restClient);
+        $auth->attachToClient($restClient);
 
         $mock = new Mock(
             [

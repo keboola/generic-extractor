@@ -21,7 +21,7 @@ class OAuth20Test extends ExtractorTestCase
             $config['authorization'],
             $config['parameters']['api']['authentication']
         );
-        $auth->authenticateClient($restClient);
+        $auth->attachToClient($restClient);
 
         $request = $restClient->getClient()->createRequest('GET', '/');
         $restClient->getClient()->send($request);
@@ -39,7 +39,7 @@ class OAuth20Test extends ExtractorTestCase
             $config['authorization'],
             $config['parameters']['api']['authentication']
         );
-        $auth->authenticateClient($restClient);
+        $auth->attachToClient($restClient);
 
         $request = $restClient->getClient()->createRequest('GET', '/resource?k=v');
         self::sendRequest($restClient->getClient(), $request);

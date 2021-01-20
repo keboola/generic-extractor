@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor\Subscriber;
 
-use GuzzleHttp\Event\BeforeEvent;
-use GuzzleHttp\Event\RequestEvents;
-use GuzzleHttp\Message\RequestInterface;
+use Psr\Http\Message\RequestInterface;
 
 abstract class AbstractSignature
 {

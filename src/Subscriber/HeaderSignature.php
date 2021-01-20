@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor\Subscriber;
 
-use GuzzleHttp\Event\SubscriberInterface;
-use GuzzleHttp\Message\RequestInterface;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * Might better be able to work with ANY type of auth, and tweak the request accordingly

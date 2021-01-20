@@ -79,7 +79,7 @@ class LoginTest extends ExtractorTestCase
         ];
 
         $auth = new Login($attrs, $api);
-        $auth->authenticateClient($restClient);
+        $auth->attachToClient($restClient);
 
         $request = $restClient->createRequest(['endpoint' => '/']);
         $restClient->download($request);
@@ -154,7 +154,7 @@ class LoginTest extends ExtractorTestCase
         ];
 
         $auth = new Login($attrs, $api);
-        $auth->authenticateClient($restClient);
+        $auth->attachToClient($restClient);
 
         $request = $restClient->createRequest(['endpoint' => '/']);
         $restClient->download($request);
@@ -220,7 +220,7 @@ class LoginTest extends ExtractorTestCase
         ];
 
         $auth = new Login($attrs, $api);
-        $auth->authenticateClient($restClient);
+        $auth->attachToClient($restClient);
 
         $request = $restClient->createRequest(['endpoint' => '/']);
         $restClient->download($request);
@@ -318,7 +318,7 @@ class LoginTest extends ExtractorTestCase
         ];
 
         $auth = new Login(['a1' => ['b1' => 'c1'], 'a2' => ['b2' => 'c2']], $api);
-        $auth->authenticateClient($restClient);
+        $auth->attachToClient($restClient);
         $request = $restClient->createRequest(['endpoint' => '/']);
         $restClient->download($request);
 

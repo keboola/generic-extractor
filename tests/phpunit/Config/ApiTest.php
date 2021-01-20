@@ -5,53 +5,21 @@ declare(strict_types=1);
 namespace Keboola\GenericExtractor\Tests\Config;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use Keboola\GenericExtractor\Authentication\OAuth20;
 use Keboola\GenericExtractor\Authentication\OAuth20Login;
 use Keboola\GenericExtractor\Authentication\Query;
 use Keboola\GenericExtractor\Configuration\Api;
 use Keboola\GenericExtractor\Exception\ApplicationException;
 use Keboola\GenericExtractor\Exception\UserException;
-use Keboola\GenericExtractor\Subscriber\AbstractSignature;
 use Keboola\Juicer\Client\RestClient;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
 class ApiTest extends TestCase
 {
-    /**
-     * @return RestClient|MockObject
-     */
-    private function getClientMock(Request $request): RestClient
-    {
-        $beforeEventMock = self::createMock(BeforeEvent::class);
-        $beforeEventMock->method('getRequest')->willReturn($request);
-        /**
- * @var BeforeEvent $beforeEventMock
-*/
-        $emitterMock = self::createMock(Emitter::class);
-        $a = 1;
-        $emitterMock->method('attach')->willReturnCallback(
-            function ($arg) use ($beforeEventMock, &$a): void {
-                /**
-            * @var AbstractSignature $arg
-            */
-                if ($a === 1) {
-                    // make sure the onBefore is triggered only once because of LoginRequests
-                    $a++;
-                    $arg->onBefore($beforeEventMock);
-                }
-            }
-        );
-        $guzzleClientMock = self::createMock(Client::class);
-        $guzzleClientMock->method('getEmitter')->willReturn($emitterMock);
-        $guzzleClientMock->method('send')->willReturn(new Response(200));
-        $restClientMock = self::createMock(RestClient::class);
-        $restClientMock->method('getClient')->willReturn($guzzleClientMock);
-        $restClientMock->method('getGuzzleRequest')->willReturn(new Request('POST', 'http://example.com'));
-        return $restClientMock;
-    }
-
     public function testCreateBaseUrlString(): void
     {
         $string = 'https://third.second.com/TEST/Something/';
@@ -120,11 +88,9 @@ class ApiTest extends TestCase
         ];
         $api = new Api(new NullLogger(), $apiConfig, $attributes, []);
         $request = new Request('GET', 'http://example.com?foo=bar');
-        $restClientMock = $this->getClientMock($request);
-        /**
- * @var RestClient $restClientMock
-*/
-        $api->getAuth()->authenticateClient($restClientMock);
+        $restClientMock = $this->createMockClient($request);
+
+        $api->getAuth()->attachToClient($restClientMock);
         self::assertEquals(['foo' => 'bar', 'param' => 'val'], $request->getQuery()->toArray());
         self::assertInstanceOf(Query::class, $api->getAuth());
     }
@@ -149,7 +115,7 @@ class ApiTest extends TestCase
         /**
  * @var RestClient $restClientMock
 */
-        $api->getAuth()->authenticateClient($restClientMock);
+        $api->getAuth()->attachToClient($restClientMock);
         self::assertEquals(['foo' => 'bar', 'param' => 'val'], $request->getQuery()->toArray());
         self::assertInstanceOf(Query::class, $api->getAuth());
     }
@@ -163,7 +129,7 @@ class ApiTest extends TestCase
         /**
  * @var RestClient $restClientMock
 */
-        $api->getAuth()->authenticateClient($restClientMock);
+        $api->getAuth()->attachToClient($restClientMock);
         self::assertInstanceOf(OAuth20::class, $api->getAuth());
         self::assertEquals(['foo' => 'bar'], $request->getQuery()->toArray());
         self::assertEquals(
@@ -182,7 +148,7 @@ class ApiTest extends TestCase
         /**
  * @var RestClient $restClientMock
 */
-        $api->getAuth()->authenticateClient($restClientMock);
+        $api->getAuth()->attachToClient($restClientMock);
         self::assertInstanceOf(OAuth20Login::class, $api->getAuth());
         self::assertEquals(['foo' => 'bar', 'oauth2_access_token' => 'baz'], $request->getQuery()->toArray());
         self::assertEquals(['Host' => ['example.com']], $request->getHeaders());
@@ -249,5 +215,22 @@ class ApiTest extends TestCase
             'The "baseUrl" attribute in API configuration resulted in an invalid URL (http:///087-function-baseurl/)'
         );
         new Api(new NullLogger(), $apiConfig, [], []);
+    }
+
+    private function createMockClient(
+        array $queue,
+        array $options = [],
+        array $retryOptions = [],
+        array $defaultOptions = [],
+        array $ignoreErrors = []
+    ): RestClient {
+        $handler = HandlerStack::create(new MockHandler($queue));
+        $options['handler'] = $handler;
+        $restClient = new RestClient(new NullLogger(), $options, $retryOptions, $defaultOptions, $ignoreErrors);
+
+        // To log retries, history middleware must be pushed after retry middleware in RestClient.
+        $handler->push(Middleware::history($this->history));
+
+        return $restClient;
     }
 }

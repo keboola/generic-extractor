@@ -29,7 +29,7 @@ class OAuth10Test extends TestCase
             ],
             ]
         );
-        $auth->authenticateClient($restClient);
+        $auth->attachToClient($restClient);
 
         self::assertEquals('oauth', $restClient->getClient()->getDefaultOption('auth'));
 
