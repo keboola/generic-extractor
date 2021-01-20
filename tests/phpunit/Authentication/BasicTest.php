@@ -26,7 +26,7 @@ class BasicTest extends TestCase
             ->addResponse200('{"foo": "bar1"}')
             ->addResponse200('{"foo": "bar2"}')
             ->setHistoryContainer($history)
-            ->setInitCallback(function (RestClient $restClient) use ($auth) {
+            ->setInitCallback(function (RestClient $restClient) use ($auth): void {
                 $auth->attachToClient($restClient);
             })
             ->getRestClient();

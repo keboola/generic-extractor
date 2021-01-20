@@ -4,15 +4,20 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor\Authentication;
 
+use Keboola\Utils\Exception\NoDataFoundException;
+use LogicException;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Uri;
 use Keboola\GenericExtractor\Configuration\UserFunction;
 use Keboola\GenericExtractor\Exception\UserException;
-use Keboola\Juicer\Client\RestRequest;
 use Keboola\Juicer\Client\RestClient;
-use Keboola\GenericExtractor\Subscriber\LoginSubscriber;
-use Keboola\Utils\Exception\NoDataFoundException;
+use Keboola\Juicer\Client\RestRequest;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use function Keboola\Utils\getDataFromPath;
 
 /**
- * config:
+ * Config:
  *
  * loginRequest:
  *    endpoint: string
@@ -24,20 +29,32 @@ use Keboola\Utils\Exception\NoDataFoundException;
  *    query: array # same as with headers
  * expires: int|array # # of seconds OR ['response' => 'path', 'relative' => false] (optional)
  *
- * The response MUST be a JSON object containing credentials
+ * The response MUST be a JSON (object or scalar) containing credentials or text. See "format".
  */
 class Login implements AuthInterface
 {
-    protected array $configAttributes;
+    private RestClient $client;
 
-    protected array $auth;
+    private array $configAttributes;
 
-    protected ?string $format = null;
+    private array $authentication;
+
+    private ?string $format = null;
+
+    private bool $enabled = true;
+
+    private bool $loggedIn = false;
+
+    private array $signatureHeaders;
+
+    private array $signatureQuery;
+
+    private ?int $expiration;
 
     public function __construct(array $configAttributes, array $authentication)
     {
         $this->configAttributes = $configAttributes;
-        $this->auth = $authentication;
+        $this->authentication = $authentication;
         if (empty($authentication['format'])) {
             $this->format = 'json';
         } else {
@@ -54,7 +71,7 @@ class Login implements AuthInterface
             throw new UserException('Request endpoint must be set for the Login authentication method.');
         }
         if (!empty($authentication['expires']) && (!filter_var($authentication['expires'], FILTER_VALIDATE_INT)
-            && empty($authentication['expires']['response']))
+                && empty($authentication['expires']['response']))
         ) {
             throw new UserException(
                 "The 'expires' attribute must be either an integer or an array with 'response' " .
@@ -63,8 +80,117 @@ class Login implements AuthInterface
         }
     }
 
-    protected function getAuthRequest(array $config): RestRequest
+    public function attachToClient(RestClient $client): void
     {
+        $this->client = $client;
+        $this->client->getHandlerStack()->push(Middleware::mapRequest(
+            function (RequestInterface $request): RequestInterface {
+                // Skip this middleware for the log in request
+                if (!$this->isEnabled()) {
+                    return $request;
+                }
+
+                // Log in if not logged in
+                if (!$this->isLoggedIn()) {
+                    $this->logIn();
+                }
+
+                // Modify request
+                return $this->addSignature($request);
+            }
+        ));
+    }
+
+    private function addSignature(RequestInterface $request): RequestInterface
+    {
+        // Add query params
+        $request = $request->withUri(Uri::withQueryValues($request->getUri(), $this->signatureQuery));
+
+        // Add headers
+        foreach($this->signatureHeaders as $name => $value) {
+            $request = $request->withHeader($name, $value);
+        }
+
+        return $request;
+    }
+
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    public function isLoggedIn(): bool
+    {
+        // Login request not sent yet
+        if (!$this->loggedIn) {
+            return false;
+        }
+
+        // Login expired
+        if ($this->expiration && time() > $this->expiration) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function getExpiration(): ?int
+    {
+        return $this->expiration;
+    }
+
+    public function logIn(): void
+    {
+        // Disabled middleware for login request
+        $this->enabled = false;
+        $rawResponse = $this->runRequest();
+        $response = $this->getObjectFromResponse($rawResponse);
+        $this->processResponse($response);
+        $this->enabled = true;
+        $this->loggedIn= true;
+    }
+
+    private function processResponse(\stdClass $response): void
+    {
+        $this->signatureQuery = $this->getResults($response, 'query');
+        $this->signatureHeaders = $this->getResults($response, 'headers');
+        $this->expiration = $this->getExpirationFromResponse($response);
+    }
+
+    private function runRequest(): ResponseInterface
+    {
+        $restRequest = $this->getLoginRequest();
+        $guzzleRequest = $this->client->getGuzzleRequestFactory()->create($restRequest);
+        return $this->client->getClient()->send($guzzleRequest);
+    }
+
+    private function getObjectFromResponse(ResponseInterface $rawResponse): \stdClass
+    {
+        if ($this->format === 'text') {
+            return (object) ['data' => (string) $rawResponse->getBody()];
+        } else if ($this->format === 'json') {
+            $response = $this->client->getObjectFromResponse($rawResponse);
+
+            if ($response instanceof \stdClass) {
+                return $response;
+            }
+
+            if (is_scalar($response)) {
+                return (object) ['data' => $response];
+            }
+
+            throw new UserException(sprintf(
+                'The response to the login request should be an object or a scalar value, given "%s".',
+                gettype($response),
+            ));
+        }
+
+        throw new LogicException(sprintf('Unexpected format "%s".', $this->format));
+    }
+
+    private function getLoginRequest(): RestRequest
+    {
+        $config = $this->authentication['loginRequest'];
         if (!empty($config['params'])) {
             $config['params'] = UserFunction::build($config['params'], ['attr' => $this->configAttributes]);
         }
@@ -75,81 +201,19 @@ class Login implements AuthInterface
     }
 
     /**
-     * @inheritdoc
+     * Gets expiration from the login response
      */
-    public function attachToClient(RestClient $client): void
+    private function getExpirationFromResponse(\stdClass $response): ?int
     {
-        $loginRequest = $this->getAuthRequest($this->auth['loginRequest']);
-        $sub = new LoginSubscriber();
-
-        $sub->setLoginMethod(
-            function () use ($client, $loginRequest, $sub) {
-                // Need to bypass the subscriber for the login call
-                $client->getClient()->getEmitter()->detach($sub);
-                $rawResponse = $client->getClient()->send($client->getGuzzleRequest($loginRequest));
-                if ($this->format === 'json') {
-                    /**
-            * @var array|object|mixed $response
-            */
-                    $response = $client->getObjectFromResponse($rawResponse);
-                    if (is_scalar($response)) {
-                        $response = (object) ['data' => $response];
-                    }
-                } else {
-                    $response = (object) ['data' => (string) $rawResponse->getBody()];
-                }
-                $client->getClient()->getEmitter()->attach($sub);
-
-                return [
-                    'query' => $this->getResults($response, 'query'),
-                    'headers' => $this->getResults($response, 'headers'),
-                    'expires' => $this->getExpiry($response),
-                ];
-            }
-        );
-
-        $client->getClient()->getEmitter()->attach($sub);
-    }
-
-    /**
-     * Maps data from login result into $type (header/query)
-     *
-     * @throws UserException
-     */
-    protected function getResults(\stdClass $response, string $type): array
-    {
-        $result = [];
-        if (!empty($this->auth['apiRequest'][$type])) {
-            $result = UserFunction::build(
-                $this->auth['apiRequest'][$type],
-                [
-                    'response' => \Keboola\Utils\objectToArray($response),
-                    'attr' => $this->configAttributes,
-                ]
-            );
-            // for backward compatibility, check the values if they are a valid path within the response
-            foreach ($result as $key => $value) {
-                try {
-                    $result[$key] = \Keboola\Utils\getDataFromPath($value, $response, '.', false);
-                } catch (NoDataFoundException $e) {
-                    // silently ignore invalid paths as they are probably values already processed by functions
-                }
-            }
-        }
-        return $result;
-    }
-
-    protected function getExpiry(\stdClass $response): ?int
-    {
-        if (!isset($this->auth['expires'])) {
+        if (!isset($this->authentication['expires'])) {
             return null;
-        } elseif (is_numeric($this->auth['expires'])) {
-            return time() + (int) $this->auth['expires'];
-        } elseif (is_array($this->auth['expires'])) {
-            $rExpiry = \Keboola\Utils\getDataFromPath($this->auth['expires']['response'], $response, '.');
+        } elseif (is_numeric($this->authentication['expires'])) {
+            return time() + (int) $this->authentication['expires'];
+        } elseif (is_array($this->authentication['expires'])) {
+            $rExpiry = getDataFromPath($this->authentication['expires']['response'], $response, '.');
             $expiry = is_int($rExpiry) ? $rExpiry : strtotime($rExpiry);
 
-            if (!empty($this->auth['expires']['relative'])) {
+            if (!empty($this->authentication['expires']['relative'])) {
                 $expiry += time();
             }
 
@@ -159,6 +223,35 @@ class Login implements AuthInterface
 
             return $expiry;
         }
+
         return null;
+    }
+
+    /**
+     * Maps data from the login response into $type -> header|query
+     */
+    protected function getResults(\stdClass $response, string $type): array
+    {
+        $result = [];
+        if (!empty($this->authentication['apiRequest'][$type])) {
+            $result = UserFunction::build(
+                $this->authentication['apiRequest'][$type],
+                [
+                    'response' => \Keboola\Utils\objectToArray($response),
+                    'attr' => $this->configAttributes,
+                ]
+            );
+
+            // for backward compatibility, check the values if they are a valid path within the response
+            foreach ($result as $key => $value) {
+                try {
+                    $result[$key] = getDataFromPath($value, $response, '.', false);
+                } catch (NoDataFoundException $e) {
+                    // silently ignore invalid paths as they are probably values already processed by functions
+                }
+            }
+        }
+
+        return $result;
     }
 }

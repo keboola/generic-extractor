@@ -5,64 +5,20 @@ declare(strict_types=1);
 namespace Keboola\GenericExtractor\Tests\Authentication;
 
 use Keboola\GenericExtractor\Authentication\Login;
-use GuzzleHttp\Message\Response;
-use GuzzleHttp\Stream\Stream;
-use GuzzleHttp\Subscriber\Mock;
-use GuzzleHttp\Subscriber\History;
 use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\GenericExtractor\Tests\ExtractorTestCase;
 use Keboola\Juicer\Client\RestClient;
-use Psr\Log\NullLogger;
+use Keboola\Juicer\Tests\HistoryContainer;
+use Keboola\Juicer\Tests\RestClientMockBuilder;
 
 class LoginTest extends ExtractorTestCase
 {
     public function testAuthenticateClient(): void
     {
-        $expiresIn = 5000;
-        $expires = time() + $expiresIn;
-        $mock = new Mock(
-            [
-            new Response(
-                200,
-                [],
-                Stream::factory(
-                    (string) json_encode(
-                        (object) [ // auth
-                        'headerToken' => 1234,
-                        'queryToken' => 4321,
-                        'expiresIn' => $expiresIn,
-                        ]
-                    )
-                )
-            ),
-            new Response(
-                200,
-                [],
-                Stream::factory(
-                    (string) json_encode(
-                        (object) [ // api call
-                        'data' => [1,2,3],
-                        ]
-                    )
-                )
-            ),
-            new Response(
-                200,
-                [],
-                Stream::factory(
-                    (string) json_encode(
-                        (object) [ // api call
-                        'data' => [1,2,3],
-                        ]
-                    )
-                )
-            ),
-            ]
-        );
-        $history = new History();
-        $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com/api'], [], []);
-        $restClient->getClient()->getEmitter()->attach($mock);
-        $restClient->getClient()->getEmitter()->attach($history);
+        $expiresInSeconds = 5000;
+        $expires = time() + $expiresInSeconds;
+
+        // Create Login auth
         $attrs = ['first' => 1, 'second' => 'two'];
         $api = [
             'loginRequest' => [
@@ -77,68 +33,171 @@ class LoginTest extends ExtractorTestCase
             ],
             'expires' => ['response' => 'expiresIn', 'relative' => true],
         ];
-
         $auth = new Login($attrs, $api);
-        $auth->attachToClient($restClient);
 
-        $request = $restClient->createRequest(['endpoint' => '/']);
-        $restClient->download($request);
-        $restClient->download($request);
+        // Create RestClient
+        $history = new HistoryContainer();
+        $restClient = RestClientMockBuilder::create()
+            // Auth response
+            ->addResponse200((string) json_encode((object) [
+                'headerToken' => 1234,
+                'queryToken' => 4321,
+                'expiresIn' => $expiresInSeconds,
+            ]))
+            // First API call response
+            ->addResponse200((string) json_encode((object) [
+                'data' => [1, 2, 3],
+            ]))
+            // Second API call response
+            ->addResponse200((string) json_encode((object) [
+                'data' => [4, 5, 6],
+            ]))
+            ->setGuzzleConfig(['base_url' => 'http://example.com/api'])
+            ->setHistoryContainer($history)
+            ->setInitCallback(function (RestClient $restClient) use ($auth): void {
+                $auth->attachToClient($restClient);
+            })
+            ->getRestClient();
 
-        // test creation of the login request
-        self::assertEquals($attrs['second'], $history->getIterator()[0]['request']->getHeader('X-Header'));
+        // Run
+        self::assertEquals(
+            (object) ['data' => [1, 2, 3]],
+            $restClient->download($restClient->createRequest(['endpoint' => '/api/get']))
+        );
+        self::assertEquals(
+            (object) ['data' => [4, 5, 6]],
+            $restClient->download($restClient->createRequest([
+                'endpoint' => '/api/get',
+                'params' => ['foo1' => 'bar1'],
+                'headers' => ['X-Request-Param' => 'bar2']
+            ]))
+        );
+
+        // Assert login call, "first" attribute is in body, "second" int the header
+        $loginCall = $history->shift();
         self::assertEquals(
             (string) json_encode(['par' => $attrs['first']]),
-            (string) $history->getIterator()[0]['request']->getBody()
+            (string) $loginCall->getRequest()->getBody()
         );
+        self::assertEquals($attrs['second'], $loginCall->getRequest()->getHeaderLine('X-Header'));
 
-        // test signature of the api request
-        self::assertEquals(1234, $history->getIterator()[1]['request']->getHeader('X-Test-Auth'));
-        self::assertEquals('qToken=4321', (string) $history->getIterator()[1]['request']->getQuery());
-        self::assertEquals(1234, $history->getIterator()[2]['request']->getHeader('X-Test-Auth'));
-        self::assertEquals('qToken=4321', (string) $history->getIterator()[2]['request']->getQuery());
+        // Assert API calls, must contain signature
+        $apiCall1 = $history->shift();
+        self::assertEquals(1234, $apiCall1->getRequest()->getHeaderLine('X-Test-Auth'));
+        self::assertEquals('qToken=4321', $apiCall1->getRequest()->getUri()->getQuery());
+        $apiCall2 = $history->shift();
+        self::assertEquals(1234, $apiCall2->getRequest()->getHeaderLine('X-Test-Auth'));
+        self::assertEquals('bar2', $apiCall2->getRequest()->getHeaderLine('X-Request-Param'));
+        self::assertEquals('foo1=bar1&qToken=4321', $apiCall2->getRequest()->getUri()->getQuery());
+        self::assertEquals('/api/get?foo1=bar1&qToken=4321', (string) $apiCall2->getRequest()->getUri());
 
-        $expiry = self::getProperty(
-            $restClient->getClient()->getEmitter()->listeners('before')[0][0],
-            'expires'
+        // No more history items
+        self::assertTrue($history->isEmpty());
+
+        // Check that the expiration meets expectations
+        $expiration = $auth->getExpiration();
+        self::assertTrue(is_int($expiration));
+        self::assertLessThan($expires + 2, $expiration);
+    }
+
+    public function testAuthenticateClientExpired(): void
+    {
+        $expiresInSecondsFirst = 1;
+        $expiresInSecondsSecond = 5000;
+
+        // Create Login auth
+        $attrs = ['first' => 1, 'second' => 'two'];
+        $api = [
+            'loginRequest' => [
+                'endpoint' => 'login',
+                'params' => ['par' => ['attr' => 'first']],
+                'headers' => ['X-Header' => ['attr' => 'second']],
+                'method' => 'POST',
+            ],
+            'apiRequest' => [
+                'headers' => ['X-Test-Auth' => ['response' => 'headerToken']],
+                'query' => ['qToken' => ['response' => 'queryToken']],
+            ],
+            'expires' => ['response' => 'expiresIn', 'relative' => true],
+        ];
+        $auth = new Login($attrs, $api);
+
+        // Create RestClient
+        $history = new HistoryContainer();
+        $restClient = RestClientMockBuilder::create()
+            // Auth response
+            ->addResponse200((string) json_encode((object) [
+                'headerToken' => 1234,
+                'queryToken' => 4321,
+                'expiresIn' => $expiresInSecondsFirst,
+            ]))
+            // First API call response
+            ->addResponse200((string) json_encode((object) [
+                'data' => [1, 2, 3],
+            ]))
+            // Second API call response
+            ->addResponse200((string) json_encode((object) [
+                'data' => [4, 5, 6],
+            ]))
+            // Auth response -> new login
+            ->addResponse200((string) json_encode((object) [
+                'headerToken' => 9876,
+                'queryToken' => 5432,
+                'expiresIn' => $expiresInSecondsSecond,
+            ]))
+            // Third API call response
+            ->addResponse200((string) json_encode((object) [
+                'data' => [7, 8, 9],
+            ]))
+            ->setGuzzleConfig(['base_url' => 'http://example.com/api'])
+            ->setHistoryContainer($history)
+            ->setInitCallback(function (RestClient $restClient) use ($auth): void {
+                $auth->attachToClient($restClient);
+            })
+            ->getRestClient();
+
+        // Run
+        $request = $restClient->createRequest(['endpoint' => '/api/get']);
+        self::assertEquals((object) ['data' => [1, 2, 3]], $restClient->download($request));
+        self::assertEquals((object) ['data' => [4, 5, 6]], $restClient->download($request));
+
+        // Login call + 2 API calls -> same as in previous testAuthenticateClient test
+        self::assertSame(3, $history->count());
+        $history->clear();
+
+        // Let's wait for the login expiration
+        sleep($expiresInSecondsFirst + 1);
+        $expiresSecond = time() + $expiresInSecondsSecond;
+
+        // Run -> expected new login
+        $request = $restClient->createRequest(['endpoint' => '/api/get']);
+        self::assertEquals((object) ['data' => [7, 8, 9]], $restClient->download($request));
+
+        // Assert login call
+        $loginCall = $history->shift();
+        self::assertEquals(
+            (string) json_encode(['par' => $attrs['first']]),
+            (string) $loginCall->getRequest()->getBody()
         );
-        self::assertGreaterThan($expires - 2, $expiry);
-        self::assertLessThan($expires + 2, $expiry);
+        self::assertEquals($attrs['second'], $loginCall->getRequest()->getHeaderLine('X-Header'));
+
+        // Assert API call
+        $apiCall1 = $history->shift();
+        self::assertEquals(9876, $apiCall1->getRequest()->getHeaderLine('X-Test-Auth'));
+        self::assertEquals('qToken=5432', $apiCall1->getRequest()->getUri()->getQuery());
+
+        // No more history items
+        self::assertTrue($history->isEmpty());
+
+        // Check that the expiration meets expectations
+        $expiration = $auth->getExpiration();
+        self::assertTrue(is_int($expiration));
+        self::assertLessThan($expiresSecond + 2, $expiration);
     }
 
     public function testAuthenticateClientScalar(): void
     {
-        $mock = new Mock(
-            [
-            new Response(200, [], Stream::factory((string) json_encode('someToken'))),
-            new Response(
-                200,
-                [],
-                Stream::factory(
-                    (string) json_encode(
-                        (object) [ // api call
-                        'data' => [1,2,3],
-                        ]
-                    )
-                )
-            ),
-            new Response(
-                200,
-                [],
-                Stream::factory(
-                    (string) json_encode(
-                        (object) [ // api call
-                        'data' => [1,2,3],
-                        ]
-                    )
-                )
-            ),
-            ]
-        );
-        $history = new History();
-        $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com/api'], [], []);
-        $restClient->getClient()->getEmitter()->attach($mock);
-        $restClient->getClient()->getEmitter()->attach($history);
+        // Create Login auth
         $attrs = ['first' => 1, 'second' => 'two'];
         $api = [
             'format' => 'json',
@@ -152,59 +211,54 @@ class LoginTest extends ExtractorTestCase
                 'headers' => ['X-Test-Auth' => ['response' => 'data']],
             ],
         ];
-
         $auth = new Login($attrs, $api);
-        $auth->attachToClient($restClient);
 
-        $request = $restClient->createRequest(['endpoint' => '/']);
-        $restClient->download($request);
-        $restClient->download($request);
+        // Create RestClient
+        $history = new HistoryContainer();
+        $restClient = RestClientMockBuilder::create()
+            // Auth response
+            ->addResponse200((string) json_encode('someToken')) // <<<< scalar JSON value
+            // First API call response
+            ->addResponse200((string) json_encode((object) [
+                'data' => [1, 2, 3],
+            ]))
+            // Second API call response
+            ->addResponse200((string) json_encode((object) [
+                'data' => [4, 5, 6],
+            ]))
+            ->setGuzzleConfig(['base_url' => 'http://example.com/api'])
+            ->setHistoryContainer($history)
+            ->setInitCallback(function (RestClient $restClient) use ($auth): void {
+                $auth->attachToClient($restClient);
+            })
+            ->getRestClient();
 
-        // test creation of the login request
-        self::assertEquals($attrs['second'], $history->getIterator()[0]['request']->getHeader('X-Header'));
+        // Run
+        $request = $restClient->createRequest(['endpoint' => '/api/get']);
+        self::assertEquals((object) ['data' => [1, 2, 3]], $restClient->download($request));
+        self::assertEquals((object) ['data' => [4, 5, 6]], $restClient->download($request));
+
+        // Assert login call, "first" attribute is in body, "second" int the header
+        $loginCall = $history->shift();
         self::assertEquals(
             (string) json_encode(['par' => $attrs['first']]),
-            (string) $history->getIterator()[0]['request']->getBody()
+            (string) $loginCall->getRequest()->getBody()
         );
+        self::assertEquals($attrs['second'], $loginCall->getRequest()->getHeaderLine('X-Header'));
 
-        // test signature of the api request
-        self::assertEquals('someToken', $history->getIterator()[1]['request']->getHeader('X-Test-Auth'));
-        self::assertEquals('someToken', $history->getIterator()[2]['request']->getHeader('X-Test-Auth'));
+        // Assert API calls, must contain signature
+        $apiCall1 = $history->shift();
+        self::assertEquals('someToken', $apiCall1->getRequest()->getHeaderLine('X-Test-Auth'));
+        $apiCall2 = $history->shift();
+        self::assertEquals('someToken', $apiCall2->getRequest()->getHeaderLine('X-Test-Auth'));
+
+        // No more history items
+        self::assertTrue($history->isEmpty());
     }
 
     public function testAuthenticateClientText(): void
     {
-        $mock = new Mock(
-            [
-            new Response(200, [], Stream::factory('someToken')),
-            new Response(
-                200,
-                [],
-                Stream::factory(
-                    (string) json_encode(
-                        (object) [ // api call
-                        'data' => [1,2,3],
-                        ]
-                    )
-                )
-            ),
-            new Response(
-                200,
-                [],
-                Stream::factory(
-                    (string) json_encode(
-                        (object) [ // api call
-                        'data' => [1,2,3],
-                        ]
-                    )
-                )
-            ),
-            ]
-        );
-        $history = new History();
-        $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com/api'], [], []);
-        $restClient->getClient()->getEmitter()->attach($mock);
-        $restClient->getClient()->getEmitter()->attach($history);
+        // Create Login auth
         $attrs = ['first' => 1, 'second' => 'two'];
         $api = [
             'format' => 'text',
@@ -218,62 +272,54 @@ class LoginTest extends ExtractorTestCase
                 'headers' => ['X-Test-Auth' => ['response' => 'data']],
             ],
         ];
-
         $auth = new Login($attrs, $api);
-        $auth->attachToClient($restClient);
 
-        $request = $restClient->createRequest(['endpoint' => '/']);
-        $restClient->download($request);
-        $restClient->download($request);
+        // Create RestClient
+        $history = new HistoryContainer();
+        $restClient = RestClientMockBuilder::create()
+            // Auth response
+            ->addResponse200('someToken') // <<<< text body
+            // First API call response
+            ->addResponse200((string) json_encode((object) [
+                'data' => [1, 2, 3],
+            ]))
+            // Second API call response
+            ->addResponse200((string) json_encode((object) [
+                'data' => [4, 5, 6],
+            ]))
+            ->setGuzzleConfig(['base_url' => 'http://example.com/api'])
+            ->setHistoryContainer($history)
+            ->setInitCallback(function (RestClient $restClient) use ($auth): void {
+                $auth->attachToClient($restClient);
+            })
+            ->getRestClient();
 
-        // test creation of the login request
-        self::assertEquals($attrs['second'], $history->getIterator()[0]['request']->getHeader('X-Header'));
+        // Run
+        $request = $restClient->createRequest(['endpoint' => '/api/get']);
+        self::assertEquals((object) ['data' => [1, 2, 3]], $restClient->download($request));
+        self::assertEquals((object) ['data' => [4, 5, 6]], $restClient->download($request));
+
+        // Assert login call, "first" attribute is in body, "second" int the header
+        $loginCall = $history->shift();
         self::assertEquals(
             (string) json_encode(['par' => $attrs['first']]),
-            (string) $history->getIterator()[0]['request']->getBody()
+            (string) $loginCall->getRequest()->getBody()
         );
+        self::assertEquals($attrs['second'], $loginCall->getRequest()->getHeaderLine('X-Header'));
 
-        // test signature of the api request
-        self::assertEquals('someToken', $history->getIterator()[1]['request']->getHeader('X-Test-Auth'));
-        self::assertEquals('someToken', $history->getIterator()[2]['request']->getHeader('X-Test-Auth'));
+        // Assert API calls, must contain signature
+        $apiCall1 = $history->shift();
+        self::assertEquals('someToken', $apiCall1->getRequest()->getHeaderLine('X-Test-Auth'));
+        $apiCall2 = $history->shift();
+        self::assertEquals('someToken', $apiCall2->getRequest()->getHeaderLine('X-Test-Auth'));
+
+        // No more history items
+        self::assertTrue($history->isEmpty());
     }
 
     public function testAuthenticateClientWithFunctionInApiRequestHeaders(): void
     {
-        $mock = new Mock(
-            [
-            new Response(
-                200,
-                [],
-                Stream::factory(
-                    (string) json_encode(
-                        (object) [ // auth
-                        'tokens' => [
-                        'header' => 1234,
-                        'query' => 4321,
-                        ],
-                        ]
-                    )
-                )
-            ),
-            new Response(
-                200,
-                [],
-                Stream::factory(
-                    (string) json_encode(
-                        (object) [ // api call
-                        'data' => [1,2,3],
-                        ]
-                    )
-                )
-            ),
-            ]
-        );
-
-        $history = new History();
-        $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com/api'], [], []);
-        $restClient->getClient()->getEmitter()->attach($mock);
-        $restClient->getClient()->getEmitter()->attach($history);
+        // Create Login auth
         $api = [
             'loginRequest' => [
                 'endpoint' => 'login',
@@ -316,27 +362,62 @@ class LoginTest extends ExtractorTestCase
                 ],
             ],
         ];
-
         $auth = new Login(['a1' => ['b1' => 'c1'], 'a2' => ['b2' => 'c2']], $api);
-        $auth->attachToClient($restClient);
-        $request = $restClient->createRequest(['endpoint' => '/']);
-        $restClient->download($request);
 
-        // test creation of the login request
-        self::assertEquals('fooBar', $history->getIterator()[0]['request']->getHeader('X-Header'));
+        // Create RestClient
+        $history = new HistoryContainer();
+        $restClient = RestClientMockBuilder::create()
+            // Auth response
+            ->addResponse200((string) json_encode((object) [
+                'tokens' => [
+                    'header' => 1234,
+                    'query' => 4321,
+                ],
+            ]))
+            // First API call response
+            ->addResponse200((string) json_encode((object) [
+                'data' => [1, 2, 3],
+            ]))
+            // Second API call response
+            ->addResponse200((string) json_encode((object) [
+                'data' => [4, 5, 6],
+            ]))
+            ->setGuzzleConfig(['base_url' => 'http://example.com/api'])
+            ->setHistoryContainer($history)
+            ->setInitCallback(function (RestClient $restClient) use ($auth): void {
+                $auth->attachToClient($restClient);
+            })
+            ->getRestClient();
 
-        // test signature of the api request
-        self::assertEquals('1234', $history->getIterator()[1]['request']->getHeader('Authorization1'));
-        self::assertEquals('Bearer 1234', $history->getIterator()[1]['request']->getHeader('Authorization2'));
-        self::assertEquals('1234', $history->getIterator()[1]['request']->getHeader('Authorization3'));
+        // Run
+        $request = $restClient->createRequest(['endpoint' => '/api/get']);
+        self::assertEquals((object) ['data' => [1, 2, 3]], $restClient->download($request));
+        self::assertEquals((object) ['data' => [4, 5, 6]], $restClient->download($request));
+
+        // Assert login call
+        $loginCall = $history->shift();
+        self::assertEquals('fooBar', $loginCall->getRequest()->getHeaderLine('X-Header'));
+
+        // Assert API calls, must contain signature
+        $apiCall1 = $history->shift();
+        self::assertEquals('1234', $apiCall1->getRequest()->getHeaderLine('Authorization1'));
+        self::assertEquals('Bearer 1234', $apiCall1->getRequest()->getHeaderLine('Authorization2'));
+        self::assertEquals('1234', $apiCall1->getRequest()->getHeaderLine('Authorization3'));
         self::assertEquals(
             'qToken1=4321&qToken2=qt4321&qToken3=4321',
-            (string) $history->getIterator()[1]['request']->getQuery()
+            $apiCall1->getRequest()->getUri()->getQuery()
         );
+        $apiCall2 = $history->shift();
+        self::assertEquals('1234', $apiCall2->getRequest()->getHeaderLine('Authorization1'));
+        self::assertEquals('Bearer 1234', $apiCall2->getRequest()->getHeaderLine('Authorization2'));
+        self::assertEquals('1234', $apiCall2->getRequest()->getHeaderLine('Authorization3'));
         self::assertEquals(
-            (string) json_encode(['data' => [1,2,3]]),
-            (string) $history->getIterator()[1]['response']->getBody()
+            'qToken1=4321&qToken2=qt4321&qToken3=4321',
+            $apiCall2->getRequest()->getUri()->getQuery()
         );
+
+        // No more history items
+        self::assertTrue($history->isEmpty());
     }
 
     public function testInvalid1(): void
@@ -382,7 +463,7 @@ class LoginTest extends ExtractorTestCase
         ];
         $this->expectException(UserException::class);
         $this->expectExceptionMessage(
-            "The 'expires' attribute must be either an integer ".
+            "The 'expires' attribute must be either an integer " .
             "or an array with 'response' key containing a path in the response"
         );
         new Login([], $api);

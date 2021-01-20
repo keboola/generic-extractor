@@ -620,12 +620,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "2ac386d8792935c3e1fc492f42c5d4692ff01532"
+                "reference": "f60c90690ad1008dee5992d67a6e8ba8771885e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/2ac386d8792935c3e1fc492f42c5d4692ff01532",
-                "reference": "2ac386d8792935c3e1fc492f42c5d4692ff01532",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/f60c90690ad1008dee5992d67a6e8ba8771885e9",
+                "reference": "f60c90690ad1008dee5992d67a6e8ba8771885e9",
                 "shasum": ""
             },
             "require": {
@@ -675,7 +675,7 @@
                 "issues": "https://github.com/keboola/juicer/issues",
                 "source": "https://github.com/keboola/juicer/tree/webrouse-COM-596-update-guzzle"
             },
-            "time": "2021-01-20T09:35:57+00:00"
+            "time": "2021-01-20T14:24:46+00:00"
         },
         {
             "name": "keboola/php-csvtable",
