@@ -85,9 +85,7 @@ class Api
                     $this->logger->warning("Using deprecated 'password', use '#password' instead.");
                 }
                 return new Authentication\Basic($configAttributes);
-            /**
- * @noinspection PhpMissingBreakStatementInspection
-*/
+            /** @noinspection PhpMissingBreakStatementInspection */
             case 'url.query':
                 $this->logger->warning("Method 'url.query' auth is deprecated, use 'query'.");
                 // intentional, no break

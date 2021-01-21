@@ -17,9 +17,7 @@ class ConfigFile implements ConfigurationInterface
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('config-file');
-        /**
- * @var ArrayNodeDefinition $root
-*/
+        /** @var ArrayNodeDefinition $root */
         $root = $treeBuilder->getRootNode();
         $parameters = $root->children()->arrayNode('parameters')->isRequired();
         $api = $parameters->children()->arrayNode('api')->isRequired();

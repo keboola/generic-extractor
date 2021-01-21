@@ -88,9 +88,7 @@ class Login implements AuthInterface
                 $client->getClient()->getEmitter()->detach($sub);
                 $rawResponse = $client->getClient()->send($client->getGuzzleRequest($loginRequest));
                 if ($this->format === 'json') {
-                    /**
-            * @var array|object|mixed $response
-            */
+                    /** @var array|object|mixed $response */
                     $response = $client->getObjectFromResponse($rawResponse);
                     if (is_scalar($response)) {
                         $response = (object) ['data' => $response];

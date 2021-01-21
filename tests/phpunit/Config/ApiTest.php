@@ -30,9 +30,7 @@ class ApiTest extends TestCase
     {
         $beforeEventMock = self::createMock(BeforeEvent::class);
         $beforeEventMock->method('getRequest')->willReturn($request);
-        /**
- * @var BeforeEvent $beforeEventMock
-*/
+        /** @var BeforeEvent $beforeEventMock */
         $emitterMock = self::createMock(Emitter::class);
         $a = 1;
         $emitterMock->method('attach')->willReturnCallback(

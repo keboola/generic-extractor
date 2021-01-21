@@ -208,9 +208,7 @@ class GenericExtractorJob
             $jobs[] = $job;
         }
 
-        /**
- * @var static[] $jobs
-*/
+        /** @var static[] $jobs */
         return $jobs;
     }
 

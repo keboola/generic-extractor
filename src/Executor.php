@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Keboola\GenericExtractor;
 
 use Keboola\GenericExtractor\Configuration\Extractor;
-use Keboola\GenericExtractor\Exception\UserException;
-use Keboola\Juicer\Config\Config;
 use Keboola\Juicer\Parser\Json;
 use Keboola\Temp\Temp;
 use Monolog\Handler\AbstractHandler;

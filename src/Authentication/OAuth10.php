@@ -36,9 +36,7 @@ class OAuth10 implements AuthInterface
             }
         }
 
-        /**
- * @var \stdClass $data
-*/
+        /** @var \stdClass $data */
         $data = jsonDecode($oauthApiDetails['#data']);
         $this->token = $data->oauth_token;
         $this->tokenSecret = $data->oauth_token_secret;
