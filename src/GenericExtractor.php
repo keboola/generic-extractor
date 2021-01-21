@@ -87,7 +87,7 @@ class GenericExtractor
             $this->api->getIgnoreErrors()
         );
 
-        $this->api->getAuth()->authenticateClient($client);
+        $this->api->getAuth()->attachToClient($client);
         // Verbose Logging of all requests
         $client->getClient()->getEmitter()->attach(new LogRequest($this->logger));
 

@@ -64,6 +64,7 @@ class Login implements AuthInterface
     }
 
     protected function getAuthRequest(array $config): RestRequest
+    public function attachToClient(RestClient $client): void
     {
         if (!empty($config['params'])) {
             $config['params'] = UserFunction::build($config['params'], ['attr' => $this->configAttributes]);
@@ -74,10 +75,6 @@ class Login implements AuthInterface
         return new RestRequest($config);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function authenticateClient(RestClient $client): void
     {
         $loginRequest = $this->getAuthRequest($this->auth['loginRequest']);
         $sub = new LoginSubscriber();

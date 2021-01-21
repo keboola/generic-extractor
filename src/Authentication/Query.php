@@ -29,7 +29,7 @@ class Query implements AuthInterface
         $this->configAttributes = $configAttributes;
     }
 
-    public function authenticateClient(RestClient $client): void
+    public function attachToClient(RestClient $client): void
     {
         $sub = new UrlSignature();
         // Create array of objects instead of arrays from YML

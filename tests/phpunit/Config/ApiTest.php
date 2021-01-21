@@ -122,9 +122,9 @@ class ApiTest extends TestCase
         ];
         $api = new Api(new NullLogger(), $apiConfig, $attributes, []);
         $request = new Request('GET', 'http://example.com?foo=bar');
-        $restClientMock = $this->getClientMock($request);
-        /** @var RestClient $restClientMock */
-        $api->getAuth()->authenticateClient($restClientMock);
+        $restClientMock = $this->createMockClient($request);
+
+        $api->getAuth()->attachToClient($restClientMock);
         self::assertEquals(['foo' => 'bar', 'param' => 'val'], $request->getQuery()->toArray());
         self::assertInstanceOf(Query::class, $api->getAuth());
     }
@@ -159,7 +159,7 @@ class ApiTest extends TestCase
         $request = new Request('GET', 'http://example.com?foo=bar');
         $restClientMock = $this->getClientMock($request);
         /** @var RestClient $restClientMock */
-        $api->getAuth()->authenticateClient($restClientMock);
+        $api->getAuth()->attachToClient($restClientMock);
         self::assertInstanceOf(OAuth20::class, $api->getAuth());
         self::assertEquals(['foo' => 'bar'], $request->getQuery()->toArray());
         self::assertEquals(
@@ -176,7 +176,7 @@ class ApiTest extends TestCase
         $restClientMock = $this->getClientMock($request);
         $restClientMock->method('getObjectFromResponse')->willReturn((object) ['access_token' => 'baz']);
         /** @var RestClient $restClientMock */
-        $api->getAuth()->authenticateClient($restClientMock);
+        $api->getAuth()->attachToClient($restClientMock);
         self::assertInstanceOf(OAuth20Login::class, $api->getAuth());
         self::assertEquals(['foo' => 'bar', 'oauth2_access_token' => 'baz'], $request->getQuery()->toArray());
         self::assertEquals(['Host' => ['example.com']], $request->getHeaders());

@@ -115,7 +115,7 @@ class OAuth20LoginTest extends ExtractorTestCase
         ];
 
         $auth = new OAuth20Login([], ['oauth_api' => ['credentials' => $oauthCredentials]], $authentication);
-        $auth->authenticateClient($restClient);
+        $auth->attachToClient($restClient);
 
         $request = $restClient->createRequest(['endpoint' => '/']);
         $restClient->download($request);
