@@ -202,11 +202,12 @@ class Login implements AuthInterface
     private function getLoginRequest(): RestRequest
     {
         $config = $this->authentication['loginRequest'];
+        $fnContext = LoginAuthLoginRequestContext::create($this->configAttributes);
         if (!empty($config['params'])) {
-            $config['params'] = $this->buildLoginRequestFunctions($config['params']);
+            $config['params'] = UserFunction::build($config['params'], $fnContext);
         }
         if (!empty($config['headers'])) {
-            $config['headers'] = $this->buildLoginRequestFunctions($config['headers']);
+            $config['headers'] = UserFunction::build($config['headers'], $fnContext);
         }
         return new RestRequest($config);
     }
@@ -236,14 +237,6 @@ class Login implements AuthInterface
         }
 
         return null;
-    }
-
-    protected function buildLoginRequestFunctions(array $functions): array
-    {
-        return UserFunction::build(
-            $functions,
-            LoginAuthLoginRequestContext::create($this->configAttributes)
-        );
     }
 
     protected function buildApiRequestFunctions(array $functions, \stdClass $loginResponse): array
