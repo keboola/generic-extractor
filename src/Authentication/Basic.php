@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor\Authentication;
 
+use GuzzleHttp\Middleware;
 use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\Juicer\Client\RestClient;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * Basic HTTP Authentication using name and password
@@ -34,6 +36,14 @@ class Basic implements AuthInterface
      */
     public function attachToClient(RestClient $client): void
     {
-        $client->getClient()->setDefaultOption('auth', [$this->username, $this->password]);
+        // Add Authorization header to each request
+        $client->getHandlerStack()->push(Middleware::mapRequest(
+            function (RequestInterface $request): RequestInterface {
+                return $request->withHeader(
+                    'Authorization',
+                    'Basic ' . \base64_encode("$this->username:$this->password")
+                );
+            }
+        ));
     }
 }
