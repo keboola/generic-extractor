@@ -31,9 +31,7 @@ try {
     if ($e instanceof \GuzzleHttp\Exception\RequestException
         && $e->getPrevious() instanceof UserException
     ) {
-        /**
- * @var UserException $ex
-*/
+        /** @var UserException $ex */
         $ex = $e->getPrevious();
         $logger->error($ex->getMessage(), (array) $ex->getData());
         exit(1);

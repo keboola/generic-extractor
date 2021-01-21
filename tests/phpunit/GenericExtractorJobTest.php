@@ -324,9 +324,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         $client->method('download')->willReturn([(object) ['result' => 'data']]);
         $client->method('createRequest')->willReturn(new RestRequest($jobConfig->getConfig()));
 
-        /**
- * @var RestClient $client
-*/
+        /** @var RestClient $client */
         $job = new GenericExtractorJob(
             $jobConfig,
             $client,
@@ -337,9 +335,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
             [],
             GenericExtractor::COMPAT_LEVEL_LATEST
         );
-        /**
- * @var GenericExtractorJob $job
-*/
+        /** @var GenericExtractorJob $job */
         $job->run();
 
         self::assertCount(1, $parser->getResults());
