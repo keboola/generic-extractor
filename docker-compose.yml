@@ -1,38 +1,18 @@
-version: '2'
-
+version: '3'
 services:
-  extractor:
+  app:
     build: .
     image: keboola/generic-extractor
+
+  ci: &ci
+    build:
+      context: .
+      dockerfile: Dockerfile-tests
+    command: composer ci
+
+  dev:
+    << : *ci
+    command: bash
     volumes:
-      - .tmp:/tmp
-      - .:/code
+      - ./:/code
       - ./data:/data
-    tty: true
-    stdin_open: true
-
-  tests:
-    build:
-      context: .
-      dockerfile: Dockerfile-tests
-    volumes:
-      - ./.git:/code/.git
-      - .tmp:/tmp
-    command: 
-      - /code/phpunit.sh
-    tty: true
-    stdin_open: true
-
-  tests-local:
-    build:
-      context: .
-      dockerfile: Dockerfile-tests
-    volumes:
-      - .:/code
-      - .tmp:/tmp
-    command:
-      - /bin/sh 
-      - -c
-      - "composer install --no-interaction && /code/phpunit.sh"
-    tty: true
-    stdin_open: true

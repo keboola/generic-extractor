@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor;
 
 use Keboola\GenericExtractor\Configuration\Extractor;
-use Keboola\GenericExtractor\Exception\UserException;
-use Keboola\Juicer\Config\Config;
 use Keboola\Juicer\Parser\Json;
 use Keboola\Temp\Temp;
 use Monolog\Handler\AbstractHandler;
@@ -26,9 +26,11 @@ class Executor
         $this->logger = $logger;
     }
 
-    private function setLogLevel(bool $debug)
+    private function setLogLevel(bool $debug): void
     {
-        /** @var AbstractHandler $handler */
+        /**
+         * @var AbstractHandler $handler
+         */
         foreach ($this->logger->getHandlers() as $handler) {
             if ($handler instanceof AbstractHandler) {
                 if ($debug) {
@@ -40,16 +42,11 @@ class Executor
         }
     }
 
-    public function run()
+    public function run(): void
     {
         $temp = new Temp();
-
-        $arguments = getopt("d::", ["data::"]);
-        if (!isset($arguments["data"])) {
-            throw new UserException('Data folder not set.');
-        }
-
-        $configuration = new Extractor($arguments['data'], $this->logger);
+        $dataDir = getenv('KBC_DATADIR') ?: '/data';
+        $configuration = new Extractor($dataDir, $this->logger);
         $configs = $configuration->getMultipleConfigs();
 
         $sshProxy = null;
@@ -66,15 +63,15 @@ class Executor
         $results = [];
 
         foreach ($configs as $config) {
-            $this->setLogLevel($config->getAttribute('debug'));
+            $this->setLogLevel((bool) $config->getAttribute('debug'));
             $api = $configuration->getApi($config->getAttributes());
 
             if (!empty($config->getAttribute('outputBucket'))) {
                 $outputBucket = $config->getAttribute('outputBucket');
             } elseif ($config->getAttribute('id')) {
-                $outputBucket = 'ex-api-' . $api->getName() . "-" . $config->getAttribute('id');
+                $outputBucket = 'ex-api-' . $api->getName() . '-' . $config->getAttribute('id');
             } else {
-                $outputBucket = "__kbc_default";
+                $outputBucket = '__kbc_default';
             }
 
             $extractor = new GenericExtractor(
@@ -103,11 +100,13 @@ class Executor
 
         foreach ($results as $bucket => $result) {
             $this->logger->debug("Processing results for {$bucket}.");
-            /** @var Json $parser */
+            /**
+             * @var Json $parser
+             */
             $parser = $result['parser'];
             $configuration->storeResults(
                 $parser->getResults(),
-                $bucket == "__kbc_default" ? null : $bucket,
+                $bucket === '__kbc_default' ? null : (string) $bucket,
                 true,
                 $result['incremental']
             );
@@ -115,7 +114,7 @@ class Executor
             // move files and flatten file structure
             $folderFinder = new Finder();
             $fs = new Filesystem();
-            $folders = $folderFinder->directories()->in($arguments['data'] . "/out/tables")->depth(0);
+            $folders = $folderFinder->directories()->in($dataDir . '/out/tables')->depth(0);
             foreach ($folders as $folder) {
                 /** @var SplFileInfo $folder */
                 $filesFinder = new Finder();
@@ -123,8 +122,8 @@ class Executor
                 /** @var SplFileInfo $file */
                 foreach ($files as $file) {
                     $destination =
-                        $arguments['data'] . "/out/tables/" . basename($folder->getPathname()) .
-                        "." . basename($file->getPathname());
+                        $dataDir . '/out/tables/' . basename($folder->getPathname()) .
+                        '.' . basename($file->getPathname());
                     // maybe move will be better?
                     $fs->rename($file->getPathname(), $destination);
                 }
@@ -132,13 +131,13 @@ class Executor
             $fs->remove($folders);
         }
 
-        MissingTableHelper::checkConfigs($configs, $arguments['data'], $configuration);
+        MissingTableHelper::checkConfigs($configs, $dataDir, $configuration);
         $metadata['time']['previousStart'] = $metadata['time']['currentStart'];
         unset($metadata['time']['currentStart']);
         $configuration->saveConfigMetadata($metadata);
     }
 
-    private function createSshTunnel($sshConfig) : string
+    private function createSshTunnel(array $sshConfig): string
     {
         $tunnelParams = [
             'user' => $sshConfig['user'],

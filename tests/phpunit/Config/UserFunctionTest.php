@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Tests\Config;
 
 use Keboola\GenericExtractor\Configuration\UserFunction;
@@ -16,9 +18,9 @@ class UserFunctionTest extends TestCase
             'fn' => [
                 'function' => 'md5',
                 'args' => [
-                    'hashMe'
-                ]
-            ]
+                    'hashMe',
+                ],
+            ],
         ];
 
         $data = ['attr' => ['attrName' => 'attrValue']];
@@ -27,7 +29,7 @@ class UserFunctionTest extends TestCase
             [
                 'str' => 'aaa',
                 'attribute' => $data['attr']['attrName'],
-                'fn' => md5($functions['fn']['args'][0])
+                'fn' => md5($functions['fn']['args'][0]),
             ],
             UserFunction::build($functions, $data)
         );
@@ -35,6 +37,7 @@ class UserFunctionTest extends TestCase
 
     public function testInvalidType(): void
     {
+        /** @var array $functions */
         $functions = 'not array';
 
         $this->expectException(UserException::class);

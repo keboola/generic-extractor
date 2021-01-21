@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor;
 
 use Keboola\GenericExtractor\Exception\UserException;
@@ -8,7 +10,7 @@ use Symfony\Component\Process\Process;
 
 class SSH
 {
-    const SSH_SERVER_ALIVE_INTERVAL = 15;
+    public const SSH_SERVER_ALIVE_INTERVAL = 15;
 
     private Temp $temp;
 
@@ -18,7 +20,6 @@ class SSH
     }
 
     /**
-     *
      * $user, $sshHost, $localPort, $remoteHost, $remotePort, $privateKey, $sshPort = '22'
      *
      * @param array $config
@@ -32,7 +33,7 @@ class SSH
      *
      * @throws UserException
      */
-    public function openTunnel(array $config)
+    public function openTunnel(array $config): void
     {
         $missingParams = array_diff(
             ['user', 'sshHost', 'sshPort', 'localPort','privateKey'],
@@ -44,7 +45,8 @@ class SSH
         }
 
         $cmd = sprintf(
-            'ssh -D %s %s@%s -p %s -i %s -fN -o ExitOnForwardFailure=yes -o StrictHostKeyChecking=no -o ServerAliveInterval=%d',
+            'ssh -D %s %s@%s -p %s -i %s -fN ' .
+            '-o ExitOnForwardFailure=yes -o StrictHostKeyChecking=no -o ServerAliveInterval=%d',
             $config['localPort'],
             $config['user'],
             $config['sshHost'],
@@ -62,24 +64,23 @@ class SSH
         }
 
         if ($process->getExitCode() !== 0) {
-            throw new UserException(sprintf(
-                "Unable to create ssh tunnel. Output: %s ErrorOutput: %s",
-                $process->getOutput(),
-                $process->getErrorOutput()
-            ));
+            throw new UserException(
+                sprintf(
+                    'Unable to create ssh tunnel. Output: %s ErrorOutput: %s',
+                    $process->getOutput(),
+                    $process->getErrorOutput()
+                )
+            );
         }
     }
 
-    /**
-     * @throws UserException
-     */
     private function writeKeyToFile(string $key): string
     {
         if (empty($key)) {
-            throw new UserException("Key must not be empty");
+            throw new UserException('Key must not be empty');
         }
-        $path = $this->temp->createFile('ssh-key')->getRealPath();
-        file_put_contents($path, $key);
+        $path = (string) $this->temp->createFile('ssh-key')->getRealPath();
+        (string) file_put_contents($path, $key);
         chmod($path, 0600);
         return $path;
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Configuration\Extractor;
 
 use Keboola\GenericExtractor\Configuration\Extractor\Node\Api;
@@ -12,7 +14,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class ConfigFile implements ConfigurationInterface
 {
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('config-file');
         /** @var ArrayNodeDefinition $root */

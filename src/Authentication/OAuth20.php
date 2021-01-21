@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Authentication;
 
 use Keboola\GenericExtractor\Configuration\UserFunction;
@@ -47,13 +49,10 @@ class OAuth20 implements AuthInterface
 
     protected array $configAttributes;
 
-    /**
-     * @throws UserException
-     */
     public function __construct(array $configAttributes, array $authorization, array $authentication)
     {
         if (empty($authorization['oauth_api']['credentials'])) {
-            throw new UserException("OAuth API credentials not supplied in configuration.");
+            throw new UserException('OAuth API credentials not supplied in configuration.');
         }
 
         $oauthApiDetails = $authorization['oauth_api']['credentials'];
@@ -67,14 +66,17 @@ class OAuth20 implements AuthInterface
         if (empty($authentication['format'])) {
             $authentication['format'] = 'text';
         }
+
         switch ($authentication['format']) {
             case 'json':
                 // authorization: { data: key }
-                $this->data = \Keboola\Utils\jsonDecode($oauthApiDetails['#data']);
+                /** @var object $data */
+                $data = \Keboola\Utils\jsonDecode((string) $oauthApiDetails['#data']);
+                $this->data = $data;
                 break;
             case 'text':
                 // authorization: data
-                $this->data = $oauthApiDetails['#data'];
+                $this->data = (string) $oauthApiDetails['#data'];
                 break;
             default:
                 throw new UserException("Unknown OAuth data format '{$authentication['format']}'.");
@@ -92,23 +94,23 @@ class OAuth20 implements AuthInterface
     /**
      * @inheritdoc
      */
-    public function authenticateClient(RestClient $client)
+    public function authenticateClient(RestClient $client): void
     {
         $subscribers = [
             [
                 'subscriber' => new UrlSignature(),
-                'definitions' => $this->query
+                'definitions' => $this->query,
             ],
             [
                 'subscriber' => new HeaderSignature(),
-                'definitions' => $this->headers
-            ]
+                'definitions' => $this->headers,
+            ],
         ];
 
         $authorization = [
             'clientId' => $this->clientId,
             'nonce' => substr(sha1(uniqid(microtime(), true)), 0, 16),
-            'timestamp' => time()
+            'timestamp' => time(),
         ];
 
         if (!is_scalar($this->data)) {
@@ -130,10 +132,7 @@ class OAuth20 implements AuthInterface
         }
     }
 
-    /**
-     * @param array|object $definitions
-     */
-    protected function addGenerator(AbstractSignature $subscriber, $definitions, array $authorization)
+    protected function addGenerator(AbstractSignature $subscriber, array $definitions, array $authorization): void
     {
         // Create array of objects instead of arrays from YML
         $q = (array) \Keboola\Utils\arrayToObject($definitions);

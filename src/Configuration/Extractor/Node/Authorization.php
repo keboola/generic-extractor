@@ -1,13 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Configuration\Extractor\Node;
 
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 
 class Authorization
 {
-    public static function configureNode(ArrayNodeDefinition $node)
+    public static function configureNode(ArrayNodeDefinition $node): void
     {
+        // @formatter:off
+        /** @noinspection NullPointerExceptionInspection */
         $node->children()
             ->arrayNode('oauth_api')
                 ->children()
@@ -21,5 +25,6 @@ class Authorization
                 ->end()
             ->end()
         ->end();
+        // @formatter:on
     }
 }

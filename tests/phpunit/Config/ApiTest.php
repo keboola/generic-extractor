@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Tests\Config;
 
 use GuzzleHttp\Client;
@@ -15,26 +17,34 @@ use Keboola\GenericExtractor\Exception\ApplicationException;
 use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\GenericExtractor\Subscriber\AbstractSignature;
 use Keboola\Juicer\Client\RestClient;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
 class ApiTest extends TestCase
 {
-    private function getClientMock(Request $request)
+    /**
+     * @return RestClient|MockObject
+     */
+    private function getClientMock(Request $request): RestClient
     {
         $beforeEventMock = self::createMock(BeforeEvent::class);
         $beforeEventMock->method('getRequest')->willReturn($request);
         /** @var BeforeEvent $beforeEventMock */
         $emitterMock = self::createMock(Emitter::class);
         $a = 1;
-        $emitterMock->method('attach')->willReturnCallback(function ($arg) use ($beforeEventMock, $request, &$a) {
-            /** @var AbstractSignature $arg */
-            if ($a === 1) {
-                // make sure the onBefore is triggered only once because of LoginRequests
-                $a++;
-                $arg->onBefore($beforeEventMock);
+        $emitterMock->method('attach')->willReturnCallback(
+            function ($arg) use ($beforeEventMock, &$a): void {
+                /**
+            * @var AbstractSignature $arg
+            */
+                if ($a === 1) {
+                    // make sure the onBefore is triggered only once because of LoginRequests
+                    $a++;
+                    $arg->onBefore($beforeEventMock);
+                }
             }
-        });
+        );
         $guzzleClientMock = self::createMock(Client::class);
         $guzzleClientMock->method('getEmitter')->willReturn($emitterMock);
         $guzzleClientMock->method('send')->willReturn(new Response(200));
@@ -62,7 +72,7 @@ class ApiTest extends TestCase
     {
         try {
             new Api(new NullLogger(), ['baseUrl' => 'htt//this is not valid'], [], []);
-            self::fail("Invalid URL must fail");
+            self::fail('Invalid URL must fail');
         } catch (UserException $e) {
             self::assertStringContainsString('is not a valid URL', $e->getMessage());
         }
@@ -75,8 +85,8 @@ class ApiTest extends TestCase
             'args' => [
                 'https://',
                 (object) ['attr' => 'domain'],
-                '.example.com/'
-            ]
+                '.example.com/',
+            ],
         ];
         $api = new Api(new NullLogger(), ['baseUrl' => $fn], ['domain' => 'keboola'], []);
         self::assertEquals('https://keboola.example.com/', $api->getBaseUrl());
@@ -88,8 +98,8 @@ class ApiTest extends TestCase
             'function' => 'concat',
             'args' => [
                 'https://keboola.com/',
-                (object) ['attr' => 'path']
-            ]
+                (object) ['attr' => 'path'],
+            ],
         ];
         $this->expectException(UserException::class);
         new Api(new NullLogger(), ['baseUrl' => $fn], [], []);
@@ -102,18 +112,20 @@ class ApiTest extends TestCase
         $apiConfig = [
             'baseUrl' => 'http://example.com',
             'authentication' => [
-                'type' => 'url.query'
+                'type' => 'url.query',
             ],
             'query' => [
                 'param' => [
-                    'attr' => 'key'
-                ]
-            ]
+                    'attr' => 'key',
+                ],
+            ],
         ];
         $api = new Api(new NullLogger(), $apiConfig, $attributes, []);
         $request = new Request('GET', 'http://example.com?foo=bar');
         $restClientMock = $this->getClientMock($request);
-        /** @var RestClient $restClientMock */
+        /**
+ * @var RestClient $restClientMock
+*/
         $api->getAuth()->authenticateClient($restClientMock);
         self::assertEquals(['foo' => 'bar', 'param' => 'val'], $request->getQuery()->toArray());
         self::assertInstanceOf(Query::class, $api->getAuth());
@@ -127,16 +139,18 @@ class ApiTest extends TestCase
                 'type' => 'query',
                 'query' => [
                     'param' => [
-                        'attr' => 'key'
-                    ]
-                ]
-            ]
+                        'attr' => 'key',
+                    ],
+                ],
+            ],
         ];
 
         $api = new Api(new NullLogger(), $apiConfig, ['key' => 'val'], []);
         $request = new Request('GET', 'http://example.com?foo=bar');
         $restClientMock = $this->getClientMock($request);
-        /** @var RestClient $restClientMock */
+        /**
+ * @var RestClient $restClientMock
+*/
         $api->getAuth()->authenticateClient($restClientMock);
         self::assertEquals(['foo' => 'bar', 'param' => 'val'], $request->getQuery()->toArray());
         self::assertInstanceOf(Query::class, $api->getAuth());
@@ -144,11 +158,13 @@ class ApiTest extends TestCase
 
     public function testCreateAuthOAuth20Bearer(): void
     {
-        $config = json_decode(file_get_contents(__DIR__ . '/../data/oauth20bearer/config.json'), true);
+        $config = json_decode((string) file_get_contents(__DIR__ . '/../data/oauth20bearer/config.json'), true);
         $api = new Api(new NullLogger(), $config['parameters']['api'], [], $config['authorization']);
         $request = new Request('GET', 'http://example.com?foo=bar');
         $restClientMock = $this->getClientMock($request);
-        /** @var RestClient $restClientMock */
+        /**
+ * @var RestClient $restClientMock
+*/
         $api->getAuth()->authenticateClient($restClientMock);
         self::assertInstanceOf(OAuth20::class, $api->getAuth());
         self::assertEquals(['foo' => 'bar'], $request->getQuery()->toArray());
@@ -160,12 +176,14 @@ class ApiTest extends TestCase
 
     public function testCreateOauth2Login(): void
     {
-        $config = json_decode(file_get_contents(__DIR__ . '/../data/oauth20login/config.json'), true);
+        $config = json_decode((string) file_get_contents(__DIR__ . '/../data/oauth20login/config.json'), true);
         $api = new Api(new NullLogger(), $config['parameters']['api'], [], $config['authorization']);
         $request = new Request('GET', 'http://example.com?foo=bar');
         $restClientMock = $this->getClientMock($request);
-        $restClientMock->method('getObjectFromResponse')->willReturn((object)['access_token' => 'baz']);
-        /** @var RestClient $restClientMock */
+        $restClientMock->method('getObjectFromResponse')->willReturn((object) ['access_token' => 'baz']);
+        /**
+ * @var RestClient $restClientMock
+*/
         $api->getAuth()->authenticateClient($restClientMock);
         self::assertInstanceOf(OAuth20Login::class, $api->getAuth());
         self::assertEquals(['foo' => 'bar', 'oauth2_access_token' => 'baz'], $request->getQuery()->toArray());
@@ -203,7 +221,9 @@ class ApiTest extends TestCase
 
     public function testCustomClientCertificate(): void
     {
-        $crtContent = "-----BEGIN CERTIFICATE-----\nMIIFazCCA1OgAwIBAgIUGzl\n....\n-----END CERTIFICATE-----\n-----BEGIN RSA PRIVATE KEY-----\nMIIFazCCA1OgAwIBAgIUGzl\n-----END RSA PRIVATE KEY-----";
+        $crtContent =
+            "-----BEGIN CERTIFICATE-----\nMIIFazCCA1OgAwIBAgIUGzl\n...."."\n-----END CERTIFICATE-----\n".
+            "-----BEGIN RSA PRIVATE KEY-----\nMIIFazCCA1OgAwIBAgIUGzl\n-----END RSA PRIVATE KEY-----";
         $apiConfig = [
             'baseUrl' => 'http://example.com',
             '#clientCertificate' => $crtContent,
@@ -218,11 +238,11 @@ class ApiTest extends TestCase
     public function testInvalidFunctionBaseUrlThrowsUserException(): void
     {
         $apiConfig = [
-            "baseUrl" => [
-                "function" => "concat",
-                "args" => [
-                    "http://",
-                    "/087-function-baseurl/",
+            'baseUrl' => [
+                'function' => 'concat',
+                'args' => [
+                    'http://',
+                    '/087-function-baseurl/',
                 ],
             ],
         ];

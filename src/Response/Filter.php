@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Response;
 
 use Keboola\GenericExtractor\Exception\UserException;
@@ -16,7 +18,7 @@ use Keboola\Juicer\Config\JobConfig;
  */
 class Filter
 {
-    const DEFAULT_DELIMITER = '.';
+    public const DEFAULT_DELIMITER = '.';
 
     protected array $filters;
 
@@ -58,14 +60,15 @@ class Filter
     }
 
     /**
-     * @param mixed $item
+     * @param  mixed $item
      * @return mixed
      */
     protected function filterItem($item, string $path)
     {
+        /** @var array $currentPath */
         $currentPath = explode($this->delimiter, $path, 2);
 
-        if ('[]' == substr($currentPath[0], -2)) {
+        if (substr($currentPath[0], -2) === '[]') {
             $key = substr($currentPath[0], 0, -2);
             $arr = true;
         } else {
@@ -89,14 +92,14 @@ class Filter
             }
 
             foreach ($item->{$key} as &$subItem) {
-                if (count($currentPath) == 1) {
+                if (count($currentPath) === 1) {
                     $subItem = $this->updateItem($subItem);
                 } else {
                     $subItem = $this->filterItem($subItem, $currentPath[1]);
                 }
             }
         } else {
-            if (count($currentPath) == 1) {
+            if (count($currentPath) === 1) {
                 $item->{$key} = $this->updateItem($item->{$key});
             } else {
                 $item->{$key} = $this->filterItem($item->{$key}, $currentPath[1]);
@@ -112,9 +115,9 @@ class Filter
     protected function updateItem($item): string
     {
         if ($this->compatLevel <= GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY_SCALAR) {
-            return is_scalar($item) ? $item : json_encode($item);
+            return is_scalar($item) ? (string) $item : (string) json_encode($item);
         } else {
-            return json_encode($item);
+            return (string) json_encode($item);
         }
     }
 }

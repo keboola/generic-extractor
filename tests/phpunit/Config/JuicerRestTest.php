@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Tests\Config;
 
 use Keboola\GenericExtractor\Configuration\JuicerRest;

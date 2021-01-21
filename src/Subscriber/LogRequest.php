@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Subscriber;
 
 use GuzzleHttp\Event\BeforeEvent;
@@ -19,13 +21,13 @@ class LogRequest implements SubscriberInterface
         $this->logger = $logger;
     }
 
-    public function getEvents()
+    public function getEvents(): array
     {
         return ['before' => ['onBefore', RequestEvents::LATE]];
     }
 
-    public function onBefore(BeforeEvent $event)
+    public function onBefore(BeforeEvent $event): void
     {
-        $this->logger->debug((string)$event->getRequest());
+        $this->logger->debug((string) $event->getRequest());
     }
 }

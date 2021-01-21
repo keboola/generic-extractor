@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Subscriber;
 
 use GuzzleHttp\Event\BeforeEvent;
@@ -13,24 +15,24 @@ abstract class AbstractSignature
      */
     protected $generator;
 
-    public function getEvents()
+    public function getEvents(): array
     {
         return ['before' => ['onBefore', RequestEvents::SIGN_REQUEST]];
     }
 
-    public function onBefore(BeforeEvent $event)
+    public function onBefore(BeforeEvent $event): void
     {
         $request = $event->getRequest();
 
         $this->addSignature($request);
     }
 
-    abstract protected function addSignature(RequestInterface $request);
+    abstract protected function addSignature(RequestInterface $request): void;
 
     /**
      * @param callable $generator A method that returns query parameters required for authentication
      */
-    public function setSignatureGenerator(callable $generator)
+    public function setSignatureGenerator(callable $generator): void
     {
         $this->generator = $generator;
     }
@@ -51,13 +53,13 @@ abstract class AbstractSignature
             'method' => $request->getMethod(),
             'hostname' => $request->getHost(),
             'port' => $request->getPort(),
-            'resource' => $request->getResource()
+            'resource' => $request->getResource(),
             // if needed, ksorted query string can come here
         ];
 
         return [
             'query' => $query,
-            'request' => $requestInfo
+            'request' => $requestInfo,
         ];
     }
 }

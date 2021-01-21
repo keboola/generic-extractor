@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Response;
 
 use Keboola\GenericExtractor\Exception\UserException;
@@ -18,13 +20,13 @@ class FindResponseArray
     /**
      * Try to find the data array within $response.
      *
-     * @param array|object $response
+     * @param  array|object $response
      * @throws UserException
      */
     public function process($response, JobConfig $jobConfig): array
     {
         $config = $jobConfig->getConfig();
-        $separator = ".";
+        $separator = '.';
         // If dataField doesn't say where the data is in a response, try to find it!
         if (!empty($config['dataField'])) {
             if (is_array($config['dataField'])) {
@@ -56,30 +58,33 @@ class FindResponseArray
         } elseif (is_object($response)) {
             // Find arrays in the response
             $arrays = [];
-            foreach ($response as $key => $value) {
+            foreach (get_object_vars($response) as $key => $value) {
                 if (is_array($value)) {
                     $arrays[$key] = $value;
                 } // TODO else {$this->metadata[$key] = json_encode($value);} ? return [$data,$metadata];
             }
 
             $arrayNames = array_keys($arrays);
-            if (count($arrays) == 1) {
+            if (count($arrays) === 1) {
                 $data = $arrays[$arrayNames[0]];
-            } elseif (count($arrays) == 0) {
-                $this->logger->warning("No data array found in response! (endpoint: {$config['endpoint']})", [
-                    'response' => json_encode($response)
-                ]);
+            } elseif (count($arrays) === 0) {
+                $this->logger->warning(
+                    "No data array found in response! (endpoint: {$config['endpoint']})",
+                    [
+                    'response' => json_encode($response),
+                    ]
+                );
                 $data = [];
             } else {
                 throw new UserException(
                     "More than one array found in response! Use 'dataField' parameter to specify a key to the data " .
-                    "array. (endpoint: " . $config['endpoint'] . ", arrays in response root: " .
-                    implode(", ", $arrayNames) . ")",
+                    'array. (endpoint: ' . $config['endpoint'] . ', arrays in response root: ' .
+                    implode(', ', $arrayNames) . ')',
                     0,
                     null,
                     [
                         'response' => json_encode($response),
-                        'arrays found' => $arrayNames
+                        'arrays found' => $arrayNames,
                     ]
                 );
             }

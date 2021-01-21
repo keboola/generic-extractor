@@ -6,10 +6,10 @@ services:
 before_script:
   - docker -v
   - docker-compose -v
-  - docker-compose build extractor tests
-  # Run tests
-  - docker-compose run --rm -e CC_TEST_REPORTER_ID -e GIT_COMMIT_SHA=$TRAVIS_COMMIT -e GIT_BRANCH=$TRAVIS_BRANCH tests
-  - sh -c "cd doc && ./run-samples.sh"  
+  - docker-compose build app ci
+  # Run tests and generate code coverage
+  - docker-compose run --rm -v $(pwd)/build:/code/build ci
+  - sh -c "cd doc && ./run-samples.sh"
 
 script:
   # Push master image
@@ -22,6 +22,16 @@ script:
   - docker pull quay.io/keboola/syrup-cli:latest
   - docker run --rm -e KBC_STORAGE_TOKEN quay.io/keboola/syrup-cli:latest run-job $KBC_DEVELOPERPORTAL_APP $KBC_APP_TEST_CONFIG master
 
+after_script:
+  # Upload code coverage
+  - export GIT_COMMIT_SHA=$TRAVIS_COMMIT
+  - export GIT_BRANCH=$TRAVIS_BRANCH
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ls $(pwd)/build
+  - ./cc-test-reporter format-coverage --prefix /code
+  - ./cc-test-reporter upload-coverage
+
 after_success:
   - docker images
 
@@ -31,8 +41,3 @@ deploy:
   script: ./deploy.sh
   on:
     tags: true
-
-notifications:
-  slack:
-    secure: PwqOh1lRxps0xsnaWhxJxotCsazQsSSRyXlcy16CPCq5uVB1hwj8q1nYgK+49mrFtM0q0iQCsUpyu2YeTcuemHdZ8ScyrIPmVpAl20R/O2QcqLUKhzfnGAKe+QW9e4/DkDf9al/4y2OGTg+AXx7e1xajXtHqv0MkqbyI5QsKIMyKwrqg3JH1jtA58IqDg3yXC0+/+rKjYK08ldmt544EkgMsxuF01Lu8RWK6eELlq/7FqQqgVuZla2q2XgDuc1NCiC9eSFfAXua7oUv0rye7/QxGxqRHyLUUfo24gpt9gGEzY1oryBwfuPK1qfrCbFsxtGuMPC0zDfHOHDxuKbPHmId20aRzy4bHtHaHrZeYTQbrRVWU6on0Zo/coe/rjb0aZbSOxMV5V0o3xQ+3K8IxSAh3QM172NT1BW5uKwoL28lZPNSBTbeFMvXLeMvFJCZbqhTe3RC1JxjK3sGD/flUUxg4f2MD46jaEMdJcfc+nGng5bs++cQ42TvEfgijt0Z78Xj+s5kk4vJb/or7ciabSX9NbjFrnd7odw9klRNGvJ4DzmRw8TAyjSMkO6VFzSgxh3CmBTL1rqGBQtM+bZtrVH9GmANLr6oq+yymAJzRHUS0TNipAEKEQ8UjQmFy0ZgnfxKu4dUUhCOEm68Mt+Xtcw/amdq/1Ickvh4iki2H5pg=
-  email: false

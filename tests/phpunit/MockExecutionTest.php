@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Tests;
 
 use PHPUnit\Framework\TestCase;
@@ -11,8 +13,10 @@ class MockExecutionTest extends TestCase
      */
     public function testRun(string $configDir): void
     {
-        $this->rmDir(__DIR__ . "/data/{$configDir}/out");
-        exec("php " . __DIR__ . "/../run.php --data=" . __DIR__ . "/data/{$configDir} 2>&1", $output, $retval);
+        $dataDir = __DIR__ . "/data/{$configDir}";
+        $runPhp = __DIR__ . '/../../src/run.php';
+        $this->rmDir(__DIR__ . "{$dataDir}/out");
+        exec("KBC_DATADIR=$dataDir php $runPhp  2>&1", $output, $retval);
 
         self::assertStringContainsString('Extractor finished successfully.', implode("\n", $output));
         self::assertDirectoryEquals(
@@ -24,7 +28,7 @@ class MockExecutionTest extends TestCase
         $this->rmDir(__DIR__ . "/data/{$configDir}/out");
     }
 
-    public function configProvider()
+    public function configProvider(): array
     {
         return [
             ['responseUrlScroll'],
@@ -34,27 +38,34 @@ class MockExecutionTest extends TestCase
             ['multipleOutputs'],
             ['multipleOutputsUserData'],
             ['defaultBucket'],
-            ['jsonMap']
+            ['jsonMap'],
         ];
     }
 
     public function testDefaultRequestOptions(): void
     {
-        exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/defaultOptions', $output);
+        $dataDir = __DIR__ . '/data/defaultOptions';
+        $runPhp = __DIR__ . '/../../src/run.php';
+        exec("KBC_DATADIR=$dataDir php $runPhp  2>&1", $output, $retval);
         self::assertMatchesRegularExpression('/GET \/defaultOptions\?param=value/', implode("\n", $output));
         $this->rmDir(__DIR__ . '/data/defaultOptions/out');
     }
 
     public function testEmptyCfg(): void
     {
-        exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/emptyCfg 2>&1', $output, $retval);
+        $dataDir = __DIR__ . '/data/emptyCfg';
+        $runPhp = __DIR__ . '/../../src/run.php';
+        exec("KBC_DATADIR=$dataDir php $runPhp  2>&1", $output, $retval);
         self::assertStringContainsString('is not a valid JSON: Syntax error', implode("\n", $output));
         self::assertEquals(2, $retval);
     }
 
     public function testDynamicUserData(): void
     {
-        exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/dynamicUserData 2>&1', $output, $retval);
+        $dataDir = __DIR__ . '/data/dynamicUserData';
+        $runPhp = __DIR__ . '/../../src/run.php';
+        exec("KBC_DATADIR=$dataDir php $runPhp  2>&1", $output, $retval);
+        /** @var array $expectedFile */
         $expectedFile = file(__DIR__ . '/data/dynamicUserData/expected/tables/get');
         foreach ($expectedFile as &$row) {
             $row = str_replace('{{date}}', date('Y-m-d'), $row);
@@ -62,12 +73,14 @@ class MockExecutionTest extends TestCase
 
         self::assertEquals($expectedFile, file(__DIR__ . '/data/dynamicUserData/out/tables/get'));
         // 2nd row; 3rd column should contain the date
-        self::assertEquals(date('Y-m-d'), str_getcsv(file(__DIR__ . '/data/dynamicUserData/out/tables/get')[1])[2]);
+        /** @var array $file */
+        $file = file(__DIR__ . '/data/dynamicUserData/out/tables/get');
+        self::assertEquals(date('Y-m-d'), str_getcsv($file[1])[2]);
 
         $this->rmDir(__DIR__ . '/data/dynamicUserData/out');
     }
 
-    protected function rmDir($dirPath)
+    protected function rmDir(string $dirPath): void
     {
         if (!file_exists($dirPath)) {
             return;
@@ -84,7 +97,7 @@ class MockExecutionTest extends TestCase
         rmdir($dirPath);
     }
 
-    protected function assertDirectoryEquals($pathToExpected, $pathToActual)
+    protected function assertDirectoryEquals(string $pathToExpected, string $pathToActual): void
     {
         foreach (new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator(

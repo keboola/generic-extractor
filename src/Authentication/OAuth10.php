@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Authentication;
 
 use Keboola\GenericExtractor\Exception\UserException;
@@ -19,13 +22,10 @@ class OAuth10 implements AuthInterface
 
     protected string $consumerSecret;
 
-    /**
-     * @throws UserException
-     */
     public function __construct(array $authorization)
     {
         if (empty($authorization['oauth_api']['credentials'])) {
-            throw new UserException("OAuth API credentials not supplied in configuration.");
+            throw new UserException('OAuth API credentials not supplied in configuration.');
         }
 
         $oauthApiDetails = $authorization['oauth_api']['credentials'];
@@ -47,14 +47,16 @@ class OAuth10 implements AuthInterface
     /**
      * @inheritdoc
      */
-    public function authenticateClient(RestClient $client)
+    public function authenticateClient(RestClient $client): void
     {
-        $sub = new Oauth1([
+        $sub = new Oauth1(
+            [
             'consumer_key'    => $this->consumerKey,
             'consumer_secret' => $this->consumerSecret,
             'token'           => $this->token,
-            'token_secret'    => $this->tokenSecret
-        ]);
+            'token_secret'    => $this->tokenSecret,
+            ]
+        );
 
         $client->getClient()->getEmitter()->attach($sub);
         $client->getClient()->setDefaultOption('auth', 'oauth');

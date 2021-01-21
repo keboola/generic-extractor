@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Tests\Config;
 
 use Keboola\GenericExtractor\Configuration\Extractor;
@@ -38,7 +40,7 @@ class ConfigurationTest extends ExtractorTestCase
 
         $files = [
             Table::create('first', ['col1', 'col2']),
-            Table::create('second', ['col11', 'col12'])
+            Table::create('second', ['col11', 'col12']),
         ];
 
         $files[0]->writeRow(['a', 'b']);
@@ -47,6 +49,7 @@ class ConfigurationTest extends ExtractorTestCase
 
         $configuration->storeResults($files);
 
+        /** @var \SplFileInfo $file */
         foreach (new \FilesystemIterator(__DIR__ . '/../data/storeResultsDefaultBucket/out/tables/') as $file) {
             self::assertFileEquals($file->getPathname(), $resultsPath . '/out/tables/' . $file->getFilename());
         }
@@ -54,7 +57,7 @@ class ConfigurationTest extends ExtractorTestCase
         $this->rmDir($resultsPath);
     }
 
-    protected function storeResults($resultsPath, $name, $incremental)
+    protected function storeResults(string $resultsPath, string $name, bool $incremental): void
     {
         $config = '{"parameters":{}}';
         $fs = new Filesystem();
@@ -63,7 +66,7 @@ class ConfigurationTest extends ExtractorTestCase
 
         $files = [
             Table::create('first', ['col1', 'col2']),
-            Table::create('second', ['col11', 'col12'])
+            Table::create('second', ['col11', 'col12']),
         ];
 
         $files[0]->writeRow(['a', 'b']);
@@ -71,6 +74,7 @@ class ConfigurationTest extends ExtractorTestCase
 
         $configuration->storeResults($files, $name, true, $incremental);
 
+        /** @var \SplFileInfo $file */
         foreach (new \FilesystemIterator(__DIR__ . '/../data/storeResultsTest/out/tables/' . $name) as $file) {
             self::assertFileEquals(
                 $file->getPathname(),
@@ -102,12 +106,14 @@ class ConfigurationTest extends ExtractorTestCase
         $fs->dumpFile($resultsPath . DIRECTORY_SEPARATOR . 'config.json', $config);
         $configuration = new Extractor($resultsPath, new NullLogger());
 
-        $configuration->saveConfigMetadata([
+        $configuration->saveConfigMetadata(
+            [
             'some' => 'data',
             'more' => [
-                'woah' => 'such recursive'
+                'woah' => 'such recursive',
+            ],
             ]
-        ]);
+        );
 
         self::assertFileEquals(__DIR__ . '/../data/metadataTest/out/state.json', $resultsPath . '/out/state.json');
 
@@ -118,14 +124,14 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $configuration = new Extractor(__DIR__ . '/../data/iterations', new NullLogger());
         $configs = $configuration->getMultipleConfigs();
-        $json = json_decode(file_get_contents(__DIR__ . '/../data/iterations/config.json'), true);
+        $json = json_decode((string) file_get_contents(__DIR__ . '/../data/iterations/config.json'), true);
 
         foreach ($json['parameters']['iterations'] as $i => $params) {
             self::assertEquals(
                 array_replace(
                     [
                         'id' => $json['parameters']['config']['id'],
-                        'outputBucket' => $json['parameters']['config']['outputBucket']
+                        'outputBucket' => $json['parameters']['config']['outputBucket'],
                     ],
                     $params
                 ),
@@ -160,15 +166,23 @@ class ConfigurationTest extends ExtractorTestCase
         $fs->dumpFile($temp->getTmpFolder() . '/config.json', 'invalidJSON');
         try {
             new Extractor($temp->getTmpFolder(), new NullLogger());
-            self::fail("Invalid JSON must cause exception");
+            self::fail('Invalid JSON must cause exception');
         } catch (ApplicationException $e) {
             self::assertStringContainsString('Configuration file is not a valid JSON: Syntax error', $e->getMessage());
         }
     }
 
-    protected function rmDir($dirPath)
+    protected function rmDir(string $dirPath): bool
     {
-        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dirPath, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST) as $path) {
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator(
+                $dirPath,
+                \FilesystemIterator::SKIP_DOTS
+            ),
+            \RecursiveIteratorIterator::CHILD_FIRST
+        );
+
+        foreach ($iterator as $path) {
             $path->isDir() && !$path->isLink() ? rmdir($path->getPathname()) : unlink($path->getPathname());
         }
         return rmdir($dirPath);

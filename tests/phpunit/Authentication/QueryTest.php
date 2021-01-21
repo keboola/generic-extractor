@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Tests\Authentication;
 
 use Keboola\GenericExtractor\Authentication\Query;
@@ -19,10 +21,10 @@ class QueryTest extends ExtractorTestCase
                 'paramOne' => (object) ['attr' => 'first'],
                 'paramTwo' => (object) [
                     'function' => 'md5',
-                    'args' => [(object) ['attr' => 'second']]
+                    'args' => [(object) ['attr' => 'second']],
                 ],
-                'paramThree' => 'string'
-            ]
+                'paramThree' => 'string',
+            ],
         ];
         $configAttributes = ['first' => 1, 'second' => 'two'];
 
@@ -45,11 +47,21 @@ class QueryTest extends ExtractorTestCase
         $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com'], [], []);
         $auth->authenticateClient($restClient);
 
-        $mock = new Mock([
-            new Response(200, [], Stream::factory(json_encode((object) [
-                'data' => [1,2,3]
-            ])))
-        ]);
+        $mock = new Mock(
+            [
+            new Response(
+                200,
+                [],
+                Stream::factory(
+                    (string) json_encode(
+                        (object) [
+                        'data' => [1,2,3],
+                        ]
+                    )
+                )
+            ),
+            ]
+        );
         $restClient->getClient()->getEmitter()->attach($mock);
 
         $request = $restClient->getClient()->createRequest('GET', '/query?param=value');
@@ -68,8 +80,8 @@ class QueryTest extends ExtractorTestCase
             'args' => [
                 (object) ['request' => 'url'],
                 (object) ['attr' => 'token'],
-                (object) ['query' => 'param']
-            ]
+                (object) ['query' => 'param'],
+            ],
         ];
 
         $authentication = [
@@ -77,25 +89,35 @@ class QueryTest extends ExtractorTestCase
                 'urlTokenParamHash' => (object) [
                     'function' => 'md5',
                     'args' => [
-                        $urlTokenParam
-                    ]
+                        $urlTokenParam,
+                    ],
                 ],
-                'urlTokenParam' => $urlTokenParam
-            ]
+                'urlTokenParam' => $urlTokenParam,
+            ],
         ];
         $configAttributes = [
-            'token' => 'asdf1234'
+            'token' => 'asdf1234',
         ];
 
         $auth = new Query($configAttributes, $authentication);
         $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com'], [], []);
         $auth->authenticateClient($restClient);
 
-        $mock = new Mock([
-            new Response(200, [], Stream::factory(json_encode((object) [
-                'data' => [1,2,3]
-            ])))
-        ]);
+        $mock = new Mock(
+            [
+            new Response(
+                200,
+                [],
+                Stream::factory(
+                    (string) json_encode(
+                        (object) [
+                        'data' => [1,2,3],
+                        ]
+                    )
+                )
+            ),
+            ]
+        );
         $restClient->getClient()->getEmitter()->attach($mock);
 
         $request = $restClient->getClient()->createRequest('GET', '/query?param=value');

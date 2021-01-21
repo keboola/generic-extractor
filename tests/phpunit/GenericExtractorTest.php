@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Tests;
 
 use Keboola\GenericExtractor\Configuration\Api;
@@ -34,12 +36,12 @@ class GenericExtractorTest extends TestCase
                             ],
                         ],
                     ],
-                ]
+                ],
             ],
             'json_parser.structVersion' => 3,
             'time' => [
-                'previousStart' => 123
-            ]
+                'previousStart' => 123,
+            ],
         ];
 
         $cfg = new Config(['jobs' => [['endpoint' => 'get']]]);
@@ -75,12 +77,12 @@ class GenericExtractorTest extends TestCase
                             ],
                         ],
                     ],
-                ]
+                ],
             ],
             'json_parser.structVersion' => 3,
             'time' => [
-                'previousStart' => 123
-            ]
+                'previousStart' => 123,
+            ],
         ];
 
         $cfg = new Config(['jobs' => [['endpoint' => 'get']]]);

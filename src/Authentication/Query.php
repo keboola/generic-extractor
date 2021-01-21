@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Authentication;
 
 use Keboola\GenericExtractor\Configuration\UserFunction;
@@ -16,9 +18,6 @@ class Query implements AuthInterface
 
     protected array $configAttributes;
 
-    /**
-     * @throws UserException
-     */
     public function __construct(array $configAttributes, array $authentication)
     {
         if (empty($authentication['query'])) {
@@ -30,7 +29,7 @@ class Query implements AuthInterface
         $this->configAttributes = $configAttributes;
     }
 
-    public function authenticateClient(RestClient $client)
+    public function authenticateClient(RestClient $client): void
     {
         $sub = new UrlSignature();
         // Create array of objects instead of arrays from YML

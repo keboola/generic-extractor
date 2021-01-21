@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Tests\Authentication;
 
 use Keboola\GenericExtractor\Authentication\OAuth20;
@@ -11,7 +13,7 @@ class OAuth20Test extends ExtractorTestCase
 {
     public function testAuthenticateClientJson(): void
     {
-        $config = json_decode(file_get_contents(__DIR__ . '/../data/oauth20bearer/config.json'), true);
+        $config = json_decode((string) file_get_contents(__DIR__ . '/../data/oauth20bearer/config.json'), true);
         $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com'], [], []);
         $restClient->getClient()->setDefaultOption('headers', ['X-Test' => 'test']);
         $auth = new OAuth20(
@@ -30,7 +32,7 @@ class OAuth20Test extends ExtractorTestCase
 
     public function testMACAuth(): void
     {
-        $config = json_decode(file_get_contents(__DIR__ . '/../data/oauth20mac/config.json'), true);
+        $config = json_decode((string) file_get_contents(__DIR__ . '/../data/oauth20mac/config.json'), true);
         $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com'], [], []);
         $auth = new OAuth20(
             [],
@@ -50,22 +52,25 @@ class OAuth20Test extends ExtractorTestCase
             $authHeader,
             $matches
         );
-        if (1 !== $match) {
-            throw new \Exception("MAC Header does not match the expected pattern");
+        if ($match !== 1) {
+            throw new \Exception('MAC Header does not match the expected pattern');
         }
 
         $timestamp = $matches[1];
         $nonce = $matches[2];
 
-        $macString = join("\n", [
+        $macString = join(
+            "\n",
+            [
             $timestamp,
             $nonce,
             strtoupper($request->getMethod()),
             $request->getResource(),
             $request->getHost(),
             $request->getPort(),
-            "\n"
-        ]);
+            "\n",
+            ]
+        );
 
         $expectedAuthHeader = sprintf(
             'MAC id="%s", ts="%s", nonce="%s", mac="%s"',

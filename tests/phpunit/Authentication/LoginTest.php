@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Tests\Authentication;
 
 use Keboola\GenericExtractor\Authentication\Login;
@@ -18,19 +20,45 @@ class LoginTest extends ExtractorTestCase
     {
         $expiresIn = 5000;
         $expires = time() + $expiresIn;
-        $mock = new Mock([
-            new Response(200, [], Stream::factory(json_encode((object) [ // auth
-                'headerToken' => 1234,
-                'queryToken' => 4321,
-                'expiresIn' => $expiresIn,
-            ]))),
-            new Response(200, [], Stream::factory(json_encode((object) [ // api call
-                'data' => [1,2,3]
-            ]))),
-            new Response(200, [], Stream::factory(json_encode((object) [ // api call
-                'data' => [1,2,3]
-            ])))
-        ]);
+        $mock = new Mock(
+            [
+            new Response(
+                200,
+                [],
+                Stream::factory(
+                    (string) json_encode(
+                        (object) [ // auth
+                        'headerToken' => 1234,
+                        'queryToken' => 4321,
+                        'expiresIn' => $expiresIn,
+                        ]
+                    )
+                )
+            ),
+            new Response(
+                200,
+                [],
+                Stream::factory(
+                    (string) json_encode(
+                        (object) [ // api call
+                        'data' => [1,2,3],
+                        ]
+                    )
+                )
+            ),
+            new Response(
+                200,
+                [],
+                Stream::factory(
+                    (string) json_encode(
+                        (object) [ // api call
+                        'data' => [1,2,3],
+                        ]
+                    )
+                )
+            ),
+            ]
+        );
         $history = new History();
         $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com/api'], [], []);
         $restClient->getClient()->getEmitter()->attach($mock);
@@ -41,13 +69,13 @@ class LoginTest extends ExtractorTestCase
                 'endpoint' => 'login',
                 'params' => ['par' => ['attr' => 'first']],
                 'headers' => ['X-Header' => ['attr' => 'second']],
-                'method' => 'POST'
+                'method' => 'POST',
             ],
             'apiRequest' => [
                 'headers' => ['X-Test-Auth' => ['response' => 'headerToken']],
-                'query' => ['qToken' => ['response' => 'queryToken']]
+                'query' => ['qToken' => ['response' => 'queryToken']],
             ],
-            'expires' => ['response' => 'expiresIn', 'relative' => true]
+            'expires' => ['response' => 'expiresIn', 'relative' => true],
         ];
 
         $auth = new Login($attrs, $api);
@@ -60,7 +88,7 @@ class LoginTest extends ExtractorTestCase
         // test creation of the login request
         self::assertEquals($attrs['second'], $history->getIterator()[0]['request']->getHeader('X-Header'));
         self::assertEquals(
-            json_encode(['par' => $attrs['first']]),
+            (string) json_encode(['par' => $attrs['first']]),
             (string) $history->getIterator()[0]['request']->getBody()
         );
 
@@ -80,15 +108,33 @@ class LoginTest extends ExtractorTestCase
 
     public function testAuthenticateClientScalar(): void
     {
-        $mock = new Mock([
-            new Response(200, [], Stream::factory(json_encode('someToken'))),
-            new Response(200, [], Stream::factory(json_encode((object) [ // api call
-                'data' => [1,2,3]
-            ]))),
-            new Response(200, [], Stream::factory(json_encode((object) [ // api call
-                'data' => [1,2,3]
-            ])))
-        ]);
+        $mock = new Mock(
+            [
+            new Response(200, [], Stream::factory((string) json_encode('someToken'))),
+            new Response(
+                200,
+                [],
+                Stream::factory(
+                    (string) json_encode(
+                        (object) [ // api call
+                        'data' => [1,2,3],
+                        ]
+                    )
+                )
+            ),
+            new Response(
+                200,
+                [],
+                Stream::factory(
+                    (string) json_encode(
+                        (object) [ // api call
+                        'data' => [1,2,3],
+                        ]
+                    )
+                )
+            ),
+            ]
+        );
         $history = new History();
         $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com/api'], [], []);
         $restClient->getClient()->getEmitter()->attach($mock);
@@ -100,7 +146,7 @@ class LoginTest extends ExtractorTestCase
                 'endpoint' => 'login',
                 'params' => ['par' => ['attr' => 'first']],
                 'headers' => ['X-Header' => ['attr' => 'second']],
-                'method' => 'POST'
+                'method' => 'POST',
             ],
             'apiRequest' => [
                 'headers' => ['X-Test-Auth' => ['response' => 'data']],
@@ -117,7 +163,7 @@ class LoginTest extends ExtractorTestCase
         // test creation of the login request
         self::assertEquals($attrs['second'], $history->getIterator()[0]['request']->getHeader('X-Header'));
         self::assertEquals(
-            json_encode(['par' => $attrs['first']]),
+            (string) json_encode(['par' => $attrs['first']]),
             (string) $history->getIterator()[0]['request']->getBody()
         );
 
@@ -128,15 +174,33 @@ class LoginTest extends ExtractorTestCase
 
     public function testAuthenticateClientText(): void
     {
-        $mock = new Mock([
+        $mock = new Mock(
+            [
             new Response(200, [], Stream::factory('someToken')),
-            new Response(200, [], Stream::factory(json_encode((object) [ // api call
-                'data' => [1,2,3]
-            ]))),
-            new Response(200, [], Stream::factory(json_encode((object) [ // api call
-                'data' => [1,2,3]
-            ])))
-        ]);
+            new Response(
+                200,
+                [],
+                Stream::factory(
+                    (string) json_encode(
+                        (object) [ // api call
+                        'data' => [1,2,3],
+                        ]
+                    )
+                )
+            ),
+            new Response(
+                200,
+                [],
+                Stream::factory(
+                    (string) json_encode(
+                        (object) [ // api call
+                        'data' => [1,2,3],
+                        ]
+                    )
+                )
+            ),
+            ]
+        );
         $history = new History();
         $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com/api'], [], []);
         $restClient->getClient()->getEmitter()->attach($mock);
@@ -148,7 +212,7 @@ class LoginTest extends ExtractorTestCase
                 'endpoint' => 'login',
                 'params' => ['par' => ['attr' => 'first']],
                 'headers' => ['X-Header' => ['attr' => 'second']],
-                'method' => 'POST'
+                'method' => 'POST',
             ],
             'apiRequest' => [
                 'headers' => ['X-Test-Auth' => ['response' => 'data']],
@@ -165,7 +229,7 @@ class LoginTest extends ExtractorTestCase
         // test creation of the login request
         self::assertEquals($attrs['second'], $history->getIterator()[0]['request']->getHeader('X-Header'));
         self::assertEquals(
-            json_encode(['par' => $attrs['first']]),
+            (string) json_encode(['par' => $attrs['first']]),
             (string) $history->getIterator()[0]['request']->getBody()
         );
 
@@ -176,17 +240,35 @@ class LoginTest extends ExtractorTestCase
 
     public function testAuthenticateClientWithFunctionInApiRequestHeaders(): void
     {
-        $mock = new Mock([
-            new Response(200, [], Stream::factory(json_encode((object) [ // auth
-                'tokens' => [
-                    'header' => 1234,
-                    'query' => 4321
-                ]
-            ]))),
-            new Response(200, [], Stream::factory(json_encode((object) [ // api call
-                'data' => [1,2,3]
-            ])))
-        ]);
+        $mock = new Mock(
+            [
+            new Response(
+                200,
+                [],
+                Stream::factory(
+                    (string) json_encode(
+                        (object) [ // auth
+                        'tokens' => [
+                        'header' => 1234,
+                        'query' => 4321,
+                        ],
+                        ]
+                    )
+                )
+            ),
+            new Response(
+                200,
+                [],
+                Stream::factory(
+                    (string) json_encode(
+                        (object) [ // api call
+                        'data' => [1,2,3],
+                        ]
+                    )
+                )
+            ),
+            ]
+        );
 
         $history = new History();
         $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com/api'], [], []);
@@ -196,7 +278,7 @@ class LoginTest extends ExtractorTestCase
             'loginRequest' => [
                 'endpoint' => 'login',
                 'headers' => ['X-Header' => 'fooBar'],
-                'method' => 'POST'
+                'method' => 'POST',
             ],
             'apiRequest' => [
                 'headers' => [
@@ -208,13 +290,13 @@ class LoginTest extends ExtractorTestCase
                         'args' => [
                             'Bearer',
                             ' ',
-                            ['response' => 'tokens.header']
-                        ]
+                            ['response' => 'tokens.header'],
+                        ],
                     ],
                     // direct reference
                     'Authorization3' => [
-                        'response' => 'tokens.header'
-                    ]
+                        'response' => 'tokens.header',
+                    ],
                 ],
                 'query' => [
                     // backward compatible
@@ -224,15 +306,15 @@ class LoginTest extends ExtractorTestCase
                         'function' => 'concat',
                         'args' => [
                             'qt',
-                            ['response' => 'tokens.query']
-                        ]
+                            ['response' => 'tokens.query'],
+                        ],
                     ],
                     // direct reference
                     'qToken3' => [
-                        'response' => 'tokens.query'
-                    ]
-                ]
-            ]
+                        'response' => 'tokens.query',
+                    ],
+                ],
+            ],
         ];
 
         $auth = new Login(['a1' => ['b1' => 'c1'], 'a2' => ['b2' => 'c2']], $api);
@@ -252,7 +334,7 @@ class LoginTest extends ExtractorTestCase
             (string) $history->getIterator()[1]['request']->getQuery()
         );
         self::assertEquals(
-            json_encode(['data' => [1,2,3]]),
+            (string) json_encode(['data' => [1,2,3]]),
             (string) $history->getIterator()[1]['response']->getBody()
         );
     }
@@ -281,11 +363,11 @@ class LoginTest extends ExtractorTestCase
     {
         $api = [
             'loginRequest' => [
-                'method' => 'POST'
+                'method' => 'POST',
             ],
         ];
         $this->expectException(UserException::class);
-        $this->expectExceptionMessage("Request endpoint must be set for the Login authentication method.");
+        $this->expectExceptionMessage('Request endpoint must be set for the Login authentication method.');
         new Login([], $api);
     }
 
@@ -294,12 +376,15 @@ class LoginTest extends ExtractorTestCase
         $api = [
             'loginRequest' => [
                 'method' => 'POST',
-                'endpoint' => 'dummy'
+                'endpoint' => 'dummy',
             ],
-            'expires' => 'never'
+            'expires' => 'never',
         ];
         $this->expectException(UserException::class);
-        $this->expectExceptionMessage("The 'expires' attribute must be either an integer or an array with 'response' key containing a path in the response");
+        $this->expectExceptionMessage(
+            "The 'expires' attribute must be either an integer ".
+            "or an array with 'response' key containing a path in the response"
+        );
         new Login([], $api);
     }
 }

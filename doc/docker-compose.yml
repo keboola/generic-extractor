@@ -62,12 +62,10 @@ services:
     volumes:
       - .tmp:/tmp
       - ./examples/:/examples/
-    tty: true
-    stdin_open: true
     command:
       - /bin/sh
       - -c
-      - "php /code/run.php --data=/examples/$$KBC_EXAMPLE_NAME"
+      - "KBC_DATADIR=\"/examples/$$KBC_EXAMPLE_NAME\" php /code/src/run.php"
     links:
       - mock-server
       - mock-server-https-self-signed-proxy

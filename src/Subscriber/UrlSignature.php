@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Subscriber;
 
 use GuzzleHttp\Event\SubscriberInterface;
@@ -10,7 +12,7 @@ use GuzzleHttp\Message\RequestInterface;
  */
 class UrlSignature extends AbstractSignature implements SubscriberInterface
 {
-    protected function addSignature(RequestInterface $request)
+    protected function addSignature(RequestInterface $request): void
     {
         $authQuery = call_user_func($this->generator, $this->getRequestAndQuery($request));
         foreach ($authQuery as $key => $value) {

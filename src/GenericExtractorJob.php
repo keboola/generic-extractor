@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor;
 
+use GuzzleHttp\Message\RequestInterface;
 use Keboola\Filter\Exception\FilterException;
 use Keboola\Filter\FilterFactory;
 use Keboola\GenericExtractor\Configuration\UserFunction;
@@ -65,9 +68,9 @@ class GenericExtractorJob
     private int $compatLevel;
 
     /**
-     * @param RestClient $client A client used to communicate with the API (wrapper for Guzzle)
-     * @param ParserInterface $parser A parser to handle the result and convert it into CSV file(s)
-     * @param int $compatLevel Compatibility level, @see GenericExtractor
+     * @param RestClient      $client      A client used to communicate with the API (wrapper for Guzzle)
+     * @param ParserInterface $parser      A parser to handle the result and convert it into CSV file(s)
+     * @param int             $compatLevel Compatibility level, @see GenericExtractor
      */
     public function __construct(
         JobConfig $config,
@@ -97,22 +100,25 @@ class GenericExtractorJob
      * Verifies the latest response isn't identical as the last one
      * to prevent infinite loop on awkward pagination APIs
      */
-    public function run()
+    public function run(): void
     {
         $this->config->setParams($this->buildParams($this->config));
 
         $parentId = $this->getParentId();
 
+        /** @var RestRequest $request */
         $request = $this->firstPage($this->config);
         while ($request !== false) {
             $response = $this->download($request);
 
             $responseHash = sha1(serialize($response));
-            if ($responseHash == $this->lastResponseHash) {
-                $this->logger->debug(sprintf(
-                    "Job '%s' finished when last response matched the previous!",
-                    $this->getJobId()
-                ));
+            if ($responseHash === $this->lastResponseHash) {
+                $this->logger->debug(
+                    sprintf(
+                        "Job '%s' finished when last response matched the previous!",
+                        $this->getJobId()
+                    )
+                );
                 $this->scroller->reset();
                 break;
             } else {
@@ -127,10 +133,7 @@ class GenericExtractorJob
         }
     }
 
-    /**
-     * @throws UserException
-     */
-    private function runChildJobs(array $data)
+    private function runChildJobs(array $data): void
     {
         foreach ($this->config->getChildJobs() as $jobId => $child) {
             $filter = null;
@@ -143,7 +146,7 @@ class GenericExtractorJob
             }
 
             foreach ($data as $result) {
-                if (!empty($filter) && ($filter->compareObject((object) $result) == false)) {
+                if (!empty($filter) && ($filter->compareObject((object) $result) === false)) {
                     continue;
                 }
 
@@ -161,9 +164,10 @@ class GenericExtractorJob
 
     /**
      * Create a child job with current client and parser
+     *
      * @return static[]
      */
-    private function createChild(JobConfig $config, array $parentResults) : array
+    private function createChild(JobConfig $config, array $parentResults): array
     {
         // Clone and reset Scroller
         $scroller = clone $this->scroller;
@@ -208,7 +212,7 @@ class GenericExtractorJob
         return $jobs;
     }
 
-    private function flattenParameters(array $params) : array
+    private function flattenParameters(array $params): array
     {
         $flatParameters = [];
         $i = 0;
@@ -229,7 +233,7 @@ class GenericExtractorJob
 
 
     /**
-     * @param string|object|array $field Path or a function with a path
+     * @param  string|array $field Path or a function with a path
      * @return array ['placeholder', 'field', 'value']
      * @throws UserException
      */
@@ -238,7 +242,7 @@ class GenericExtractorJob
         // TODO allow using a descriptive ID(level) by storing the result by `task(job) id` in $parentResults
         $level = strpos($placeholder, ':') === false
             ? 0
-            : strtok($placeholder, ':') -1;
+            : (int) strtok($placeholder, ':') -1;
 
         if (!is_scalar($field)) {
             if (empty($field['path'])) {
@@ -248,7 +252,7 @@ class GenericExtractorJob
                 );
             }
 
-            $fn = \Keboola\Utils\arrayToObject($field);
+            $fn = (object) \Keboola\Utils\arrayToObject($field);
             $field = $field['path'];
             unset($fn->path);
         }
@@ -264,7 +268,7 @@ class GenericExtractorJob
         return [
             'placeholder' => $placeholder,
             'field' => $field,
-            'value' => $value
+            'value' => $value,
         ];
     }
 
@@ -276,26 +280,26 @@ class GenericExtractorJob
     {
         try {
             if (!array_key_exists($level, $parentResults)) {
-                $maxLevel = empty($parentResults) ? 0 : max(array_keys($parentResults)) +1;
+                $maxLevel = empty($parentResults) ? 0 : (int) max(array_keys($parentResults)) +1;
                 throw new UserException(
-                    "Level " . ++$level . " not found in parent results! Maximum level: " . $maxLevel
+                    'Level ' . ++$level . ' not found in parent results! Maximum level: ' . $maxLevel
                 );
             }
 
-            return \Keboola\Utils\getDataFromPath($field, $parentResults[$level], ".", false);
+            return \Keboola\Utils\getDataFromPath($field, $parentResults[$level], '.', false);
         } catch (NoDataFoundException $e) {
             throw new UserException(
-                "No value found for {$placeholder} in parent result. (level: " . ++$level . ")",
+                "No value found for {$placeholder} in parent result. (level: " . ++$level . ')',
                 0,
                 null,
                 [
-                    'parents' => $parentResults
+                    'parents' => $parentResults,
                 ]
             );
         }
     }
 
-    public function setParentResults(array $results)
+    public function setParentResults(array $results): void
     {
         $this->parentResults = $results;
     }
@@ -303,6 +307,7 @@ class GenericExtractorJob
     /**
      *  Download an URL from REST or SOAP API and return its body as an object.
      * should handle the API call, backoff and response decoding
+     *
      * @return mixed Raw response as it comes from the client
      */
     private function download(RestRequest $request)
@@ -315,10 +320,10 @@ class GenericExtractorJob
      * Create subsequent requests for pagination (usually based on $response from previous request)
      * Return a download request OR false if no next page exists
      *
-     * @param mixed $response
-     * @return RestRequest | false
+     * @param  mixed $response
+     * @return RestRequest|false
      */
-    private function nextPage(JobConfig $config, $response, ?array $data)
+    private function nextPage(JobConfig $config, $response, array $data)
     {
         return $this->getScroller()->getNextRequest($this->client, $config, $response, $data);
     }
@@ -338,10 +343,11 @@ class GenericExtractorJob
      * Parse the result into a CSV (either using any of built-in parsers, or using own methods).
      *
      * Create subsequent jobs for recursive endpoints. Uses "children" section of the job config
-     * @param array $parentId ID (or list thereof) to be passed to parser
+     *
+     * @param  array $parentId ID (or list thereof) to be passed to parser
      * @return array
      */
-    private function parse(array $data, array $parentId = null): array
+    private function parse(array $data, ?array $parentId = null): array
     {
         $this->parser->process($data, $this->config->getDataType(), $this->getParentCols($parentId));
         $this->runChildJobs($data);
@@ -381,12 +387,12 @@ class GenericExtractorJob
             $jobUserData,
             [
                 'attr' => $this->attributes,
-                'time' => !empty($this->metadata['time']) ? $this->metadata['time'] : []
+                'time' => !empty($this->metadata['time']) ? $this->metadata['time'] : [],
             ]
         );
     }
 
-    private function getParentCols(array $parentIdCols = null): array
+    private function getParentCols(?array $parentIdCols = null): array
     {
         // Add parent values to the result
         $parentCols = is_null($parentIdCols) ? [] : $parentIdCols;
@@ -403,7 +409,7 @@ class GenericExtractorJob
             $config->getParams(),
             [
                 'attr' => $this->attributes,
-                'time' => !empty($this->metadata['time']) ? $this->metadata['time'] : []
+                'time' => !empty($this->metadata['time']) ? $this->metadata['time'] : [],
             ]
         );
         return $params;
@@ -433,7 +439,7 @@ class GenericExtractorJob
      * Add parameters from parent call to the Endpoint.
      * The parameter name in the config's endpoint has to be enclosed in {}
      */
-    public function setParams(array $params)
+    public function setParams(array $params): void
     {
         foreach ($params as $param) {
             $this->config->setEndpoint(
@@ -447,17 +453,20 @@ class GenericExtractorJob
 
     private function prependParent(string $string): string
     {
-        return (substr($string, 0, 7) == "parent_") ? $string : "parent_{$string}";
+        return (substr($string, 0, 7) === 'parent_') ? $string : "parent_{$string}";
     }
 
-    public function setUserParentId($id)
+    /**
+     * @param mixed $id
+     */
+    public function setUserParentId($id): void
     {
         if (!is_array($id)) {
             throw new UserException(
-                "User defined parent ID must be a key:value pair, or multiple such pairs.",
+                'User defined parent ID must be a key:value pair, or multiple such pairs.',
                 0,
                 null,
-                ["id" => $id]
+                ['id' => $id]
             );
         }
 

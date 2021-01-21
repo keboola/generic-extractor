@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor\Tests;
 
 use Keboola\Csv\CsvFile;
@@ -9,13 +11,13 @@ class CacheTest extends TestCase
 {
     public function testCacheTTL(): void
     {
-        $this->rmDir(__DIR__ . '/data/requestCacheTTL/out');
-        $this->rmDir(__DIR__ . '/data/requestCacheTTL/cache');
-
-        $filePath = __DIR__ . '/data/requestCacheTTL/out/tables/getPost.get';
-
         // first execution
-        exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/requestCacheTTL/', $output);
+        $dataDir = __DIR__ . '/data/requestCacheTTL';
+        $runPhp = __DIR__ . '/../../src/run.php';
+        $this->rmDir("{$dataDir}/out");
+        $this->rmDir("{$dataDir}/cache");
+        $filePath = "{$dataDir}/out/tables/getPost.get";
+        exec("KBC_DATADIR=$dataDir php $runPhp  2>&1", $output, $retval);
 
         self::assertStringContainsString('Extractor finished successfully.', implode("\n", $output));
         self::assertFileExists($filePath);
@@ -26,13 +28,13 @@ class CacheTest extends TestCase
         $data = $csv->current();
         unset($csv);
 
-        $firstDateTime = (int)$data[1];
-        $this->rmDir(__DIR__ . '/data/requestCacheTTL/out');
+        $firstDateTime = (int) $data[1];
+        $this->rmDir("{$dataDir}/out");
 
         sleep(3);
 
         // second execution
-        exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/requestCacheTTL', $output);
+        exec("KBC_DATADIR=$dataDir php $runPhp  2>&1", $output, $retval);
 
         self::assertStringContainsString('Extractor finished successfully', implode("\n", $output));
         self::assertFileExists($filePath);
@@ -43,15 +45,14 @@ class CacheTest extends TestCase
         $data = $csv->current();
         unset($csv);
 
-        $secondDateTime = (int)$data[1];
+        $secondDateTime = (int) $data[1];
         self::assertTrue($firstDateTime === $secondDateTime);
-
-        $this->rmDir(__DIR__ . '/data/requestCacheTTL/out');
+        $this->rmDir("{$dataDir}/out");
 
         sleep(10);
 
         // third execution
-        exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/requestCacheTTL', $output);
+        exec("KBC_DATADIR=$dataDir php $runPhp  2>&1", $output, $retval);
 
         self::assertStringContainsString('Extractor finished successfully.', implode("\n", $output));
         self::assertFileExists($filePath);
@@ -62,14 +63,14 @@ class CacheTest extends TestCase
         $data = $csv->current();
         unset($csv);
 
-        $thirdDateTime = (int)$data[1];
+        $thirdDateTime = (int) $data[1];
         self::assertTrue($secondDateTime < $thirdDateTime);
 
-        $this->rmDir(__DIR__ . '/data/requestCacheTTL/out');
-        $this->rmDir(__DIR__ . '/data/requestCacheTTL/cache');
+        $this->rmDir("{$dataDir}/out");
+        $this->rmDir("{$dataDir}/cache");
     }
 
-    protected function rmDir($dirPath)
+    protected function rmDir(string $dirPath): void
     {
         if (!file_exists($dirPath)) {
             return;
@@ -93,7 +94,9 @@ class CacheTest extends TestCase
         $filePath = __DIR__ . '/data/requestCache/out/tables/getPost.get';
 
         // first execution
-        exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/requestCache', $output);
+        $dataDir = __DIR__ . '/data/requestCache';
+        $runPhp = __DIR__ . '/../../src/run.php';
+        exec("KBC_DATADIR=$dataDir php $runPhp  2>&1", $output, $retval);
 
         self::assertStringContainsString('Extractor finished successfully', implode("\n", $output));
         self::assertFileExists($filePath);
@@ -104,13 +107,13 @@ class CacheTest extends TestCase
         $data = $csv->current();
         unset($csv);
 
-        $firstDateTime = (int)$data[1];
+        $firstDateTime = (int) $data[1];
         $this->rmDir(__DIR__ . '/data/requestCache/out');
 
         sleep(3);
 
         // second execution
-        exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/requestCache', $output);
+        exec("KBC_DATADIR=$dataDir php $runPhp  2>&1", $output, $retval);
 
         self::assertStringContainsString('Extractor finished successfully', implode("\n", $output));
         self::assertFileExists($filePath);
@@ -121,7 +124,7 @@ class CacheTest extends TestCase
         $data = $csv->current();
         unset($csv);
 
-        $secondDateTime = (int)$data[1];
+        $secondDateTime = (int) $data[1];
         self::assertTrue($firstDateTime === $secondDateTime);
 
         $this->rmDir(__DIR__ . '/data/requestCache/out');
@@ -136,7 +139,9 @@ class CacheTest extends TestCase
         $filePath = __DIR__ . '/data/noCache/out/tables/getPost.get';
 
         // first execution
-        exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/noCache', $output);
+        $dataDir = __DIR__ . '/data/noCache';
+        $runPhp = __DIR__ . '/../../src/run.php';
+        exec("KBC_DATADIR=$dataDir php $runPhp  2>&1", $output, $retval);
 
         self::assertStringContainsString('Extractor finished successfully', implode("\n", $output));
         self::assertFileExists($filePath);
@@ -147,13 +152,13 @@ class CacheTest extends TestCase
         $data = $csv->current();
         unset($csv);
 
-        $firstDateTime = (int)$data[1];
+        $firstDateTime = (int) $data[1];
         $this->rmDir(__DIR__ . '/data/noCache/out');
 
         sleep(3);
 
         // second execution
-        exec('php ' . __DIR__ . '/../run.php --data=' . __DIR__ . '/data/noCache', $output);
+        exec("KBC_DATADIR=$dataDir php $runPhp  2>&1", $output, $retval);
         self::assertStringContainsString('Extractor finished successfully', implode("\n", $output));
         self::assertFileExists($filePath);
 
@@ -164,7 +169,7 @@ class CacheTest extends TestCase
         $data = $csv->current();
         unset($csv);
 
-        $secondDateTime = (int)$data[1];
+        $secondDateTime = (int) $data[1];
         self::assertTrue($firstDateTime < $secondDateTime);
         $this->rmDir(__DIR__ . '/data/noCache/out');
     }

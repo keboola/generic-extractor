@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\GenericExtractor;
 
 use Keboola\Csv\CsvFile;
@@ -8,7 +10,7 @@ use Keboola\GenericExtractor\Exception\UserException;
 
 class MissingTableHelper
 {
-    public static function checkConfigs($configs, $dataDir, Extractor $configuration)
+    public static function checkConfigs(array $configs, string $dataDir, Extractor $configuration): void
     {
         foreach ($configs as $config) {
             $api = $configuration->getApi($config->getAttributes());
@@ -16,7 +18,7 @@ class MissingTableHelper
             if (!empty($config->getAttribute('outputBucket'))) {
                 $outputBucket = $config->getAttribute('outputBucket');
             } elseif ($config->getAttribute('id')) {
-                $outputBucket = 'ex-api-' . $api->getName() . "-" . $config->getAttribute('id');
+                $outputBucket = 'ex-api-' . $api->getName() . '-' . $config->getAttribute('id');
             } else {
                 $outputBucket = '';
             }
@@ -41,13 +43,13 @@ class MissingTableHelper
     }
 
     private static function fillMissingTableMapping(
-        $baseFileName,
-        $outputBucket,
-        $incremental,
-        $name,
-        $mapping,
-        $parentKey = []
-    ) {
+        string $baseFileName,
+        string $outputBucket,
+        bool $incremental,
+        string $name,
+        array $mapping,
+        array $parentKey = []
+    ): void {
         $columns = [];
         $primaryKey = [];
         if (!empty($mapping['type']) && ($mapping['type'] === 'table')) {
@@ -85,7 +87,7 @@ class MissingTableHelper
         }
         /* this is intentionally after to produce consistent results with generic, where parent key
             is appended to the end of the table */
-        if ($parentKey && !$parentKey['disable']) {
+        if ($parentKey && !($parentKey['disable'] ?? false)) {
             $columns[] = $parentKey['destination'];
             if (!empty($parentKey['primaryKey'])) {
                 $primaryKey[] = $parentKey['destination'];
