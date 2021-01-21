@@ -28,7 +28,7 @@ class RequestContextTest extends TestCase
             'queryString' => '',
             'method' => 'GET',
             'hostname' => 'example.com',
-            'port' => null,
+            'port' => 80,
             'resource' => '',
         ];
         $this->assertSame($expected, $context);
