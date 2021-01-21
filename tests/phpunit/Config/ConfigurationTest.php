@@ -15,12 +15,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ConfigurationTest extends ExtractorTestCase
 {
-    protected function setUp(): void
-    {
-        $this->markTestSkipped('TODO fix test');
-        parent::setUp();
-    }
-
     public function testStoreResults(): void
     {
         $temp = new Temp();
