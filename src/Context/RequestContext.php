@@ -6,6 +6,7 @@ namespace Keboola\GenericExtractor\Context;
 
 use Psr\Http\Message\RequestInterface;
 
+/** Used by: QueryAuthContext */
 class RequestContext
 {
     public static function create(RequestInterface $request): array
