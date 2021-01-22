@@ -42,15 +42,21 @@ class OAuth20Test extends ExtractorTestCase
 
         // Each request contains Authorization header
         // 1. request
-        self::assertEquals((object) ['foo' => 'bar1'], $restClient->download(new RestRequest(['endpoint' => 'ep'])));
+        self::assertEquals((object) ['foo' => 'bar1'], $restClient->download(
+            new RestRequest(['endpoint' => 'ep', 'params' => ['k1' => 'v1']])
+        ));
         $request1 = $history->pop()->getRequest();
         self::assertSame('Bearer testToken', $request1->getHeaderLine('Authorization'));
         self::assertSame('test', $request1->getHeaderLine('X-Test'));
+        self::assertSame('k1=v1', $request1->getUri()->getQuery());
         // 2. request
-        self::assertEquals((object) ['foo' => 'bar2'], $restClient->download(new RestRequest(['endpoint' => 'ep'])));
+        self::assertEquals((object) ['foo' => 'bar2'], $restClient->download(
+            new RestRequest(['endpoint' => 'ep', 'params' => ['k2' => 'v2']])
+        ));
         $request2 = $history->pop()->getRequest();
         self::assertSame('Bearer testToken', $request2->getHeaderLine('Authorization'));
         self::assertSame('test', $request2->getHeaderLine('X-Test'));
+        self::assertSame('k2=v2', $request2->getUri()->getQuery());
 
         // No more history items
         self::assertTrue($history->isEmpty());
@@ -111,8 +117,8 @@ class OAuth20Test extends ExtractorTestCase
         $timestamp = $matches[1];
         $nonce = $matches[2];
 
-        $originalUri = $this->getOriginalUri($request->getUri());
-        $resource = $originalUri->getPath() . ($originalUri->getQuery() ? '?' . $originalUri->getQuery() : '');
+        $uri = $request->getUri();
+        $resource = $uri->getPath() . ($uri->getQuery() ? '?' . $uri->getQuery() : '');
         $macString = join(
             "\n",
             [
@@ -120,7 +126,7 @@ class OAuth20Test extends ExtractorTestCase
                 $nonce,
                 strtoupper($request->getMethod()),
                 $resource,
-                $originalUri->getHost(),
+                $uri->getHost(),
                 80,
                 "\n",
             ]
@@ -136,13 +142,5 @@ class OAuth20Test extends ExtractorTestCase
         self::assertEquals($expectedAuthHeader, $authHeader);
         // Header gets last newline trimmed
         self::assertEquals($macString, $request->getHeaderLine('Test') . "\n\n");
-    }
-
-    private function getOriginalUri(UriInterface $uri): UriInterface
-    {
-        $query = Query::parse($uri->getQuery());
-        unset($query['Authorization']);
-        unset($query['Test']);
-        return $uri->withQuery(Query::build($query));
     }
 }
