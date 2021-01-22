@@ -78,9 +78,7 @@ class GenericExtractor
         $client = new RestClient(
             $this->logger,
             $this->api->getBaseUrl(),
-            [
-                'defaults' => $defaults,
-            ],
+            $defaults,
             JuicerRest::convertRetry($this->api->getRetryConfig()),
             $this->api->getDefaultRequestOptions(),
             $this->api->getIgnoreErrors()
