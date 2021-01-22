@@ -26,9 +26,25 @@ class Utils
         $query2 = is_array($query2) ? $query2 : Query::parse($query2);
 
         foreach ($query2 as $key => $value) {
-            $query1[$key] = $value;
+            if (!array_key_exists($key, $query1)) {
+                $query1[$key] = $value;
+            }
         }
 
         return Query::build($query1);
+    }
+
+    /**
+     * Merge HTTP headers, request headers values take precedence.
+     */
+    public static function mergeHeaders(RequestInterface $request, array $headers): RequestInterface
+    {
+        foreach ($headers as $name => $value) {
+            if (!$request->hasHeader($name)) {
+                $request = $request->withHeader($name, $value);
+            }
+        }
+
+        return $request;
     }
 }

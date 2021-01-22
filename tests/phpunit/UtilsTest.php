@@ -7,7 +7,6 @@ namespace Keboola\GenericExtractor\Tests;
 use GuzzleHttp\Psr7\Request;
 use Keboola\GenericExtractor\Utils;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\RequestInterface;
 
 class UtilsTest extends TestCase
 {
@@ -53,10 +52,14 @@ class UtilsTest extends TestCase
         yield [['param1' => 'value1'], ['param2' => 'value2'], 'param1=value1&param2=value2'];
         yield ['param1=value1', ['param2' => 'value2'], 'param1=value1&param2=value2'];
         yield [['param1' => 'value1'], 'param2=value2', 'param1=value1&param2=value2'];
-        yield ['a=x&b=y&c=z', 'a=xx&c=zz', 'a=xx&b=y&c=zz'];
-        yield [['a' => 'x', 'b' => 'y', 'c' => 'z'], ['a' => 'xx', 'c' => 'zz'], 'a=xx&b=y&c=zz'];
-        yield ['a=x&b=y&c=z', ['a' => 'xx', 'c' => 'zz'], 'a=xx&b=y&c=zz'];
-        yield [['a' => 'x', 'b' => 'y', 'c' => 'z'], 'a=xx&c=zz', 'a=xx&b=y&c=zz'];
+        yield ['a=x&b=y&c=z', 'a=xx&c=zz', 'a=x&b=y&c=z'];
+        yield [['a' => 'x', 'b' => 'y', 'c' => 'z'], ['a' => 'xx', 'c' => 'zz'], 'a=x&b=y&c=z'];
+        yield ['a=x&b=y&c=z', ['a' => 'xx', 'c' => 'zz'], 'a=x&b=y&c=z'];
+        yield [['a' => 'x', 'b' => 'y', 'c' => 'z'], 'a=xx&c=zz', 'a=x&b=y&c=z'];
+        yield ['a=xx&c=zz', 'a=x&b=y&c=z', 'a=xx&c=zz&b=y'];
+        yield [['a' => 'xx', 'c' => 'zz'], ['a' => 'x', 'b' => 'y', 'c' => 'z'], 'a=xx&c=zz&b=y'];
+        yield ['a=xx&c=zz', ['a' => 'x', 'b' => 'y', 'c' => 'z'], 'a=xx&c=zz&b=y'];
+        yield [['a' => 'xx', 'c' => 'zz'], 'a=x&b=y&c=z', 'a=xx&c=zz&b=y'];
         yield ['param1=!@#', 'param2=úěš', 'param1=%21%40%23&param2=%C3%BA%C4%9B%C5%A1'];
         yield ['param1=%21%40%23', 'param2=%C3%BA%C4%9B%C5%A1', 'param1=%21%40%23&param2=%C3%BA%C4%9B%C5%A1'];
         yield [
@@ -65,4 +68,32 @@ class UtilsTest extends TestCase
             'param1=%2521%2540%2523&param2=%25C3%25BA%25C4%259B%25C5%25A1',
         ];
     }
+
+    /**
+     * @dataProvider getTestHeaders
+     */
+    public function testMergeHeaders(array $a, array $b, array $expected): void
+    {
+        $request = new Request('GET', 'http://example.com');
+        foreach($a as $name => $value) {
+            $request = $request->withHeader($name, $value);
+        }
+
+        $result = Utils::mergeHeaders($request, $b)->getHeaders();
+        unset($result['Host']);
+
+        $this->assertSame($expected, $result);
+    }
+
+    public function getTestHeaders(): iterable
+    {
+        yield [[],[],[]];
+        yield [['k1' => 'v1'],[],['k1' => ['v1']]];
+        yield [[],['k1' => 'v1'],['k1' => ['v1']]];
+        yield [['k1' => 'v1'],['k2' => 'v2'],['k1' => ['v1'], 'k2' => ['v2']]];
+        yield [['k1' => 'v1'],['k1' => 'v2'],['k1' => ['v1']]];
+        yield [['key1' => 'v1'],['KEY1' => 'v2'],['key1' => ['v1']]];
+        yield [['KEY1' => 'v1'],['KEY2' => 'v2'],['KEY1' => ['v1'], 'KEY2' => ['v2']]];
+    }
+
 }

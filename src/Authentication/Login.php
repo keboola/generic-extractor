@@ -112,9 +112,7 @@ class Login implements AuthInterface
         ));
 
         // Add headers
-        foreach ($this->signatureHeaders as $name => $value) {
-            $request = $request->withHeader($name, $value);
-        }
+        $request = Utils::mergeHeaders($request, $this->signatureHeaders);
 
         return $request;
     }
