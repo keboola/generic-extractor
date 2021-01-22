@@ -101,7 +101,7 @@ class OAuth20 implements AuthInterface
 
                 // Add query params
                 $uri = $request->getUri();
-                $query = UserFunction::build($this->headers, $fnContext);
+                $query = UserFunction::build($this->query, $fnContext);
                 $request = $request->withUri($uri->withQuery(
                     Utils::mergeQueries($uri->getQuery(), $query)
                 ));
