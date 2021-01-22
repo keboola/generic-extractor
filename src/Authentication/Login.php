@@ -164,7 +164,9 @@ class Login implements AuthInterface
         if (!empty($config['headers'])) {
             $config['headers'] = UserFunction::build($config['headers'], $fnContext);
         }
-        return $this->client->createRequest($config);
+
+        // Create login request without default request options
+        return $this->client->createRequest($config, false);
     }
 
     private function processResponse(\stdClass $loginResponse): void
