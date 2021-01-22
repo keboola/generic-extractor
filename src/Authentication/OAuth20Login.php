@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Keboola\GenericExtractor\Authentication;
 
 use Keboola\GenericExtractor\Configuration\UserFunction;
+use Keboola\GenericExtractor\Context\OAuth20LoginContext;
 use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\Juicer\Client\RestRequest;
 use Keboola\Utils\Exception\JsonDecodeException;
+use function Keboola\Utils\jsonDecode;
 
 /**
- * config:
+ * Config:
  *
  * loginRequest:
  *    endpoint: string
@@ -30,6 +32,12 @@ class OAuth20Login extends Login
 
     protected array $auth;
 
+    private string $key;
+
+    private string $secret;
+
+    private array $data;
+
     public function __construct(array $configAttributes, array $authorization, array $authentication)
     {
         parent::__construct($configAttributes, $authentication);
@@ -37,41 +45,31 @@ class OAuth20Login extends Login
             throw new UserException('OAuth API credentials not supplied in config');
         }
 
-        $oauthApiDetails = $authorization['oauth_api']['credentials'];
+        $credentials = $authorization['oauth_api']['credentials'];
         foreach (['#data', 'appKey', '#appSecret'] as $key) {
-            if (empty($oauthApiDetails[$key])) {
+            if (empty($credentials[$key])) {
                 throw new UserException("Missing '{$key}' for OAuth 2.0 authorization");
             }
         }
+        $this->key = (string) $credentials['appKey'];
+        $this->secret = (string) $credentials['#appSecret'];
 
         try {
-            $oAuthData = \Keboola\Utils\jsonDecode($oauthApiDetails['#data'], true);
+            $this->data = jsonDecode($credentials['#data'], true);
         } catch (JsonDecodeException $e) {
             throw new UserException('The OAuth data is not a valid JSON');
         }
-
-        $consumerData = [
-            'client_id' => $oauthApiDetails['appKey'],
-            'client_secret' => $oauthApiDetails['#appSecret'],
-        ];
-
-        $this->params = [
-            'consumer' => $consumerData,
-            'user' => $oAuthData,
-            'attr' => $this->configAttributes,
-        ];
     }
 
-    /**
-     * @inheritdoc
-     */
-    protected function getAuthRequest(array $config): RestRequest
+    protected function getLoginRequest(array $config): RestRequest
     {
+        $fnContext = OAuth20LoginContext::create($this->key, $this->secret, $this->data, $this->configAttributes);
+
         if (!empty($config['params'])) {
-            $config['params'] = UserFunction::build($config['params'], $this->params);
+            $config['params'] = UserFunction::build($config['params'], $fnContext);
         }
         if (!empty($config['headers'])) {
-            $config['headers'] = UserFunction::build($config['headers'], $this->params);
+            $config['headers'] = UserFunction::build($config['headers'], $fnContext);
         }
 
         return new RestRequest($config);
