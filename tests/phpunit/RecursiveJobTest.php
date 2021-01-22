@@ -4,24 +4,20 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor\Tests;
 
+use GuzzleHttp\Psr7\Response;
 use Keboola\GenericExtractor\GenericExtractor;
 use Keboola\GenericExtractor\GenericExtractorJob;
-use Keboola\Juicer\Client\RestClient;
-use Keboola\Juicer\Client\RestRequest;
 use Keboola\Juicer\Config\JobConfig;
 use Keboola\Juicer\Pagination\NoScroller;
 use Keboola\Juicer\Parser\Json;
+use Keboola\Juicer\Parser\ParserInterface;
+use Keboola\Juicer\Tests\HistoryContainer;
+use Keboola\Juicer\Tests\RestClientMockBuilder;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
 class RecursiveJobTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        $this->markTestSkipped('TODO fix test');
-        parent::setUp();
-    }
-
     public function testParse(): void
     {
         $jobConfig = new JobConfig([
@@ -31,7 +27,7 @@ class RecursiveJobTest extends TestCase
             'userData' => ['userData' => 'hello'],
         ]);
         $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
-        $response = json_decode('{
+        $response = '{
             "data": [
                 {
                     "a": "first",
@@ -44,22 +40,13 @@ class RecursiveJobTest extends TestCase
                     "c": ["dva","two",2]
                 }
             ]
-        }');
-        $client = self::createMock(RestClient::class);
-        $client->method('download')->willReturn($response);
-        $client->method('createRequest')->willReturn(new RestRequest($jobConfig->getConfig()));
-        /** @var RestClient $client */
-        $job = new GenericExtractorJob(
-            $jobConfig,
-            $client,
-            $parser,
-            new NullLogger(),
-            new NoScroller(),
-            [],
-            [],
-            GenericExtractor::COMPAT_LEVEL_LATEST
-        );
+        }';
+
+        $job = $this->createJob($jobConfig, $parser, null, [
+            new Response(200, [], $response),
+        ]);
         $job->run();
+
         self::assertEquals(
             ['tickets_export', 'tickets_export_c'],
             array_keys($parser->getResults())
@@ -111,45 +98,29 @@ class RecursiveJobTest extends TestCase
             ],
         ]);
         $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
-        $client = self::createMock(RestClient::class);
-        $passes = 0;
-        $client->method('download')->willReturnCallback(function ($request) use (&$passes) {
-            /** @var RestRequest $request */
-            $passes++;
-            switch ($request->getEndpoint()) {
-                case 'first/':
-                    return \Keboola\Utils\arrayToObject(['data' => [['id' => 123, '1st' => 1]]]);
-                case 'first/123':
-                    return \Keboola\Utils\arrayToObject(
-                        ['data' => [['id' => 456, '2nd' => 2], ['id' => 789, '2nd' => 3]]]
-                    );
-                case 'first/123/second/456':
-                    return \Keboola\Utils\arrayToObject(['data' => [['3rd' => 4]]]);
-                case 'first/123/second/789':
-                    return \Keboola\Utils\arrayToObject(['data' => [['3rd' => 5]]]);
-                default:
-                    throw new \RuntimeException('Invalid request ' . $request->getEndpoint());
-            }
-        });
-        $client->method('createRequest')->willReturnCallback(fn($config) => new RestRequest($config));
-        /** @var RestClient $client */
-        $job = new GenericExtractorJob(
-            $jobConfig,
-            $client,
-            $parser,
-            new NullLogger(),
-            new NoScroller(),
-            [],
-            [],
-            GenericExtractor::COMPAT_LEVEL_LATEST
-        );
+        $history = new HistoryContainer();
+        $job = $this->createJob($jobConfig, $parser, $history, [
+            new Response(200, [], json_encode(
+                ['data' => [['id' => 123, '1st' => 1]]]
+            )),
+            new Response(200, [], json_encode(
+                ['data' => [['id' => 456, '2nd' => 2], ['id' => 789, '2nd' => 3]]]
+            )),
+            new Response(200, [], json_encode(
+                ['data' => [['3rd' => 4]]]
+            )),
+            new Response(200, [], json_encode(
+                ['data' => [['3rd' => 5]]]
+            )),
+        ]);
         $job->run();
+
         self::assertEquals(
             ['first', 'second', 'third'],
             array_keys($parser->getResults())
         );
 
-        self::assertEquals(4, $passes);
+        self::assertEquals(4, $history->count());
         self::assertEquals(
             "\"id\",\"1st\"\n\"123\",\"1\"\n",
             file_get_contents($parser->getResults()['first']->getPathname())
@@ -196,45 +167,29 @@ class RecursiveJobTest extends TestCase
             ],
         ]);
         $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
-        $client = self::createMock(RestClient::class);
-        $passes = 0;
-        $client->method('download')->willReturnCallback(function ($request) use (&$passes) {
-            /** @var RestRequest $request */
-            $passes++;
-            switch ($request->getEndpoint()) {
-                case 'first/':
-                    return \Keboola\Utils\arrayToObject(['data' => [['id' => 123, '1st' => 1]]]);
-                case 'first/123':
-                    return \Keboola\Utils\arrayToObject(
-                        ['data' => [['id' => 456, '2nd' => 2], ['id' => 789, '2nd' => 3]]]
-                    );
-                case 'first/123/second/456':
-                    return \Keboola\Utils\arrayToObject(['data' => [['3rd' => 4]]]);
-                case 'first/123/second/789':
-                    return \Keboola\Utils\arrayToObject(['data' => [['3rd' => 5]]]);
-                default:
-                    throw new \RuntimeException('Invalid request ' . $request->getEndpoint());
-            }
-        });
-        $client->method('createRequest')->willReturnCallback(fn($config) => new RestRequest($config));
-        /** @var RestClient $client */
-        $job = new GenericExtractorJob(
-            $jobConfig,
-            $client,
-            $parser,
-            new NullLogger(),
-            new NoScroller(),
-            [],
-            [],
-            GenericExtractor::COMPAT_LEVEL_LATEST
-        );
+        $history = new HistoryContainer();
+        $job = $this->createJob($jobConfig, $parser, $history, [
+            new Response(200, [], json_encode(
+                ['data' => [['id' => 123, '1st' => 1]]]
+            )),
+            new Response(200, [], json_encode(
+                ['data' => [['id' => 456, '2nd' => 2], ['id' => 789, '2nd' => 3]]]
+            )),
+            new Response(200, [], json_encode(
+                ['data' => [['3rd' => 4]]]
+            )),
+            new Response(200, [], json_encode(
+                ['data' => [['3rd' => 5]]]
+            )),
+        ]);
         $job->run();
+
         self::assertEquals(
             ['first', 'second', 'third'],
             array_keys($parser->getResults())
         );
 
-        self::assertEquals(4, $passes);
+        self::assertEquals(4, $history->count());
         self::assertEquals(
             "\"id\",\"1st\"\n\"123\",\"1\"\n",
             file_get_contents($parser->getResults()['first']->getPathname())
@@ -280,46 +235,31 @@ class RecursiveJobTest extends TestCase
                 ],
             ],
         ]);
+
         $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
-        $client = self::createMock(RestClient::class);
-        $passes = 0;
-        $client->method('download')->willReturnCallback(function ($request) use (&$passes) {
-            /** @var RestRequest $request */
-            $passes++;
-            switch ($request->getEndpoint()) {
-                case 'first/':
-                    return \Keboola\Utils\arrayToObject(['data' => [['id' => 123, '1st' => 1]]]);
-                case 'first/123':
-                    return \Keboola\Utils\arrayToObject(
-                        ['data' => [['id' => 456, '2nd' => 2], ['id' => 789, '2nd' => 3]]]
-                    );
-                case 'first/123/second/456':
-                    return \Keboola\Utils\arrayToObject(['data' => [['3rd' => 4]]]);
-                case 'first/123/second/789':
-                    return \Keboola\Utils\arrayToObject(['data' => [['3rd' => 5]]]);
-                default:
-                    throw new \RuntimeException('Invalid request ' . $request->getEndpoint());
-            }
-        });
-        $client->method('createRequest')->willReturnCallback(fn($config) => new RestRequest($config));
-        /** @var RestClient $client */
-        $job = new GenericExtractorJob(
-            $jobConfig,
-            $client,
-            $parser,
-            new NullLogger(),
-            new NoScroller(),
-            [],
-            [],
-            GenericExtractor::COMPAT_LEVEL_LATEST
-        );
+        $history = new HistoryContainer();
+        $job = $this->createJob($jobConfig, $parser, $history, [
+            new Response(200, [], json_encode(
+                ['data' => [['id' => 123, '1st' => 1]]]
+            )),
+            new Response(200, [], json_encode(
+                ['data' => [['id' => 456, '2nd' => 2], ['id' => 789, '2nd' => 3]]]
+            )),
+            new Response(200, [], json_encode(
+                ['data' => [['3rd' => 4]]]
+            )),
+            new Response(200, [], json_encode(
+                ['data' => [['3rd' => 5]]]
+            )),
+        ]);
         $job->run();
+
         self::assertEquals(
             ['first', 'second', 'third'],
             array_keys($parser->getResults())
         );
 
-        self::assertEquals(4, $passes);
+        self::assertEquals(4, $history->count());
         self::assertEquals(
             "\"id\",\"1st\"\n\"123\",\"1\"\n",
             file_get_contents($parser->getResults()['first']->getPathname())
@@ -366,45 +306,29 @@ class RecursiveJobTest extends TestCase
             ],
         ]);
         $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
-        $client = self::createMock(RestClient::class);
-        $passes = 0;
-        $client->method('download')->willReturnCallback(function ($request) use (&$passes) {
-            /** @var RestRequest $request */
-            $passes++;
-            switch ($request->getEndpoint()) {
-                case 'first/':
-                    return \Keboola\Utils\arrayToObject(['data' => [['id' => 123, '1st' => 1]]]);
-                case 'first/123':
-                    return \Keboola\Utils\arrayToObject(
-                        ['data' => [['id' => 456, '2nd' => 2], ['id' => 789, '2nd' => 3]]]
-                    );
-                case 'first/123/second/456':
-                    return \Keboola\Utils\arrayToObject(['data' => [['3rd' => 4]]]);
-                case 'first/123/second/789':
-                    return \Keboola\Utils\arrayToObject(['data' => [['3rd' => 5]]]);
-                default:
-                    throw new \RuntimeException('Invalid request ' . $request->getEndpoint());
-            }
-        });
-        $client->method('createRequest')->willReturnCallback(fn($config) => new RestRequest($config));
-        /** @var RestClient $client */
-        $job = new GenericExtractorJob(
-            $jobConfig,
-            $client,
-            $parser,
-            new NullLogger(),
-            new NoScroller(),
-            [],
-            [],
-            GenericExtractor::COMPAT_LEVEL_LATEST
-        );
+        $history = new HistoryContainer();
+        $job = $this->createJob($jobConfig, $parser, $history, [
+            new Response(200, [], json_encode(
+                ['data' => [['id' => 123, '1st' => 1]]]
+            )),
+            new Response(200, [], json_encode(
+                ['data' => [['id' => 456, '2nd' => 2], ['id' => 789, '2nd' => 3]]]
+            )),
+            new Response(200, [], json_encode(
+                ['data' => [['3rd' => 4]]]
+            )),
+            new Response(200, [], json_encode(
+                ['data' => [['3rd' => 5]]]
+            )),
+        ]);
         $job->run();
+
         self::assertEquals(
             ['first', 'second', 'third'],
             array_keys($parser->getResults())
         );
 
-        self::assertEquals(4, $passes);
+        self::assertEquals(4, $history->count());
         self::assertEquals(
             "\"id\",\"1st\"\n\"123\",\"1\"\n",
             file_get_contents($parser->getResults()['first']->getPathname())
@@ -428,7 +352,7 @@ class RecursiveJobTest extends TestCase
             'userData' => ['column' => 'hello'],
         ]);
         $parser = new Json(new NullLogger(), [], Json::LEGACY_VERSION);
-        $response = json_decode('{
+        $response = '{
             "data": [
                 {
                     "column": "first",
@@ -439,22 +363,13 @@ class RecursiveJobTest extends TestCase
                     "id": 2
                 }
             ]
-        }');
-        $client = self::createMock(RestClient::class);
-        $client->method('download')->willReturn($response);
-        $client->method('createRequest')->willReturn(new RestRequest($jobConfig->getConfig()));
-        /** @var RestClient $client */
-        $job = new GenericExtractorJob(
-            $jobConfig,
-            $client,
-            $parser,
-            new NullLogger(),
-            new NoScroller(),
-            [],
-            [],
-            GenericExtractor::COMPAT_LEVEL_OLD_PARSER
-        );
+        }';
+
+        $job = $this->createJob($jobConfig, $parser, null, [
+            new Response(200, [], $response),
+        ]);
         $job->run();
+
         self::assertEquals(
             ['tickets_export'],
             array_keys($parser->getResults())
@@ -490,7 +405,7 @@ class RecursiveJobTest extends TestCase
             'json_parser.structVersion' => 2,
         ];
         $parser = new Json(new NullLogger(), $metadata, Json::LATEST_VERSION);
-        $response = json_decode('{
+        $response = '{
             "data": [
                 {
                     "column": "first",
@@ -501,22 +416,13 @@ class RecursiveJobTest extends TestCase
                     "id": 2
                 }
             ]
-        }');
-        $client = self::createMock(RestClient::class);
-        $client->method('download')->willReturn($response);
-        $client->method('createRequest')->willReturn(new RestRequest($jobConfig->getConfig()));
-        /** @var RestClient $client */
-        $job = new GenericExtractorJob(
-            $jobConfig,
-            $client,
-            $parser,
-            new NullLogger(),
-            new NoScroller(),
-            [],
-            [],
-            GenericExtractor::COMPAT_LEVEL_OLD_PARSER
-        );
+        }';
+
+        $job = $this->createJob($jobConfig, $parser, null, [
+            new Response(200, [], $response),
+        ]);
         $job->run();
+
         self::assertEquals(
             ['tickets_export'],
             array_keys($parser->getResults())
@@ -585,7 +491,7 @@ class RecursiveJobTest extends TestCase
             'json_parser.structVersion' => 3,
         ];
         $parser = new Json(new NullLogger(), $metadata, Json::LATEST_VERSION);
-        $response = json_decode('{
+        $response = '{
             "data": [
                 {
                     "column": "first",
@@ -596,22 +502,13 @@ class RecursiveJobTest extends TestCase
                     "id": 2
                 }
             ]
-        }');
-        $client = self::createMock(RestClient::class);
-        $client->method('download')->willReturn($response);
-        $client->method('createRequest')->willReturn(new RestRequest($jobConfig->getConfig()));
-        /** @var RestClient $client */
-        $job = new GenericExtractorJob(
-            $jobConfig,
-            $client,
-            $parser,
-            new NullLogger(),
-            new NoScroller(),
-            [],
-            [],
-            GenericExtractor::COMPAT_LEVEL_LATEST
-        );
+        }';
+
+        $job = $this->createJob($jobConfig, $parser, null, [
+            new Response(200, [], $response),
+        ]);
         $job->run();
+
         self::assertEquals(
             ['tickets_export'],
             array_keys($parser->getResults())
@@ -670,7 +567,7 @@ class RecursiveJobTest extends TestCase
             'userData' => ['column' => 'hello'],
         ]);
         $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
-        $response = json_decode('{
+        $response = '{
             "data": [
                 {
                     "column": "first",
@@ -681,22 +578,13 @@ class RecursiveJobTest extends TestCase
                     "id": 2
                 }
             ]
-        }');
-        $client = self::createMock(RestClient::class);
-        $client->method('download')->willReturn($response);
-        $client->method('createRequest')->willReturn(new RestRequest($jobConfig->getConfig()));
-        /** @var RestClient $client */
-        $job = new GenericExtractorJob(
-            $jobConfig,
-            $client,
-            $parser,
-            new NullLogger(),
-            new NoScroller(),
-            [],
-            [],
-            GenericExtractor::COMPAT_LEVEL_LATEST
-        );
+        }';
+
+        $job = $this->createJob($jobConfig, $parser, null, [
+            new Response(200, [], $response),
+        ]);
         $job->run();
+
         self::assertEquals(
             ['tickets_export'],
             array_keys($parser->getResults())
@@ -720,27 +608,18 @@ class RecursiveJobTest extends TestCase
             'userData' => ['column' => 'hello'],
         ]);
         $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
-        $response = json_decode('{
+        $response = '{
             "data": {
                 "column": "second",
                 "id": 2
             }
-        }');
-        $client = self::createMock(RestClient::class);
-        $client->method('download')->willReturn($response);
-        $client->method('createRequest')->willReturn(new RestRequest($jobConfig->getConfig()));
-        /** @var RestClient $client */
-        $job = new GenericExtractorJob(
-            $jobConfig,
-            $client,
-            $parser,
-            new NullLogger(),
-            new NoScroller(),
-            [],
-            [],
-            GenericExtractor::COMPAT_LEVEL_LATEST
-        );
+        }';
+
+        $job = $this->createJob($jobConfig, $parser, null, [
+            new Response(200, [], $response),
+        ]);
         $job->run();
+
         self::assertEquals(
             ['tickets_export'],
             array_keys($parser->getResults())
@@ -750,6 +629,41 @@ class RecursiveJobTest extends TestCase
             '"data_column","data_id","column"' . "\n" .
             '"second","2","hello"' . "\n",
             file_get_contents($parser->getResults()['tickets_export']->getPathname())
+        );
+    }
+
+    protected function createJob(
+        JobConfig $config,
+        ?ParserInterface $parser,
+        ?HistoryContainer $history,
+        ?array $responses = null
+    ): GenericExtractorJob {
+        $attributes = [];
+        $metadata = [];
+        $scroller = new NoScroller();
+        $logger = new NullLogger();
+        $scroller = $scroller ?? new NoScroller();
+        $parser = $parser ?? new Json($logger, [], Json::LATEST_VERSION);
+        $responses = $responses ?? new Response(200, [], '[{"result": "data"}]');
+        $restClientBuilder = RestClientMockBuilder::create()
+            ->setResponses($responses)
+            ->setBaseUri('http://example.com/api/');
+
+        if ($history) {
+            $restClientBuilder->setHistoryContainer($history);
+        }
+
+        $restClient = $restClientBuilder->getRestClient();
+
+        return new GenericExtractorJob(
+            $config,
+            $restClient,
+            $parser,
+            $logger,
+            $scroller,
+            $attributes,
+            $metadata,
+            GenericExtractor::COMPAT_LEVEL_LATEST
         );
     }
 }
