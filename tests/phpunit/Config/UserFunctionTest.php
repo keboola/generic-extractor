@@ -10,12 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 class UserFunctionTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        $this->markTestSkipped('TODO fix test');
-        parent::setUp();
-    }
-
     public function testBuild(): void
     {
         $functions = [
