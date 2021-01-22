@@ -15,12 +15,6 @@ use Psr\Log\NullLogger;
 
 class GenericExtractorTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        $this->markTestSkipped('TODO fix test');
-        parent::setUp();
-    }
-
     /**
      * No change to JSON parser structure should happen when nothing is parsed!
      */
