@@ -9,8 +9,7 @@ before_script:
   - docker-compose build app ci
   # Run tests and generate code coverage
   - docker-compose run --rm -v $(pwd)/build:/code/build ci
-  # TODO enable examples tests
-  #- sh -c "cd doc && ./run-samples.sh"
+  - sh -c "cd doc && ./run-samples.sh"
 
 script:
   # Push master image
