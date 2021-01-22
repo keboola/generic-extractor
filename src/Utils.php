@@ -5,9 +5,16 @@ declare(strict_types=1);
 namespace Keboola\GenericExtractor;
 
 use GuzzleHttp\Psr7\Query;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\UriInterface;
 
 class Utils
 {
+    public static function getResource(UriInterface $uri): string
+    {
+        return $uri->getPath() . ($uri->getQuery() ? '?' . $uri->getQuery() : '');
+    }
+
     /**
      * Merge HTTP queries, query1 values take precedence over query2 values.
      * @param string|array $query1

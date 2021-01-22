@@ -72,6 +72,6 @@ class OAuth20Login extends Login
             $config['headers'] = UserFunction::build($config['headers'], $fnContext);
         }
 
-        return new RestRequest($config);
+        return $this->client->createRequest($config);
     }
 }

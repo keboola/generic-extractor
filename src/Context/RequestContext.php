@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor\Context;
 
+use Keboola\GenericExtractor\Utils;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
 
@@ -20,7 +21,7 @@ class RequestContext
             'method' => $request->getMethod(),
             'hostname' => $uri->getHost(),
             'port' => self::getPort($uri),
-            'resource' => $uri->getPath() . ($uri->getQuery() ? '?' . $uri->getQuery() : ''),
+            'resource' => Utils::getResource($uri),
         ];
     }
 

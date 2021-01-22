@@ -37,7 +37,7 @@ class Login implements AuthInterface
 {
     protected array $configAttributes;
 
-    private RestClient $client;
+    protected RestClient $client;
 
     private array $authentication;
 
@@ -164,7 +164,7 @@ class Login implements AuthInterface
         if (!empty($config['headers'])) {
             $config['headers'] = UserFunction::build($config['headers'], $fnContext);
         }
-        return new RestRequest($config);
+        return $this->client->createRequest($config);
     }
 
     private function processResponse(\stdClass $loginResponse): void

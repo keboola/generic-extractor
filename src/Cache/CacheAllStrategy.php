@@ -11,7 +11,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Cache ALL response, useful for the development of templates.
+ * Cache ALL responses, useful for templates development.
  * It is not publicly documented.
  */
 class CacheAllStrategy extends PublicCacheStrategy
