@@ -12,15 +12,22 @@ use Psr\Log\NullLogger;
 
 class MissingTableHelperTest extends TestCase
 {
+    private Temp $temp;
+
     protected function setUp(): void
     {
-        $this->markTestSkipped('TODO fix test');
         parent::setUp();
+        $this->temp = new Temp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->temp->remove();
     }
 
     public function testMissingTables(): void
     {
-        $temp = new Temp();
         $config = [
             'parameters' => [
                 'api' => ['baseUrl' => 'https://dummy'],
@@ -92,15 +99,14 @@ class MissingTableHelperTest extends TestCase
                 ],
             ],
         ];
-        $temp->initRunFolder();
 
-        mkdir($temp->getTmpFolder() . '/out/');
-        $baseDir = $temp->getTmpFolder() . '/out/tables/';
+        mkdir($this->temp->getTmpFolder() . '/out/');
+        $baseDir = $this->temp->getTmpFolder() . '/out/tables/';
         mkdir($baseDir);
-        file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
-        $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
+        file_put_contents($this->temp->getTmpFolder() . '/config.json', json_encode($config));
+        $configuration = new Extractor($this->temp->getTmpFolder(), new NullLogger());
         $configs = $configuration->getMultipleConfigs();
-        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
+        MissingTableHelper::checkConfigs($configs, $this->temp->getTmpFolder(), $configuration);
         self::assertFileExists($baseDir . 'mock-server.primary-address');
         self::assertFileExists($baseDir . 'mock-server.primary-address.manifest');
         self::assertFileExists($baseDir . 'mock-server.user-contact');
@@ -140,7 +146,6 @@ class MissingTableHelperTest extends TestCase
 
     public function testMissingTablesNoOverwrite(): void
     {
-        $temp = new Temp();
         $config = [
             'parameters' => [
                 'api' => ['baseUrl' => 'https://dummy'],
@@ -172,17 +177,16 @@ class MissingTableHelperTest extends TestCase
                 ],
             ],
         ];
-        $temp->initRunFolder();
 
-        mkdir($temp->getTmpFolder() . '/out/');
-        $baseDir = $temp->getTmpFolder() . '/out/tables/';
+        mkdir($this->temp->getTmpFolder() . '/out/');
+        $baseDir = $this->temp->getTmpFolder() . '/out/tables/';
         mkdir($baseDir);
-        file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
-        $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
+        file_put_contents($this->temp->getTmpFolder() . '/config.json', json_encode($config));
+        $configuration = new Extractor($this->temp->getTmpFolder(), new NullLogger());
         $configs = $configuration->getMultipleConfigs();
         file_put_contents($baseDir . 'mock-server.users', 'foo');
         file_put_contents($baseDir . 'mock-server.users.manifest', 'bar');
-        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
+        MissingTableHelper::checkConfigs($configs, $this->temp->getTmpFolder(), $configuration);
         self::assertFileExists($baseDir . 'mock-server.users');
         self::assertFileExists($baseDir . 'mock-server.users.manifest');
         self::assertEquals('foo', file_get_contents($baseDir . 'mock-server.users'));
@@ -191,7 +195,6 @@ class MissingTableHelperTest extends TestCase
 
     public function testMissingMappings(): void
     {
-        $temp = new Temp();
         $config = [
             'parameters' => [
                 'api' => ['baseUrl' => 'https://dummy'],
@@ -208,22 +211,20 @@ class MissingTableHelperTest extends TestCase
                 ],
             ],
         ];
-        $temp->initRunFolder();
 
-        mkdir($temp->getTmpFolder() . '/out/');
-        $baseDir = $temp->getTmpFolder() . '/out/tables/';
+        mkdir($this->temp->getTmpFolder() . '/out/');
+        $baseDir = $this->temp->getTmpFolder() . '/out/tables/';
         mkdir($baseDir);
-        file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
-        $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
+        file_put_contents($this->temp->getTmpFolder() . '/config.json', json_encode($config));
+        $configuration = new Extractor($this->temp->getTmpFolder(), new NullLogger());
         $configs = $configuration->getMultipleConfigs();
-        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
+        MissingTableHelper::checkConfigs($configs, $this->temp->getTmpFolder(), $configuration);
         self::assertFileDoesNotExist($baseDir . 'mock-server.users');
         self::assertFileDoesNotExist($baseDir . 'mock-server.users.manifest');
     }
 
     public function testMissingTablesSimplifiedMapping(): void
     {
-        $temp = new Temp();
         $config = [
             'parameters' => [
                 'api' => ['baseUrl' => 'https://dummy'],
@@ -252,15 +253,14 @@ class MissingTableHelperTest extends TestCase
                 ],
             ],
         ];
-        $temp->initRunFolder();
 
-        mkdir($temp->getTmpFolder() . '/out/');
-        $baseDir = $temp->getTmpFolder() . '/out/tables/';
+        mkdir($this->temp->getTmpFolder() . '/out/');
+        $baseDir = $this->temp->getTmpFolder() . '/out/tables/';
         mkdir($baseDir);
-        file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
-        $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
+        file_put_contents($this->temp->getTmpFolder() . '/config.json', json_encode($config));
+        $configuration = new Extractor($this->temp->getTmpFolder(), new NullLogger());
         $configs = $configuration->getMultipleConfigs();
-        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
+        MissingTableHelper::checkConfigs($configs, $this->temp->getTmpFolder(), $configuration);
 
         self::assertFileExists($baseDir . 'mock-server.user-contact');
         self::assertFileExists($baseDir . 'mock-server.user-contact.manifest');
@@ -290,7 +290,6 @@ class MissingTableHelperTest extends TestCase
 
     public function testMissingTablesNoOutputBucket(): void
     {
-        $temp = new Temp();
         $config = [
             'parameters' => [
                 'api' => ['baseUrl' => 'https://dummy'],
@@ -318,15 +317,14 @@ class MissingTableHelperTest extends TestCase
                 ],
             ],
         ];
-        $temp->initRunFolder();
 
-        mkdir($temp->getTmpFolder() . '/out/');
-        $baseDir = $temp->getTmpFolder() . '/out/tables/';
+        mkdir($this->temp->getTmpFolder() . '/out/');
+        $baseDir = $this->temp->getTmpFolder() . '/out/tables/';
         mkdir($baseDir);
-        file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
-        $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
+        file_put_contents($this->temp->getTmpFolder() . '/config.json', json_encode($config));
+        $configuration = new Extractor($this->temp->getTmpFolder(), new NullLogger());
         $configs = $configuration->getMultipleConfigs();
-        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
+        MissingTableHelper::checkConfigs($configs, $this->temp->getTmpFolder(), $configuration);
 
         self::assertFileExists($baseDir . 'user-contact');
         self::assertFileExists($baseDir . 'user-contact.manifest');
@@ -355,7 +353,6 @@ class MissingTableHelperTest extends TestCase
 
     public function testMissingBucketPresentIdPresentName(): void
     {
-        $temp = new Temp();
         $config = [
             'parameters' => [
                 'api' => ['baseUrl' => 'https://dummy', 'name' => 'testName'],
@@ -384,15 +381,14 @@ class MissingTableHelperTest extends TestCase
                 ],
             ],
         ];
-        $temp->initRunFolder();
 
-        mkdir($temp->getTmpFolder() . '/out/');
-        $baseDir = $temp->getTmpFolder() . '/out/tables/';
+        mkdir($this->temp->getTmpFolder() . '/out/');
+        $baseDir = $this->temp->getTmpFolder() . '/out/tables/';
         mkdir($baseDir);
-        file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
-        $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
+        file_put_contents($this->temp->getTmpFolder() . '/config.json', json_encode($config));
+        $configuration = new Extractor($this->temp->getTmpFolder(), new NullLogger());
         $configs = $configuration->getMultipleConfigs();
-        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
+        MissingTableHelper::checkConfigs($configs, $this->temp->getTmpFolder(), $configuration);
 
         self::assertFileExists($baseDir . 'ex-api-testName-config-id.user-contact');
         self::assertFileExists($baseDir . 'ex-api-testName-config-id.user-contact.manifest');
@@ -425,7 +421,6 @@ class MissingTableHelperTest extends TestCase
 
     public function testMissingBucketPresentIdMissingName(): void
     {
-        $temp = new Temp();
         $config = [
             'parameters' => [
                 'api' => ['baseUrl' => 'https://dummy'],
@@ -454,15 +449,14 @@ class MissingTableHelperTest extends TestCase
                 ],
             ],
         ];
-        $temp->initRunFolder();
 
-        mkdir($temp->getTmpFolder() . '/out/');
-        $baseDir = $temp->getTmpFolder() . '/out/tables/';
+        mkdir($this->temp->getTmpFolder() . '/out/');
+        $baseDir = $this->temp->getTmpFolder() . '/out/tables/';
         mkdir($baseDir);
-        file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
-        $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
+        file_put_contents($this->temp->getTmpFolder() . '/config.json', json_encode($config));
+        $configuration = new Extractor($this->temp->getTmpFolder(), new NullLogger());
         $configs = $configuration->getMultipleConfigs();
-        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
+        MissingTableHelper::checkConfigs($configs, $this->temp->getTmpFolder(), $configuration);
 
         self::assertFileExists($baseDir . 'ex-api-generic-config-id.user-contact');
         self::assertFileExists($baseDir . 'ex-api-generic-config-id.user-contact.manifest');
@@ -495,7 +489,6 @@ class MissingTableHelperTest extends TestCase
 
     public function testMissingParentKeyDestination(): void
     {
-        $temp = new Temp();
         $config = [
             'parameters' => [
                 'api' => ['baseUrl' => 'https://dummy'],
@@ -534,15 +527,14 @@ class MissingTableHelperTest extends TestCase
                 ],
             ],
         ];
-        $temp->initRunFolder();
 
-        mkdir($temp->getTmpFolder() . '/out/');
-        $baseDir = $temp->getTmpFolder() . '/out/tables/';
+        mkdir($this->temp->getTmpFolder() . '/out/');
+        $baseDir = $this->temp->getTmpFolder() . '/out/tables/';
         mkdir($baseDir);
-        file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
-        $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
+        file_put_contents($this->temp->getTmpFolder() . '/config.json', json_encode($config));
+        $configuration = new Extractor($this->temp->getTmpFolder(), new NullLogger());
         $configs = $configuration->getMultipleConfigs();
-        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
+        MissingTableHelper::checkConfigs($configs, $this->temp->getTmpFolder(), $configuration);
         self::assertFileExists($baseDir . 'mock-server.user-contact');
         self::assertFileExists($baseDir . 'mock-server.user-contact.manifest');
         self::assertFileExists($baseDir . 'mock-server.users');
@@ -572,7 +564,6 @@ class MissingTableHelperTest extends TestCase
 
     public function testParentKeyDisableTableMapping(): void
     {
-        $temp = new Temp();
         $config = [
             'parameters' => [
                 'api' => ['baseUrl' => 'https://dummy'],
@@ -625,15 +616,14 @@ class MissingTableHelperTest extends TestCase
                 ],
             ],
         ];
-        $temp->initRunFolder();
 
-        mkdir($temp->getTmpFolder() . '/out/');
-        $baseDir = $temp->getTmpFolder() . '/out/tables/';
+        mkdir($this->temp->getTmpFolder() . '/out/');
+        $baseDir = $this->temp->getTmpFolder() . '/out/tables/';
         mkdir($baseDir);
-        file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
-        $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
+        file_put_contents($this->temp->getTmpFolder() . '/config.json', json_encode($config));
+        $configuration = new Extractor($this->temp->getTmpFolder(), new NullLogger());
         $configs = $configuration->getMultipleConfigs();
-        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
+        MissingTableHelper::checkConfigs($configs, $this->temp->getTmpFolder(), $configuration);
         self::assertFileExists($baseDir . 'mock-server.user-contact');
         self::assertFileExists($baseDir . 'mock-server.user-contact.manifest');
         self::assertFileExists($baseDir . 'mock-server.users');
@@ -663,7 +653,6 @@ class MissingTableHelperTest extends TestCase
 
     public function testTableMapping(): void
     {
-        $temp = new Temp();
         $config = [
             'parameters' => [
                 'api' => ['baseUrl' => 'https://dummy'],
@@ -699,15 +688,14 @@ class MissingTableHelperTest extends TestCase
                 ],
             ],
         ];
-        $temp->initRunFolder();
 
-        mkdir($temp->getTmpFolder() . '/out/');
-        $baseDir = $temp->getTmpFolder() . '/out/tables/';
+        mkdir($this->temp->getTmpFolder() . '/out/');
+        $baseDir = $this->temp->getTmpFolder() . '/out/tables/';
         mkdir($baseDir);
-        file_put_contents($temp->getTmpFolder() . '/config.json', json_encode($config));
-        $configuration = new Extractor($temp->getTmpFolder(), new NullLogger());
+        file_put_contents($this->temp->getTmpFolder() . '/config.json', json_encode($config));
+        $configuration = new Extractor($this->temp->getTmpFolder(), new NullLogger());
         $configs = $configuration->getMultipleConfigs();
-        MissingTableHelper::checkConfigs($configs, $temp->getTmpFolder(), $configuration);
+        MissingTableHelper::checkConfigs($configs, $this->temp->getTmpFolder(), $configuration);
         self::assertFileExists($baseDir . 'mock-server.user-contact');
         self::assertFileExists($baseDir . 'mock-server.user-contact.manifest');
 

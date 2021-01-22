@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor;
 
-use Keboola\Csv\CsvFile;
+use Keboola\Csv\CsvWriter;
 use Keboola\GenericExtractor\Configuration\Extractor;
 use Keboola\GenericExtractor\Exception\UserException;
 
@@ -96,7 +96,7 @@ class MissingTableHelper
         /* the condition for file existence is intentionally so far in checking, if it were any earlier, we would
             skip non-existent child mappings of an existent parent */
         if ($columns && !file_exists($baseFileName . $name)) {
-            $csvFile = new CsvFile($baseFileName . $name);
+            $csvFile = new CsvWriter($baseFileName . $name);
             $csvFile->writeRow($columns);
             $manifest = [
                 'incremental' => $incremental,
