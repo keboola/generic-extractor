@@ -35,9 +35,9 @@ use function Keboola\Utils\getDataFromPath;
  */
 class Login implements AuthInterface
 {
-    private RestClient $client;
+    protected array $configAttributes;
 
-    private array $configAttributes;
+    private RestClient $client;
 
     private array $authentication;
 
@@ -155,6 +155,18 @@ class Login implements AuthInterface
         $this->loggedIn= true;
     }
 
+    protected function getLoginRequest(array $config): RestRequest
+    {
+        $fnContext = LoginAuthLoginRequestContext::create($this->configAttributes);
+        if (!empty($config['params'])) {
+            $config['params'] = UserFunction::build($config['params'], $fnContext);
+        }
+        if (!empty($config['headers'])) {
+            $config['headers'] = UserFunction::build($config['headers'], $fnContext);
+        }
+        return new RestRequest($config);
+    }
+
     private function processResponse(\stdClass $loginResponse): void
     {
         $this->signatureQuery = $this->buildApiRequestFunctions(
@@ -170,7 +182,7 @@ class Login implements AuthInterface
 
     private function runRequest(): ResponseInterface
     {
-        $restRequest = $this->getLoginRequest();
+        $restRequest = $this->getLoginRequest($this->authentication['loginRequest']);
         $guzzleRequest = $this->client->getGuzzleRequestFactory()->create($restRequest);
         return $this->client->getClient()->send($guzzleRequest);
     }
@@ -197,19 +209,6 @@ class Login implements AuthInterface
         }
 
         throw new LogicException(sprintf('Unexpected format "%s".', $this->format));
-    }
-
-    private function getLoginRequest(): RestRequest
-    {
-        $config = $this->authentication['loginRequest'];
-        $fnContext = LoginAuthLoginRequestContext::create($this->configAttributes);
-        if (!empty($config['params'])) {
-            $config['params'] = UserFunction::build($config['params'], $fnContext);
-        }
-        if (!empty($config['headers'])) {
-            $config['headers'] = UserFunction::build($config['headers'], $fnContext);
-        }
-        return new RestRequest($config);
     }
 
     /**

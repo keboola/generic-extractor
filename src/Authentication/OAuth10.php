@@ -8,6 +8,7 @@ use GuzzleHttp\Middleware;
 use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\Juicer\Client\RestClient;
 use GuzzleHttp\Subscriber\Oauth\Oauth1;
+use Keboola\Utils\Exception\JsonDecodeException;
 use Psr\Http\Message\RequestInterface;
 use function Keboola\Utils\jsonDecode;
 
@@ -39,7 +40,12 @@ class OAuth10 implements AuthInterface
         }
 
         // Decode data
-        $data = jsonDecode($oauthApiDetails['#data']);
+        try {
+            $data = jsonDecode($oauthApiDetails['#data']);
+        } catch (JsonDecodeException $e) {
+            throw new UserException('The OAuth #data is not a valid JSON.');
+        }
+
         if (!$data instanceof \stdClass) {
             throw new UserException(sprintf(
                 "Key 'oauth_api.credentials'.#data must be object, given '%s'.",
