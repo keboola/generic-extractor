@@ -106,9 +106,8 @@ class GenericExtractorJob
 
         $parentId = $this->getParentId();
 
-        /** @var RestRequest $request */
         $request = $this->firstPage($this->config);
-        while ($request !== false) {
+        while ($request !== null) {
             $response = $this->download($request);
 
             $responseHash = sha1(serialize($response));
