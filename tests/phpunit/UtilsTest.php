@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor\Tests;
 
+use GuzzleHttp\Psr7\Query;
 use GuzzleHttp\Psr7\Request;
 use Keboola\GenericExtractor\Utils;
 use PHPUnit\Framework\TestCase;
@@ -34,39 +35,41 @@ class UtilsTest extends TestCase
 
     /**
      * @dataProvider getTestQueries
-     * @param string|array $query1
-     * @param string|array $query2
      */
-    public function testMergeQueries($query1, $query2, string $expected): void
+    public function testMergeQueries(string $query1, string $query2, string $expected): void
     {
+        // Test all string + array representations
         $this->assertSame($expected, Utils::mergeQueries($query1, $query2));
+        $this->assertSame($expected, Utils::mergeQueries(Query::parse($query1), $query2));
+        $this->assertSame($expected, Utils::mergeQueries($query1, Query::parse($query2)));
+        $this->assertSame($expected, Utils::mergeQueries(Query::parse($query1), Query::parse($query2)));
+    }
+
+    public function testMergeQueriesEscaping(): void
+    {
+        $query1 = ['param1' => '%21%40%23'];
+        $query2 = ['param2' => '%C3%BA%C4%9B%C5%A1'];
+        $expected = 'param1=%2521%2540%2523&param2=%25C3%25BA%25C4%259B%25C5%25A1';
+        $this->assertSame($expected, Utils::mergeQueries($query1, $query2));
+    }
+
+    public function testMergeQueriesMergeToArray(): void
+    {
+        $query1 = ['a' => 'a1', 'b' => 'b1', 'c' => 'c1'];
+        $query2 = ['c' => 'c2', 'd' => 'd2'];
+        // a=a1&b=b1&d=d2&c[0]=c1&c[1]=c2
+        $expected = 'a=a1&b=b1&d=d2&c%5B0%5D=c1&c%5B1%5D=c2';
+        $this->assertSame($expected, Utils::mergeQueries($query1, $query2, true));
     }
 
     public function getTestQueries(): iterable
     {
         yield ['', '', ''];
-        yield [[], [], ''];
-        yield ['', [], ''];
-        yield [[], '', ''];
         yield ['param1=value1', 'param2=value2', 'param1=value1&param2=value2'];
-        yield [['param1' => 'value1'], ['param2' => 'value2'], 'param1=value1&param2=value2'];
-        yield ['param1=value1', ['param2' => 'value2'], 'param1=value1&param2=value2'];
-        yield [['param1' => 'value1'], 'param2=value2', 'param1=value1&param2=value2'];
-        yield ['a=x&b=y&c=z', 'a=xx&c=zz', 'a=x&b=y&c=z'];
-        yield [['a' => 'x', 'b' => 'y', 'c' => 'z'], ['a' => 'xx', 'c' => 'zz'], 'a=x&b=y&c=z'];
-        yield ['a=x&b=y&c=z', ['a' => 'xx', 'c' => 'zz'], 'a=x&b=y&c=z'];
-        yield [['a' => 'x', 'b' => 'y', 'c' => 'z'], 'a=xx&c=zz', 'a=x&b=y&c=z'];
-        yield ['a=xx&c=zz', 'a=x&b=y&c=z', 'a=xx&c=zz&b=y'];
-        yield [['a' => 'xx', 'c' => 'zz'], ['a' => 'x', 'b' => 'y', 'c' => 'z'], 'a=xx&c=zz&b=y'];
-        yield ['a=xx&c=zz', ['a' => 'x', 'b' => 'y', 'c' => 'z'], 'a=xx&c=zz&b=y'];
-        yield [['a' => 'xx', 'c' => 'zz'], 'a=x&b=y&c=z', 'a=xx&c=zz&b=y'];
+        yield ['a=x&b=y&c=z', 'a=xx&c=zz', 'a=xx&b=y&c=zz'];
+        yield ['a=xx&c=zz', 'a=x&b=y&c=z', 'a=x&c=z&b=y'];
         yield ['param1=!@#', 'param2=úěš', 'param1=%21%40%23&param2=%C3%BA%C4%9B%C5%A1'];
         yield ['param1=%21%40%23', 'param2=%C3%BA%C4%9B%C5%A1', 'param1=%21%40%23&param2=%C3%BA%C4%9B%C5%A1'];
-        yield [
-            ['param1' => '%21%40%23'],
-            ['param2' => '%C3%BA%C4%9B%C5%A1'],
-            'param1=%2521%2540%2523&param2=%25C3%25BA%25C4%259B%25C5%25A1',
-        ];
     }
 
     /**
@@ -75,7 +78,7 @@ class UtilsTest extends TestCase
     public function testMergeHeaders(array $a, array $b, array $expected): void
     {
         $request = new Request('GET', 'http://example.com');
-        foreach($a as $name => $value) {
+        foreach ($a as $name => $value) {
             $request = $request->withHeader($name, $value);
         }
 
@@ -91,9 +94,8 @@ class UtilsTest extends TestCase
         yield [['k1' => 'v1'],[],['k1' => ['v1']]];
         yield [[],['k1' => 'v1'],['k1' => ['v1']]];
         yield [['k1' => 'v1'],['k2' => 'v2'],['k1' => ['v1'], 'k2' => ['v2']]];
-        yield [['k1' => 'v1'],['k1' => 'v2'],['k1' => ['v1']]];
-        yield [['key1' => 'v1'],['KEY1' => 'v2'],['key1' => ['v1']]];
+        yield [['k1' => 'v1'],['k1' => 'v2'],['k1' => ['v2']]];
+        yield [['key1' => 'v1'],['KEY1' => 'v2'],['KEY1' => ['v2']]];
         yield [['KEY1' => 'v1'],['KEY2' => 'v2'],['KEY1' => ['v1'], 'KEY2' => ['v2']]];
     }
-
 }

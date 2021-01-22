@@ -16,18 +16,32 @@ class Utils
     }
 
     /**
-     * Merge HTTP queries, query1 values take precedence over query2 values.
+     * Merge HTTP queries, query2 values take precedence over query1 values.
      * @param string|array $query1
      * @param string|array $query2
+     * @param bool $mergeToArray
      */
-    public static function mergeQueries($query1, $query2): string
+    public static function mergeQueries($query1, $query2, bool $mergeToArray = false): string
     {
         $query1 = is_array($query1) ? $query1 : Query::parse($query1);
         $query2 = is_array($query2) ? $query2 : Query::parse($query2);
+        $mergeToArrayValues = [];
 
         foreach ($query2 as $key => $value) {
-            if (!array_key_exists($key, $query1)) {
+            if (array_key_exists($key, $query1) && $mergeToArray) {
+                $mergeToArrayValues[$key] = array_merge(
+                    $mergeToArrayValues[$key] ?? [$query1[$key]],
+                    [$value]
+                );
+                unset($query1[$key]);
+            } else {
                 $query1[$key] = $value;
+            }
+        }
+
+        foreach ($mergeToArrayValues as $key => $values) {
+            foreach (array_unique($values) as $i => $value) {
+                $query1[$key. "[$i]"] = $value;
             }
         }
 
@@ -35,14 +49,12 @@ class Utils
     }
 
     /**
-     * Merge HTTP headers, request headers values take precedence.
+     * Merge HTTP headers, new headers values take precedence.
      */
     public static function mergeHeaders(RequestInterface $request, array $headers): RequestInterface
     {
         foreach ($headers as $name => $value) {
-            if (!$request->hasHeader($name)) {
-                $request = $request->withHeader($name, $value);
-            }
+            $request = $request->withHeader($name, $value);
         }
 
         return $request;

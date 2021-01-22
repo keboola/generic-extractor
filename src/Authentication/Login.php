@@ -107,8 +107,10 @@ class Login implements AuthInterface
     {
         // Add query params
         $uri = $request->getUri();
+        // For historical reasons, we HERE merge same keys into the array.
+        // TODO: Make a flag to configure queries merging.
         $request = $request->withUri($uri->withQuery(
-            Utils::mergeQueries($uri->getQuery(), $this->signatureQuery)
+            Utils::mergeQueries($uri->getQuery(), $this->signatureQuery, true)
         ));
 
         // Add headers
