@@ -6,20 +6,10 @@ namespace Keboola\GenericExtractor\Tests;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Message\RequestInterface;
-use GuzzleHttp\Message\ResponseInterface;
-use GuzzleHttp\Ring\Future\FutureInterface;
-use http\Env\Response;
 use PHPUnit\Framework\TestCase;
 
 class ExtractorTestCase extends TestCase
 {
-    protected function setUp(): void
-    {
-        $this->markTestSkipped('TODO fix test');
-        parent::setUp();
-    }
-
     /**
      * @return mixed
      */

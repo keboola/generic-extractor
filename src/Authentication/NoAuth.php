@@ -8,7 +8,7 @@ use Keboola\Juicer\Client\RestClient;
 
 class NoAuth implements AuthInterface
 {
-    public function authenticateClient(RestClient $client): void
+    public function attachToClient(RestClient $client): void
     {
     }
 }

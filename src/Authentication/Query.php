@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor\Authentication;
 
+use GuzzleHttp\Middleware;
 use Keboola\GenericExtractor\Configuration\UserFunction;
+use Keboola\GenericExtractor\Context\QueryAuthContext;
 use Keboola\GenericExtractor\Exception\UserException;
+use Keboola\GenericExtractor\Utils;
 use Keboola\Juicer\Client\RestClient;
-use Keboola\GenericExtractor\Subscriber\UrlSignature;
+use Psr\Http\Message\RequestInterface;
+use function Keboola\Utils\arrayToObject;
 
 /**
  * Authentication method using query parameters
@@ -29,17 +33,19 @@ class Query implements AuthInterface
         $this->configAttributes = $configAttributes;
     }
 
-    public function authenticateClient(RestClient $client): void
+    public function attachToClient(RestClient $client): void
     {
-        $sub = new UrlSignature();
-        // Create array of objects instead of arrays from YML
-        $q = (array) \Keboola\Utils\arrayToObject($this->query);
-        $sub->setSignatureGenerator(
-            function (array $requestInfo = []) use ($q) {
-                $params = array_merge($requestInfo, ['attr' => $this->configAttributes]);
-                return UserFunction::build($q, $params);
+        $client->getHandlerStack()->push(Middleware::mapRequest(
+            function (RequestInterface $request): RequestInterface {
+                $context = QueryAuthContext::create($request, $this->configAttributes);
+                $authQuery = UserFunction::build((array) arrayToObject($this->query), $context);
+
+                // Append auth query
+                $uri = $request->getUri();
+                return $request->withUri($uri->withQuery(
+                    Utils::mergeQueries($uri->getQuery(), $authQuery)
+                ));
             }
-        );
-        $client->getClient()->getEmitter()->attach($sub);
+        ));
     }
 }

@@ -6,31 +6,42 @@ namespace Keboola\GenericExtractor\Tests\Authentication;
 
 use Keboola\GenericExtractor\Authentication\Basic;
 use Keboola\Juicer\Client\RestClient;
+use Keboola\Juicer\Client\RestRequest;
+use Keboola\Juicer\Tests\HistoryContainer;
+use Keboola\Juicer\Tests\RestClientMockBuilder;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\NullLogger;
 
 class BasicTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        $this->markTestSkipped('TODO fix test');
-        parent::setUp();
-    }
-
     /**
      * @dataProvider credentialsProvider
      */
     public function testAuthenticateClient(array $credentials): void
     {
         $auth = new Basic($credentials);
-        $restClient = new RestClient(new NullLogger(), []);
-        $auth->authenticateClient($restClient);
 
-        self::assertEquals(['test','pass'], $restClient->getClient()->getDefaultOption('auth'));
+        // Create RestClient
+        $history = new HistoryContainer();
+        $restClient = RestClientMockBuilder::create()
+            ->addResponse200('{"foo": "bar1"}')
+            ->addResponse200('{"foo": "bar2"}')
+            ->setHistoryContainer($history)
+            ->setInitCallback(function (RestClient $restClient) use ($auth): void {
+                $auth->attachToClient($restClient);
+            })
+            ->getRestClient();
 
-        $request = $restClient->getClient()->createRequest('GET', '/');
-        self::assertArrayHasKey('Authorization', $request->getHeaders());
-        self::assertEquals(['Basic dGVzdDpwYXNz'], $request->getHeaders()['Authorization']);
+        // Each request contains Authorization header
+        self::assertEquals((object) ['foo' => 'bar1'], $restClient->download(new RestRequest(['endpoint' => 'ep'])));
+        self::assertSame(
+            'Basic dGVzdDpwYXNz',
+            $history->pop()->getRequest()->getHeaderLine('Authorization')
+        );
+        self::assertEquals((object) ['foo' => 'bar2'], $restClient->download(new RestRequest(['endpoint' => 'ep'])));
+        self::assertSame(
+            'Basic dGVzdDpwYXNz',
+            $history->pop()->getRequest()->getHeaderLine('Authorization')
+        );
     }
 
     public function credentialsProvider(): array
