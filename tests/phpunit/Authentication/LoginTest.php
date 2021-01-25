@@ -179,9 +179,9 @@ class LoginTest extends ExtractorTestCase
         self::assertEquals($attrs['second'], $loginCall->getRequest()->getHeaderLine('X-Header'));
 
         // Assert API call
-        $apiCall1 = $history->shift();
-        self::assertEquals(9876, $apiCall1->getRequest()->getHeaderLine('X-Test-Auth'));
-        self::assertEquals('qToken=5432', $apiCall1->getRequest()->getUri()->getQuery());
+        $apiCall3 = $history->shift();
+        self::assertEquals(9876, $apiCall3->getRequest()->getHeaderLine('X-Test-Auth'));
+        self::assertEquals('qToken=5432', $apiCall3->getRequest()->getUri()->getQuery());
 
         // No more history items
         self::assertTrue($history->isEmpty());

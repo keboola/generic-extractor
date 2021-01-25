@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor\Authentication;
 
+use GuzzleHttp\Middleware;
 use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\Juicer\Client\RestClient;
 use GuzzleHttp\Subscriber\Oauth\Oauth1;
+use Keboola\Utils\Exception\JsonDecodeException;
+use Psr\Http\Message\RequestInterface;
 use function Keboola\Utils\jsonDecode;
 
 /**
@@ -36,8 +39,32 @@ class OAuth10 implements AuthInterface
             }
         }
 
-        /** @var \stdClass $data */
-        $data = jsonDecode($oauthApiDetails['#data']);
+        // Decode data
+        try {
+            $data = jsonDecode($oauthApiDetails['#data']);
+        } catch (JsonDecodeException $e) {
+            throw new UserException('The OAuth #data is not a valid JSON.');
+        }
+
+        if (!$data instanceof \stdClass) {
+            throw new UserException(sprintf(
+                "Key 'oauth_api.credentials'.#data must be object, given '%s'.",
+                gettype($data)
+            ));
+        }
+
+        if (!isset($data->oauth_token)) {
+            throw new UserException(
+                "Missing 'oauth_api.credentials.#data.oauth_token' for OAuth 1.0 authorization."
+            );
+        }
+
+        if (!isset($data->oauth_token_secret)) {
+            throw new UserException(
+                "Missing 'oauth_api.credentials.#data.oauth_token_secret' for OAuth 1.0 authorization."
+            );
+        }
+
         $this->token = $data->oauth_token;
         $this->tokenSecret = $data->oauth_token_secret;
         $this->consumerKey = $oauthApiDetails['appKey'];
@@ -49,16 +76,23 @@ class OAuth10 implements AuthInterface
      */
     public function attachToClient(RestClient $client): void
     {
-        $sub = new Oauth1(
-            [
-            'consumer_key'    => $this->consumerKey,
+        $middleware = new Oauth1([
+            'consumer_key' => $this->consumerKey,
             'consumer_secret' => $this->consumerSecret,
-            'token'           => $this->token,
-            'token_secret'    => $this->tokenSecret,
-            ]
-        );
+            'token' => $this->token,
+            'token_secret' => $this->tokenSecret,
+        ]);
 
-        $client->getClient()->getEmitter()->attach($sub);
-        $client->getClient()->setDefaultOption('auth', 'oauth');
+        // Before OAuth we need to set option "auth" = "oauth",
+        // otherwise, OAuth middleware will not start (this is how it is implemented).
+        $client->getHandlerStack()->push(static function (callable $handler): callable {
+            return static function (RequestInterface $request, array $options) use ($handler) {
+                $options['auth'] = 'oauth';
+                return $handler($request, $options);
+            };
+        });
+
+        // Add OAuth middleware
+        $client->getHandlerStack()->push($middleware);
     }
 }
