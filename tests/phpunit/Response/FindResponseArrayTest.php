@@ -12,12 +12,6 @@ use Psr\Log\NullLogger;
 
 class FindResponseArrayTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        $this->markTestSkipped('TODO fix test');
-        parent::setUp();
-    }
-
     public function testSingleArray(): void
     {
         $cfg = new JobConfig(
