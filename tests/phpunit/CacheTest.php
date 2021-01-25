@@ -4,17 +4,11 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor\Tests;
 
-use Keboola\Csv\CsvFile;
+use Keboola\Csv\CsvReader;
 use PHPUnit\Framework\TestCase;
 
 class CacheTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        $this->markTestSkipped('TODO fix test');
-        parent::setUp();
-    }
-
     public function testCacheTTL(): void
     {
         // first execution
@@ -27,7 +21,7 @@ class CacheTest extends TestCase
 
         self::assertStringContainsString('Extractor finished successfully.', implode("\n", $output));
         self::assertFileExists($filePath);
-        $csv = new CsvFile($filePath);
+        $csv = new CsvReader($filePath);
         self::assertEquals(3, $csv->getColumnsCount());
 
         $csv->next();
@@ -44,13 +38,14 @@ class CacheTest extends TestCase
 
         self::assertStringContainsString('Extractor finished successfully', implode("\n", $output));
         self::assertFileExists($filePath);
-        $csv = new CsvFile($filePath);
+        $csv = new CsvReader($filePath);
         self::assertEquals(3, $csv->getColumnsCount());
 
         $csv->next();
         $data = $csv->current();
         unset($csv);
 
+        // First and second date are same -> response was cached
         $secondDateTime = (int) $data[1];
         self::assertTrue($firstDateTime === $secondDateTime);
         $this->rmDir("{$dataDir}/out");
@@ -62,7 +57,7 @@ class CacheTest extends TestCase
 
         self::assertStringContainsString('Extractor finished successfully.', implode("\n", $output));
         self::assertFileExists($filePath);
-        $csv = new CsvFile($filePath);
+        $csv = new CsvReader($filePath);
         self::assertEquals(3, $csv->getColumnsCount());
 
         $csv->next();
@@ -106,7 +101,7 @@ class CacheTest extends TestCase
 
         self::assertStringContainsString('Extractor finished successfully', implode("\n", $output));
         self::assertFileExists($filePath);
-        $csv = new CsvFile($filePath);
+        $csv = new CsvReader($filePath);
         self::assertEquals(3, $csv->getColumnsCount());
 
         $csv->next();
@@ -123,13 +118,14 @@ class CacheTest extends TestCase
 
         self::assertStringContainsString('Extractor finished successfully', implode("\n", $output));
         self::assertFileExists($filePath);
-        $csv = new CsvFile($filePath);
+        $csv = new CsvReader($filePath);
         self::assertEquals(3, $csv->getColumnsCount());
 
         $csv->next();
         $data = $csv->current();
         unset($csv);
 
+        // First and second date are same -> response was cached
         $secondDateTime = (int) $data[1];
         self::assertTrue($firstDateTime === $secondDateTime);
 
@@ -151,7 +147,7 @@ class CacheTest extends TestCase
 
         self::assertStringContainsString('Extractor finished successfully', implode("\n", $output));
         self::assertFileExists($filePath);
-        $csv = new CsvFile($filePath);
+        $csv = new CsvReader($filePath);
         self::assertEquals(3, $csv->getColumnsCount());
 
         $csv->next();
@@ -168,13 +164,14 @@ class CacheTest extends TestCase
         self::assertStringContainsString('Extractor finished successfully', implode("\n", $output));
         self::assertFileExists($filePath);
 
-        $csv = new CsvFile($filePath);
+        $csv = new CsvReader($filePath);
         self::assertEquals(3, $csv->getColumnsCount());
 
         $csv->next();
         $data = $csv->current();
         unset($csv);
 
+        // First and second date are NOT same -> response was NOT cached
         $secondDateTime = (int) $data[1];
         self::assertTrue($firstDateTime < $secondDateTime);
         $this->rmDir(__DIR__ . '/data/noCache/out');

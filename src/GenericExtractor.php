@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor;
 
-use GuzzleHttp\Message\RequestInterface;
-use GuzzleHttp\Subscriber\Cache\CacheStorage;
-use GuzzleHttp\Subscriber\Cache\CacheSubscriber;
 use Keboola\GenericExtractor\Configuration\Api;
 use Keboola\GenericExtractor\Configuration\JuicerRest;
 use Keboola\GenericExtractor\Configuration\UserFunction;
@@ -16,8 +13,9 @@ use Keboola\Juicer\Client\RestClient;
 use Keboola\Juicer\Parser\Json;
 use Keboola\Juicer\Parser\JsonMap;
 use Keboola\Juicer\Parser\ParserInterface;
-use Keboola\GenericExtractor\Subscriber\LogRequest;
 use Keboola\Temp\Temp;
+use Kevinrob\GuzzleCache\CacheMiddleware;
+use Kevinrob\GuzzleCache\Strategy\CacheStrategyInterface;
 use Psr\Log\LoggerInterface;
 
 class GenericExtractor
@@ -28,7 +26,7 @@ class GenericExtractor
 
     protected ?ParserInterface $parser = null;
 
-    protected ?CacheStorage $cache = null;
+    protected ?CacheStrategyInterface $cacheStrategy = null;
 
     protected Temp $temp;
 
@@ -54,9 +52,9 @@ class GenericExtractor
         $this->proxy = $proxy;
     }
 
-    public function enableCache(CacheStorage $cache): self
+    public function enableCache(CacheStrategyInterface $cacheStrategy): self
     {
-        $this->cache = $cache;
+        $this->cacheStrategy = $cacheStrategy;
         return $this;
     }
 
@@ -89,17 +87,10 @@ class GenericExtractor
 
         $this->api->getAuth()->attachToClient($client);
         // Verbose Logging of all requests
-        $client->getClient()->getEmitter()->attach(new LogRequest($this->logger));
+        //$client->getClient()->getEmitter()->attach(new LogRequest($this->logger));
 
-        if ($this->cache) {
-            CacheSubscriber::attach(
-                $client->getClient(),
-                [
-                    'storage' => $this->cache,
-                    'validate' => false,
-                    'can_cache' => fn(RequestInterface $requestInterface) => true,
-                ]
-            );
+        if ($this->cacheStrategy) {
+            $client->getHandlerStack()->push(new CacheMiddleware($this->cacheStrategy), 'cache');
         }
 
         $this->initParser($config);
