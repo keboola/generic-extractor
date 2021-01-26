@@ -7,6 +7,7 @@ namespace Keboola\GenericExtractor;
 use Keboola\GenericExtractor\Configuration\Api;
 use Keboola\GenericExtractor\Configuration\JuicerRest;
 use Keboola\GenericExtractor\Configuration\UserFunction;
+use Keboola\GenericExtractor\Logger\LoggerMiddleware;
 use Keboola\Juicer\Config\JobConfig;
 use Keboola\Juicer\Config\Config;
 use Keboola\Juicer\Client\RestClient;
@@ -77,17 +78,17 @@ class GenericExtractor
         $client = new RestClient(
             $this->logger,
             $this->api->getBaseUrl(),
-            [
-                'defaults' => $defaults,
-            ],
+            $defaults,
             JuicerRest::convertRetry($this->api->getRetryConfig()),
             $this->api->getDefaultRequestOptions(),
             $this->api->getIgnoreErrors()
         );
 
+        // Attach auth middleware
         $this->api->getAuth()->attachToClient($client);
+
         // Verbose Logging of all requests
-        //$client->getClient()->getEmitter()->attach(new LogRequest($this->logger));
+        $client->getHandlerStack()->push(LoggerMiddleware::create($this->logger));
 
         if ($this->cacheStrategy) {
             $client->getHandlerStack()->push(new CacheMiddleware($this->cacheStrategy), 'cache');

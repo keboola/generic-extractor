@@ -8,12 +8,6 @@ use PHPUnit\Framework\TestCase;
 
 class MockExecutionTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        $this->markTestSkipped('TODO fix test');
-        parent::setUp();
-    }
-
     /**
      * @dataProvider configProvider
      */

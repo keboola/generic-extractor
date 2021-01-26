@@ -9,8 +9,7 @@ before_script:
   - docker-compose build app ci
   # Run tests and generate code coverage
   - docker-compose run --rm -v $(pwd)/build:/code/build ci
-  # TODO enable examples tests
-  #- sh -c "cd doc && ./run-samples.sh"
+  - sh -c "cd doc && ./run-samples.sh"
 
 script:
   # Push master image
@@ -20,9 +19,8 @@ script:
   - eval $(docker run --rm -e KBC_DEVELOPERPORTAL_USERNAME -e KBC_DEVELOPERPORTAL_PASSWORD -e KBC_DEVELOPERPORTAL_URL quay.io/keboola/developer-portal-cli-v2:latest ecr:get-login $KBC_DEVELOPERPORTAL_VENDOR $KBC_DEVELOPERPORTAL_APP)
   - docker push $REPOSITORY:master
   # Run live test job on new master image
-  # TODO enable KBC tests
-  #- docker pull quay.io/keboola/syrup-cli:latest
-  #- docker run --rm -e KBC_STORAGE_TOKEN quay.io/keboola/syrup-cli:latest run-job $KBC_DEVELOPERPORTAL_APP $KBC_APP_TEST_CONFIG master
+  - docker pull quay.io/keboola/syrup-cli:latest
+  - docker run --rm -e KBC_STORAGE_TOKEN quay.io/keboola/syrup-cli:latest run-job $KBC_DEVELOPERPORTAL_APP $KBC_APP_TEST_CONFIG master
 
 after_script:
   # Upload code coverage

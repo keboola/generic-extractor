@@ -108,9 +108,7 @@ class OAuth20 implements AuthInterface
 
                 // Add headers
                 $headers = UserFunction::build($this->headers, $fnContext);
-                foreach ($headers as $name => $value) {
-                    $request = $request->withHeader($name, $value);
-                }
+                $request = Utils::mergeHeaders($request, $headers);
 
                 return $request;
             }

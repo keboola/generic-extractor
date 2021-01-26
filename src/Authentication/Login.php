@@ -37,7 +37,7 @@ class Login implements AuthInterface
 {
     protected array $configAttributes;
 
-    private RestClient $client;
+    protected RestClient $client;
 
     private array $authentication;
 
@@ -107,14 +107,14 @@ class Login implements AuthInterface
     {
         // Add query params
         $uri = $request->getUri();
+        // For historical reasons, we HERE merge same keys into the array.
+        // TODO: Make a flag to configure queries merging.
         $request = $request->withUri($uri->withQuery(
-            Utils::mergeQueries($uri->getQuery(), $this->signatureQuery)
+            Utils::mergeQueries($uri->getQuery(), $this->signatureQuery, true)
         ));
 
         // Add headers
-        foreach ($this->signatureHeaders as $name => $value) {
-            $request = $request->withHeader($name, $value);
-        }
+        $request = Utils::mergeHeaders($request, $this->signatureHeaders);
 
         return $request;
     }
@@ -164,7 +164,9 @@ class Login implements AuthInterface
         if (!empty($config['headers'])) {
             $config['headers'] = UserFunction::build($config['headers'], $fnContext);
         }
-        return new RestRequest($config);
+
+        // Create login request without default request options
+        return $this->client->createRequest($config, false);
     }
 
     private function processResponse(\stdClass $loginResponse): void
