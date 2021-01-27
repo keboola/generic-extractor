@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor\Authentication;
 
+use GuzzleHttp\Middleware;
 use Keboola\GenericExtractor\Configuration\UserFunction;
+use Keboola\GenericExtractor\Context\OAuth20Context;
 use Keboola\GenericExtractor\Exception\UserException;
-use Keboola\GenericExtractor\Subscriber\AbstractSignature;
+use Keboola\GenericExtractor\Utils;
 use Keboola\Juicer\Client\RestClient;
-use Keboola\GenericExtractor\Subscriber\UrlSignature;
-use Keboola\GenericExtractor\Subscriber\HeaderSignature;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * OAuth 2.0 Bearer implementation
@@ -37,19 +38,17 @@ class OAuth20 implements AuthInterface
     /**
      * @var string|object
      */
-    protected $data;
+    private $data;
 
-    protected string $clientId;
+    private string $clientId;
 
-    protected string $clientSecret;
+    private string $clientSecret;
 
-    protected array $headers;
+    private array $headers;
 
-    protected array $query;
+    private array $query;
 
-    protected array $configAttributes;
-
-    public function __construct(array $configAttributes, array $authorization, array $authentication)
+    public function __construct(array $authorization, array $authentication)
     {
         if (empty($authorization['oauth_api']['credentials'])) {
             throw new UserException('OAuth API credentials not supplied in configuration.');
@@ -83,64 +82,36 @@ class OAuth20 implements AuthInterface
         }
 
         // authorization: clientId
-        $this->clientId = $oauthApiDetails['appKey'];
+        $this->clientId = (string) $oauthApiDetails['appKey'];
         // authorization: clientSecret
-        $this->clientSecret = $oauthApiDetails['#appSecret'];
+        $this->clientSecret = (string) $oauthApiDetails['#appSecret'];
         $this->headers = empty($authentication['headers']) ? [] : $authentication['headers'];
         $this->query = empty($authentication['query']) ? [] : $authentication['query'];
-        $this->configAttributes = $configAttributes;
     }
 
     /**
      * @inheritdoc
      */
-    public function authenticateClient(RestClient $client): void
+    public function attachToClient(RestClient $client): void
     {
-        $subscribers = [
-            [
-                'subscriber' => new UrlSignature(),
-                'definitions' => $this->query,
-            ],
-            [
-                'subscriber' => new HeaderSignature(),
-                'definitions' => $this->headers,
-            ],
-        ];
+        $client->getHandlerStack()->push(Middleware::mapRequest(
+            function (RequestInterface $request): RequestInterface {
+                // Create context
+                $fnContext = OAuth20Context::create($request, $this->clientId, $this->data);
 
-        $authorization = [
-            'clientId' => $this->clientId,
-            'nonce' => substr(sha1(uniqid(microtime(), true)), 0, 16),
-            'timestamp' => time(),
-        ];
+                // Add query params
+                $uri = $request->getUri();
+                $query = UserFunction::build($this->query, $fnContext);
+                $request = $request->withUri($uri->withQuery(
+                    Utils::mergeQueries($uri->getQuery(), $query)
+                ));
 
-        if (!is_scalar($this->data)) {
-            $authorization = array_merge(
-                $authorization,
-                \Keboola\Utils\flattenArray(\Keboola\Utils\objectToArray($this->data), 'data.')
-            );
-        } else {
-            $authorization['data'] = $this->data;
-        }
+                // Add headers
+                $headers = UserFunction::build($this->headers, $fnContext);
+                $request = Utils::mergeHeaders($request, $headers);
 
-        foreach ($subscribers as $subscriber) {
-            if (empty($subscriber['definitions'])) {
-                continue;
+                return $request;
             }
-
-            $this->addGenerator($subscriber['subscriber'], $subscriber['definitions'], $authorization);
-            $client->getClient()->getEmitter()->attach($subscriber['subscriber']);
-        }
-    }
-
-    protected function addGenerator(AbstractSignature $subscriber, array $definitions, array $authorization): void
-    {
-        // Create array of objects instead of arrays from YML
-        $q = (array) \Keboola\Utils\arrayToObject($definitions);
-        $subscriber->setSignatureGenerator(
-            function (array $requestInfo = []) use ($q, $authorization) {
-                $params = array_merge($requestInfo, ['authorization' => $authorization]);
-                return UserFunction::build($q, $params);
-            }
-        );
+        ));
     }
 }

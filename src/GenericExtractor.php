@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor;
 
-use GuzzleHttp\Message\RequestInterface;
-use GuzzleHttp\Subscriber\Cache\CacheStorage;
-use GuzzleHttp\Subscriber\Cache\CacheSubscriber;
 use Keboola\GenericExtractor\Configuration\Api;
 use Keboola\GenericExtractor\Configuration\JuicerRest;
 use Keboola\GenericExtractor\Configuration\UserFunction;
+use Keboola\GenericExtractor\Logger\LoggerMiddleware;
 use Keboola\Juicer\Config\JobConfig;
 use Keboola\Juicer\Config\Config;
 use Keboola\Juicer\Client\RestClient;
 use Keboola\Juicer\Parser\Json;
 use Keboola\Juicer\Parser\JsonMap;
 use Keboola\Juicer\Parser\ParserInterface;
-use Keboola\GenericExtractor\Subscriber\LogRequest;
 use Keboola\Temp\Temp;
+use Kevinrob\GuzzleCache\CacheMiddleware;
+use Kevinrob\GuzzleCache\Strategy\CacheStrategyInterface;
 use Psr\Log\LoggerInterface;
 
 class GenericExtractor
@@ -28,7 +27,7 @@ class GenericExtractor
 
     protected ?ParserInterface $parser = null;
 
-    protected ?CacheStorage $cache = null;
+    protected ?CacheStrategyInterface $cacheStrategy = null;
 
     protected Temp $temp;
 
@@ -54,9 +53,9 @@ class GenericExtractor
         $this->proxy = $proxy;
     }
 
-    public function enableCache(CacheStorage $cache): self
+    public function enableCache(CacheStrategyInterface $cacheStrategy): self
     {
-        $this->cache = $cache;
+        $this->cacheStrategy = $cacheStrategy;
         return $this;
     }
 
@@ -78,28 +77,21 @@ class GenericExtractor
 
         $client = new RestClient(
             $this->logger,
-            [
-                'base_url' => $this->api->getBaseUrl(),
-                'defaults' => $defaults,
-            ],
+            $this->api->getBaseUrl(),
+            $defaults,
             JuicerRest::convertRetry($this->api->getRetryConfig()),
             $this->api->getDefaultRequestOptions(),
             $this->api->getIgnoreErrors()
         );
 
-        $this->api->getAuth()->authenticateClient($client);
-        // Verbose Logging of all requests
-        $client->getClient()->getEmitter()->attach(new LogRequest($this->logger));
+        // Attach auth middleware
+        $this->api->getAuth()->attachToClient($client);
 
-        if ($this->cache) {
-            CacheSubscriber::attach(
-                $client->getClient(),
-                [
-                    'storage' => $this->cache,
-                    'validate' => false,
-                    'can_cache' => fn(RequestInterface $requestInterface) => true,
-                ]
-            );
+        // Verbose Logging of all requests
+        $client->getHandlerStack()->push(LoggerMiddleware::create($this->logger));
+
+        if ($this->cacheStrategy) {
+            $client->getHandlerStack()->push(new CacheMiddleware($this->cacheStrategy), 'cache');
         }
 
         $this->initParser($config);

@@ -4,56 +4,21 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor\Tests\Config;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Event\BeforeEvent;
-use GuzzleHttp\Event\Emitter;
-use GuzzleHttp\Message\Request;
-use GuzzleHttp\Message\Response;
 use Keboola\GenericExtractor\Authentication\OAuth20;
 use Keboola\GenericExtractor\Authentication\OAuth20Login;
 use Keboola\GenericExtractor\Authentication\Query;
+use GuzzleHttp\Psr7\Query as Psr7Query;
 use Keboola\GenericExtractor\Configuration\Api;
 use Keboola\GenericExtractor\Exception\ApplicationException;
 use Keboola\GenericExtractor\Exception\UserException;
-use Keboola\GenericExtractor\Subscriber\AbstractSignature;
 use Keboola\Juicer\Client\RestClient;
-use PHPUnit\Framework\MockObject\MockObject;
+use Keboola\Juicer\Tests\HistoryContainer;
+use Keboola\Juicer\Tests\RestClientMockBuilder;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
 class ApiTest extends TestCase
 {
-    /**
-     * @return RestClient|MockObject
-     */
-    private function getClientMock(Request $request): RestClient
-    {
-        $beforeEventMock = self::createMock(BeforeEvent::class);
-        $beforeEventMock->method('getRequest')->willReturn($request);
-        /** @var BeforeEvent $beforeEventMock */
-        $emitterMock = self::createMock(Emitter::class);
-        $a = 1;
-        $emitterMock->method('attach')->willReturnCallback(
-            function ($arg) use ($beforeEventMock, &$a): void {
-                /**
-            * @var AbstractSignature $arg
-            */
-                if ($a === 1) {
-                    // make sure the onBefore is triggered only once because of LoginRequests
-                    $a++;
-                    $arg->onBefore($beforeEventMock);
-                }
-            }
-        );
-        $guzzleClientMock = self::createMock(Client::class);
-        $guzzleClientMock->method('getEmitter')->willReturn($emitterMock);
-        $guzzleClientMock->method('send')->willReturn(new Response(200));
-        $restClientMock = self::createMock(RestClient::class);
-        $restClientMock->method('getClient')->willReturn($guzzleClientMock);
-        $restClientMock->method('getGuzzleRequest')->willReturn(new Request('POST', 'http://example.com'));
-        return $restClientMock;
-    }
-
     public function testCreateBaseUrlString(): void
     {
         $string = 'https://third.second.com/TEST/Something/';
@@ -121,14 +86,23 @@ class ApiTest extends TestCase
             ],
         ];
         $api = new Api(new NullLogger(), $apiConfig, $attributes, []);
-        $request = new Request('GET', 'http://example.com?foo=bar');
-        $restClientMock = $this->getClientMock($request);
-        /**
- * @var RestClient $restClientMock
-*/
-        $api->getAuth()->authenticateClient($restClientMock);
-        self::assertEquals(['foo' => 'bar', 'param' => 'val'], $request->getQuery()->toArray());
+        $history = new HistoryContainer();
+        $restClient = RestClientMockBuilder::create()
+            ->addResponse200('{"foo": "bar"}')
+            ->setHistoryContainer($history)
+            ->setInitCallback(function (RestClient $client) use ($api): void {
+                $api->getAuth()->attachToClient($client);
+            })
+            ->getRestClient();
+
+        self::assertEquals(
+            (object) ['foo' => 'bar'],
+            $restClient->download($restClient->createRequest(['endpoint' => 'http://example.com?foo=bar']))
+        );
+
+        $request = $history->shift()->getRequest();
         self::assertInstanceOf(Query::class, $api->getAuth());
+        self::assertEquals(['foo' => 'bar', 'param' => 'val'], Psr7Query::parse($request->getUri()->getQuery()));
     }
 
     public function testCreateAuthQuery(): void
@@ -146,31 +120,51 @@ class ApiTest extends TestCase
         ];
 
         $api = new Api(new NullLogger(), $apiConfig, ['key' => 'val'], []);
-        $request = new Request('GET', 'http://example.com?foo=bar');
-        $restClientMock = $this->getClientMock($request);
-        /**
- * @var RestClient $restClientMock
-*/
-        $api->getAuth()->authenticateClient($restClientMock);
-        self::assertEquals(['foo' => 'bar', 'param' => 'val'], $request->getQuery()->toArray());
+        $history = new HistoryContainer();
+        $restClient = RestClientMockBuilder::create()
+            ->addResponse200('{"foo": "bar"}')
+            ->setHistoryContainer($history)
+            ->setInitCallback(function (RestClient $client) use ($api): void {
+                $api->getAuth()->attachToClient($client);
+            })
+            ->getRestClient();
+
+        self::assertEquals(
+            (object) ['foo' => 'bar'],
+            $restClient->download($restClient->createRequest(['endpoint' => 'http://example.com?foo=bar']))
+        );
+
+        $request = $history->shift()->getRequest();
         self::assertInstanceOf(Query::class, $api->getAuth());
+        self::assertEquals(['foo' => 'bar', 'param' => 'val'], Psr7Query::parse($request->getUri()->getQuery()));
     }
 
     public function testCreateAuthOAuth20Bearer(): void
     {
         $config = json_decode((string) file_get_contents(__DIR__ . '/../data/oauth20bearer/config.json'), true);
         $api = new Api(new NullLogger(), $config['parameters']['api'], [], $config['authorization']);
-        $request = new Request('GET', 'http://example.com?foo=bar');
-        $restClientMock = $this->getClientMock($request);
-        /**
- * @var RestClient $restClientMock
-*/
-        $api->getAuth()->authenticateClient($restClientMock);
+        $history = new HistoryContainer();
+        $restClient = RestClientMockBuilder::create()
+            ->addResponse200('{"foo": "bar"}')
+            ->setHistoryContainer($history)
+            ->setInitCallback(function (RestClient $client) use ($api): void {
+                $api->getAuth()->attachToClient($client);
+            })
+            ->getRestClient();
+
+        self::assertEquals(
+            (object) ['foo' => 'bar'],
+            $restClient->download($restClient->createRequest(['endpoint' => 'http://example.com?foo=bar']))
+        );
+
+        $request = $history->shift()->getRequest();
+        $headers = $request->getHeaders();
+        unset($headers['User-Agent']);
         self::assertInstanceOf(OAuth20::class, $api->getAuth());
-        self::assertEquals(['foo' => 'bar'], $request->getQuery()->toArray());
+        self::assertEquals(['foo' => 'bar'], Psr7Query::parse($request->getUri()->getQuery()));
         self::assertEquals(
             ['Host' => ['example.com'], 'Authorization' => ['Bearer testToken']],
-            $request->getHeaders()
+            $headers
         );
     }
 
@@ -178,16 +172,44 @@ class ApiTest extends TestCase
     {
         $config = json_decode((string) file_get_contents(__DIR__ . '/../data/oauth20login/config.json'), true);
         $api = new Api(new NullLogger(), $config['parameters']['api'], [], $config['authorization']);
-        $request = new Request('GET', 'http://example.com?foo=bar');
-        $restClientMock = $this->getClientMock($request);
-        $restClientMock->method('getObjectFromResponse')->willReturn((object) ['access_token' => 'baz']);
-        /**
- * @var RestClient $restClientMock
-*/
-        $api->getAuth()->authenticateClient($restClientMock);
+
+        $history = new HistoryContainer();
+        $restClient = RestClientMockBuilder::create()
+            // Login response
+            ->addResponse200('{"access_token": "baz"}')
+            // Api response
+            ->addResponse200('{"foo": "bar"}')
+            ->setHistoryContainer($history)
+            ->setInitCallback(function (RestClient $client) use ($api): void {
+                $api->getAuth()->attachToClient($client);
+            })
+            ->getRestClient();
+
+        self::assertEquals(
+            (object) ['foo' => 'bar'],
+            $restClient->download($restClient->createRequest(['endpoint' => 'http://example.com?foo=bar']))
+        );
+
+        // Login request
+        $loginRequest = $history->shift()->getRequest();
+        $headers = $loginRequest->getHeaders();
+        unset($headers['User-Agent']);
+        self::assertEquals('POST', (string) $loginRequest->getMethod());
+        self::assertEquals('/uas/oauth2/accessToken', (string) $loginRequest->getUri()->getPath());
+
+        // Api request
+        $apiRequest = $history->shift()->getRequest();
+        $headers = $apiRequest->getHeaders();
+        unset($headers['User-Agent']);
         self::assertInstanceOf(OAuth20Login::class, $api->getAuth());
-        self::assertEquals(['foo' => 'bar', 'oauth2_access_token' => 'baz'], $request->getQuery()->toArray());
-        self::assertEquals(['Host' => ['example.com']], $request->getHeaders());
+        self::assertEquals(
+            ['foo' => 'bar', 'oauth2_access_token' => 'baz'],
+            Psr7Query::parse($apiRequest->getUri()->getQuery())
+        );
+        self::assertEquals(['Host' => ['example.com']], $headers);
+
+        // No more history items
+        self::assertTrue($history->isEmpty());
     }
 
     public function testNoCaCertificate(): void

@@ -1,1 +1,1 @@
-GET /081-login-auth-headers-query-override/users?debug=1&orderBy=userName&secretKey%5B0%5D=none&secretKey%5B1%5D=a1b2c3d435f6&customerId%5B0%5D=234&customerId%5B1%5D=abc&apiToken=987654
+GET /081-login-auth-headers-query-override/users?debug=1&orderBy=userName&apiToken=987654&secretKey%5B0%5D=none&secretKey%5B1%5D=a1b2c3d435f6&customerId%5B0%5D=234&customerId%5B1%5D=abc

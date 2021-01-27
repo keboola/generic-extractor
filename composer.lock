@@ -4,194 +4,56 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9a98364051ef98531748d0e9ba5c440f",
+    "content-hash": "feeac99d26a675fb7233cf4a9d647ee5",
     "packages": [
         {
-            "name": "doctrine/cache",
-            "version": "1.10.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/doctrine/cache.git",
-                "reference": "13e3381b25847283a91948d04640543941309727"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/13e3381b25847283a91948d04640543941309727",
-                "reference": "13e3381b25847283a91948d04640543941309727",
-                "shasum": ""
-            },
-            "require": {
-                "php": "~7.1 || ^8.0"
-            },
-            "conflict": {
-                "doctrine/common": ">2.2,<2.4"
-            },
-            "require-dev": {
-                "alcaeus/mongo-php-adapter": "^1.1",
-                "doctrine/coding-standard": "^6.0",
-                "mongodb/mongodb": "^1.1",
-                "phpunit/phpunit": "^7.0",
-                "predis/predis": "~1.0"
-            },
-            "suggest": {
-                "alcaeus/mongo-php-adapter": "Required to use legacy MongoDB driver"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.9.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Doctrine\\Common\\Cache\\": "lib/Doctrine/Common/Cache"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com"
-                },
-                {
-                    "name": "Roman Borschel",
-                    "email": "roman@code-factory.org"
-                },
-                {
-                    "name": "Benjamin Eberlei",
-                    "email": "kontakt@beberlei.de"
-                },
-                {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com"
-                },
-                {
-                    "name": "Johannes Schmitt",
-                    "email": "schmittjoh@gmail.com"
-                }
-            ],
-            "description": "PHP Doctrine Cache library is a popular cache implementation that supports many different drivers such as redis, memcache, apc, mongodb and others.",
-            "homepage": "https://www.doctrine-project.org/projects/cache.html",
-            "keywords": [
-                "abstraction",
-                "apcu",
-                "cache",
-                "caching",
-                "couchdb",
-                "memcached",
-                "php",
-                "redis",
-                "xcache"
-            ],
-            "support": {
-                "issues": "https://github.com/doctrine/cache/issues",
-                "source": "https://github.com/doctrine/cache/tree/1.10.x"
-            },
-            "funding": [
-                {
-                    "url": "https://www.doctrine-project.org/sponsorship.html",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://www.patreon.com/phpdoctrine",
-                    "type": "patreon"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/doctrine%2Fcache",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-07-07T18:54:01+00:00"
-        },
-        {
-            "name": "guzzlehttp/cache-subscriber",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/guzzle/cache-subscriber.git",
-                "reference": "aaab195"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/cache-subscriber/zipball/aaab195",
-                "reference": "aaab195",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/cache": "~1.3",
-                "guzzlehttp/guzzle": "~5.0",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0"
-            },
-            "default-branch": true,
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.2-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "GuzzleHttp\\Subscriber\\Cache\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michael Dowling",
-                    "email": "mtdowling@gmail.com",
-                    "homepage": "https://github.com/mtdowling"
-                }
-            ],
-            "description": "Guzzle HTTP cache subscriber",
-            "homepage": "http://guzzlephp.org/",
-            "keywords": [
-                "Guzzle",
-                "cache"
-            ],
-            "support": {
-                "issues": "https://github.com/guzzle/cache-subscriber/issues",
-                "source": "https://github.com/guzzle/cache-subscriber/tree/0.2.0"
-            },
-            "abandoned": true,
-            "time": "2019-09-16T13:44:55+00:00"
-        },
-        {
             "name": "guzzlehttp/guzzle",
-            "version": "5.3.4",
+            "version": "7.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "b87eda7a7162f95574032da17e9323c9899cb6b2"
+                "reference": "0aa74dfb41ae110835923ef10a9d803a22d50e79"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/b87eda7a7162f95574032da17e9323c9899cb6b2",
-                "reference": "b87eda7a7162f95574032da17e9323c9899cb6b2",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/0aa74dfb41ae110835923ef10a9d803a22d50e79",
+                "reference": "0aa74dfb41ae110835923ef10a9d803a22d50e79",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/ringphp": "^1.1",
-                "php": ">=5.4.0",
-                "react/promise": "^2.2"
+                "ext-json": "*",
+                "guzzlehttp/promises": "^1.4",
+                "guzzlehttp/psr7": "^1.7",
+                "php": "^7.2.5 || ^8.0",
+                "psr/http-client": "^1.0"
+            },
+            "provide": {
+                "psr/http-client-implementation": "1.0"
             },
             "require-dev": {
                 "ext-curl": "*",
-                "phpunit/phpunit": "^4.0"
+                "php-http/client-integration-tests": "^3.0",
+                "phpunit/phpunit": "^8.5.5 || ^9.3.5",
+                "psr/log": "^1.1"
+            },
+            "suggest": {
+                "ext-curl": "Required for CURL handler support",
+                "ext-intl": "Required for Internationalized Domain Name (IDN) support",
+                "psr/log": "Required for using the Log middleware"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "7.1-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "GuzzleHttp\\": "src/"
-                }
+                },
+                "files": [
+                    "src/functions_include.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -202,9 +64,14 @@
                     "name": "Michael Dowling",
                     "email": "mtdowling@gmail.com",
                     "homepage": "https://github.com/mtdowling"
+                },
+                {
+                    "name": "Márk Sági-Kazár",
+                    "email": "mark.sagikazar@gmail.com",
+                    "homepage": "https://sagikazarmark.hu"
                 }
             ],
-            "description": "Guzzle is a PHP HTTP client library and framework for building RESTful web service clients",
+            "description": "Guzzle is a PHP HTTP client library",
             "homepage": "http://guzzlephp.org/",
             "keywords": [
                 "client",
@@ -212,32 +79,52 @@
                 "framework",
                 "http",
                 "http client",
+                "psr-18",
+                "psr-7",
                 "rest",
                 "web service"
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
-                "source": "https://github.com/guzzle/guzzle/tree/5.3"
+                "source": "https://github.com/guzzle/guzzle/tree/7.2.0"
             },
-            "time": "2019-10-30T09:32:00+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/GrahamCampbell",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/Nyholm",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/alexeyshockov",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/gmponos",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-10-10T11:47:56+00:00"
         },
         {
             "name": "guzzlehttp/oauth-subscriber",
-            "version": "0.2.0",
+            "version": "0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/oauth-subscriber.git",
-                "reference": "03f1ebe31d3112526106d0570c80eba6820e86e5"
+                "reference": "47b4b9cd0b31a6733a3cc500d4285a8363502485"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/oauth-subscriber/zipball/03f1ebe31d3112526106d0570c80eba6820e86e5",
-                "reference": "03f1ebe31d3112526106d0570c80eba6820e86e5",
+                "url": "https://api.github.com/repos/guzzle/oauth-subscriber/zipball/47b4b9cd0b31a6733a3cc500d4285a8363502485",
+                "reference": "47b4b9cd0b31a6733a3cc500d4285a8363502485",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/guzzle": "~4.0|~5.0",
-                "php": ">=5.4.0"
+                "guzzlehttp/guzzle": "^6.0|^7.0",
+                "php": ">=5.5.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "~4.0"
@@ -245,7 +132,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.1-dev"
+                    "dev-master": "0.4-dev"
                 }
             },
             "autoload": {
@@ -272,42 +159,43 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/oauth-subscriber/issues",
-                "source": "https://github.com/guzzle/oauth-subscriber/tree/master"
+                "source": "https://github.com/guzzle/oauth-subscriber/tree/0.4.0"
             },
-            "time": "2014-10-23T22:19:02+00:00"
+            "time": "2020-07-01T06:28:13+00:00"
         },
         {
-            "name": "guzzlehttp/retry-subscriber",
-            "version": "dev-master",
+            "name": "guzzlehttp/promises",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/guzzle/retry-subscriber.git",
-                "reference": "270393c"
+                "url": "https://github.com/guzzle/promises.git",
+                "reference": "60d379c243457e073cff02bc323a2a86cb355631"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/retry-subscriber/zipball/270393c",
-                "reference": "270393c",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/60d379c243457e073cff02bc323a2a86cb355631",
+                "reference": "60d379c243457e073cff02bc323a2a86cb355631",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/guzzle": "~5.1",
-                "php": ">=5.4.0"
+                "php": ">=5.5"
             },
             "require-dev": {
-                "guzzlehttp/log-subscriber": "~1.0",
-                "phpunit/phpunit": "~4.0"
+                "symfony/phpunit-bridge": "^4.4 || ^5.1"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0-dev"
+                    "dev-master": "1.4-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "GuzzleHttp\\Subscriber\\Retry\\": "src/"
-                }
+                    "GuzzleHttp\\Promise\\": "src/"
+                },
+                "files": [
+                    "src/functions_include.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -320,56 +208,58 @@
                     "homepage": "https://github.com/mtdowling"
                 }
             ],
-            "description": "Retries failed HTTP requests using customizable retry strategies (Guzzle 4+)",
-            "homepage": "http://guzzlephp.org/",
+            "description": "Guzzle promises library",
             "keywords": [
-                "Guzzle",
-                "http",
-                "retry"
+                "promise"
             ],
             "support": {
-                "issues": "https://github.com/guzzle/retry-subscriber/issues",
-                "source": "https://github.com/guzzle/retry-subscriber/tree/master"
+                "issues": "https://github.com/guzzle/promises/issues",
+                "source": "https://github.com/guzzle/promises/tree/1.4.0"
             },
-            "abandoned": true,
-            "time": "2017-03-13T02:52:35+00:00"
+            "time": "2020-09-30T07:37:28+00:00"
         },
         {
-            "name": "guzzlehttp/ringphp",
-            "version": "1.1.1",
+            "name": "guzzlehttp/psr7",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/guzzle/RingPHP.git",
-                "reference": "5e2a174052995663dd68e6b5ad838afd47dd615b"
+                "url": "https://github.com/guzzle/psr7.git",
+                "reference": "53330f47520498c0ae1f61f7e2c90f55690c06a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/RingPHP/zipball/5e2a174052995663dd68e6b5ad838afd47dd615b",
-                "reference": "5e2a174052995663dd68e6b5ad838afd47dd615b",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/53330f47520498c0ae1f61f7e2c90f55690c06a3",
+                "reference": "53330f47520498c0ae1f61f7e2c90f55690c06a3",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/streams": "~3.0",
                 "php": ">=5.4.0",
-                "react/promise": "~2.0"
+                "psr/http-message": "~1.0",
+                "ralouphie/getallheaders": "^2.0.5 || ^3.0.0"
+            },
+            "provide": {
+                "psr/http-message-implementation": "1.0"
             },
             "require-dev": {
-                "ext-curl": "*",
-                "phpunit/phpunit": "~4.0"
+                "ext-zlib": "*",
+                "phpunit/phpunit": "~4.8.36 || ^5.7.27 || ^6.5.14 || ^7.5.20 || ^8.5.8 || ^9.3.10"
             },
             "suggest": {
-                "ext-curl": "Guzzle will use specific adapters if cURL is present"
+                "laminas/laminas-httphandlerrunner": "Emit PSR-7 responses"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1-dev"
+                    "dev-master": "1.7-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "GuzzleHttp\\Ring\\": "src/"
-                }
+                    "GuzzleHttp\\Psr7\\": "src/"
+                },
+                "files": [
+                    "src/functions_include.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -380,95 +270,53 @@
                     "name": "Michael Dowling",
                     "email": "mtdowling@gmail.com",
                     "homepage": "https://github.com/mtdowling"
-                }
-            ],
-            "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
-            "support": {
-                "issues": "https://github.com/guzzle/RingPHP/issues",
-                "source": "https://github.com/guzzle/RingPHP/tree/1.1.1"
-            },
-            "abandoned": true,
-            "time": "2018-07-31T13:22:33+00:00"
-        },
-        {
-            "name": "guzzlehttp/streams",
-            "version": "3.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/guzzle/streams.git",
-                "reference": "47aaa48e27dae43d39fc1cea0ccf0d84ac1a2ba5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/streams/zipball/47aaa48e27dae43d39fc1cea0ccf0d84ac1a2ba5",
-                "reference": "47aaa48e27dae43d39fc1cea0ccf0d84ac1a2ba5",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "GuzzleHttp\\Stream\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
+                },
                 {
-                    "name": "Michael Dowling",
-                    "email": "mtdowling@gmail.com",
-                    "homepage": "https://github.com/mtdowling"
+                    "name": "Tobias Schultze",
+                    "homepage": "https://github.com/Tobion"
                 }
             ],
-            "description": "Provides a simple abstraction over streams of data",
-            "homepage": "http://guzzlephp.org/",
+            "description": "PSR-7 message implementation that also provides common utility methods",
             "keywords": [
-                "Guzzle",
-                "stream"
+                "http",
+                "message",
+                "psr-7",
+                "request",
+                "response",
+                "stream",
+                "uri",
+                "url"
             ],
             "support": {
-                "issues": "https://github.com/guzzle/streams/issues",
-                "source": "https://github.com/guzzle/streams/tree/master"
+                "issues": "https://github.com/guzzle/psr7/issues",
+                "source": "https://github.com/guzzle/psr7/tree/1.7.0"
             },
-            "abandoned": true,
-            "time": "2014-10-12T19:18:40+00:00"
+            "time": "2020-09-30T07:37:11+00:00"
         },
         {
             "name": "keboola-legacy/json-parser",
-            "version": "2.1.0",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/legacy-php-jsonparser.git",
-                "reference": "8ab380215ff34911cf27e44388ea0e3b794343d6"
+                "reference": "8c574cc9f71ed3892455a9cdbcf54d05d74a4ef8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/legacy-php-jsonparser/zipball/8ab380215ff34911cf27e44388ea0e3b794343d6",
-                "reference": "8ab380215ff34911cf27e44388ea0e3b794343d6",
+                "url": "https://api.github.com/repos/keboola/legacy-php-jsonparser/zipball/8c574cc9f71ed3892455a9cdbcf54d05d74a4ef8",
+                "reference": "8c574cc9f71ed3892455a9cdbcf54d05d74a4ef8",
                 "shasum": ""
             },
             "require": {
-                "keboola/php-csvtable": "~0.1.0",
-                "keboola/php-utils": "^2.1",
-                "monolog/monolog": "~1.8",
-                "php": ">=5.4.0"
+                "keboola/php-csvtable": "^1.1",
+                "keboola/php-utils": "^4.1",
+                "monolog/monolog": "^2.2",
+                "php": ">=7.4"
             },
             "require-dev": {
                 "codeclimate/php-test-reporter": "dev-master",
                 "phpunit/phpunit": "^5.2",
-                "squizlabs/php_codesniffer": "2.*"
+                "squizlabs/php_codesniffer": "^2.5"
             },
             "type": "library",
             "autoload": {
@@ -496,39 +344,40 @@
             ],
             "support": {
                 "issues": "https://github.com/keboola/legacy-php-jsonparser/issues",
-                "source": "https://github.com/keboola/legacy-php-jsonparser/tree/2.1.0"
+                "source": "https://github.com/keboola/legacy-php-jsonparser/tree/3.0.0"
             },
             "abandoned": "keboola/json-parser",
-            "time": "2017-12-20T15:59:27+00:00"
+            "time": "2021-01-15T15:41:37+00:00"
         },
         {
             "name": "keboola/codebuilder",
-            "version": "0.6.0",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-codebuilder.git",
-                "reference": "2e035ad231e4ea9f363d162458336676bc2db787"
+                "reference": "1e96e94995546f8cac6afaa8fb31ee5d9397f80a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-codebuilder/zipball/2e035ad231e4ea9f363d162458336676bc2db787",
-                "reference": "2e035ad231e4ea9f363d162458336676bc2db787",
+                "url": "https://api.github.com/repos/keboola/php-codebuilder/zipball/1e96e94995546f8cac6afaa8fb31ee5d9397f80a",
+                "reference": "1e96e94995546f8cac6afaa8fb31ee5d9397f80a",
                 "shasum": ""
             },
             "require": {
-                "keboola/php-utils": "^2.1",
-                "php": ">=7.0"
+                "ext-json": "*",
+                "keboola/php-utils": "^4.1",
+                "php": ">=7.4"
             },
             "require-dev": {
-                "codeclimate/php-test-reporter": "^0.4",
-                "phpunit/phpunit": "^6.2",
-                "squizlabs/php_codesniffer": "^3.0"
+                "keboola/coding-standard": ">=9.0",
+                "php-parallel-lint/php-parallel-lint": "^1.2",
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "^9.5"
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "Keboola\\Code": "src/",
-                    "Keboola\\Code\\Tests": "tests/"
+                "psr-4": {
+                    "Keboola\\Code\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -549,68 +398,84 @@
             ],
             "support": {
                 "issues": "https://github.com/keboola/php-codebuilder/issues",
-                "source": "https://github.com/keboola/php-codebuilder/tree/master"
+                "source": "https://github.com/keboola/php-codebuilder/tree/1.0.0"
             },
-            "time": "2019-01-16T16:44:11+00:00"
+            "time": "2021-01-15T15:41:41+00:00"
         },
         {
             "name": "keboola/csv",
-            "version": "1.1.4",
+            "version": "2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-csv.git",
-                "reference": "d7e257096c42eab09b54b7b46a905ca953a8eb6f"
+                "reference": "eb5a835a855f1bf03ddaa330e7b22fc5fb6042d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-csv/zipball/d7e257096c42eab09b54b7b46a905ca953a8eb6f",
-                "reference": "d7e257096c42eab09b54b7b46a905ca953a8eb6f",
+                "url": "https://api.github.com/repos/keboola/php-csv/zipball/eb5a835a855f1bf03ddaa330e7b22fc5fb6042d7",
+                "reference": "eb5a835a855f1bf03ddaa330e7b22fc5fb6042d7",
                 "shasum": ""
             },
+            "require": {
+                "php": ">=5.6"
+            },
             "require-dev": {
-                "phpunit/phpunit": "~3.7"
+                "ext-json": "*",
+                "phpunit/phpunit": "^5.7",
+                "squizlabs/php_codesniffer": "^3.2"
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "Keboola\\Csv": "src/"
+                "psr-4": {
+                    "Keboola\\Csv\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
+            "authors": [
+                {
+                    "name": "Keboola",
+                    "email": "devel@keboola.com"
+                }
+            ],
             "description": "Keboola CSV reader and writer",
             "homepage": "http://keboola.com",
+            "keywords": [
+                "csv",
+                "rfc4180"
+            ],
             "support": {
                 "issues": "https://github.com/keboola/php-csv/issues",
                 "source": "https://github.com/keboola/php-csv/tree/master"
             },
-            "time": "2016-04-21T20:46:22+00:00"
+            "time": "2020-07-28T09:27:05+00:00"
         },
         {
             "name": "keboola/csvmap",
-            "version": "0.5.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-csvmap.git",
-                "reference": "950929ee4fe9f45d9157ffcb1f0b5e3016504c94"
+                "reference": "87ebc40091b3fc14ebda382fbdd6ad7f69639b5f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-csvmap/zipball/950929ee4fe9f45d9157ffcb1f0b5e3016504c94",
-                "reference": "950929ee4fe9f45d9157ffcb1f0b5e3016504c94",
+                "url": "https://api.github.com/repos/keboola/php-csvmap/zipball/87ebc40091b3fc14ebda382fbdd6ad7f69639b5f",
+                "reference": "87ebc40091b3fc14ebda382fbdd6ad7f69639b5f",
                 "shasum": ""
             },
             "require": {
-                "keboola/csv": "~1.1.4",
-                "keboola/php-csvtable": "~0.1.6",
-                "keboola/php-utils": "^2.1",
-                "php": ">=5.6.0"
+                "ext-json": "*",
+                "keboola/csv": "^2.1",
+                "keboola/php-csvtable": "^1.1",
+                "keboola/php-utils": "^4.1",
+                "php": "^7.1"
             },
             "require-dev": {
                 "codeclimate/php-test-reporter": "dev-master",
-                "phpunit/phpunit": "^5.2",
+                "phpunit/phpunit": ">=7.5",
                 "squizlabs/php_codesniffer": "~2.7"
             },
             "type": "library",
@@ -637,38 +502,38 @@
             ],
             "support": {
                 "issues": "https://github.com/keboola/php-csvmap/issues",
-                "source": "https://github.com/keboola/php-csvmap/tree/0.5.0"
+                "source": "https://github.com/keboola/php-csvmap/tree/1.1.0"
             },
-            "time": "2017-12-20T16:07:11+00:00"
+            "time": "2020-10-29T12:19:34+00:00"
         },
         {
             "name": "keboola/filter",
-            "version": "1.1.0",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-filter.git",
-                "reference": "8e38d4b19722824f528a8a4395caa8b2e2cf66e1"
+                "reference": "e21735865f7eac769793559c90bc053fe4c7b86d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-filter/zipball/8e38d4b19722824f528a8a4395caa8b2e2cf66e1",
-                "reference": "8e38d4b19722824f528a8a4395caa8b2e2cf66e1",
+                "url": "https://api.github.com/repos/keboola/php-filter/zipball/e21735865f7eac769793559c90bc053fe4c7b86d",
+                "reference": "e21735865f7eac769793559c90bc053fe4c7b86d",
                 "shasum": ""
             },
             "require": {
-                "keboola/php-utils": "^2.2",
-                "php": ">=7.0"
+                "keboola/php-utils": "^4.1",
+                "php": ">=7.4"
             },
             "require-dev": {
-                "codeclimate/php-test-reporter": "^0.4",
-                "phpunit/phpunit": "^6.2",
-                "squizlabs/php_codesniffer": "^3.0"
+                "keboola/coding-standard": ">=9.0",
+                "php-parallel-lint/php-parallel-lint": "^1.2",
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "^9.5"
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "Keboola\\Filter": "src/",
-                    "Keboola\\Filter\\Tests": "tests/"
+                "psr-4": {
+                    "Keboola\\Filter\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -687,42 +552,42 @@
                 "generic extractor"
             ],
             "support": {
-                "issues": "https://github.com/keboola/php-filter/issues",
-                "source": "https://github.com/keboola/php-filter/tree/1.1.0"
+                "source": "https://github.com/keboola/php-filter/tree/2.0.0"
             },
-            "time": "2017-12-21T14:02:11+00:00"
+            "time": "2021-01-20T10:43:27+00:00"
         },
         {
             "name": "keboola/json-parser",
-            "version": "2.1.0",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-jsonparser.git",
-                "reference": "41c1ac42b369eeceb1c8d2674348282be253bbfc"
+                "reference": "a8b93569f57ba1dae696729f74ffa8f79a0955df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-jsonparser/zipball/41c1ac42b369eeceb1c8d2674348282be253bbfc",
-                "reference": "41c1ac42b369eeceb1c8d2674348282be253bbfc",
+                "url": "https://api.github.com/repos/keboola/php-jsonparser/zipball/a8b93569f57ba1dae696729f74ffa8f79a0955df",
+                "reference": "a8b93569f57ba1dae696729f74ffa8f79a0955df",
                 "shasum": ""
             },
             "require": {
-                "keboola/php-csvtable": "^0.1",
-                "keboola/php-temp": "^1.0",
-                "keboola/php-utils": "^2.2",
-                "monolog/monolog": "^1.23",
-                "php": ">=7.1"
+                "ext-json": "*",
+                "keboola/php-csvtable": "^1.1.1",
+                "keboola/php-temp": "^2.0",
+                "keboola/php-utils": "^4.1",
+                "monolog/monolog": "^2.2",
+                "php": ">=7.4"
             },
             "require-dev": {
-                "codeclimate/php-test-reporter": "^0.4",
-                "phpunit/phpunit": "^6.3",
-                "squizlabs/php_codesniffer": "^3.0"
+                "keboola/coding-standard": ">=9.0",
+                "php-parallel-lint/php-parallel-lint": "^1.2",
+                "phpstan/phpstan": "^0.12.14",
+                "phpunit/phpunit": "^9.0"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Keboola\\Json\\": "src",
-                    "Keboola\\Json\\Tests\\": "tests"
+                    "Keboola\\Json\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -745,49 +610,49 @@
             ],
             "support": {
                 "issues": "https://github.com/keboola/php-jsonparser/issues",
-                "source": "https://github.com/keboola/php-jsonparser/tree/2.1.0"
+                "source": "https://github.com/keboola/php-jsonparser/tree/3.0.0"
             },
-            "time": "2017-12-21T08:59:11+00:00"
+            "time": "2021-01-14T12:37:59+00:00"
         },
         {
             "name": "keboola/juicer",
-            "version": "4.10.1",
+            "version": "5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "5dbe45a8879560d31bdbd36308b4c62c9b2d3722"
+                "reference": "59224b17df7c2a80723dcdee001b8aa12849358e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/5dbe45a8879560d31bdbd36308b4c62c9b2d3722",
-                "reference": "5dbe45a8879560d31bdbd36308b4c62c9b2d3722",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/59224b17df7c2a80723dcdee001b8aa12849358e",
+                "reference": "59224b17df7c2a80723dcdee001b8aa12849358e",
                 "shasum": ""
             },
             "require": {
+                "ext-curl": "*",
                 "ext-iconv": "*",
                 "ext-json": "*",
-                "guzzlehttp/guzzle": "^5.3",
-                "guzzlehttp/retry-subscriber": "dev-master#270393c",
-                "keboola-legacy/json-parser": "^2.1",
-                "keboola/codebuilder": "^0.6",
-                "keboola/csvmap": "^0.5",
-                "keboola/json-parser": "^2.1",
-                "keboola/php-csvtable": "^0.1",
-                "keboola/php-temp": "^1.0",
-                "keboola/php-utils": "^2.2",
+                "guzzlehttp/guzzle": "^7.2",
+                "keboola-legacy/json-parser": "^3.0",
+                "keboola/codebuilder": "^1.0",
+                "keboola/csvmap": "^1.1",
+                "keboola/json-parser": "^3.0",
+                "keboola/php-csvtable": "^1.1",
+                "keboola/php-temp": "^2.0",
+                "keboola/php-utils": "^4.1",
                 "php": ">=7.4"
             },
             "require-dev": {
-                "keboola/coding-standard": ">=7.0.2",
-                "monolog/monolog": "^1.22",
+                "keboola/coding-standard": ">=9.0",
+                "monolog/monolog": "^2.2",
                 "php-parallel-lint/php-parallel-lint": "^1.2",
                 "phpstan/phpstan": "^0.12",
-                "phpunit/phpunit": "^7.0"
+                "phpunit/phpunit": "^9.5"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Keboola\\Juicer\\": ""
+                    "Keboola\\Juicer\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -808,31 +673,32 @@
             ],
             "support": {
                 "issues": "https://github.com/keboola/juicer/issues",
-                "source": "https://github.com/keboola/juicer/tree/4.10.1"
+                "source": "https://github.com/keboola/juicer/tree/5.0.0"
             },
-            "time": "2021-01-13T09:52:47+00:00"
+            "time": "2021-01-27T08:11:32+00:00"
         },
         {
             "name": "keboola/php-csvtable",
-            "version": "0.1.7",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-csvtable.git",
-                "reference": "099d234ed14da2948a92117df10edbd35cfa336c"
+                "reference": "c5163f1b96c3e35f660b35218781621c789b1a28"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-csvtable/zipball/099d234ed14da2948a92117df10edbd35cfa336c",
-                "reference": "099d234ed14da2948a92117df10edbd35cfa336c",
+                "url": "https://api.github.com/repos/keboola/php-csvtable/zipball/c5163f1b96c3e35f660b35218781621c789b1a28",
+                "reference": "c5163f1b96c3e35f660b35218781621c789b1a28",
                 "shasum": ""
             },
             "require": {
-                "keboola/csv": "~1.1.0",
-                "keboola/php-temp": ">=0.1.0"
+                "keboola/csv": "^2.2",
+                "keboola/php-temp": "^2.0",
+                "php": "^7.1"
             },
             "require-dev": {
                 "codeclimate/php-test-reporter": "dev-master",
-                "phpunit/phpunit": "^5.2"
+                "phpunit/phpunit": ">=7.5"
             },
             "type": "library",
             "autoload": {
@@ -858,36 +724,39 @@
             ],
             "support": {
                 "issues": "https://github.com/keboola/php-csvtable/issues",
-                "source": "https://github.com/keboola/php-csvtable/tree/master"
+                "source": "https://github.com/keboola/php-csvtable/tree/1.2.0"
             },
-            "time": "2016-03-31T21:16:36+00:00"
+            "time": "2021-01-20T10:46:15+00:00"
         },
         {
             "name": "keboola/php-temp",
-            "version": "1.0.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-temp.git",
-                "reference": "2e3c2fc4cce8536a84cbad2a1586eb2eaebe5d3b"
+                "reference": "cbdb4dd0dfe548d7bffd74a0e66294981aea49ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-temp/zipball/2e3c2fc4cce8536a84cbad2a1586eb2eaebe5d3b",
-                "reference": "2e3c2fc4cce8536a84cbad2a1586eb2eaebe5d3b",
+                "url": "https://api.github.com/repos/keboola/php-temp/zipball/cbdb4dd0dfe548d7bffd74a0e66294981aea49ce",
+                "reference": "cbdb4dd0dfe548d7bffd74a0e66294981aea49ce",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3",
-                "symfony/filesystem": ">2.1.0"
+                "php": ">=7.1",
+                "symfony/filesystem": ">2.8"
             },
             "require-dev": {
-                "codeclimate/php-test-reporter": "dev-master",
-                "phpunit/phpunit": "^5.2"
+                "infection/infection": "^0.12",
+                "jakub-onderka/php-parallel-lint": "^1.0",
+                "keboola/coding-standard": "^8.0",
+                "phpstan/phpstan-shim": "^0.11",
+                "phpunit/phpunit": "^7.0|^8.0"
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "Keboola\\Temp": "src/"
+                "psr-4": {
+                    "Keboola\\Temp\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -896,41 +765,37 @@
             ],
             "authors": [
                 {
-                    "name": "Miro Cillik",
-                    "email": "miro@keboola.cz"
-                },
-                {
-                    "name": "Ondrej Vana",
-                    "email": "kachna@keboola.cz"
+                    "name": "Keboola",
+                    "email": "devel@keboola.com"
                 }
             ],
-            "description": "Temp service - handles application's temporary files",
+            "description": "Temp library handles application temporary files",
             "keywords": [
                 "filesystem",
                 "temp"
             ],
             "support": {
                 "issues": "https://github.com/keboola/php-temp/issues",
-                "source": "https://github.com/keboola/php-temp/tree/1.0.0"
+                "source": "https://github.com/keboola/php-temp/tree/2.0.1"
             },
-            "time": "2017-11-13T13:02:19+00:00"
+            "time": "2019-04-26T07:18:24+00:00"
         },
         {
             "name": "keboola/php-utils",
-            "version": "2.3.1",
+            "version": "4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-utils.git",
-                "reference": "ec4d582994f2961bd16a6f6be40d3e8608ef5ec3"
+                "reference": "f5be83a50b5c4858f5698747e8a795048a89c382"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-utils/zipball/ec4d582994f2961bd16a6f6be40d3e8608ef5ec3",
-                "reference": "ec4d582994f2961bd16a6f6be40d3e8608ef5ec3",
+                "url": "https://api.github.com/repos/keboola/php-utils/zipball/f5be83a50b5c4858f5698747e8a795048a89c382",
+                "reference": "f5be83a50b5c4858f5698747e8a795048a89c382",
                 "shasum": ""
             },
             "require": {
-                "keboola/php-temp": "^1.0",
+                "keboola/sanitizer": "^0.1",
                 "php": ">=5.6.0",
                 "seld/jsonlint": "^1.4"
             },
@@ -959,7 +824,8 @@
                     "src/Keboola/Utils/isEmptyObject.php",
                     "src/Keboola/Utils/stripInvalidUtf16.php",
                     "src/Keboola/Utils/toAscii.php",
-                    "src/Keboola/Utils/sanitizeColumnName.php"
+                    "src/Keboola/Utils/sanitizeColumnName.php",
+                    "src/Keboola/Utils/formatBytes.php"
                 ],
                 "psr-0": {
                     "Keboola\\Utils": "src/"
@@ -983,25 +849,303 @@
                 "issues": "https://github.com/keboola/php-utils/issues",
                 "source": "https://github.com/keboola/php-utils/tree/master"
             },
-            "time": "2018-04-11T14:40:53+00:00"
+            "time": "2019-10-04T20:55:45+00:00"
         },
         {
-            "name": "monolog/monolog",
-            "version": "1.26.0",
+            "name": "keboola/sanitizer",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "2209ddd84e7ef1256b7af205d0717fb62cfc9c33"
+                "url": "https://github.com/keboola/sanitizer.git",
+                "reference": "6edda00cd177409a33f180b8f12bdad89bf893c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/2209ddd84e7ef1256b7af205d0717fb62cfc9c33",
-                "reference": "2209ddd84e7ef1256b7af205d0717fb62cfc9c33",
+                "url": "https://api.github.com/repos/keboola/sanitizer/zipball/6edda00cd177409a33f180b8f12bdad89bf893c5",
+                "reference": "6edda00cd177409a33f180b8f12bdad89bf893c5",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0",
-                "psr/log": "~1.0"
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "jakub-onderka/php-parallel-lint": "^1.0",
+                "phpunit/phpunit": "^5.7",
+                "squizlabs/php_codesniffer": "^3.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Keboola\\Utils\\Sanitizer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Keboola",
+                    "email": "devel@keboola.com"
+                }
+            ],
+            "description": "Column name sanitizer",
+            "support": {
+                "issues": "https://github.com/keboola/sanitizer/issues",
+                "source": "https://github.com/keboola/sanitizer/tree/0.1.0"
+            },
+            "time": "2019-01-11T10:21:17+00:00"
+        },
+        {
+            "name": "kevinrob/guzzle-cache-middleware",
+            "version": "v3.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Kevinrob/guzzle-cache-middleware.git",
+                "reference": "f978b8da7484a16e26589a5518d6bacc6ccdee99"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Kevinrob/guzzle-cache-middleware/zipball/f978b8da7484a16e26589a5518d6bacc6ccdee99",
+                "reference": "f978b8da7484a16e26589a5518d6bacc6ccdee99",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "cache/array-adapter": "^0.4 || ^0.5 || ^1.0",
+                "cache/simple-cache-bridge": "^0.1 || ^1.0",
+                "doctrine/cache": "^1.0",
+                "guzzlehttp/guzzle": "^6.0",
+                "illuminate/cache": "^5.0",
+                "league/flysystem": "^1.0",
+                "phpunit/phpunit": "^4.8.36 || ^5.0",
+                "psr/cache": "^1.0",
+                "symfony/phpunit-bridge": "^4.4 || ^5.0"
+            },
+            "suggest": {
+                "doctrine/cache": "This library has a lot of ready-to-use cache storage (to be used with Kevinrob\\GuzzleCache\\Storage\\DoctrineCacheStorage).",
+                "guzzlehttp/guzzle": "For using this library. It was created for Guzzle6 (but you can use it with any PSR-7 HTTP client).",
+                "laravel/framework": "To be used with Kevinrob\\GuzzleCache\\Storage\\LaravelCacheStorage",
+                "league/flysystem": "To be used with Kevinrob\\GuzzleCache\\Storage\\FlysystemStorage",
+                "psr/cache": "To be used with Kevinrob\\GuzzleCache\\Storage\\Psr6CacheStorage",
+                "psr/simple-cache": "To be used with Kevinrob\\GuzzleCache\\Storage\\Psr16CacheStorage"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Kevinrob\\GuzzleCache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kevin Robatel",
+                    "email": "kevinrob2@gmail.com",
+                    "homepage": "https://github.com/Kevinrob"
+                }
+            ],
+            "description": "A HTTP/1.1 Cache for Guzzle 6. It's a simple Middleware to be added in the HandlerStack. (RFC 7234)",
+            "homepage": "https://github.com/Kevinrob/guzzle-cache-middleware",
+            "keywords": [
+                "Etag",
+                "Flysystem",
+                "Guzzle",
+                "cache",
+                "cache-control",
+                "doctrine",
+                "expiration",
+                "guzzle6",
+                "handler",
+                "http",
+                "http 1.1",
+                "middleware",
+                "performance",
+                "php",
+                "promise",
+                "psr6",
+                "psr7",
+                "rfc7234",
+                "validation"
+            ],
+            "support": {
+                "issues": "https://github.com/Kevinrob/guzzle-cache-middleware/issues",
+                "source": "https://github.com/Kevinrob/guzzle-cache-middleware/tree/v3.3.1"
+            },
+            "time": "2020-02-14T11:17:02+00:00"
+        },
+        {
+            "name": "league/flysystem",
+            "version": "1.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/flysystem.git",
+                "reference": "9be3b16c877d477357c015cec057548cf9b2a14a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/9be3b16c877d477357c015cec057548cf9b2a14a",
+                "reference": "9be3b16c877d477357c015cec057548cf9b2a14a",
+                "shasum": ""
+            },
+            "require": {
+                "ext-fileinfo": "*",
+                "league/mime-type-detection": "^1.3",
+                "php": "^7.2.5 || ^8.0"
+            },
+            "conflict": {
+                "league/flysystem-sftp": "<1.0.6"
+            },
+            "require-dev": {
+                "phpspec/prophecy": "^1.11.1",
+                "phpunit/phpunit": "^8.5.8"
+            },
+            "suggest": {
+                "ext-fileinfo": "Required for MimeType",
+                "ext-ftp": "Allows you to use FTP server storage",
+                "ext-openssl": "Allows you to use FTPS server storage",
+                "league/flysystem-aws-s3-v2": "Allows you to use S3 storage with AWS SDK v2",
+                "league/flysystem-aws-s3-v3": "Allows you to use S3 storage with AWS SDK v3",
+                "league/flysystem-azure": "Allows you to use Windows Azure Blob storage",
+                "league/flysystem-cached-adapter": "Flysystem adapter decorator for metadata caching",
+                "league/flysystem-eventable-filesystem": "Allows you to use EventableFilesystem",
+                "league/flysystem-rackspace": "Allows you to use Rackspace Cloud Files",
+                "league/flysystem-sftp": "Allows you to use SFTP server storage via phpseclib",
+                "league/flysystem-webdav": "Allows you to use WebDAV storage",
+                "league/flysystem-ziparchive": "Allows you to use ZipArchive adapter",
+                "spatie/flysystem-dropbox": "Allows you to use Dropbox storage",
+                "srmklive/flysystem-dropbox-v2": "Allows you to use Dropbox storage for PHP 5 applications"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Flysystem\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frenky.net"
+                }
+            ],
+            "description": "Filesystem abstraction: Many filesystems, one API.",
+            "keywords": [
+                "Cloud Files",
+                "WebDAV",
+                "abstraction",
+                "aws",
+                "cloud",
+                "copy.com",
+                "dropbox",
+                "file systems",
+                "files",
+                "filesystem",
+                "filesystems",
+                "ftp",
+                "rackspace",
+                "remote",
+                "s3",
+                "sftp",
+                "storage"
+            ],
+            "support": {
+                "issues": "https://github.com/thephpleague/flysystem/issues",
+                "source": "https://github.com/thephpleague/flysystem/tree/1.x"
+            },
+            "funding": [
+                {
+                    "url": "https://offset.earth/frankdejonge",
+                    "type": "other"
+                }
+            ],
+            "time": "2020-08-23T07:39:11+00:00"
+        },
+        {
+            "name": "league/mime-type-detection",
+            "version": "1.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/mime-type-detection.git",
+                "reference": "3b9dff8aaf7323590c1d2e443db701eb1f9aa0d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/mime-type-detection/zipball/3b9dff8aaf7323590c1d2e443db701eb1f9aa0d3",
+                "reference": "3b9dff8aaf7323590c1d2e443db701eb1f9aa0d3",
+                "shasum": ""
+            },
+            "require": {
+                "ext-fileinfo": "*",
+                "php": "^7.2 || ^8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.18",
+                "phpstan/phpstan": "^0.12.68",
+                "phpunit/phpunit": "^8.5.8 || ^9.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "League\\MimeTypeDetection\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frankdejonge.nl"
+                }
+            ],
+            "description": "Mime-type detection for Flysystem",
+            "support": {
+                "issues": "https://github.com/thephpleague/mime-type-detection/issues",
+                "source": "https://github.com/thephpleague/mime-type-detection/tree/1.7.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/frankdejonge",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/league/flysystem",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-01-18T20:58:21+00:00"
+        },
+        {
+            "name": "monolog/monolog",
+            "version": "2.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Seldaek/monolog.git",
+                "reference": "1cb1cde8e8dd0f70cc0fe51354a59acad9302084"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1cb1cde8e8dd0f70cc0fe51354a59acad9302084",
+                "reference": "1cb1cde8e8dd0f70cc0fe51354a59acad9302084",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2",
+                "psr/log": "^1.0.1"
             },
             "provide": {
                 "psr/log-implementation": "1.0.0"
@@ -1009,29 +1153,39 @@
             "require-dev": {
                 "aws/aws-sdk-php": "^2.4.9 || ^3.0",
                 "doctrine/couchdb": "~1.0@dev",
-                "graylog2/gelf-php": "~1.0",
+                "elasticsearch/elasticsearch": "^7",
+                "graylog2/gelf-php": "^1.4.2",
+                "mongodb/mongodb": "^1.8",
                 "php-amqplib/php-amqplib": "~2.4",
                 "php-console/php-console": "^3.1.3",
+                "phpspec/prophecy": "^1.6.1",
                 "phpstan/phpstan": "^0.12.59",
-                "phpunit/phpunit": "~4.5",
-                "ruflin/elastica": ">=0.90 <3.0",
-                "sentry/sentry": "^0.13",
+                "phpunit/phpunit": "^8.5",
+                "predis/predis": "^1.1",
+                "rollbar/rollbar": "^1.3",
+                "ruflin/elastica": ">=0.90 <7.0.1",
                 "swiftmailer/swiftmailer": "^5.3|^6.0"
             },
             "suggest": {
                 "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
                 "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
+                "elasticsearch/elasticsearch": "Allow sending log messages to an Elasticsearch server via official client",
                 "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
-                "ext-mongo": "Allow sending log messages to a MongoDB server",
+                "ext-mbstring": "Allow to work properly with unicode symbols",
+                "ext-mongodb": "Allow sending log messages to a MongoDB server (via driver)",
                 "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
-                "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
+                "mongodb/mongodb": "Allow sending log messages to a MongoDB server (via library)",
                 "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
                 "php-console/php-console": "Allow sending log messages to Google Chrome",
                 "rollbar/rollbar": "Allow sending log messages to Rollbar",
-                "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
-                "sentry/sentry": "Allow sending log messages to a Sentry server"
+                "ruflin/elastica": "Allow sending log messages to an Elastic Search server"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "2.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Monolog\\": "src/Monolog"
@@ -1045,11 +1199,11 @@
                 {
                     "name": "Jordi Boggiano",
                     "email": "j.boggiano@seld.be",
-                    "homepage": "http://seld.be"
+                    "homepage": "https://seld.be"
                 }
             ],
             "description": "Sends your logs to files, sockets, inboxes, databases and various web services",
-            "homepage": "http://github.com/Seldaek/monolog",
+            "homepage": "https://github.com/Seldaek/monolog",
             "keywords": [
                 "log",
                 "logging",
@@ -1057,7 +1211,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Seldaek/monolog/issues",
-                "source": "https://github.com/Seldaek/monolog/tree/1.26.0"
+                "source": "https://github.com/Seldaek/monolog/tree/2.2.0"
             },
             "funding": [
                 {
@@ -1069,7 +1223,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-12-14T12:56:38+00:00"
+            "time": "2020-12-14T13:15:25+00:00"
         },
         {
             "name": "psr/container",
@@ -1125,6 +1279,111 @@
             "time": "2017-02-14T16:28:37+00:00"
         },
         {
+            "name": "psr/http-client",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-client.git",
+                "reference": "2dfb5f6c5eff0e91e20e913f8c5452ed95b86621"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-client/zipball/2dfb5f6c5eff0e91e20e913f8c5452ed95b86621",
+                "reference": "2dfb5f6c5eff0e91e20e913f8c5452ed95b86621",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.0 || ^8.0",
+                "psr/http-message": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Client\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for HTTP clients",
+            "homepage": "https://github.com/php-fig/http-client",
+            "keywords": [
+                "http",
+                "http-client",
+                "psr",
+                "psr-18"
+            ],
+            "support": {
+                "source": "https://github.com/php-fig/http-client/tree/master"
+            },
+            "time": "2020-06-29T06:28:15+00:00"
+        },
+        {
+            "name": "psr/http-message",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-message.git",
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Message\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for HTTP messages",
+            "homepage": "https://github.com/php-fig/http-message",
+            "keywords": [
+                "http",
+                "http-message",
+                "psr",
+                "psr-7",
+                "request",
+                "response"
+            ],
+            "support": {
+                "source": "https://github.com/php-fig/http-message/tree/master"
+            },
+            "time": "2016-08-06T14:39:51+00:00"
+        },
+        {
             "name": "psr/log",
             "version": "1.1.3",
             "source": {
@@ -1175,32 +1434,30 @@
             "time": "2020-03-23T09:12:05+00:00"
         },
         {
-            "name": "react/promise",
-            "version": "v2.8.0",
+            "name": "ralouphie/getallheaders",
+            "version": "3.0.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/reactphp/promise.git",
-                "reference": "f3cff96a19736714524ca0dd1d4130de73dbbbc4"
+                "url": "https://github.com/ralouphie/getallheaders.git",
+                "reference": "120b605dfeb996808c31b6477290a714d356e822"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/reactphp/promise/zipball/f3cff96a19736714524ca0dd1d4130de73dbbbc4",
-                "reference": "f3cff96a19736714524ca0dd1d4130de73dbbbc4",
+                "url": "https://api.github.com/repos/ralouphie/getallheaders/zipball/120b605dfeb996808c31b6477290a714d356e822",
+                "reference": "120b605dfeb996808c31b6477290a714d356e822",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0"
+                "php": ">=5.6"
             },
             "require-dev": {
-                "phpunit/phpunit": "^7.0 || ^6.5 || ^5.7 || ^4.8.36"
+                "php-coveralls/php-coveralls": "^2.1",
+                "phpunit/phpunit": "^5 || ^6.5"
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "React\\Promise\\": "src/"
-                },
                 "files": [
-                    "src/functions_include.php"
+                    "src/getallheaders.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1209,20 +1466,16 @@
             ],
             "authors": [
                 {
-                    "name": "Jan Sorgalla",
-                    "email": "jsorgalla@gmail.com"
+                    "name": "Ralph Khattar",
+                    "email": "ralph.khattar@gmail.com"
                 }
             ],
-            "description": "A lightweight implementation of CommonJS Promises/A for PHP",
-            "keywords": [
-                "promise",
-                "promises"
-            ],
+            "description": "A polyfill for getallheaders.",
             "support": {
-                "issues": "https://github.com/reactphp/promise/issues",
-                "source": "https://github.com/reactphp/promise/tree/v2.8.0"
+                "issues": "https://github.com/ralouphie/getallheaders/issues",
+                "source": "https://github.com/ralouphie/getallheaders/tree/develop"
             },
-            "time": "2020-05-12T15:16:56+00:00"
+            "time": "2019-03-08T08:55:37+00:00"
         },
         {
             "name": "seld/jsonlint",
@@ -3161,16 +3414,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.68",
+            "version": "0.12.69",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "ddbe01af0706ee094c3f1ce9730b35aebb508d3d"
+                "reference": "8f436ea35241da33487fd0d38b4bc3e6dfe30ea8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/ddbe01af0706ee094c3f1ce9730b35aebb508d3d",
-                "reference": "ddbe01af0706ee094c3f1ce9730b35aebb508d3d",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/8f436ea35241da33487fd0d38b4bc3e6dfe30ea8",
+                "reference": "8f436ea35241da33487fd0d38b4bc3e6dfe30ea8",
                 "shasum": ""
             },
             "require": {
@@ -3201,7 +3454,7 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/0.12.68"
+                "source": "https://github.com/phpstan/phpstan/tree/0.12.69"
             },
             "funding": [
                 {
@@ -3217,7 +3470,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-18T12:29:17+00:00"
+            "time": "2021-01-24T14:55:37+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -4758,12 +5011,12 @@
             "version": "1.9.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/webmozart/assert.git",
+                "url": "https://github.com/webmozarts/assert.git",
                 "reference": "bafc69caeb4d49c39fd0779086c03a3738cbb389"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozart/assert/zipball/bafc69caeb4d49c39fd0779086c03a3738cbb389",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/bafc69caeb4d49c39fd0779086c03a3738cbb389",
                 "reference": "bafc69caeb4d49c39fd0779086c03a3738cbb389",
                 "shasum": ""
             },
@@ -4801,18 +5054,15 @@
                 "validate"
             ],
             "support": {
-                "issues": "https://github.com/webmozart/assert/issues",
-                "source": "https://github.com/webmozart/assert/tree/master"
+                "issues": "https://github.com/webmozarts/assert/issues",
+                "source": "https://github.com/webmozarts/assert/tree/1.9.1"
             },
             "time": "2020-07-08T17:02:28+00:00"
         }
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "guzzlehttp/cache-subscriber": 20,
-        "guzzlehttp/retry-subscriber": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

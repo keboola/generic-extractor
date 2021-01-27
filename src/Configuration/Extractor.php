@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor\Configuration;
 
-use Doctrine\Common\Cache\FilesystemCache;
-use GuzzleHttp\Subscriber\Cache\CacheStorage;
 use Keboola\CsvTable\Table;
+use Keboola\GenericExtractor\Cache\CacheAllStrategy;
 use Keboola\GenericExtractor\Configuration\Extractor\ConfigFile;
 use Keboola\GenericExtractor\Configuration\Extractor\StateFile;
 use Keboola\GenericExtractor\Exception\ApplicationException;
 use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\Juicer\Config\Config;
+use Kevinrob\GuzzleCache\Storage\FlysystemStorage;
+use Kevinrob\GuzzleCache\Strategy\CacheStrategyInterface;
+use League\Flysystem\Adapter\Local;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
@@ -123,7 +126,7 @@ class Extractor
         return $this->state;
     }
 
-    public function getCache(): ?CacheStorage
+    public function getCache(): ?CacheStrategyInterface
     {
         if (empty($this->config['parameters']['cache'])) {
             return null;
@@ -131,7 +134,11 @@ class Extractor
 
         $ttl = !empty($this->config['parameters']['cache']['ttl']) ?
             (int) $this->config['parameters']['cache']['ttl'] : self::CACHE_TTL;
-        return new CacheStorage(new FilesystemCache($this->dataDir . DIRECTORY_SEPARATOR . 'cache'), null, $ttl);
+        $cacheDir = $this->dataDir . DIRECTORY_SEPARATOR . 'cache';
+        return new CacheAllStrategy(
+            new FlysystemStorage(new Local($cacheDir)),
+            $ttl
+        );
     }
 
     public function getApi(array $configAttributes): Api
@@ -188,11 +195,9 @@ class Extractor
                 $manifest['destination'] = "{$bucketName}.{$key}";
             }
 
-            /** @var bool|null $fileIncremental */
-            $fileIncremental = $file->getIncremental();
-            $manifest['incremental'] = is_null($fileIncremental)
-                ? $incremental
-                : $file->getIncremental();
+            $manifest['incremental'] = $file->isIncrementalSet()
+                ? $file->getIncremental()
+                : $incremental;
 
             if (!empty($file->getPrimaryKey())) {
                 $manifest['primary_key'] = $file->getPrimaryKey(true);

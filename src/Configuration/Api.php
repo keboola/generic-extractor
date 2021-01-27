@@ -100,7 +100,7 @@ class Api
             case 'oauth10':
                 return new Authentication\OAuth10($authorization);
             case 'oauth20':
-                return new Authentication\OAuth20($configAttributes, $authorization, $api['authentication']);
+                return new Authentication\OAuth20($authorization, $api['authentication']);
             case 'oauth20.login':
                 return new Authentication\OAuth20Login($configAttributes, $authorization, $api['authentication']);
             default:

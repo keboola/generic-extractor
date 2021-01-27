@@ -8,5 +8,5 @@ use Keboola\Juicer\Client\RestClient;
 
 interface AuthInterface
 {
-    public function authenticateClient(RestClient $client): void;
+    public function attachToClient(RestClient $client): void;
 }

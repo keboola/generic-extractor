@@ -6,3 +6,5 @@ parameters:
         - '#Cannot access offset .* on Iterator#'
         - '#MockObject is not subtype of native type#'
         - '#Call to an undefined method .*::method\(\)#'
+        # TODO remove -> skipped tests
+        - '#Unreachable statement - code above always terminates\.#'

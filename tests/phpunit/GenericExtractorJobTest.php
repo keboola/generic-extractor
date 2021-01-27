@@ -7,12 +7,13 @@ namespace Keboola\GenericExtractor\Tests;
 use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\GenericExtractor\GenericExtractor;
 use Keboola\GenericExtractor\GenericExtractorJob;
-use Keboola\Juicer\Client\RestRequest;
 use Keboola\Juicer\Config\JobConfig;
 use Keboola\Juicer\Pagination\NoScroller;
 use Keboola\Juicer\Pagination\ResponseUrlScroller;
-use Keboola\Juicer\Client\RestClient;
+use Keboola\Juicer\Pagination\ScrollerInterface;
 use Keboola\Juicer\Parser\Json;
+use Keboola\Juicer\Parser\ParserInterface;
+use Keboola\Juicer\Tests\RestClientMockBuilder;
 use Psr\Log\NullLogger;
 
 class GenericExtractorJobTest extends ExtractorTestCase
@@ -22,7 +23,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
      */
     public function testGetParentId(JobConfig $cfg, ?array $expected): void
     {
-        $job = $this->getJob($cfg, [], []);
+        $job = $this->createJob($cfg, [], []);
 
         self::assertEquals($expected, self::callMethod($job, 'getParentId', []));
     }
@@ -86,7 +87,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
     public function testUserParentId(): void
     {
         $value = ['parent' => 'val'];
-        $job = $this->getJob(
+        $job = $this->createJob(
             new JobConfig(
                 [
                 'endpoint' => 'ep',
@@ -102,7 +103,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     public function testUserParentIdMerge(): void
     {
-        $job = $this->getJob(
+        $job = $this->createJob(
             new JobConfig(
                 [
                 'endpoint' => 'ep',
@@ -142,7 +143,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
             ],
             ]
         );
-        $job = $this->getJob($cfg, [], []);
+        $job = $this->createJob($cfg, [], []);
 
         $req = self::callMethod($job, 'firstPage', [$cfg]);
         self::assertEquals('ep', $req->getEndpoint());
@@ -161,19 +162,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
             ],
             ]
         );
-        $job = new GenericExtractorJob(
-            $cfg,
-            new RestClient(
-                new NullLogger(),
-                ['base_url' => 'http://example.com/api/']
-            ),
-            new Json(new NullLogger(), [], Json::LATEST_VERSION),
-            new NullLogger(),
-            new ResponseUrlScroller($config),
-            [],
-            [],
-            GenericExtractor::COMPAT_LEVEL_LATEST
-        );
+        $job = $this->createJob($cfg, [], [], new ResponseUrlScroller($config));
         self::callMethod($job, 'buildParams', [$cfg]);
 
         $response = new \stdClass();
@@ -227,7 +216,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
             ],
             ]
         );
-        $job = $this->getJob(
+        $job = $this->createJob(
             $cfg,
             ['das.attribute' => 'something interesting'],
             [
@@ -266,7 +255,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
             ],
             ]
         );
-        $job = $this->getJob(
+        $job = $this->createJob(
             $cfg,
             ['das.attribute' => 'something interesting'],
             [
@@ -290,7 +279,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
             ]
         );
 
-        $job = $this->getJob($cfg, [], []);
+        $job = $this->createJob($cfg, [], []);
 
         $data = [
             (object) [
@@ -313,58 +302,13 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     public function testRun(): void
     {
-        $jobConfig = new JobConfig(
-            [
-            'endpoint' => 'ep',
-            ]
-        );
+        $jobConfig = new JobConfig(['endpoint' => 'ep']);
         $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
-
-        $client = self::createMock(RestClient::class);
-        $client->method('download')->willReturn([(object) ['result' => 'data']]);
-        $client->method('createRequest')->willReturn(new RestRequest($jobConfig->getConfig()));
-
-        /**
- * @var RestClient $client
-*/
-        $job = new GenericExtractorJob(
-            $jobConfig,
-            $client,
-            $parser,
-            new NullLogger(),
-            new NoScroller(),
-            [],
-            [],
-            GenericExtractor::COMPAT_LEVEL_LATEST
-        );
-        /**
- * @var GenericExtractorJob $job
-*/
+        $job = $this->createJob($jobConfig, [], [], null, $parser);
         $job->run();
 
         self::assertCount(1, $parser->getResults());
         self::assertContainsOnlyInstancesOf('\Keboola\CsvTable\Table', $parser->getResults());
-    }
-
-    protected function getJob(JobConfig $config, array $attributes, array $metadata): GenericExtractorJob
-    {
-        return new GenericExtractorJob(
-            $config,
-            new RestClient(
-                new NullLogger(),
-                ['base_url' => 'http://example.com/api/']
-            ),
-            new Json(
-                new NullLogger(),
-                [],
-                Json::LATEST_VERSION
-            ),
-            new NullLogger(),
-            new NoScroller(),
-            $attributes,
-            $metadata,
-            GenericExtractor::COMPAT_LEVEL_LATEST
-        );
     }
 
     /**
@@ -499,5 +443,31 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 456,
             ],
         ];
+    }
+
+    protected function createJob(
+        JobConfig $config,
+        array $attributes = [],
+        array $metadata = [],
+        ?ScrollerInterface $scroller = null,
+        ?ParserInterface $parser = null
+    ): GenericExtractorJob {
+        $logger = new NullLogger();
+        $scroller = $scroller ?? new NoScroller();
+        $parser = $parser ?? new Json($logger, [], Json::LATEST_VERSION);
+        $restClient = RestClientMockBuilder::create()
+            ->addResponse200('[{"result": "data"}]')
+            ->setBaseUri('http://example.com/api/')
+            ->getRestClient();
+        return new GenericExtractorJob(
+            $config,
+            $restClient,
+            $parser,
+            $logger,
+            $scroller,
+            $attributes,
+            $metadata,
+            GenericExtractor::COMPAT_LEVEL_LATEST
+        );
     }
 }

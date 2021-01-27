@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor\Tests\Authentication;
 
+use GuzzleHttp\Psr7\Query as Psr7Query;
 use Keboola\GenericExtractor\Authentication\Query;
-use GuzzleHttp\Message\Response;
-use GuzzleHttp\Stream\Stream;
-use GuzzleHttp\Subscriber\Mock;
 use Keboola\GenericExtractor\Tests\ExtractorTestCase;
 use Keboola\Juicer\Client\RestClient;
-use Psr\Log\NullLogger;
+use Keboola\Juicer\Tests\HistoryContainer;
+use Keboola\Juicer\Tests\RestClientMockBuilder;
 
 class QueryTest extends ExtractorTestCase
 {
     public function testAuthenticateClient(): void
     {
+        // Create Query auth
         $authentication = [
             'query' => [
                 'paramOne' => (object) ['attr' => 'first'],
@@ -27,54 +27,78 @@ class QueryTest extends ExtractorTestCase
             ],
         ];
         $configAttributes = ['first' => 1, 'second' => 'two'];
-
         $auth = new Query($configAttributes, $authentication);
-        $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com'], [], []);
-        $auth->authenticateClient($restClient);
 
-        $request = $restClient->getClient()->createRequest('GET', '/');
-        $restClient->getClient()->send($request);
+        // Create RestClient
+        $history = new HistoryContainer();
+        $restClient = RestClientMockBuilder::create()
+            ->addResponse200((string) json_encode((object) [
+                'data' => [1, 2, 3],
+            ]))
+            ->setHistoryContainer($history)
+            ->setInitCallback(function (RestClient $restClient) use ($auth): void {
+                $auth->attachToClient($restClient);
+            })
+            ->getRestClient();
 
+        // Run
+        self::assertEquals(
+            (object) ['data' => [1, 2, 3]],
+            $restClient->download($restClient->createRequest(['endpoint' => '/']))
+        );
+
+        // Assert request query
+        $apiCall = $history->shift();
         self::assertEquals(
             'paramOne=1&paramTwo=' . md5($configAttributes['second']) . '&paramThree=string',
-            (string) $request->getQuery()
+            $apiCall->getRequest()->getUri()->getQuery()
         );
+
+        // No more history items
+        self::assertTrue($history->isEmpty());
     }
 
     public function testAuthenticateClientQuery(): void
     {
-        $auth = new Query([], ['query' => ['authParam' => 'secretCodeWow']]);
-        $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com'], [], []);
-        $auth->authenticateClient($restClient);
+        // Create Query auth
+        $authentication = ['query' => ['authParam' => 'secretCodeWow']];
+        $configAttributes = [];
+        $auth = new Query($configAttributes, $authentication);
 
-        $mock = new Mock(
-            [
-            new Response(
-                200,
-                [],
-                Stream::factory(
-                    (string) json_encode(
-                        (object) [
-                        'data' => [1,2,3],
-                        ]
-                    )
-                )
-            ),
-            ]
+        // Create RestClient
+        $history = new HistoryContainer();
+        $restClient = RestClientMockBuilder::create()
+            ->addResponse200((string) json_encode((object) [
+                'data' => [1, 2, 3],
+            ]))
+            ->setHistoryContainer($history)
+            ->setInitCallback(function (RestClient $restClient) use ($auth): void {
+                $auth->attachToClient($restClient);
+            })
+            ->getRestClient();
+
+        // Run
+        self::assertEquals(
+            (object) ['data' => [1, 2, 3]],
+            $restClient->download(
+                $restClient->createRequest(['endpoint' => '/query', 'params' => ['param' => 'value']])
+            )
         );
-        $restClient->getClient()->getEmitter()->attach($mock);
 
-        $request = $restClient->getClient()->createRequest('GET', '/query?param=value');
-        $restClient->getClient()->send($request);
-
+        // Assert request query
+        $apiCall = $history->shift();
         self::assertEquals(
             'param=value&authParam=secretCodeWow',
-            (string) $request->getQuery()
+            $apiCall->getRequest()->getUri()->getQuery()
         );
+
+        // No more history items
+        self::assertTrue($history->isEmpty());
     }
 
     public function testRequestInfo(): void
     {
+        // Create Query auth
         $urlTokenParam = (object) [
             'function' => 'concat',
             'args' => [
@@ -95,39 +119,42 @@ class QueryTest extends ExtractorTestCase
                 'urlTokenParam' => $urlTokenParam,
             ],
         ];
-        $configAttributes = [
-            'token' => 'asdf1234',
-        ];
-
+        $configAttributes = ['token' => 'asdf1234'];
         $auth = new Query($configAttributes, $authentication);
-        $restClient = new RestClient(new NullLogger(), ['base_url' => 'http://example.com'], [], []);
-        $auth->authenticateClient($restClient);
 
-        $mock = new Mock(
-            [
-            new Response(
-                200,
-                [],
-                Stream::factory(
-                    (string) json_encode(
-                        (object) [
-                        'data' => [1,2,3],
-                        ]
-                    )
-                )
-            ),
-            ]
-        );
-        $restClient->getClient()->getEmitter()->attach($mock);
+        // Create RestClient
+        $history = new HistoryContainer();
+        $restClient = RestClientMockBuilder::create()
+            ->addResponse200((string) json_encode((object) [
+                'data' => [1, 2, 3],
+            ]))
+            ->setHistoryContainer($history)
+            ->setInitCallback(function (RestClient $restClient) use ($auth): void {
+                $auth->attachToClient($restClient);
+            })
+            ->getRestClient();
 
-        $request = $restClient->getClient()->createRequest('GET', '/query?param=value');
-        $originalUrl = $request->getUrl();
-        self::sendRequest($restClient->getClient(), $request);
+        // Run
         self::assertEquals(
-            'param=value&urlTokenParamHash=' .
-                md5($originalUrl . $configAttributes['token'] . 'value') .
-                '&urlTokenParam=' . urlencode($originalUrl) . $configAttributes['token'] . 'value',
-            (string) $request->getQuery()
+            (object) ['data' => [1, 2, 3]],
+            $restClient->download(
+                $restClient->createRequest(['endpoint' => '/query', 'params' => ['param' => 'value']])
+            )
         );
+
+        // Assert request query
+        $apiCall = $history->shift();
+        $originalUrl = 'http://example.com/query?param=value';
+        self::assertEquals(
+            (string) Psr7Query::build([
+                'param' => 'value',
+                'urlTokenParamHash' => md5($originalUrl . $configAttributes['token'] . 'value'),
+                'urlTokenParam' => $originalUrl . $configAttributes['token'] . 'value',
+            ]),
+            $apiCall->getRequest()->getUri()->getQuery()
+        );
+
+        // No more history items
+        self::assertTrue($history->isEmpty());
     }
 }
