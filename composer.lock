@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "83d273e8ca03b0d82187804c1fbf22fc",
+    "content-hash": "feeac99d26a675fb7233cf4a9d647ee5",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -616,16 +616,16 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "dev-webrouse-COM-596-update-guzzle",
+            "version": "5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "ba295db3250f1ad5b58f13c1d515ba27f6ab616a"
+                "reference": "59224b17df7c2a80723dcdee001b8aa12849358e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/ba295db3250f1ad5b58f13c1d515ba27f6ab616a",
-                "reference": "ba295db3250f1ad5b58f13c1d515ba27f6ab616a",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/59224b17df7c2a80723dcdee001b8aa12849358e",
+                "reference": "59224b17df7c2a80723dcdee001b8aa12849358e",
                 "shasum": ""
             },
             "require": {
@@ -673,9 +673,9 @@
             ],
             "support": {
                 "issues": "https://github.com/keboola/juicer/issues",
-                "source": "https://github.com/keboola/juicer/tree/webrouse-COM-596-update-guzzle"
+                "source": "https://github.com/keboola/juicer/tree/5.0.0"
             },
-            "time": "2021-01-22T13:56:55+00:00"
+            "time": "2021-01-27T08:11:32+00:00"
         },
         {
             "name": "keboola/php-csvtable",
@@ -3414,16 +3414,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.68",
+            "version": "0.12.69",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "ddbe01af0706ee094c3f1ce9730b35aebb508d3d"
+                "reference": "8f436ea35241da33487fd0d38b4bc3e6dfe30ea8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/ddbe01af0706ee094c3f1ce9730b35aebb508d3d",
-                "reference": "ddbe01af0706ee094c3f1ce9730b35aebb508d3d",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/8f436ea35241da33487fd0d38b4bc3e6dfe30ea8",
+                "reference": "8f436ea35241da33487fd0d38b4bc3e6dfe30ea8",
                 "shasum": ""
             },
             "require": {
@@ -3454,7 +3454,7 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/0.12.68"
+                "source": "https://github.com/phpstan/phpstan/tree/0.12.69"
             },
             "funding": [
                 {
@@ -3470,7 +3470,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-18T12:29:17+00:00"
+            "time": "2021-01-24T14:55:37+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -5062,9 +5062,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "keboola/juicer": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
