@@ -4,7 +4,7 @@
       "ttl": 8
     },
     "api": {
-      "baseUrl": "http://time.jsontest.com/",
+      "baseUrl": "http://jsontest",
       "http": {
         "Accept": "application/json",
         "Content-Type": "application/json;charset=UTF-8"
@@ -14,7 +14,7 @@
       "outputBucket": "getPost",
       "jobs": [
         {
-          "endpoint": "/",
+          "endpoint": "/date",
           "dataType": "get",
           "dataField": "."
         }

@@ -9,6 +9,8 @@ services:
       context: .
       dockerfile: Dockerfile-tests
     command: composer ci
+    depends_on:
+      - jsontest
 
   dev:
     << : *ci
@@ -16,3 +18,7 @@ services:
     volumes:
       - ./:/code
       - ./data:/data
+
+  jsontest:
+      build: ./docker/jsontest
+      image: keboola/jsontest
