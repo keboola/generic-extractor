@@ -193,7 +193,7 @@ class Login implements AuthInterface
     {
         if ($this->format === 'text') {
             return (object) ['data' => (string) $rawResponse->getBody()];
-        } else if ($this->format === 'json') {
+        } elseif ($this->format === 'json') {
             $response = $this->client->getObjectFromResponse($rawResponse);
 
             if ($response instanceof \stdClass) {
