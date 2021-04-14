@@ -7,3 +7,4 @@ vendor/
 /doc/examples/*/out/state.json
 /doc/examples/*/out/tables/*
 /build/logs
+/tests/phpunit/data/*/out

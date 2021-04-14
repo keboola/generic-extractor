@@ -11,6 +11,8 @@ services:
     command: composer ci
     depends_on:
       - jsontest
+      - toxiproxy
+      - ssh-proxy
 
   dev:
     << : *ci
@@ -22,3 +24,16 @@ services:
   jsontest:
       build: ./docker/jsontest
       image: keboola/jsontest
+
+  toxiproxy:
+    image: shopify/toxiproxy
+    depends_on:
+      - ssh-proxy
+
+  ssh-proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile-ssh-proxy
+    links:
+      - jsontest:jsontest-behind-proxy
+

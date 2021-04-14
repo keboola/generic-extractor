@@ -1,0 +1,23 @@
+{
+  "parameters": {
+    "sshProxy": {
+      "host": "ssh-proxy",
+      "port": 22,
+      "user": "root",
+      "#privateKey": "bad_key"
+    },
+    "api": {
+      "baseUrl": "http://jsontest-behind-proxy"
+    },
+    "config": {
+      "outputBucket": "get",
+      "jobs": [
+        {
+          "endpoint": "/date",
+          "dataType": "get",
+          "dataField": "."
+        }
+      ]
+    }
+  }
+}

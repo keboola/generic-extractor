@@ -46,7 +46,7 @@ class SSH
 
         $cmd = sprintf(
             'ssh -D %s %s@%s -p %s -i %s -fN ' .
-            '-o ExitOnForwardFailure=yes -o StrictHostKeyChecking=no -o ServerAliveInterval=%d',
+            '-oBatchMode=yes -o ExitOnForwardFailure=yes -o StrictHostKeyChecking=no -o ServerAliveInterval=%d',
             $config['localPort'],
             $config['user'],
             $config['sshHost'],

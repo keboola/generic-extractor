@@ -37,15 +37,9 @@ class GenericExtractor
 
     private Api $api;
 
-    /**
-     * @var array|string|null
-     */
-    private $proxy;
+    private ?string $proxy;
 
-    /**
-     * @param array|string|null $proxy
-     */
-    public function __construct(Temp $temp, LoggerInterface $logger, Api $api, $proxy = null)
+    public function __construct(Temp $temp, LoggerInterface $logger, Api $api, ?string $proxy = null)
     {
         $this->temp = $temp;
         $this->logger = $logger;
