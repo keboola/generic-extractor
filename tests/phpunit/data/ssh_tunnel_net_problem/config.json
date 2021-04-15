@@ -9,7 +9,7 @@
     "api": {
       "baseUrl": "http://jsontest-behind-proxy",
       "retryConfig": {
-        "maxRetries": 2
+        "maxRetries": 3
       }
     },
     "config": {

@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         locales \
         unzip \
         ssh \
+        netcat \
 	&& rm -r /var/lib/apt/lists/* \
 	&& sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen \
 	&& locale-gen \

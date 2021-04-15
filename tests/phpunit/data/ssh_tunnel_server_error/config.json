@@ -17,7 +17,7 @@
       "outputBucket": "get",
       "jobs": [
         {
-          "endpoint": "/date",
+          "endpoint": "/http-code-503",
           "dataType": "get",
           "dataField": "."
         }

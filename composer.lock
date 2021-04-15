@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3858214804c7b1f6fd46e281ce54c85e",
+    "content-hash": "82f483528e629a32905c1fd614ffd199",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -617,16 +617,16 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "5.0.2",
+            "version": "5.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "eeb2f6f4c61ae13c07cfe0abe8fd2fbfae7b5b60"
+                "reference": "3c66fcb8456aa4e148c73de557b0df249d9ee21b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/eeb2f6f4c61ae13c07cfe0abe8fd2fbfae7b5b60",
-                "reference": "eeb2f6f4c61ae13c07cfe0abe8fd2fbfae7b5b60",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/3c66fcb8456aa4e148c73de557b0df249d9ee21b",
+                "reference": "3c66fcb8456aa4e148c73de557b0df249d9ee21b",
                 "shasum": ""
             },
             "require": {
@@ -674,9 +674,9 @@
             ],
             "support": {
                 "issues": "https://github.com/keboola/juicer/issues",
-                "source": "https://github.com/keboola/juicer/tree/5.0.2"
+                "source": "https://github.com/keboola/juicer/tree/5.0.3"
             },
-            "time": "2021-04-13T05:52:51+00:00"
+            "time": "2021-04-15T12:06:01+00:00"
         },
         {
             "name": "keboola/php-csvtable",

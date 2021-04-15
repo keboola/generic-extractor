@@ -7,9 +7,13 @@
       "#privateKey": "bad_key"
     },
     "api": {
-      "baseUrl": "http://jsontest-behind-proxy"
+      "baseUrl": "http://jsontest-behind-proxy",
+      "retryConfig": {
+        "maxRetries": 2
+      }
     },
     "config": {
+      "debug": true,
       "outputBucket": "get",
       "jobs": [
         {

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Keboola\GenericExtractor;
 
 use Keboola\GenericExtractor\Configuration\Extractor;
+use Keboola\GenericExtractor\SshTunnel\SshTunnelFactory;
+use Keboola\Juicer\Client\RestClient;
 use Keboola\Juicer\Parser\Json;
 use Keboola\Temp\Temp;
 use Monolog\Handler\AbstractHandler;
@@ -49,9 +51,10 @@ class Executor
         $configuration = new Extractor($dataDir, $this->logger);
         $configs = $configuration->getMultipleConfigs();
 
-        $sshProxy = null;
+        $sshTunnel = null;
         if ($configuration->getSshProxy() !== null) {
-            $sshProxy = $this->createSshTunnel($configuration->getSshProxy());
+            $sshTunnelFactory = new SshTunnelFactory($this->logger);
+            $sshTunnel = $sshTunnelFactory->create($configuration->getSshProxy());
         }
 
         $metadata = $configuration->getMetadata();
@@ -78,7 +81,16 @@ class Executor
                 $temp,
                 $this->logger,
                 $api,
-                $sshProxy
+                $sshTunnel ? $sshTunnel->getProxy() : null,
+                function (RestClient $client) use ($sshTunnel): void {
+                    if ($sshTunnel) {
+                        $client->getHandlerStack()->after(
+                            'retry',
+                            $sshTunnel->getMiddleware(),
+                            'ssh-tunnel'
+                        );
+                    }
+                }
             );
 
             if ($cacheStorage) {
@@ -135,19 +147,5 @@ class Executor
         $metadata['time']['previousStart'] = $metadata['time']['currentStart'];
         unset($metadata['time']['currentStart']);
         $configuration->saveConfigMetadata($metadata);
-    }
-
-    private function createSshTunnel(array $sshConfig): string
-    {
-        $tunnelParams = [
-            'user' => $sshConfig['user'],
-            'sshHost' => $sshConfig['host'],
-            'sshPort' => $sshConfig['port'],
-            'localPort' => 33006,
-            'privateKey' => $sshConfig['#privateKey'],
-        ];
-        $this->logger->info("Creating SSH tunnel to '" . $tunnelParams['sshHost'] . "'");
-        (new SSH())->openTunnel($tunnelParams);
-        return sprintf('socks5h://127.0.0.1:%s', $tunnelParams['localPort']);
     }
 }

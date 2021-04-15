@@ -6,6 +6,9 @@ namespace Keboola\GenericExtractor\Tests\Traits;
 
 use GuzzleHttp\Client;
 
+/**
+ * We use HTTP calls, because PHP "toxiproxy" client requires older Guzzle
+ */
 trait ToxiproxyTrait
 {
     protected function clearAllProxies(): void
