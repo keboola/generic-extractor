@@ -8,6 +8,7 @@
 
 use Mojolicious::Lite;
 use Digest::MD5;
+use Bytes::Random::Secure qw( random_string_from );
 
 @ARGV = qw(daemon --listen http://*:80);
 
@@ -55,6 +56,22 @@ get '/date' => sub {
   $c->res->headers->header("Content-Type" => 'application/json');
   $c->res->headers->header("Access-Control-Allow-Origin" => '*');
   $c->render(text => $text);
+};
+
+get '/random' => sub {
+  my $c = shift;
+  my $text = "{\"data\": \"";
+  $text .= random_string_from(
+      join( '', ( 'a' .. 'z' ), ( 'A' .. 'Z' ), ( '0' .. '9' ) ),
+      10000
+  );
+  $text .= "\"\n}";
+  $c->render(text => $text);
+};
+
+get '/http-code-503' => sub {
+  my $c = shift;
+  $c->render(text => 'server error', status => '503');
 };
 
 get '/echo' => sub {

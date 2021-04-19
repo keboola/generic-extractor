@@ -37,20 +37,23 @@ class GenericExtractor
 
     private Api $api;
 
-    /**
-     * @var array|string|null
-     */
-    private $proxy;
+    private ?string $proxy;
 
-    /**
-     * @param array|string|null $proxy
-     */
-    public function __construct(Temp $temp, LoggerInterface $logger, Api $api, $proxy = null)
-    {
+    /** @var callable|null */
+    private $clientInitCallback;
+
+    public function __construct(
+        Temp $temp,
+        LoggerInterface $logger,
+        Api $api,
+        ?string $proxy = null,
+        ?callable $clientInitCallback = null
+    ) {
         $this->temp = $temp;
         $this->logger = $logger;
         $this->api = $api;
         $this->proxy = $proxy;
+        $this->clientInitCallback = $clientInitCallback;
     }
 
     public function enableCache(CacheStrategyInterface $cacheStrategy): self
@@ -60,6 +63,20 @@ class GenericExtractor
     }
 
     public function run(Config $config): void
+    {
+        $client = $this->createClient($config);
+        $this->initParser($config);
+        foreach ($config->getJobs() as $jobConfig) {
+            $this->runJob($jobConfig, $client, $config);
+        }
+
+        if ($this->parser instanceof Json) {
+            // FIXME fallback from JsonMap
+            $this->metadata = array_replace_recursive($this->metadata, $this->parser->getMetadata());
+        }
+    }
+
+    protected function createClient(Config $config): RestClient
     {
         $defaults = [
             'headers' => UserFunction::build(
@@ -88,21 +105,19 @@ class GenericExtractor
         $this->api->getAuth()->attachToClient($client);
 
         // Verbose Logging of all requests
-        $client->getHandlerStack()->push(LoggerMiddleware::create($this->logger));
+        $client->getHandlerStack()->push(LoggerMiddleware::create($this->logger), 'logger');
 
+        // Cache
         if ($this->cacheStrategy) {
             $client->getHandlerStack()->push(new CacheMiddleware($this->cacheStrategy), 'cache');
         }
 
-        $this->initParser($config);
-        foreach ($config->getJobs() as $jobConfig) {
-            $this->runJob($jobConfig, $client, $config);
+        // Custom client init callback
+        if ($this->clientInitCallback) {
+            ($this->clientInitCallback)($client);
         }
 
-        if ($this->parser instanceof Json) {
-            // FIXME fallback from JsonMap
-            $this->metadata = array_replace_recursive($this->metadata, $this->parser->getMetadata());
-        }
+        return $client;
     }
 
     protected function runJob(JobConfig $jobConfig, RestClient $client, Config $config): void
