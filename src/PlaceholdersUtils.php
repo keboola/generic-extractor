@@ -25,11 +25,11 @@ class PlaceholdersUtils
 
         // Create all combinations if there are some parameter values as array.
         // Each combination will be one child job.
-        return self::flattenParameters($params);
+        return self::getParamsPerChildJob($params);
     }
 
     /**
-     * @param  string|array $field Path or a function with a path
+     * @param string|array $field Path or a function with a path
      * @return array ['placeholder', 'field', 'value']
      */
     public static function getPlaceholder(string $placeholder, $field, array $parentResults): array
@@ -37,13 +37,13 @@ class PlaceholdersUtils
         // TODO allow using a descriptive ID(level) by storing the result by `task(job) id` in $parentResults
         $level = strpos($placeholder, ':') === false
             ? 0
-            : (int) strtok($placeholder, ':') -1;
+            : (int) strtok($placeholder, ':') - 1;
 
         // Check function (defined as array)
         if (!is_scalar($field)) {
             if (empty($field['path'])) {
                 throw new UserException(
-                    "The path for placeholder '{$placeholder}' must be a string value or an object ".
+                    "The path for placeholder '{$placeholder}' must be a string value or an object " .
                     "containing 'path' and 'function'."
                 );
             }
@@ -78,7 +78,7 @@ class PlaceholdersUtils
     {
         try {
             if (!array_key_exists($level, $parentResults)) {
-                $maxLevel = empty($parentResults) ? 0 : (int) max(array_keys($parentResults)) +1;
+                $maxLevel = empty($parentResults) ? 0 : (int) max(array_keys($parentResults)) + 1;
                 throw new UserException(
                     'Level ' . ++$level . ' not found in parent results! Maximum level: ' . $maxLevel
                 );
@@ -97,22 +97,54 @@ class PlaceholdersUtils
         }
     }
 
-    public static function flattenParameters(array $params): array
+    public static function getParamsPerChildJob(array $params): array
     {
-        $flatParameters = [];
-        $i = 0;
-        foreach ($params as $placeholderName => $placeholder) {
+        // If value is array -> it is converted to multiple separated items
+        $flattened = [];
+        foreach ($params as $placeholder) {
+            $placeholderName = $placeholder['placeholder'];
             $template = $placeholder;
             if (is_array($placeholder['value'])) {
+                $flattened[$placeholderName] = [];
                 foreach ($placeholder['value'] as $value) {
                     $template['value'] = $value;
-                    $flatParameters[$i][$placeholderName] = $template;
-                    $i++;
+                    $flattened[$placeholderName][] = $template;
                 }
             } else {
-                $flatParameters[$i][$placeholderName] = $template;
+                $flattened[$placeholderName] = [$template];
             }
         }
-        return $flatParameters;
+
+        // Get all combinations between placeholders values
+        return self::cartesian($flattened);
+    }
+
+    /**
+     * Cartesian product of array
+     * https://stackoverflow.com/a/8567479
+     */
+    private static function cartesian(array $input): array
+    {
+        $result = [];
+        $arrays = array_values($input);
+        $sizeIn = sizeof($arrays);
+        $size = $sizeIn > 0 ? 1 : 0;
+        foreach ($arrays as $array) {
+            $size = $size * sizeof($array);
+        }
+        for ($i = 0; $i < $size; $i ++) {
+            $result[$i] = [];
+            for ($j = 0; $j < $sizeIn; $j ++) {
+                array_push($result[$i], current($arrays[$j]));
+            }
+            for ($j = ($sizeIn -1); $j >= 0; $j --) {
+                if (next($arrays[$j])) {
+                    break;
+                } elseif (isset($arrays[$j])) {
+                    reset($arrays[$j]);
+                }
+            }
+        }
+        return $result;
     }
 }
