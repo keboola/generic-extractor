@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor;
 
-use GuzzleHttp\Message\RequestInterface;
 use Keboola\Filter\Exception\FilterException;
 use Keboola\Filter\FilterFactory;
 use Keboola\GenericExtractor\Configuration\UserFunction;
@@ -16,9 +15,7 @@ use Keboola\Juicer\Client\RestRequest;
 use Keboola\Juicer\Config\JobConfig;
 use Keboola\Juicer\Pagination\ScrollerInterface;
 use Keboola\Juicer\Pagination\NoScroller;
-use Keboola\Code\Builder;
 use Keboola\Juicer\Parser\ParserInterface;
-use Keboola\Utils\Exception\NoDataFoundException;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -58,9 +55,9 @@ class GenericExtractorJob
     /**
      * Used to save necessary parents' data to child's output
      */
-    private array $parentParams = [];
+    private array $parentParams;
 
-    private array $parentResults = [];
+    private array $parentResults;
 
     /**
      * Compatibility level
@@ -80,7 +77,9 @@ class GenericExtractorJob
         ScrollerInterface $scroller,
         array $attributes,
         array $metadata,
-        int $compatLevel
+        int $compatLevel,
+        array $parentResults = [],
+        array $parentParams = []
     ) {
         $this->logger = $logger;
         $this->config = $config;
@@ -91,6 +90,17 @@ class GenericExtractorJob
         $this->attributes = $attributes;
         $this->metadata = $metadata;
         $this->compatLevel = $compatLevel;
+        $this->parentResults = $parentResults;
+        $this->parentParams = $parentParams;
+
+        // Replace parent params in endpoint
+        foreach ($this->parentParams as $params) {
+            $this->config->setEndpoint(str_replace(
+                "{{$params['placeholder']}}",
+                $params['value'],
+                $this->config->getConfig()['endpoint']
+            ));
+        }
     }
 
     /**
@@ -134,7 +144,7 @@ class GenericExtractorJob
 
     private function runChildJobs(array $data): void
     {
-        foreach ($this->config->getChildJobs() as $jobId => $child) {
+        foreach ($this->config->getChildJobs() as $child) {
             $filter = null;
             if (!empty($child->getConfig()['recursionFilter'])) {
                 try {
@@ -172,25 +182,20 @@ class GenericExtractorJob
         $scroller = clone $this->scroller;
         $scroller->reset();
 
-        $params = [];
+        // Process placeholders
         $placeholders = !empty($config->getConfig()['placeholders']) ? $config->getConfig()['placeholders'] : [];
         if (empty($placeholders)) {
             $this->logger->warning("No 'placeholders' set for '" . $config->getConfig()['endpoint'] . "'");
         }
 
-        foreach ($placeholders as $placeholder => $field) {
-            $params[$placeholder] = $this->getPlaceholder($placeholder, $field, $parentResults);
-        }
-
-        // Add parent params as well (for 'tagging' child-parent data)
-        // Same placeholder in deeper nesting replaces parent value
-        if (!empty($this->parentParams)) {
-            $params = array_replace($this->parentParams, $params);
-        }
-        $params = $this->flattenParameters($params);
+        $paramsForChildJobs = PlaceholdersUtils::getParamsForChildJobs(
+            $placeholders,
+            $parentResults,
+            $this->parentParams
+        );
 
         $jobs = [];
-        foreach ($params as $index => $param) {
+        foreach ($paramsForChildJobs as $params) {
             // Clone the config to prevent overwriting the placeholder(s) in endpoint
             $job = new self(
                 clone $config,
@@ -200,107 +205,15 @@ class GenericExtractorJob
                 $scroller,
                 $this->attributes,
                 $this->metadata,
-                $this->compatLevel
+                $this->compatLevel,
+                $parentResults,
+                $params,
             );
-            $job->setParams($param);
-            $job->setParentResults($parentResults);
             $jobs[] = $job;
         }
 
         /** @var static[] $jobs */
         return $jobs;
-    }
-
-    private function flattenParameters(array $params): array
-    {
-        $flatParameters = [];
-        $i = 0;
-        foreach ($params as $placeholderName => $placeholder) {
-            $template = $placeholder;
-            if (is_array($placeholder['value'])) {
-                foreach ($placeholder['value'] as $value) {
-                    $template['value'] = $value;
-                    $flatParameters[$i][$placeholderName] = $template;
-                    $i++;
-                }
-            } else {
-                $flatParameters[$i][$placeholderName] = $template;
-            }
-        }
-        return $flatParameters;
-    }
-
-
-    /**
-     * @param  string|array $field Path or a function with a path
-     * @return array ['placeholder', 'field', 'value']
-     * @throws UserException
-     */
-    private function getPlaceholder(string $placeholder, $field, array $parentResults): array
-    {
-        // TODO allow using a descriptive ID(level) by storing the result by `task(job) id` in $parentResults
-        $level = strpos($placeholder, ':') === false
-            ? 0
-            : (int) strtok($placeholder, ':') -1;
-
-        if (!is_scalar($field)) {
-            if (empty($field['path'])) {
-                throw new UserException(
-                    "The path for placeholder '{$placeholder}' must be a string value or an object ".
-                    "containing 'path' and 'function'."
-                );
-            }
-
-            $fn = (object) \Keboola\Utils\arrayToObject($field);
-            $field = $field['path'];
-            unset($fn->path);
-        }
-
-        $value = $this->getPlaceholderValue($field, $parentResults, $level, $placeholder);
-
-        if (isset($fn)) {
-            $builder = new Builder;
-            $builder->allowFunction('urlencode');
-            $value = $builder->run($fn, ['placeholder' => ['value' => $value]]);
-        }
-
-        return [
-            'placeholder' => $placeholder,
-            'field' => $field,
-            'value' => $value,
-        ];
-    }
-
-    /**
-     * @return mixed
-     * @throws UserException
-     */
-    private function getPlaceholderValue(string $field, array $parentResults, int $level, string $placeholder)
-    {
-        try {
-            if (!array_key_exists($level, $parentResults)) {
-                $maxLevel = empty($parentResults) ? 0 : (int) max(array_keys($parentResults)) +1;
-                throw new UserException(
-                    'Level ' . ++$level . ' not found in parent results! Maximum level: ' . $maxLevel
-                );
-            }
-
-            return \Keboola\Utils\getDataFromPath($field, $parentResults[$level], '.', false);
-        } catch (NoDataFoundException $e) {
-            throw new UserException(
-                "No value found for {$placeholder} in parent result. (level: " . ++$level . ')',
-                0,
-                null,
-                [
-                    'parents' => $parentResults,
-                ]
-            );
-        }
-    }
-
-    public function setParentResults(array $results): void
-    {
-        $this->parentResults = $results;
     }
 
     /**
@@ -404,14 +317,13 @@ class GenericExtractorJob
 
     private function buildParams(JobConfig $config): array
     {
-        $params = UserFunction::build(
+        return UserFunction::build(
             $config->getParams(),
             [
                 'attr' => $this->attributes,
                 'time' => !empty($this->metadata['time']) ? $this->metadata['time'] : [],
             ]
         );
-        return $params;
     }
 
     /**
@@ -432,21 +344,6 @@ class GenericExtractorJob
     {
         $responseModule = new FindResponseArray($this->logger);
         return $responseModule->process($response, $jobConfig);
-    }
-
-    /**
-     * Add parameters from parent call to the Endpoint.
-     * The parameter name in the config's endpoint has to be enclosed in {}
-     */
-    public function setParams(array $params): void
-    {
-        foreach ($params as $param) {
-            $this->config->setEndpoint(
-                str_replace('{' . $param['placeholder'] . '}', $param['value'], $this->config->getConfig()['endpoint'])
-            );
-        }
-
-        $this->parentParams = $params;
     }
 
 

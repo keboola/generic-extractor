@@ -7,6 +7,7 @@ namespace Keboola\GenericExtractor\Tests;
 use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\GenericExtractor\GenericExtractor;
 use Keboola\GenericExtractor\GenericExtractorJob;
+use Keboola\GenericExtractor\PlaceholdersUtils;
 use Keboola\Juicer\Config\JobConfig;
 use Keboola\Juicer\Pagination\NoScroller;
 use Keboola\Juicer\Pagination\ResponseUrlScroller;
@@ -34,10 +35,10 @@ class GenericExtractorJobTest extends ExtractorTestCase
             [
                 new JobConfig(
                     [
-                    'endpoint' => 'ep',
-                    'userData' => [
-                        'k' => 'v',
-                    ],
+                        'endpoint' => 'ep',
+                        'userData' => [
+                            'k' => 'v',
+                        ],
                     ]
                 ),
                 [
@@ -47,7 +48,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
             [
                 new JobConfig(
                     [
-                    'endpoint' => 'ep',
+                        'endpoint' => 'ep',
                     ]
                 ),
                 null,
@@ -55,8 +56,8 @@ class GenericExtractorJobTest extends ExtractorTestCase
             [
                 new JobConfig(
                     [
-                    'endpoint' => 'ep',
-                    'userData' => 'v',
+                        'endpoint' => 'ep',
+                        'userData' => 'v',
                     ]
                 ),
                 [
@@ -66,15 +67,15 @@ class GenericExtractorJobTest extends ExtractorTestCase
             [
                 new JobConfig(
                     [
-                    'endpoint' => 'ep',
-                    'userData' => [
-                        'hash' => [
-                            'function' => 'md5',
-                            'args' => [
-                                'a',
+                        'endpoint' => 'ep',
+                        'userData' => [
+                            'hash' => [
+                                'function' => 'md5',
+                                'args' => [
+                                    'a',
+                                ],
                             ],
                         ],
-                    ],
                     ]
                 ),
                 [
@@ -90,7 +91,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         $job = $this->createJob(
             new JobConfig(
                 [
-                'endpoint' => 'ep',
+                    'endpoint' => 'ep',
                 ]
             ),
             [],
@@ -106,11 +107,11 @@ class GenericExtractorJobTest extends ExtractorTestCase
         $job = $this->createJob(
             new JobConfig(
                 [
-                'endpoint' => 'ep',
-                'userData' => [
-                'cfg' => 'cfgVal',
-                'both' => 'cfgVal',
-                ],
+                    'endpoint' => 'ep',
+                    'userData' => [
+                        'cfg' => 'cfgVal',
+                        'both' => 'cfgVal',
+                    ],
                 ]
             ),
             [],
@@ -118,8 +119,8 @@ class GenericExtractorJobTest extends ExtractorTestCase
         );
         $job->setUserParentId(
             [
-            'inj' => 'injVal',
-            'both' => 'injVal',
+                'inj' => 'injVal',
+                'both' => 'injVal',
             ]
         );
 
@@ -137,10 +138,10 @@ class GenericExtractorJobTest extends ExtractorTestCase
     {
         $cfg = new JobConfig(
             [
-            'endpoint' => 'ep',
-            'params' => [
-                'first' => 1,
-            ],
+                'endpoint' => 'ep',
+                'params' => [
+                    'first' => 1,
+                ],
             ]
         );
         $job = $this->createJob($cfg, [], []);
@@ -156,10 +157,10 @@ class GenericExtractorJobTest extends ExtractorTestCase
     {
         $cfg = new JobConfig(
             [
-            'endpoint' => 'ep',
-            'params' => [
-                'first' => 1,
-            ],
+                'endpoint' => 'ep',
+                'params' => [
+                    'first' => 1,
+                ],
             ]
         );
         $job = $this->createJob($cfg, [], [], new ResponseUrlScroller($config));
@@ -173,9 +174,9 @@ class GenericExtractorJobTest extends ExtractorTestCase
             $job,
             'nextPage',
             [
-            $cfg,
-            $response,
-            $response->results,
+                $cfg,
+                $response,
+                $response->results,
             ]
         );
 
@@ -195,25 +196,25 @@ class GenericExtractorJobTest extends ExtractorTestCase
     {
         $cfg = new JobConfig(
             [
-            'endpoint' => 'fooBar',
-            'params' => [
-                'timeframe' => 'this_24_hours',
-                'filters' => [
-                    'function' => 'concat',
-                    'args' => [
-                        [
-                            'function' => 'date',
-                            'args' => [
-                                'Y-m-d',
+                'endpoint' => 'fooBar',
+                'params' => [
+                    'timeframe' => 'this_24_hours',
+                    'filters' => [
+                        'function' => 'concat',
+                        'args' => [
+                            [
+                                'function' => 'date',
+                                'args' => [
+                                    'Y-m-d',
+                                ],
                             ],
-                        ],
-                        'string',
-                        [
-                            'attr' => 'das.attribute',
+                            'string',
+                            [
+                                'attr' => 'das.attribute',
+                            ],
                         ],
                     ],
                 ],
-            ],
             ]
         );
         $job = $this->createJob(
@@ -230,14 +231,14 @@ class GenericExtractorJobTest extends ExtractorTestCase
             $job,
             'buildParams',
             [
-            $cfg,
+                $cfg,
             ]
         );
 
         self::assertEquals(
             [
-            'timeframe' => 'this_24_hours',
-            'filters' => date('Y-m-d') . 'stringsomething interesting',
+                'timeframe' => 'this_24_hours',
+                'filters' => date('Y-m-d') . 'stringsomething interesting',
             ],
             $params
         );
@@ -247,12 +248,12 @@ class GenericExtractorJobTest extends ExtractorTestCase
     {
         $cfg = new JobConfig(
             [
-            'endpoint' => 'fooBar',
-            'params' => [
-                'filters' => [
-                    'function' => 'date',
+                'endpoint' => 'fooBar',
+                'params' => [
+                    'filters' => [
+                        'function' => 'date',
+                    ],
                 ],
-            ],
             ]
         );
         $job = $this->createJob(
@@ -274,8 +275,8 @@ class GenericExtractorJobTest extends ExtractorTestCase
     {
         $cfg = new JobConfig(
             [
-            'endpoint' => 'fooBar',
-            'responseFilter' => 'complexItem',
+                'endpoint' => 'fooBar',
+                'responseFilter' => 'complexItem',
             ]
         );
 
@@ -285,11 +286,11 @@ class GenericExtractorJobTest extends ExtractorTestCase
             (object) [
                 'simpleItem' => 1,
                 'complexItem' => (object) [
-                    'data' => [1,2,3],
+                    'data' => [1, 2, 3],
                 ],
                 'anotherItem' => (object) [
                     'id' => 1,
-                    'data' => [4,5,6],
+                    'data' => [4, 5, 6],
                 ],
             ],
         ];
@@ -313,26 +314,18 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     /**
      * @dataProvider placeholderProvider
-     * @param        mixed $field
-     * @param        mixed $expectedValue
+     * @param mixed $field
+     * @param mixed $expectedValue
      */
     public function testGetPlaceholder($field, $expectedValue): void
     {
-        $job = $this->getMockBuilder(GenericExtractorJob::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $value = self::callMethod(
-            $job,
-            'getPlaceholder',
-            [ // $placeholder, $field, $parentResults
-                '1:id',
-                $field,
-                [
-                    (object) [
-                        'field' => 'data',
-                        'id' => '1:1',
-                    ],
+        $value = PlaceholdersUtils::getPlaceholder(
+            '1:id',
+            $field,
+            [
+                (object) [
+                    'field' => 'data',
+                    'id' => '1:1',
                 ],
             ]
         );
@@ -350,7 +343,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
     public function placeholderProvider(): array
     {
         return [
-            [
+            'function' => [
                 [
                     'path' => 'id',
                     'function' => 'urlencode',
@@ -360,7 +353,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 ],
                 '1%3A1',
             ],
-            [
+            'scalar' => [
                 'id',
                 '1:1',
             ],
@@ -369,27 +362,19 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     /**
      * @dataProvider placeholderValueProvider
-     * @param        mixed $level
-     * @param        mixed $expected
+     * @param mixed $level
+     * @param mixed $expected
      */
     public function testGetPlaceholderValue($level, $expected): void
     {
-        $job = $this->getMockBuilder(GenericExtractorJob::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $value = self::callMethod(
-            $job,
-            'getPlaceholderValue',
-            [ // $field, $parentResults, $level, $placeholder
-                'id',
-                [
-                    0 => ['id' => 123],
-                    1 => ['id' => 456],
-                ],
-                $level,
-                '1:id',
-            ]
+        $value = PlaceholdersUtils::getPlaceholderValue(
+            'id',
+            [
+                0 => ['id' => 123],
+                1 => ['id' => 456],
+            ],
+            $level,
+            '1:id',
         );
 
         self::assertEquals($expected, $value);
@@ -397,25 +382,17 @@ class GenericExtractorJobTest extends ExtractorTestCase
 
     /**
      * @dataProvider placeholderErrorValueProvider
-     * @param        mixed $data
-     * @param        mixed $message
+     * @param mixed $data
+     * @param mixed $message
      */
     public function testGetPlaceholderValueError($data, $message): void
     {
-        $job = $this->getMockBuilder(GenericExtractorJob::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
         try {
-            self::callMethod(
-                $job,
-                'getPlaceholderValue',
-                [ // $field, $parentResults, $level, $placeholder
-                    'id',
-                    $data,
-                    0,
-                    '1:id',
-                ]
+            PlaceholdersUtils::getPlaceholderValue(
+                'id',
+                $data,
+                0,
+                '1:id',
             );
             self::fail('UserException was not thrown');
         } catch (UserException $e) {
