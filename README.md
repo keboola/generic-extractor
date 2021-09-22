@@ -1182,7 +1182,7 @@ Best way to create and test new configurations is run extractor in docker contai
 - Clone this repository `git clone https://github.com/keboola/generic-extractor.git`
 - Switch to extractor directory `cd generic-extractor`
 - Build container `docker-compose build`
-- Install dependencies locally `docker-compose run --rm extractor composer install`
+- Install dependencies locally `docker-compose run --rm dev composer install`
 - Create data folder for configuration `mkdir data`
 
 ## Execution
@@ -1211,9 +1211,9 @@ Best way to create and test new configurations is run extractor in docker contai
     }
   }
     ```
-- Run extraction `docker-compose run --rm extractor`
+- Run extraction `docker-compose run --rm dev`
 - You will find extracted data in folder `data/out`
-- Clear `data/out` by running `docker-compose run --rm extractor rm -rf data/out`
+- Clear `data/out` by running `docker-compose run --rm dev rm -rf data/out`
 - Repeat :)
 
 # Running tests:
