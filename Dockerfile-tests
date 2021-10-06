@@ -1,6 +1,0 @@
-FROM keboola/generic-extractor
-
-RUN pecl channel-update pecl.php.net \
-    && pecl config-set php_ini /usr/local/etc/php.ini \
-    && pecl install xdebug \
-    && docker-php-ext-enable xdebug
