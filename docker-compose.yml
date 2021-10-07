@@ -1,13 +1,11 @@
 version: '3'
 services:
-  app:
+  app: &app
     build: .
     image: keboola/generic-extractor
 
   ci: &ci
-    build:
-      context: .
-      dockerfile: Dockerfile-tests
+    << : *app
     command: composer ci
     depends_on:
       - jsontest
