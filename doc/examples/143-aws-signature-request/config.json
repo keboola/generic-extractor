@@ -1,0 +1,26 @@
+{
+    "parameters": {
+        "aws": {
+            "signature": {
+                "credentials": {
+                    "accessKeyId": "testAccessKey",
+                    "#secretKey": "testSecretKey",
+                    "serviceName": "testService",
+                    "regionName": "testRegion"
+                }
+            }
+        },
+        "api": {
+            "baseUrl": "http://mock-server:80/143-aws-signature-request/"
+        },
+        "config": {
+            "debug": true,
+            "outputBucket": "mock-server",
+            "jobs": [
+                {
+                    "endpoint": "users"
+                }
+            ]
+        }
+    }
+}
