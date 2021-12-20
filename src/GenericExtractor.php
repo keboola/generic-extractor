@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor;
 
+use Keboola\GenericExtractor\AwsSignature\AwsSignatureMiddleware;
 use Keboola\GenericExtractor\Configuration\Api;
 use Keboola\GenericExtractor\Configuration\JuicerRest;
 use Keboola\GenericExtractor\Configuration\UserFunction;
@@ -47,13 +48,15 @@ class GenericExtractor
         LoggerInterface $logger,
         Api $api,
         ?string $proxy = null,
-        ?callable $clientInitCallback = null
+        ?callable $clientInitCallback = null,
+        ?array $awsSignatureCredentials = null
     ) {
         $this->temp = $temp;
         $this->logger = $logger;
         $this->api = $api;
         $this->proxy = $proxy;
         $this->clientInitCallback = $clientInitCallback;
+        $this->awsSignatureCredentials = $awsSignatureCredentials;
     }
 
     public function enableCache(CacheStrategyInterface $cacheStrategy): self
@@ -110,6 +113,14 @@ class GenericExtractor
         // Cache
         if ($this->cacheStrategy) {
             $client->getHandlerStack()->push(new CacheMiddleware($this->cacheStrategy), 'cache');
+        }
+
+        // AWS Signature request
+        if ($this->awsSignatureCredentials) {
+            $client->getHandlerStack()->push(
+                AwsSignatureMiddleware::create($this->awsSignatureCredentials),
+                'aws-signature'
+            );
         }
 
         // Custom client init callback

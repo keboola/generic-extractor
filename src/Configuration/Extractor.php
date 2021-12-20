@@ -153,6 +153,27 @@ class Extractor
         return new Api($this->logger, $this->config['parameters']['api'], $configAttributes, $authorization);
     }
 
+    public function getAwsSignatureCredentials(): ?array
+    {
+        if (empty($this->config['parameters']['aws']['signature']['credentials'])) {
+            return null;
+        }
+
+        $requiredParams = ['accessKeyId', '#secretKey', 'serviceName', 'regionName'];
+        foreach ($requiredParams as $requiredParam) {
+            if (empty($this->config['parameters']['aws']['signature']['credentials'][$requiredParam])) {
+                throw new UserException(
+                    sprintf(
+                        'Option "%s" under "parameters.aws.signature.credentials" cannot be empty.',
+                        $requiredParam
+                    )
+                );
+            }
+        }
+
+        return $this->config['parameters']['aws']['signature']['credentials'];
+    }
+
     public function saveConfigMetadata(array $data): void
     {
         $dirPath = $this->dataDir . DIRECTORY_SEPARATOR . 'out';
