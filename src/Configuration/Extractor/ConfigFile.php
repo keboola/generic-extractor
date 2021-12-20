@@ -6,6 +6,7 @@ namespace Keboola\GenericExtractor\Configuration\Extractor;
 
 use Keboola\GenericExtractor\Configuration\Extractor\Node\Api;
 use Keboola\GenericExtractor\Configuration\Extractor\Node\Authorization;
+use Keboola\GenericExtractor\Configuration\Extractor\Node\AwsSignature;
 use Keboola\GenericExtractor\Configuration\Extractor\Node\Config;
 use Keboola\GenericExtractor\Configuration\Extractor\Node\SshProxy;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
@@ -20,6 +21,8 @@ class ConfigFile implements ConfigurationInterface
         /** @var ArrayNodeDefinition $root */
         $root = $treeBuilder->getRootNode();
         $parameters = $root->children()->arrayNode('parameters')->isRequired();
+        $awsSignature = $parameters->children()->arrayNode('aws');
+        AwsSignature::configureNode($awsSignature);
         $api = $parameters->children()->arrayNode('api')->isRequired();
         Api::configureNode($api);
         $config = $parameters->children()->arrayNode('config')->isRequired();

@@ -57,6 +57,8 @@ class Executor
             $sshTunnel = $sshTunnelFactory->create($configuration->getSshProxy());
         }
 
+        $awsSignatureCredentials = $configuration->getAwsSignatureCredentials();
+
         $metadata = $configuration->getMetadata();
         $metadata['time']['previousStart'] =
             empty($metadata['time']['previousStart']) ? 0 : $metadata['time']['previousStart'];
@@ -90,7 +92,8 @@ class Executor
                             'ssh-tunnel'
                         );
                     }
-                }
+                },
+                $awsSignatureCredentials
             );
 
             if ($cacheStorage) {
