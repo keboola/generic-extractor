@@ -10,7 +10,7 @@
         "aws/aws-sdk-php": "^3.208",
         "guzzlehttp/oauth-subscriber": "^0.4",
         "keboola/filter": "^2.0",
-        "keboola/juicer": "^5.0.3",
+        "keboola/juicer": "^5.0.4",
         "keboola/php-csvtable": "^1.2",
         "keboola/php-temp": "^2.0",
         "keboola/php-utils": "^4.1",
