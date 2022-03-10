@@ -8,6 +8,7 @@ use Keboola\GenericExtractor\Authentication;
 use Keboola\GenericExtractor\Authentication\AuthInterface;
 use Keboola\GenericExtractor\Exception\ApplicationException;
 use Keboola\GenericExtractor\Exception\UserException;
+use Keboola\Juicer\Client\RestClient;
 use Keboola\Juicer\Pagination\ScrollerFactory;
 use Keboola\Juicer\Pagination\ScrollerInterface;
 use Keboola\Utils\Exception\JsonDecodeException;
@@ -42,6 +43,10 @@ class Api
 
     private ?string $clientCertificate = null;
 
+    private float $connectTimeout = RestClient::DEFAULT_CONNECT_TIMEOUT;
+
+    private float $requestTimeout = RestClient::DEFAULT_REQUEST_TIMEOUT;
+
     public function __construct(LoggerInterface $logger, array $api, array $configAttributes, array $authorization)
     {
         $this->logger = $logger;
@@ -64,6 +69,12 @@ class Api
         }
         if (!empty($api['http']['defaultOptions'])) {
             $this->defaultRequestOptions = $api['http']['defaultOptions'];
+        }
+        if (!empty($api['http']['connectTimeout']) && is_numeric($api['http']['connectTimeout'])) {
+            $this->connectTimeout = (float) $api['http']['connectTimeout'];
+        }
+        if (!empty($api['http']['requestTimeout']) && is_numeric($api['http']['requestTimeout'])) {
+            $this->requestTimeout = (float) $api['http']['requestTimeout'];
         }
     }
 
@@ -225,6 +236,17 @@ class Api
     {
         return $this->ignoreErrors;
     }
+
+    public function getConnectTimeout(): float
+    {
+        return $this->connectTimeout;
+    }
+
+    public function getRequestTimeout(): float
+    {
+        return $this->requestTimeout;
+    }
+
 
     /**
      * @param mixed $url
