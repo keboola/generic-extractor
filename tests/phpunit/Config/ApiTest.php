@@ -257,6 +257,31 @@ class ApiTest extends TestCase
         self::assertSame($crtContent, file_get_contents($api->getClientCertificateFile()));
     }
 
+    public function testTimeouts(): void
+    {
+        $apiConfig = [
+            'baseUrl' => 'http://example.com',
+            'http' => [
+                'connectTimeout' => 123.45,
+                'requestTimeout' => 456.78,
+            ],
+        ];
+
+        $api = new Api(new NullLogger(), $apiConfig, [], []);
+        self::assertEquals(123.45, $api->getConnectTimeout());
+        self::assertEquals(456.78, $api->getRequestTimeout());
+    }
+
+    public function testTimeoutsDefault(): void
+    {
+        $apiConfig = [
+            'baseUrl' => 'http://example.com',
+        ];
+        $api = new Api(new NullLogger(), $apiConfig, [], []);
+        self::assertEquals(30, $api->getConnectTimeout());
+        self::assertEquals(300, $api->getRequestTimeout());
+    }
+
     public function testInvalidFunctionBaseUrlThrowsUserException(): void
     {
         $apiConfig = [

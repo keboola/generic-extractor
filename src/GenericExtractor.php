@@ -89,6 +89,9 @@ class GenericExtractor
             'proxy' => $this->proxy,
             // http://docs.guzzlephp.org/en/stable/request-options.html#verify-option
             'verify' => $this->api->hasCaCertificate() ? $this->api->getCaCertificateFile() : true,
+            // timeouts
+            'connect_timeout' => $this->api->getConnectTimeout(),
+            'timeout' => $this->api->getRequestTimeout(),
         ];
 
         if ($this->api->hasClientCertificate()) {
