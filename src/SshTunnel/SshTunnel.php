@@ -8,6 +8,9 @@ use GuzzleHttp\Middleware;
 use Keboola\GenericExtractor\Exception\ApplicationException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Log\LoggerInterface;
+use Retry\BackOff\ExponentialBackOffPolicy;
+use Retry\Policy\SimpleRetryPolicy;
+use Retry\RetryProxy;
 use Symfony\Component\Process\Process;
 use Keboola\GenericExtractor\Exception\SshTunnelOpenException;
 use Keboola\GenericExtractor\Exception\UserException;
@@ -16,6 +19,8 @@ use Keboola\Temp\Temp;
 class SshTunnel
 {
     public const SSH_SERVER_ALIVE_INTERVAL = 10;
+
+    private const CREATE_SSH_MAX_RETRY = 5;
 
     private LoggerInterface $logger;
     private Temp $temp;
@@ -76,28 +81,42 @@ class SshTunnel
             self::SSH_SERVER_ALIVE_INTERVAL
         );
 
-        // SSH tunnel process
-        $this->process = Process::fromShellCommandline($cmd, null);
-        $this->process->setTimeout(null);
-        $this->process->start();
+        $simplyRetryPolicy = new SimpleRetryPolicy(
+            self::CREATE_SSH_MAX_RETRY,
+            [SshTunnelOpenException::class,\Throwable::class]
+        );
 
-        // Wait until:
-        // - SSH tunnel process is not running -> error
-        // - SSH tunnel ready -> ok
-        while ($this->process->isRunning() && !$this->isAlive()) {
-            sleep(1);
-        }
+        $exponentialBackOffPolicy = new ExponentialBackOffPolicy();
+        $proxy = new RetryProxy(
+            $simplyRetryPolicy,
+            $exponentialBackOffPolicy,
+            $this->logger
+        );
 
-        // Throw exception if error when creating tunnel
-        if (!$this->process->isRunning()) {
-            throw new SshTunnelOpenException(
-                sprintf(
-                    'Unable to create ssh tunnel. Output: %s ErrorOutput: %s',
-                    $this->process->getOutput(),
-                    $this->process->getErrorOutput()
-                )
-            );
-        }
+        $proxy->call(function () use ($cmd): void {
+            // SSH tunnel process
+            $this->process = Process::fromShellCommandline($cmd, null);
+            $this->process->setTimeout(null);
+            $this->process->start();
+
+            // Wait until:
+            // - SSH tunnel process is not running -> error
+            // - SSH tunnel ready -> ok
+            while ($this->process->isRunning() && !$this->isAlive()) {
+                sleep(1);
+            }
+
+            // Throw exception if error when creating tunnel
+            if (!$this->process->isRunning()) {
+                throw new SshTunnelOpenException(
+                    sprintf(
+                        'Unable to create ssh tunnel. Output: %s ErrorOutput: %s',
+                        $this->process->getOutput(),
+                        $this->process->getErrorOutput()
+                    )
+                );
+            }
+        });
 
         $this->logger->debug('SSH tunnel created.');
     }
