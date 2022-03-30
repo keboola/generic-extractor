@@ -56,6 +56,8 @@ class SshTunnelRetryTest extends TestCase
         $process->wait();
         Assert::assertSame(1, $process->getExitCode());
         Assert::assertStringContainsString('Unable to create ssh tunnel', $process->getOutput());
+        Assert::assertStringContainsString('Retrying... [1x]', $process->getOutput());
+        Assert::assertStringContainsString('Retrying... [4x]', $process->getOutput());
     }
 
     public function testRetryServerError(): void
