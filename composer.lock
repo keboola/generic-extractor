@@ -493,7 +493,7 @@
         },
         {
             "name": "keboola/codebuilder",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-codebuilder.git",
@@ -5328,5 +5328,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
