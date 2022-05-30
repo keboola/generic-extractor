@@ -1226,3 +1226,7 @@ or (with local source code and vendor copy)
 ```
 docker-compose run --rm tests-local
 ``` 
+
+## License
+
+MIT licensed, see [LICENSE](./LICENSE) file.
