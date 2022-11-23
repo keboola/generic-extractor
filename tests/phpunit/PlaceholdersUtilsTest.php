@@ -58,6 +58,54 @@ class PlaceholdersUtilsTest extends ExtractorTestCase
     }
 
     /**
+     * @dataProvider placeholderProviderIntPath
+     * @param mixed $field
+     * @param mixed $expectedValue
+     */
+    public function testGetPlaceholderIntPath($field, $expectedValue): void
+    {
+        $value = PlaceholdersUtils::getPlaceholder(
+            '1:123',
+            $field,
+            [
+                (object) [
+                    'field' => 'data',
+                    '123' => '1:1',
+                ],
+            ]
+        );
+
+        self::assertEquals(
+            [
+                'placeholder' => '1:123',
+                'field' => '123',
+                'value' => $expectedValue,
+            ],
+            $value
+        );
+    }
+
+    public function placeholderProviderIntPath(): array
+    {
+        return [
+            'function' => [
+                [
+                    'path' => 123,
+                    'function' => 'urlencode',
+                    'args' => [
+                        ['placeholder' => 'value'],
+                    ],
+                ],
+                '1%3A1',
+            ],
+            'scalar' => [
+                '123',
+                '1:1',
+            ],
+        ];
+    }
+
+    /**
      * @dataProvider placeholderValueProvider
      * @param mixed $level
      * @param mixed $expected
