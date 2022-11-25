@@ -54,7 +54,7 @@ class PlaceholdersUtils
         }
 
         // Get value
-        $value = self::getPlaceholderValue($field, $parentResults, $level, $placeholder);
+        $value = self::getPlaceholderValue((string) $field, $parentResults, $level, $placeholder);
 
         // Run function
         if (isset($fn)) {
