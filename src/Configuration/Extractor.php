@@ -147,9 +147,9 @@ class Extractor
         } else {
             $authorization = [];
         }
-        if (empty($this->config['parameters']['api']) && !is_array($this->config['parameters']['api'])) {
-            throw new UserException("The 'api' section is required in configuration.");
-        }
+
+        $this->validateApiConfig();
+
         return new Api($this->logger, $this->config['parameters']['api'], $configAttributes, $authorization);
     }
 
@@ -225,6 +225,26 @@ class Extractor
 
             file_put_contents($path . $key . '.manifest', json_encode($manifest));
             copy($file->getPathname(), $path . $key);
+        }
+    }
+
+    protected function validateApiConfig(): void
+    {
+        $apiNode = $this->config['parameters']['api'];
+        if (empty($apiNode) && !is_array($apiNode)) {
+            throw new UserException("The 'api' section is required in configuration.");
+        }
+
+        if (array_key_exists('caCertificate', $apiNode)
+            && (!is_null($apiNode['caCertificate']) && !is_string($apiNode['caCertificate']))
+        ) {
+            throw new UserException("The 'caCertificate' must be string.");
+        }
+
+        if (array_key_exists('clientCertificate', $apiNode)
+            && (!is_null($apiNode['clientCertificate']) && !is_string($apiNode['clientCertificate']))
+        ) {
+            throw new UserException("The 'clientCertificate' must be string.");
         }
     }
 }
