@@ -1,0 +1,34 @@
+{
+  "parameters": {
+    "api": {
+      "baseUrl": "https://lichess.org/",
+      "http": {
+        "headers": {
+          "Authorization":
+                  [
+            {
+              "args": [
+                "Bearer ",
+                {
+                  "attr": "#token"
+                }
+              ],
+              "function": "concat"
+            }
+        ]
+        }
+      }
+    },
+    "config": {
+      "#token": "KBC::ProjectSecureKV::eJxLtDK2qs60MrIutjI0sLBSuveVieHfmSubrQLzfI88D9NVajxXcup9cT5vJH/N9W1zfp+Nkf7Pq3Fa7cy7iiMzF5gJySx3FzFNLYt9pPKCx1/Z/9bCk3JNG6zSJk1dK+g6tdLr7pq3m3j2pR1u5dt//cgehs86Lxd3rj1yXOnINY++SiXrTCtjoMVGZlZK6al5uql5yUWVBSX5RWbGKebJKYYmiWbGpqkgVSZAVcZGVkrJhomWKaaGhgZGZokmBolJFpaGycaJqRaWppZAloG5knUtAHCEU00=",
+      "debug": true,
+      "jobs": [
+        {
+          "dataField": ".",
+          "endpoint": "api/account"
+        }
+      ],
+      "outputBucket": "Player_Details"
+    }
+  }
+}
