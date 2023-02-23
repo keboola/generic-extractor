@@ -6,6 +6,7 @@ namespace Keboola\GenericExtractor\Tests\Config;
 
 use Keboola\GenericExtractor\Configuration\Extractor;
 use Keboola\GenericExtractor\Exception\ApplicationException;
+use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\GenericExtractor\Tests\ExtractorTestCase;
 use Keboola\Juicer\Config\Config;
 use Keboola\Temp\Temp;
@@ -169,6 +170,32 @@ class ConfigurationTest extends ExtractorTestCase
             self::fail('Invalid JSON must cause exception');
         } catch (ApplicationException $e) {
             self::assertStringContainsString('Configuration file is not a valid JSON: Syntax error', $e->getMessage());
+        }
+    }
+
+    public function testInvalidValuesInApiNode(): void
+    {
+        $temp = new Temp();
+        $config['parameters'] = [
+            'api' => [
+                'baseUrl' => 'test',
+                'authentication' => [
+                    'type' => 'basic',
+                ],
+                'caCertificate' => false,
+            ],
+            'config' => ['outputBucket' => 'someBucket', 'jobs' => [['endpoint' => 'GET']]],
+        ];
+        $fs = new Filesystem();
+        $fs->dumpFile($temp->getTmpFolder() . '/config.json', json_encode($config));
+        try {
+            $extractor = new Extractor($temp->getTmpFolder(), new NullLogger());
+            foreach ($extractor->getMultipleConfigs() as $config) {
+                $extractor->getApi($config->getAttributes());
+            }
+            self::fail('Invalid config value must cause exception');
+        } catch (UserException $e) {
+            self::assertStringContainsString("The 'caCertificate' must be string.", $e->getMessage());
         }
     }
 

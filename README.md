@@ -1,7 +1,5 @@
 # Extractor configuration
 
-[![Build Status](https://travis-ci.org/keboola/generic-extractor.svg?branch=master)](https://travis-ci.org/keboola/generic-extractor)
-
 
 ## Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/)
 
