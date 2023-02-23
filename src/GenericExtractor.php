@@ -8,6 +8,7 @@ use Keboola\GenericExtractor\AwsSignature\AwsSignatureMiddleware;
 use Keboola\GenericExtractor\Configuration\Api;
 use Keboola\GenericExtractor\Configuration\JuicerRest;
 use Keboola\GenericExtractor\Configuration\UserFunction;
+use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\GenericExtractor\Logger\LoggerMiddleware;
 use Keboola\Juicer\Config\JobConfig;
 use Keboola\Juicer\Config\Config;
@@ -19,6 +20,7 @@ use Keboola\Temp\Temp;
 use Kevinrob\GuzzleCache\CacheMiddleware;
 use Kevinrob\GuzzleCache\Strategy\CacheStrategyInterface;
 use Psr\Log\LoggerInterface;
+use stdClass;
 
 class GenericExtractor
 {
@@ -81,11 +83,15 @@ class GenericExtractor
 
     protected function createClient(Config $config): RestClient
     {
+        $headers = UserFunction::build(
+            $this->api->getHeaders()->getHeaders(),
+            ['attr' => $config->getAttributes()]
+        );
+
+        $this->checkHeadersForStdClass($headers);
+
         $defaults = [
-            'headers' => UserFunction::build(
-                $this->api->getHeaders()->getHeaders(),
-                ['attr' => $config->getAttributes()]
-            ),
+            'headers' => $headers,
             'proxy' => $this->proxy,
             // http://docs.guzzlephp.org/en/stable/request-options.html#verify-option
             'verify' => $this->api->hasCaCertificate() ? $this->api->getCaCertificateFile() : true,
@@ -213,5 +219,21 @@ class GenericExtractor
     public function getMetadata(): array
     {
         return $this->metadata;
+    }
+
+    protected function checkHeadersForStdClass(array $array, array $path = []): void
+    {
+        foreach ($array as $key => $value) {
+            $currentPath = array_merge($path, [$key]);
+            if (is_array($value)) {
+                $this->checkHeadersForStdClass($value, $currentPath);
+            } elseif (!is_scalar($value) && !is_null($value)) {
+                throw new UserException(sprintf(
+                    'Invalid configuration: invalid type "%s" in headers at path: %s',
+                    gettype($value),
+                    implode('.', $currentPath)
+                ));
+            }
+        }
     }
 }
