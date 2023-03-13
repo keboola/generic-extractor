@@ -47,7 +47,7 @@ class Executor
     public function run(): void
     {
         $temp = new Temp();
-        $dataDir = getenv('KBC_DATADIR') ?: '/data';
+        $dataDir = rtrim(getenv('KBC_DATADIR'), '/') ?: '/data';
         $configuration = new Extractor($dataDir, $this->logger);
         $configs = $configuration->getMultipleConfigs();
 
