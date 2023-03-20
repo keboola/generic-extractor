@@ -1,0 +1,36 @@
+{
+  "parameters": {
+    "api": {
+      "baseUrl": "https://api.stripe.com/v1/",
+      "authentication": {
+        "type": "oauth20",
+        "headers": {
+          "Authorization": {
+            "args": [
+              {
+                "authorization": "data"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "config": {
+      "jobs": [
+        {
+          "endpoint": "customers",
+          "dataType": "customers"
+        }
+      ]
+    }
+  },
+  "authorization": {
+    "oauth_api": {
+      "credentials": {
+        "#data": "xxxxx",
+        "appKey": "clientId",
+        "#appSecret": "xxxxx"
+      }
+    }
+  }
+}

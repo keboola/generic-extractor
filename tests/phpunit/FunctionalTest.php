@@ -44,6 +44,19 @@ class FunctionalTest extends TestCase
         );
     }
 
+    public function testInvalidHeaderConfigOauth(): void
+    {
+        $dataDir = __DIR__ . '/data/invalidHeadersConfigOauth';
+        $process = $this->startPhpProcess($dataDir);
+        $process->wait();
+        $stdout = $process->getOutput();
+        Assert::assertSame(1, $process->getExitCode());
+        Assert::assertStringContainsString(
+            'Invalid configuration: invalid type "object" in headers at path: Authorization [] []',
+            $stdout
+        );
+    }
+
     public function startPhpProcess(string $dataDir): Process
     {
         $outDir = $dataDir . '/out';
