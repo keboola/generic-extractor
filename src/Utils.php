@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Keboola\GenericExtractor;
 
 use GuzzleHttp\Psr7\Query;
+use Keboola\GenericExtractor\Exception\UserException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
 
@@ -58,5 +59,21 @@ class Utils
         }
 
         return $request;
+    }
+
+    public static function checkHeadersForStdClass(array $array, array $path = []): void
+    {
+        foreach ($array as $key => $value) {
+            $currentPath = array_merge($path, [$key]);
+            if (is_array($value)) {
+                self::checkHeadersForStdClass($value, $currentPath);
+            } elseif (!is_scalar($value) && !is_null($value)) {
+                throw new UserException(sprintf(
+                    'Invalid configuration: invalid type "%s" in headers at path: %s',
+                    gettype($value),
+                    implode('.', $currentPath)
+                ));
+            }
+        }
     }
 }

@@ -163,6 +163,7 @@ class Login implements AuthInterface
         }
         if (!empty($config['headers'])) {
             $config['headers'] = UserFunction::build($config['headers'], $fnContext);
+            Utils::checkHeadersForStdClass($config['headers']);
         }
 
         // Create login request without default request options
