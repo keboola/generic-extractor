@@ -59,7 +59,10 @@ class MissingTableHelper
         foreach ($mapping as $item) {
             if (!is_array($item)) {
                 $columns[] = $item;
-            } elseif (empty($item['type']) || (($item['type'] === 'column') || ($item['type'] === 'user'))) {
+            } elseif ((empty($item['type']) || (($item['type'] === 'column') || ($item['type'] === 'user')))) {
+                if (!isset($item['mapping'])) {
+                    throw new UserException(sprintf('Missing mapping key at item with type "%s"', $item['type']));
+                }
                 $columns[] = $item['mapping']['destination'];
                 if (!empty($item['mapping']['primaryKey'])) {
                     $primaryKey[] = $item['mapping']['destination'];
