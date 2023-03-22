@@ -224,6 +224,9 @@ class Login implements AuthInterface
             return time() + (int) $this->authentication['expires'];
         } elseif (is_array($this->authentication['expires'])) {
             $rExpiry = getDataFromPath($this->authentication['expires']['response'], $response, '.');
+            if ($rExpiry === null) {
+                return null;
+            }
             $expiry = is_int($rExpiry) ? $rExpiry : strtotime($rExpiry);
 
             if (!empty($this->authentication['expires']['relative'])) {
