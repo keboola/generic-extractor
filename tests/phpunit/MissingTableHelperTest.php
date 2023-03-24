@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Keboola\GenericExtractor\Tests;
 
 use Keboola\GenericExtractor\Configuration\Extractor;
+use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\GenericExtractor\MissingTableHelper;
 use Keboola\Temp\Temp;
 use PHPUnit\Framework\TestCase;
@@ -710,5 +711,47 @@ class MissingTableHelperTest extends TestCase
             ],
             json_decode((string) file_get_contents($baseDir . 'mock-server.user-contact.manifest'), true)
         );
+    }
+
+    public function testMissingMappingKeyInTypeColumn(): void
+    {
+        $config = [
+            'parameters' => [
+                'api' => ['baseUrl' => 'https://dummy'],
+                'config' => [
+                    'jobs' => [
+                        [
+                            'endpoint' => 'users',
+                            'dataType' => 'users',
+                        ],
+                    ],
+                    'outputBucket' => 'mock-server',
+                    'incrementalOutput' => true,
+                    'mappings' => [
+                        'users' => [
+                            'id' => [
+                                'type' => 'column',
+                            ],
+                            'name' => [
+                                'mapping' => [
+                                    'destination' => 'name',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage('Missing mapping key at item with type "column"');
+
+        mkdir($this->temp->getTmpFolder() . '/out/');
+        $baseDir = $this->temp->getTmpFolder() . '/out/tables/';
+        mkdir($baseDir);
+        file_put_contents($this->temp->getTmpFolder() . '/config.json', json_encode($config));
+        $configuration = new Extractor($this->temp->getTmpFolder(), new NullLogger());
+        $configs = $configuration->getMultipleConfigs();
+        MissingTableHelper::checkConfigs($configs, $this->temp->getTmpFolder(), $configuration);
     }
 }
