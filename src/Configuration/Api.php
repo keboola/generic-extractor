@@ -55,6 +55,18 @@ class Api
         $this->clientCertificate = $api['#clientCertificate'] ?? null;
         $this->headers = new Headers($api, $configAttributes);
         if (!empty($api['pagination']) && is_array($api['pagination'])) {
+            if (isset($api['pagination']['pages'])) {
+                if (is_int($api['pagination']['pages']) ||
+                    (is_string($api['pagination']['pages']) && ctype_digit($api['pagination']['pages']))
+                ) {
+                    $api['pagination']['pages'] = (int) $api['pagination']['pages'];
+                } else {
+                    throw new UserException(sprintf(
+                        'Value "pages" in "api.pagination" has to be int, %s given.',
+                        getType($api['pagination']['pages'])
+                    ));
+                }
+            }
             $this->scrollerConfig = $api['pagination'];
         }
         if (!empty($api['retryConfig']) && is_array($api['retryConfig'])) {
