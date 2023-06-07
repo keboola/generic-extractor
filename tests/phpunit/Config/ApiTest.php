@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor\Tests\Config;
 
+use Generator;
 use Keboola\GenericExtractor\Authentication\OAuth20;
 use Keboola\GenericExtractor\Authentication\OAuth20Login;
 use Keboola\GenericExtractor\Authentication\Query;
@@ -298,5 +299,46 @@ class ApiTest extends TestCase
             'The "baseUrl" attribute in API configuration resulted in an invalid URL (http:///087-function-baseurl/)'
         );
         new Api(new NullLogger(), $apiConfig, [], []);
+    }
+
+    public function testPaginationPagesValidInt(): void
+    {
+        $string = 'https://third.second.com/TEST/Something/';
+        new Api(new NullLogger(), ['baseUrl' => $string, 'pagination' => ['pages' => 2]], [], []);
+        $this->expectNotToPerformAssertions();
+    }
+
+    public function testPaginationPagesValidString(): void
+    {
+        $string = 'https://third.second.com/TEST/Something/';
+        new Api(new NullLogger(), ['baseUrl' => $string, 'pagination' => ['pages' => '2']], [], []);
+        $this->expectNotToPerformAssertions();
+    }
+
+    /**
+     * @dataProvider invalidPagesValues
+     * @param int|double|array|string $pagesValue
+     */
+    public function testPaginationPagesInvalidValues($pagesValue): void
+    {
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage(sprintf(
+            'Value "pages" in "api.pagination" has to be int, %s given.',
+            getType($pagesValue)
+        ));
+
+        $string = 'https://third.second.com/TEST/Something/';
+        new Api(new NullLogger(), ['baseUrl' => $string, 'pagination' => ['pages' => $pagesValue]], [], []);
+    }
+
+    public function invalidPagesValues(): Generator
+    {
+        yield 'string' => ['two'];
+
+        yield 'double' => [2.2];
+
+        yield 'bool' => [true];
+
+        yield 'array' => [[]];
     }
 }
