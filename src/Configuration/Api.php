@@ -178,7 +178,7 @@ class Api
 
     public function getNewScroller(): ScrollerInterface
     {
-        return ScrollerFactory::getScroller($this->scrollerConfig);
+        return ScrollerFactory::getScroller($this->scrollerConfig, $this->logger);
     }
 
     public function getAuth(): AuthInterface
