@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e165a713851b1134dcccbc561ffb3e46",
+    "content-hash": "88fa176c9784b276372582be0dcfdfe2",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -758,16 +758,16 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "5.0.7",
+            "version": "5.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "cef6f9d3c7ae10e432f5a88cb21582be6474ad53"
+                "reference": "4cb9d1395c6ebeb1fe6c1f25aa5d88e7280e2bcd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/cef6f9d3c7ae10e432f5a88cb21582be6474ad53",
-                "reference": "cef6f9d3c7ae10e432f5a88cb21582be6474ad53",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/4cb9d1395c6ebeb1fe6c1f25aa5d88e7280e2bcd",
+                "reference": "4cb9d1395c6ebeb1fe6c1f25aa5d88e7280e2bcd",
                 "shasum": ""
             },
             "require": {
@@ -815,9 +815,9 @@
             ],
             "support": {
                 "issues": "https://github.com/keboola/juicer/issues",
-                "source": "https://github.com/keboola/juicer/tree/5.0.7"
+                "source": "https://github.com/keboola/juicer/tree/5.1.0"
             },
-            "time": "2022-11-30T10:29:53+00:00"
+            "time": "2023-09-05T11:21:25+00:00"
         },
         {
             "name": "keboola/php-csvtable",
@@ -5328,5 +5328,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

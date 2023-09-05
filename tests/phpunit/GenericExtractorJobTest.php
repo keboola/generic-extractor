@@ -162,7 +162,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 ],
             ]
         );
-        $job = $this->createJob($cfg, [], [], new ResponseUrlScroller($config));
+        $job = $this->createJob($cfg, [], [], new ResponseUrlScroller($config, new NullLogger()));
         self::callMethod($job, 'buildParams', [$cfg]);
 
         $response = new \stdClass();
