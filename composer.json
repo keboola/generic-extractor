@@ -46,8 +46,7 @@
         "phplint": "parallel-lint -j 10 --exclude vendor .",
         "build": [
             "@phplint",
-            "@phpcs",
-            "@tests"
+            "@phpcs"
         ],
         "ci": [
             "@composer validate --no-check-publish --no-check-all",

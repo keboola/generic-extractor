@@ -14,7 +14,7 @@ class LoggerMiddleware
     public static function create(LoggerInterface $logger): callable
     {
         // GET /defaultOptions?param=value HTTP/1.1 User-Agent: GuzzleHttp/7 Host: ...
-        $template = '{req_headers}';
+        $template = '{req_headers} {req_body}';
         $formatter = new MessageFormatter($template);
 
         // Log request
