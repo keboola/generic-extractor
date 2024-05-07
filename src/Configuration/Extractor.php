@@ -17,6 +17,9 @@ use League\Flysystem\Adapter\Local;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
+use Throwable;
 
 /**
  * Class Extractor provides interfaces for processing configuration files and
@@ -38,6 +41,9 @@ class Extractor
     {
         $this->logger = $logger;
         $this->config = $this->loadConfigFile($dataDir);
+        if ($this->isSyncAction()) {
+            $this->runSyncActionProcess();
+        }
         $this->state = $this->loadStateFile($dataDir);
         $this->dataDir = $dataDir;
     }
@@ -110,6 +116,15 @@ class Extractor
         }
         $configuration = array_replace($this->config['parameters']['config'], $params);
         return new Config($configuration);
+    }
+
+    private function isSyncAction(): bool
+    {
+        if (isset($this->config['action']) && $this->config['action'] !== 'run') {
+            return true;
+        }
+
+        return false;
     }
 
     public function getSshProxy(): ?array
@@ -245,6 +260,34 @@ class Extractor
             && (!is_null($apiNode['clientCertificate']) && !is_string($apiNode['clientCertificate']))
         ) {
             throw new UserException("The 'clientCertificate' must be string.");
+        }
+    }
+
+    private function runSyncActionProcess(): void
+    {
+        try {
+            $command = [
+                'python',
+                '-u',
+                './python-sync-actions/src/component.py',
+            ];
+
+            $process = new Process($command);
+            $process->start();
+
+            // Delay to let the process initialize
+            usleep(500000); // Sleep for 0.5 seconds
+
+            // Check if the process has terminated already due to a startup error
+            if (!$process->isRunning() && !$process->isSuccessful()) {
+                $this->logger->error('Process failed to start. Error output: ' . $process->getErrorOutput());
+                throw new ProcessFailedException($process);
+            }
+        } catch (ProcessFailedException $e) {
+            $this->logger->error('Process failed to start: ' . $e->getMessage());
+            throw new ApplicationException('Process error output: ' . $e->getProcess()->getErrorOutput());
+        } catch (Throwable $e) {
+            throw new ApplicationException('Unexpected error: ' . $e->getMessage());
         }
     }
 }
