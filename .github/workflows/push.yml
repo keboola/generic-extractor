@@ -60,6 +60,25 @@ jobs:
           push_latest: ${{ steps.tag.outputs.is_semantic_tag }}
           source_image: ${{ env.APP_IMAGE}}
 
+  python-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Build image
+        working-directory: ./python-sync-actions
+        run: docker compose build
+
+      - name: Run unit tests
+        working-directory: ./python-sync-actions
+        run: docker compose run dev python -m unittest discover
+
+      - name: Run python lint
+        working-directory: ./python-sync-actions
+        run: docker compose run dev flake8 . --config=flake8.cfg
+
+
   tests:
     needs: build
     runs-on: ubuntu-latest
@@ -124,6 +143,7 @@ jobs:
   deploy:
     needs:
       - build
+      - python-tests
       - tests
       - tests-examples
       - tests-in-kbc
@@ -131,7 +151,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/') && needs.build.outputs.is_semantic_tag == 'true'
     steps:
       -
-        name: Set tag in the Deloper Portal
+        name: Set tag in the Developer Portal
         uses: keboola/action-set-tag-developer-portal@master
         with:
           vendor: ${{ env.KBC_DEVELOPERPORTAL_VENDOR }}
@@ -139,4 +159,3 @@ jobs:
           username: ${{ env.KBC_DEVELOPERPORTAL_USERNAME }}
           password: ${{ env.KBC_DEVELOPERPORTAL_PASSWORD }}
           tag: ${{ needs.build.outputs.app_image_tag }}
-
