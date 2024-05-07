@@ -9,6 +9,8 @@ WORKDIR /code/
 
 COPY docker/php.ini /usr/local/etc/php/php.ini
 COPY docker/composer-install.sh /tmp/composer-install.sh
+COPY python-sync-actions/requirements.txt /tmp/requirements.txt
+
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         curl \
@@ -76,6 +78,20 @@ RUN set -eux; \
         [ ! -e "/usr/local/bin/$dst" ]; \
         ln -svT "$src" "/usr/local/bin/$dst"; \
     done
+
+# Install pip and configure environment variables
+ENV PYTHON_PIP_VERSION 24.0
+ENV PYTHON_GET_PIP_URL https://github.com/pypa/get-pip/raw/dbf0c85f76fb6e1ab42aa672ffca6f0a675d9ee4/public/get-pip.py
+ENV PYTHON_GET_PIP_SHA256 dfe9fd5c28dc98b5ac17979a953ea550cec37ae1b47a5116007395bfacff2ab9
+
+RUN set -eux; \
+    wget -O get-pip.py "$PYTHON_GET_PIP_URL"; \
+    echo "$PYTHON_GET_PIP_SHA256 *get-pip.py" | sha256sum -c -; \
+    python3 get-pip.py --disable-pip-version-check --no-cache-dir --no-compile "pip==$PYTHON_PIP_VERSION"; \
+    rm -f get-pip.py; \
+    pip --version
+
+RUN pip install -r /tmp/requirements.txt
 
 # Install Node.js and set up symlinks
 RUN set -eux; \
