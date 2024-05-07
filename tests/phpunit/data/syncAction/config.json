@@ -1,0 +1,52 @@
+{
+  "storage": {},
+  "parameters": {
+    "__SELECTED_JOB": "0",
+
+    "config": {
+      "jobs": [
+        {
+          "__NAME": "users",
+          "endpoint": "users",
+          "method": "GET",
+          "dataType": "",
+          "dataField": "users"
+        }
+      ],
+      "test": "test-value",
+
+      "debug": false,
+      "outputBucket": "in.c-",
+      "incrementalOutput": false,
+      "__AUTH_METHOD": "api-key",
+      "#__AUTH_TOKEN": "token"
+    },
+    "api": {
+      "baseUrl": "http://127.0.0.1:8000",
+      "http": {
+        "headers": {
+          "auth-key": {
+            "attr": "#__AUTH_TOKEN"
+          }
+        }
+      }
+    },
+    "http": {
+      "maxRetries": 10,
+      "codes": [
+        500,
+        502,
+        503,
+        504,
+        408,
+        420,
+        429
+      ]
+    }
+  },
+  "action": "load_from_curl",
+  "image_parameters": {
+  },
+  "authorization": {
+  }
+}
