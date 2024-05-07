@@ -128,10 +128,10 @@ def convert_to_v2(configuration: dict) -> Configuration:
     """
     user_parameters = build_user_parameters(configuration)
 
-    api_json = configuration.get('api')
-    base_url = api_json.get('baseUrl')
-    default_headers = api_json.get('http').get('headers', {})
-    default_query_parameters = api_json.get('http').get('defaultOptions', {}).get('params', {})
+    api_json = configuration.get('api', {})
+    base_url = api_json.get('baseUrl', '')
+    default_headers = api_json.get('http', {}).get('headers', {})
+    default_query_parameters = api_json.get('http', {}).get('defaultOptions', {}).get('params', {})
 
     api_config = ApiConfig(base_url=base_url, default_headers=default_headers,
                            default_query_parameters=default_query_parameters)
@@ -158,7 +158,7 @@ def build_retry_config(configuration: dict) -> RetryConfig:
     Returns: Retry configuration
 
     """
-    http_section = configuration.get('api').get('http', {})
+    http_section = configuration.get('api', {}).get('http', {})
     return RetryConfig(max_retries=http_section.get('maxRetries', 10),
                        codes=http_section.get('codes', (500, 502, 503, 504, 408, 420, 429)))
 
@@ -175,7 +175,7 @@ def build_user_parameters(configuration: dict) -> dict:
     config_excluded_keys = ['__AUTH_METHOD', '__NAME', '#__BEARER_TOKEN', 'jobs', 'outputBucket', 'incrementalOutput',
                             'debug', 'mappings', ' #username', '#password']
     user_parameters = {}
-    for key, value in configuration['config'].items():
+    for key, value in configuration.get('config', {}).items():
         if key not in config_excluded_keys:
             user_parameters[key] = value
     return user_parameters
@@ -192,11 +192,11 @@ def build_api_request(configuration: dict) -> Tuple[ApiRequest, RequestContent, 
     """
     job_path: str = configuration.get('__SELECTED_JOB')
     if not job_path:
-        raise ValueError('Selected job not found in the configuration')
+        return None, None, None
     if '_' in job_path:
         parent, child = job_path.split('_')
     else:
-        parent, child = job_path, None # noqa
+        parent, child = job_path, None  # noqa
 
     jobs_section: list[dict] = configuration.get('config', {}).get('jobs')
     if not jobs_section:
@@ -247,7 +247,7 @@ class AuthMethodConverter:
         Args:
             config_parameters (dict):
         """
-        auth_method = config_parameters.get('config').get('__AUTH_METHOD', None)
+        auth_method = config_parameters.get('config', {}).get('__AUTH_METHOD', None)
         if not auth_method:
             return None
 

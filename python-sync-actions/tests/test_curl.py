@@ -54,3 +54,26 @@ class TestCurl(unittest.TestCase):
 
         self.assertEqual(str(context.exception),
                          'Unsupported method PATCH, only GET, POST with JSON and POST with form data are supported.')
+
+    def test_query_with_globs(self):
+        command = """curl --include \
+     --header "X-StorageApi-Token: your_token" \
+  'https://connection.keboola.com/v2/storage/events?sinceId={sinceId}&maxId={maxId}&component={component}&configurationId={configurationId}&runId={runId}&q={q}&limit={limit}&offset={offset}'"""
+        expected = JobTemplate(endpoint='https://connection.keboola.com/v2/storage/events', children=[], method='GET',
+                               dataType='.', dataField='.',
+                               params={'sinceId': '_sinceId_', 'maxId': '_maxId_', 'component': '_component_',
+                                       'configurationId': '_configurationId_', 'runId': '_runId_', 'q': '_q_',
+                                       'limit': '_limit_', 'offset': '_offset_'},
+                               headers={'X-StorageApi-Token': 'your_token'})
+        result = curl.build_job_from_curl(command)
+        self.assertEqual(result, expected)
+
+    def test_url_w_placeholders(self):
+        command = """curl 'https://connection.{{stack}}.keboola.com/v2/storage/events?sinceId={sinceId}&maxId={maxId}&component={component}&configurationId={configurationId}&runId={runId}&q={q}&limit={limit}&offset={offset}'"""
+        expected = JobTemplate(endpoint='https://connection.__stack__.keboola.com/v2/storage/events', children=[],
+                               method='GET', dataType='.', dataField='.',
+                               params={'sinceId': '_sinceId_', 'maxId': '_maxId_', 'component': '_component_',
+                                       'configurationId': '_configurationId_', 'runId': '_runId_', 'q': '_q_',
+                                       'limit': '_limit_', 'offset': '_offset_'}, headers={})
+        result = curl.build_job_from_curl(command)
+        self.assertEqual(result, expected)
