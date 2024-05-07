@@ -20,7 +20,7 @@
         "symfony/config": "^5.2",
         "symfony/console": "^5.2",
         "symfony/finder": "^5.2",
-        "symfony/process": "^5.2",
+        "symfony/process": "^5.4",
         "symfony/validator": "^5.2"
     },
     "require-dev": {
@@ -36,7 +36,7 @@
         "psr-4": { "Keboola\\GenericExtractor\\Tests\\": "tests/phpunit" }
     },
     "scripts": {
-        "tests-phpunit": "phpunit",
+        "tests-phpunit": "phpunit --testdox",
         "tests": [
             "@tests-phpunit"
         ],
