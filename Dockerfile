@@ -114,6 +114,9 @@ RUN set -eux; \
     rm "node-$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
     ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
+# Install curlconverter using npm
+RUN npm install --global curlconverter
+
 ENV LANGUAGE=en_US.UTF-8
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
