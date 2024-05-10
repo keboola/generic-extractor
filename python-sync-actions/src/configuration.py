@@ -76,6 +76,7 @@ class ApiRequest(ConfigurationBase):
     headers: dict = field(default_factory=dict)
     query_parameters: dict = field(default_factory=dict)
     continue_on_failure: bool = False
+    nested_job: dict = field(default_factory=dict)
 
 
 @dataclass
@@ -196,7 +197,7 @@ def build_api_request(configuration: dict) -> Tuple[ApiRequest, RequestContent, 
     if '_' in job_path:
         parent, child = job_path.split('_')
     else:
-        parent, child = job_path, None  # noqa
+        parent, child = job_path, None  # noqa: F841
 
     jobs_section: list[dict] = configuration.get('config', {}).get('jobs')
     if not jobs_section:
@@ -204,6 +205,8 @@ def build_api_request(configuration: dict) -> Tuple[ApiRequest, RequestContent, 
 
     # TODO: support recursive child-job config. E.g. have chained/list of ApiRequests objects instead of just one
     endpoint_config = jobs_section[int(parent)]
+
+    nested_job = endpoint_config.get('children')
 
     method = endpoint_config.get('method', 'GET')
 
@@ -233,7 +236,10 @@ def build_api_request(configuration: dict) -> Tuple[ApiRequest, RequestContent, 
     return (ApiRequest(method=method,
                        endpoint_path=endpoint_path,
                        headers=endpoint_config.get('headers', {}),
-                       query_parameters=endpoint_config.get('params', {})), request_content,
+                       query_parameters=endpoint_config.get('params', {}),
+                       nested_job=nested_job
+                       ),
+            request_content,
             DataPath(path=path, delimiter=delimiter))
 
 
@@ -266,7 +272,7 @@ class AuthMethodConverter:
 
     @classmethod
     def _convert_basic(cls, config_parameters: dict) -> Authentication:
-        username = config_parameters.get('config').get('#username')
+        username = config_parameters.get('config').get('username')
         password = config_parameters.get('config').get('#password')
         if not username or not password:
             raise ValueError('Username or password not found in the BasicAuth configuration')
