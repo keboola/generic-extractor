@@ -12,14 +12,13 @@ from keboola.component.exceptions import UserException
 from nested_lookup import nested_lookup
 
 import configuration
-from configuration import Configuration, DataPath
 from actions.curl import build_job_from_curl
 from actions.mapping import infer_mapping
+from configuration import Configuration, DataPath
 from http_generic.auth import AuthMethodBuilder, AuthBuilderError
 from http_generic.client import GenericHttpClient
-from user_functions import UserFunctions
-
 from placeholders_utils import PlaceholdersUtils
+from user_functions import UserFunctions
 
 # configuration variables
 KEY_API_TOKEN = '#api_token'
@@ -145,7 +144,7 @@ class Component(ComponentBase):
             method: method to use
             request_parameters: request parameters
         """
-
+        results = []
         for row in parent_result:
 
             parent_results_ext = parent_results_list + [row]
@@ -207,24 +206,22 @@ class Component(ComponentBase):
 
         """
 
-        if path.path is None:
+        if path.path == '.':
             result = data
         else:
-            if path.delimiter in path.path:
-                keys = path.path.split(path.delimiter)  # Split the path only if delimiter is present
-            else:
-                keys = [path.path]
-
-            value = data
+            keys = path.path.split(path.delimiter)
+            value = data.copy()
             try:
                 for key in keys:
                     value = value[key]
                 result = value
             except KeyError:
-                result = None
+                raise UserException(f"Path {path.path} not found in the response data")
 
         if not isinstance(result, list):
-            result = [result] if result is not None else []
+            element_name = 'root' if path.path == '.' else path.path
+            raise UserException(f"The {element_name} element of the response is not list, "
+                                "please change your Record Selector path to list")
 
         return result
 
@@ -235,6 +232,8 @@ class Component(ComponentBase):
             requests.Response
         """
         self.init_component()
+        if not self._configuration.request_parameters:
+            raise ValueError("_JOB_PATH is missing!")
         self._client.login()
 
         api_cfg = self._configuration.api
@@ -297,12 +296,13 @@ class Component(ComponentBase):
         Load configuration from cURL command
         """
         response, data = self.make_call()
-        mapping = infer_mapping(self._final_results)
+        if not data:
+            raise UserException("The request returned no data to infer mapping from.")
+        mapping = infer_mapping(data)
         return mapping
 
     @sync_action('test_request')
     def test_request(self):
-
         self.make_call()
 
         return [self._final_response.status_code, self._final_response.json(),

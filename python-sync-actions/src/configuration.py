@@ -192,6 +192,7 @@ def build_api_request(configuration: dict) -> Tuple[ApiRequest, RequestContent, 
 
     """
     job_path: str = configuration.get('__SELECTED_JOB')
+
     if not job_path:
         return None, None, None
     if '_' in job_path:
