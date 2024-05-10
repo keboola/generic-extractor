@@ -1,0 +1,18 @@
+<?xml version='1.0' ?>
+<root_el>
+    <orders>
+        <order>
+            <id>1</id>
+            <date>2018-01-01</date>
+            <cust_name>David</cust_name>	
+            <order-item>
+                <price currency="CZK">100</price>
+                <item>Umbrella</item>
+            </order-item>
+            <order-item>
+                <price currency="CZK">200</price>
+                <item>Rain Coat</item>
+            </order-item>
+        </order>
+    </orders>
+</root_el>

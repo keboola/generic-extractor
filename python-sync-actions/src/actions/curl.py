@@ -196,5 +196,6 @@ def build_job_from_curl(curl_command: str, base_url: str = None, is_child_job: b
 
     job_template.method = parsed_curl['method'].upper()
     job_template.headers = parsed_curl.get('headers', {})
+    job_template.dataType = job_template.endpoint.split('/')[-1]
 
     return job_template

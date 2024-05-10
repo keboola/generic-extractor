@@ -1,0 +1,76 @@
+{
+    "id": "in.c-test.test",
+    "uri": "https:\/\/connection.keboola.com\/v2\/storage\/tables\/in.c-test.test",
+    "name": "test",
+    "primary_key": [],
+    "indexed_columns": [],
+    "created": "2018-03-02T15:36:50+0100",
+    "last_change_date": "2018-03-02T15:36:54+0100",
+    "last_import_date": "2018-03-02T15:36:54+0100",
+    "rows_count": 0,
+    "data_size_bytes": 0,
+    "is_alias": false,
+    "attributes": [],
+    "columns": [
+        "Type",
+        "Campaign_Name",
+        "Status",
+        "Start_Date",
+        "End_Date",
+        "Location",
+        "Eventbrite_link"
+    ],
+    "metadata": [
+        {
+            "id": "18271581",
+            "key": "KBC.createdBy.component.id",
+            "value": "transformation",
+            "provider": "system",
+            "timestamp": "2018-03-02T15:37:02+0100"
+        },
+        {
+            "id": "18271582",
+            "key": "KBC.createdBy.configuration.id",
+            "value": "361585608",
+            "provider": "system",
+            "timestamp": "2018-03-02T15:37:02+0100"
+        },
+        {
+            "id": "18271583",
+            "key": "KBC.createdBy.configurationRow.id",
+            "value": "361585762",
+            "provider": "system",
+            "timestamp": "2018-03-02T15:37:02+0100"
+        },
+        {
+            "id": "18271584",
+            "key": "KBC.lastUpdatedBy.component.id",
+            "value": "transformation",
+            "provider": "system",
+            "timestamp": "2018-03-02T15:37:02+0100"
+        },
+        {
+            "id": "18271585",
+            "key": "KBC.lastUpdatedBy.configuration.id",
+            "value": "361585608",
+            "provider": "system",
+            "timestamp": "2018-03-02T15:37:02+0100"
+        },
+        {
+            "id": "18271586",
+            "key": "KBC.lastUpdatedBy.configurationRow.id",
+            "value": "361585762",
+            "provider": "system",
+            "timestamp": "2018-03-02T15:37:02+0100"
+        }
+    ],
+    "column_metadata": {
+        "Type": [],
+        "Campaign_Name": [],
+        "Status": [],
+        "Start_Date": [],
+        "End_Date": [],
+        "Location": [],
+        "Eventbrite_link": []
+    }
+}
