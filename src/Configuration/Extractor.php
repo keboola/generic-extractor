@@ -273,7 +273,6 @@ class Extractor
             ];
 
             $process = new Process($command);
-            $process->setTty(true);
             $process->mustRun();
 
             echo $process->getOutput();
