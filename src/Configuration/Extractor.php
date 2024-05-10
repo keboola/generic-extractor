@@ -265,6 +265,27 @@ class Extractor
 
     private function runSyncActionProcess(): void
     {
-        exec('python -u ./python-sync-actions/src/component.py');
+        try {
+            $command = [
+                'python',
+                '-u',
+                './python-sync-actions/src/component.py',
+            ];
+
+            $process = new Process($command);
+            $process->setTty(true);
+            $process->mustRun();
+
+            echo $process->getOutput();
+            fwrite(STDERR, $process->getErrorOutput());
+            exit($process->getExitCode());
+        } catch (ProcessFailedException $e) {
+            $this->logger->error('Process failed to start: ' . $e->getMessage());
+            fwrite(STDERR, 'Process error output: ' . $e->getProcess()->getErrorOutput());
+            exit($e->getProcess()->getExitCode());
+        } catch (Throwable $e) {
+            $this->logger->error('Unexpected error: ' . $e->getMessage());
+            throw new ApplicationException('Unexpected error: ' . $e->getMessage());
+        }
     }
 }
