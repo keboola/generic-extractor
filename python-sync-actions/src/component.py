@@ -227,6 +227,57 @@ class Component(ComponentBase):
 
         return result
 
+    def make_call(self) -> list:
+        """
+        Make call to the API
+        Returns:
+            list: [status_code, response, results, log]
+        """
+        self.init_component()
+        self._client.login()
+
+        api_cfg = self._configuration.api
+        request_cfg = self._configuration.request_parameters
+        # fix KBC bug
+        user_params = self._configuration.user_parameters
+        # evaluate user_params inside the user params itself
+        user_params = self._fill_in_user_parameters(user_params, user_params)
+
+        # build headers
+        headers = {**api_cfg.default_headers.copy(), **request_cfg.headers.copy()}
+        new_headers = self._fill_in_user_parameters(headers, user_params)
+
+        # build additional parameters
+        query_parameters = {**api_cfg.default_query_parameters.copy(), **request_cfg.query_parameters.copy()}
+        query_parameters = self._fill_in_user_parameters(query_parameters, user_params)
+        ssl_verify = api_cfg.ssl_verification
+        timeout = api_cfg.timeout
+        # additional_params = self._build_request_parameters(additional_params_cfg)
+        request_parameters = {'params': query_parameters,
+                              'headers': new_headers,
+                              'verify': ssl_verify,
+                              'timeout': timeout}
+
+        endpoint_path = request_cfg.endpoint_path
+
+        # use client to send requests / perform actions
+        self._final_response = self._client.send_request(method=request_cfg.method, endpoint_path=endpoint_path,
+                                                         **request_parameters)
+
+        headers = dict(self._final_response.headers)
+
+        result = self._parse_data(self._final_response.json(), self._configuration.data_path)
+
+        if request_cfg.nested_job:
+            parent_results = []
+            self._process_nested_job(result, request_cfg.nested_job[0], parent_results, self._client,
+                                     request_cfg.method, **request_parameters)
+        else:
+            self._final_results = result
+
+        return [self._final_response.status_code, self._final_response,
+                self._final_results, self.log.getvalue()]
+
     @sync_action('load_from_curl')
     def load_from_curl(self) -> dict:
         """
@@ -302,47 +353,7 @@ class Component(ComponentBase):
     @sync_action('test_request')
     def test_request(self):
 
-        self.init_component()
-        self._client.login()
-
-        api_cfg = self._configuration.api
-        request_cfg = self._configuration.request_parameters
-        # fix KBC bug
-        user_params = self._configuration.user_parameters
-        # evaluate user_params inside the user params itself
-        user_params = self._fill_in_user_parameters(user_params, user_params)
-
-        # build headers
-        headers = {**api_cfg.default_headers.copy(), **request_cfg.headers.copy()}
-        new_headers = self._fill_in_user_parameters(headers, user_params)
-
-        # build additional parameters
-        query_parameters = {**api_cfg.default_query_parameters.copy(), **request_cfg.query_parameters.copy()}
-        query_parameters = self._fill_in_user_parameters(query_parameters, user_params)
-        ssl_verify = api_cfg.ssl_verification
-        timeout = api_cfg.timeout
-        # additional_params = self._build_request_parameters(additional_params_cfg)
-        request_parameters = {'params': query_parameters,
-                              'headers': new_headers,
-                              'verify': ssl_verify,
-                              'timeout': timeout}
-
-        endpoint_path = request_cfg.endpoint_path
-
-        # use client to send requests / perform actions
-        self._final_response = self._client.send_request(method=request_cfg.method, endpoint_path=endpoint_path,
-                                                         **request_parameters)
-
-        headers = dict(self._final_response.headers)
-
-        result = self._parse_data(self._final_response.json(), self._configuration.data_path)
-
-        if request_cfg.nested_job:
-            parent_results = []
-            self._process_nested_job(result, request_cfg.nested_job[0], parent_results, self._client,
-                                     request_cfg.method, **request_parameters)
-        else:
-            self._final_results = result
+        self.make_call()
 
         return [self._final_response.status_code, self._final_response.json(),
                 self._final_results, self.log.getvalue()]
