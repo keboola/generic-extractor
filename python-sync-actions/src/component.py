@@ -6,6 +6,7 @@ import json
 import logging
 from io import StringIO
 
+import requests
 from keboola.component.base import ComponentBase, sync_action
 from keboola.component.exceptions import UserException
 from nested_lookup import nested_lookup
@@ -227,11 +228,11 @@ class Component(ComponentBase):
 
         return result
 
-    def make_call(self) -> list:
+    def make_call(self) -> tuple[requests.Response, list[dict]]:
         """
         Make call to the API
         Returns:
-            list: [status_code, response, results, log]
+            requests.Response
         """
         self.init_component()
         self._client.login()
@@ -275,8 +276,7 @@ class Component(ComponentBase):
         else:
             self._final_results = result
 
-        return [self._final_response.status_code, self._final_response,
-                self._final_results, self.log.getvalue()]
+        return self._final_response, self._final_results
 
     @sync_action('load_from_curl')
     def load_from_curl(self) -> dict:
@@ -296,58 +296,8 @@ class Component(ComponentBase):
         """
         Load configuration from cURL command
         """
-        self.init_component()
-        # TODO: get sample data
-        data = [{
-            "id": "236606822",
-            "name": "My new configuration",
-            "description": "",
-            "created": "2017-02-14T14:38:26+0100",
-            "creatorToken": {
-                "id": 27978,
-                "description": "ondrej.popelka@keboola.com"
-            },
-            "version": 1,
-            "changeDescription": "Initial configuration",
-            "isDeleted": False,
-            "configuration": {
-                "key": "value"
-            },
-            "rowsSortOrder": [],
-            "rows": [],
-            "state": {},
-            "currentVersion": {
-            }
-        }, {
-            "id": "236606822",
-            "name": "My new configuration",
-            "description": "",
-            "created": "2017-02-14T14:38:26+0100",
-            "creatorToken": {
-                "id": 27978,
-                "description": "ondrej.popelka@keboola.com"
-            },
-            "version": 1,
-            "changeDescription": "Initial configuration",
-            "isDeleted": False,
-            "configuration": {
-                "key": "value",
-                "key2": "value2"
-            },
-            "rowsSortOrder": [],
-            "rows": [],
-            "state": {},
-            "currentVersion": {
-                "created": "2017-02-14T14:38:26+0100",
-                "creatorToken": {
-                    "id": 27978,
-                    "description": "ondrej.popelka@keboola.com"
-                },
-                "changeDescription": "Initial configuration",
-                "versionIdentifier": "01H2W8N0ZJJB6V126C8ZSND28N"
-            }
-        }]
-        mapping = infer_mapping(data)
+        response, data = self.make_call()
+        mapping = infer_mapping(self._final_results)
         return mapping
 
     @sync_action('test_request')

@@ -11,4 +11,5 @@ vendor/
 # Python specific
 /venv
 /python-sync-actions/src/test.py
+/python-sync-actions/data
 __pycache__
