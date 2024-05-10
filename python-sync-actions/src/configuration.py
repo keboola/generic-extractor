@@ -75,6 +75,7 @@ class ApiConfig(ConfigurationBase):
 class ApiRequest(ConfigurationBase):
     method: str
     endpoint_path: str
+    placeholders: dict = field(default_factory=dict)
     headers: dict = field(default_factory=dict)
     query_parameters: dict = field(default_factory=dict)
     continue_on_failure: bool = False
@@ -251,6 +252,9 @@ def build_api_request(configuration: dict) -> List[Tuple[ApiRequest, RequestCont
 
         data_field = endpoint_config.get('dataField')
 
+        placeholders = endpoint_config.get('placeholders', {})
+
+
         if isinstance(data_field, dict):
             path = data_field.get('path')
             delimiter = data_field.get("delimiter", ".")
@@ -261,6 +265,7 @@ def build_api_request(configuration: dict) -> List[Tuple[ApiRequest, RequestCont
         result_requests.append(
             (ApiRequest(method=method,
                         endpoint_path=endpoint_path,
+                        placeholders=placeholders,
                         headers=endpoint_config.get('headers', {}),
                         query_parameters=endpoint_config.get('params', {}),),
              request_content,

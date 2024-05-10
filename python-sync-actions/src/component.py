@@ -53,12 +53,14 @@ class Component(ComponentBase):
         self._client: GenericHttpClient = None
         self._parent_params = {}
         self._final_results = []
+        self._parent_results = []
         self._final_response = None
 
     def run(self):
         """
         Main component method
         """
+        # self.make_call()
         pass
 
     def init_component(self):
@@ -148,7 +150,7 @@ class Component(ComponentBase):
             request_parameters: request parameters
         """
         results = []
-        for row in parent_result:
+        for row in parent_result or [{}]:
 
             parent_results_ext = parent_results_list + [row]
 
@@ -221,14 +223,15 @@ class Component(ComponentBase):
             except KeyError:
                 raise UserException(f"Path {path.path} not found in the response data")
 
-        if not isinstance(result, list):
-            element_name = 'root' if path.path == '.' else path.path
-            raise UserException(f"The {element_name} element of the response is not list, "
-                                "please change your Record Selector path to list")
+        # TODO: check if the result is list
+        # if not isinstance(result, list):
+        #     element_name = 'root' if path.path == '.' else path.path
+        #     raise UserException(f"The {element_name} element of the response is not list, "
+        #                         "please change your Record Selector path to list")
 
         return result
 
-    def make_call(self) -> tuple[requests.Response, list[dict]]:
+    def make_call(self) -> tuple[list, any, str]:
         """
         Make call to the API
         Returns:
@@ -239,46 +242,67 @@ class Component(ComponentBase):
             raise ValueError("_JOB_PATH is missing!")
         self._client.login()
 
-        api_cfg = self._configuration.api
-        request_cfg = self._configuration.request_parameters
-        # fix KBC bug
-        user_params = self._configuration.user_parameters
-        # evaluate user_params inside the user params itself
-        user_params = self._fill_in_user_parameters(user_params, user_params)
+        final_results = []
 
-        # build headers
-        headers = {**api_cfg.default_headers.copy(), **request_cfg.headers.copy()}
-        new_headers = self._fill_in_user_parameters(headers, user_params)
+        self._parent_results = [{}] * len(self._configurations)
 
-        # build additional parameters
-        query_parameters = {**api_cfg.default_query_parameters.copy(), **request_cfg.query_parameters.copy()}
-        query_parameters = self._fill_in_user_parameters(query_parameters, user_params)
-        ssl_verify = api_cfg.ssl_verification
-        timeout = api_cfg.timeout
-        # additional_params = self._build_request_parameters(additional_params_cfg)
-        request_parameters = {'params': query_parameters,
-                              'headers': new_headers,
-                              'verify': ssl_verify,
-                              'timeout': timeout}
+        def recursive_call(parent_result, config_index=0):
 
-        endpoint_path = request_cfg.endpoint_path
+            if parent_result:
+                self._parent_results[config_index-1] = parent_result
 
-        # use client to send requests / perform actions
-        self._final_response = self._client.send_request(method=request_cfg.method, endpoint_path=endpoint_path,
-                                                         **request_parameters)
+            if config_index >= len(self._configurations):
+                return final_results, self._final_response.json(), self.log.getvalue()
 
-        headers = dict(self._final_response.headers)
+            job = self._configurations[config_index]
 
-        result = self._parse_data(self._final_response.json(), self._configuration.data_path)
+            api_cfg = job.api
+            request_cfg = job.request_parameters
+            # fix KBC bug
+            user_params = job.user_parameters
+            # evaluate user_params inside the user params itself
+            user_params = self._fill_in_user_parameters(user_params, user_params)
 
-        if request_cfg.nested_job:
-            parent_results = []
-            self._process_nested_job(result, request_cfg.nested_job[0], parent_results, self._client,
-                                     request_cfg.method, **request_parameters)
-        else:
-            self._final_results = result
+            # build headers
+            headers = {**api_cfg.default_headers.copy(), **request_cfg.headers.copy()}
+            new_headers = self._fill_in_user_parameters(headers, user_params)
 
-        return self._final_response, self._final_results
+            # build additional parameters
+            query_parameters = {**api_cfg.default_query_parameters.copy(), **request_cfg.query_parameters.copy()}
+            query_parameters = self._fill_in_user_parameters(query_parameters, user_params)
+            ssl_verify = api_cfg.ssl_verification
+            timeout = api_cfg.timeout
+            # additional_params = self._build_request_parameters(additional_params_cfg)
+            request_parameters = {'params': query_parameters,
+                                  'headers': new_headers,
+                                  'verify': ssl_verify,
+                                  'timeout': timeout}
+
+            row_path = job.request_parameters.endpoint_path
+
+            if job.request_parameters.placeholders:
+                placeholders = PlaceholdersUtils.get_params_for_child_jobs(job.request_parameters.placeholders,
+                                                                           self._parent_results, self._parent_params)
+                self._parent_params = placeholders[0]
+                row_path = self._fill_placeholders(placeholders, job.request_parameters.endpoint_path)
+
+            self._final_response = self._client.send_request(method=job.request_parameters.method,
+                                                             endpoint_path=row_path, **request_parameters)
+
+            current_results = self._parse_data(self._final_response.json(), job.data_path)
+
+            if config_index == len(self._configurations) - 1:
+                final_results.append(current_results)
+            else:
+                if isinstance(current_results, list):
+                    for result in current_results:
+                        recursive_call(result, config_index + 1)
+                else:
+                    recursive_call(current_results, config_index + 1)
+
+        recursive_call({})
+
+        return final_results, self._final_response.json(), self.log.getvalue()
 
     @sync_action('load_from_curl')
     def load_from_curl(self) -> dict:
