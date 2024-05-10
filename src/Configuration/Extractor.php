@@ -265,29 +265,6 @@ class Extractor
 
     private function runSyncActionProcess(): void
     {
-        try {
-            $command = [
-                'python',
-                '-u',
-                './python-sync-actions/src/component.py',
-            ];
-
-            $process = new Process($command);
-            $process->start();
-
-            // Delay to let the process initialize
-            usleep(500000); // Sleep for 0.5 seconds
-
-            // Check if the process has terminated already due to a startup error
-            if (!$process->isRunning() && !$process->isSuccessful()) {
-                $this->logger->error('Process failed to start. Error output: ' . $process->getErrorOutput());
-                throw new ProcessFailedException($process);
-            }
-        } catch (ProcessFailedException $e) {
-            $this->logger->error('Process failed to start: ' . $e->getMessage());
-            throw new ApplicationException('Process error output: ' . $e->getProcess()->getErrorOutput());
-        } catch (Throwable $e) {
-            throw new ApplicationException('Unexpected error: ' . $e->getMessage());
-        }
+        exec('python -u ./python-sync-actions/src/component.py');
     }
 }

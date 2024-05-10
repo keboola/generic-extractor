@@ -2,7 +2,7 @@
   "storage": {},
   "parameters": {
     "__SELECTED_JOB": "0",
-
+    "_curl_command": "curl \"https://jsonplaceholder.typicode.com/posts\"",
     "config": {
       "jobs": [
         {
