@@ -3,6 +3,8 @@ import json
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import List, Tuple, Optional
+from keboola.component.exceptions import UserException
+
 
 import dataconf
 
@@ -124,7 +126,7 @@ class ConfigurationKeysV2(Enum):
         return list(map(lambda c: c.value, cls))
 
 
-def convert_to_v2(configuration: dict) -> Configuration:
+def convert_to_v2(configuration: dict) -> list[Configuration]:
     """
     Convert configuration to v2 format
     Args:
@@ -146,14 +148,22 @@ def convert_to_v2(configuration: dict) -> Configuration:
     api_config.retry_config = build_retry_config(configuration)
     api_config.authentication = AuthMethodConverter.convert(configuration)
 
-    api_request, request_content, data_path = build_api_request(configuration)
+    requests = []
 
-    return Configuration(api=api_config,
-                         request_parameters=api_request,
-                         request_content=request_content,
-                         user_parameters=user_parameters,
-                         data_path=data_path
-                         )
+    jobs = build_api_request(configuration)
+
+    for api_request, request_content, data_path in jobs:
+
+        requests.append(
+                        Configuration(api=api_config,
+                                      request_parameters=api_request,
+                                      request_content=request_content,
+                                      user_parameters=user_parameters,
+                                      data_path=data_path
+                                      )
+                        )
+
+    return requests
 
 
 def build_retry_config(configuration: dict) -> RetryConfig:
@@ -188,66 +198,75 @@ def build_user_parameters(configuration: dict) -> dict:
     return user_parameters
 
 
-def build_api_request(configuration: dict) -> Tuple[ApiRequest, RequestContent, DataPath]:
+def build_api_request(configuration: dict) -> List[Tuple[ApiRequest, RequestContent, DataPath]]:
     """
     Build API request and content from configuration
     Args:
         configuration: Configuration in v2 format
 
-    Returns: API request, Request Content
+    Returns: list of tuples (ApiRequest, RequestContent, DataPath)
 
     """
+
+    result_requests = []
+
     job_path: str = configuration.get('__SELECTED_JOB')
 
     if not job_path:
-        return None, None, None
-    if '_' in job_path:
-        parent, child = job_path.split('_')
-    else:
-        parent, child = job_path, None  # noqa: F841
+        raise UserException('Job path not found in the configuration')
 
-    jobs_section: list[dict] = configuration.get('config', {}).get('jobs')
-    if not jobs_section:
-        raise ValueError('Jobs section not found in the configuration, no endpoint specified')
+    selected_jobs = job_path.split('_')
 
-    # TODO: support recursive child-job config. E.g. have chained/list of ApiRequests objects instead of just one
-    endpoint_config = jobs_section[int(parent)]
+    nested_path = []
 
-    nested_job = endpoint_config.get('children')
+    for index in selected_jobs:
+        nested_path.append(int(index))
 
-    method = endpoint_config.get('method', 'GET')
+        endpoint_config = configuration.get('config', {}).get('jobs')[nested_path[0]]
 
-    match method:
-        case 'GET':
-            request_content = RequestContent(ContentType.none)
-        case 'POST':
-            request_content = RequestContent(ContentType.json,
-                                             body=endpoint_config.get('params', {}))
-        case 'FORM':
-            request_content = RequestContent(ContentType.form,
-                                             body=endpoint_config.get('params', {}))
-        case _:
-            raise ValueError(f'Unsupported method: {method}')
+        if not endpoint_config:
+            raise ValueError('Jobs section not found in the configuration, no endpoint specified')
 
-    endpoint_path = endpoint_config.get('endpoint')
+        for child in nested_path[1:]:
+            try:
+                endpoint_config = endpoint_config.get('children', [])[child]
+            except IndexError:
+                raise ValueError('Jobs section not found in the configuration, no endpoint specified')
 
-    data_field = endpoint_config.get('dataField')
+        method = endpoint_config.get('method', 'GET')
 
-    if isinstance(data_field, dict):
-        path = data_field.get('path')
-        delimiter = data_field.get("delimiter", ".")
-    else:
-        path = data_field
-        delimiter = "."
+        match method:
+            case 'GET':
+                request_content = RequestContent(ContentType.none)
+            case 'POST':
+                request_content = RequestContent(ContentType.json,
+                                                 body=endpoint_config.get('params', {}))
+            case 'FORM':
+                request_content = RequestContent(ContentType.form,
+                                                 body=endpoint_config.get('params', {}))
+            case _:
+                raise ValueError(f'Unsupported method: {method}')
 
-    return (ApiRequest(method=method,
-                       endpoint_path=endpoint_path,
-                       headers=endpoint_config.get('headers', {}),
-                       query_parameters=endpoint_config.get('params', {}),
-                       nested_job=nested_job
-                       ),
-            request_content,
-            DataPath(path=path, delimiter=delimiter))
+        endpoint_path = endpoint_config.get('endpoint')
+
+        data_field = endpoint_config.get('dataField')
+
+        if isinstance(data_field, dict):
+            path = data_field.get('path')
+            delimiter = data_field.get("delimiter", ".")
+        else:
+            path = data_field
+            delimiter = "."
+
+        result_requests.append(
+            (ApiRequest(method=method,
+                        endpoint_path=endpoint_path,
+                        headers=endpoint_config.get('headers', {}),
+                        query_parameters=endpoint_config.get('params', {}),),
+             request_content,
+             DataPath(path=path, delimiter=delimiter)))
+
+    return result_requests
 
 
 class AuthMethodConverter:

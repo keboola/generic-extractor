@@ -1,5 +1,5 @@
 vendor/
-/data/
+/python-sync-actions/data/
 .idea/
 .tmp
 .phpunit.result.cache

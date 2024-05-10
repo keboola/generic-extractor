@@ -19,6 +19,7 @@ from http_generic.auth import AuthMethodBuilder, AuthBuilderError
 from http_generic.client import GenericHttpClient
 from placeholders_utils import PlaceholdersUtils
 from user_functions import UserFunctions
+from typing import List
 
 # configuration variables
 KEY_API_TOKEN = '#api_token'
@@ -47,7 +48,7 @@ class Component(ComponentBase):
         logging.getLogger().addHandler(logging.StreamHandler(self.log))
 
         self.user_functions = UserFunctions()
-
+        self._configurations: List[Configuration] = None
         self._configuration: Configuration = None
         self._client: GenericHttpClient = None
         self._parent_params = {}
@@ -62,7 +63,9 @@ class Component(ComponentBase):
 
     def init_component(self):
 
-        self._configuration = configuration.convert_to_v2(self.configuration.parameters)
+        self._configurations = configuration.convert_to_v2(self.configuration.parameters)
+
+        self._configuration = self._configurations[0]
 
         # build authentication method
         auth_method = None
