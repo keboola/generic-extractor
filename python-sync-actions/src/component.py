@@ -5,7 +5,9 @@ Template Component main class.
 import json
 import logging
 from io import StringIO
+from typing import List
 
+import requests
 from keboola.component.base import ComponentBase, sync_action
 from keboola.component.exceptions import UserException
 from nested_lookup import nested_lookup
@@ -18,7 +20,6 @@ from http_generic.auth import AuthMethodBuilder, AuthBuilderError
 from http_generic.client import GenericHttpClient
 from placeholders_utils import PlaceholdersUtils
 from user_functions import UserFunctions
-from typing import List
 
 # configuration variables
 KEY_API_TOKEN = '#api_token'
@@ -44,7 +45,15 @@ class Component(ComponentBase):
     def __init__(self):
         super().__init__()
         self.log = StringIO()
+
+        # remove default handler
+        for h in logging.getLogger().handlers:
+            logging.getLogger().removeHandler(h)
         logging.getLogger().addHandler(logging.StreamHandler(self.log))
+
+        # always set debug mode
+        self.set_debug_mode()
+        logging.info("Component initialized")
 
         self.user_functions = UserFunctions()
         self._configurations: List[Configuration] = None
@@ -53,7 +62,7 @@ class Component(ComponentBase):
         self._parent_params = {}
         self._final_results = []
         self._parent_results = []
-        self._final_response = None
+        self._final_response: requests.Response = None
 
     def run(self):
         """
@@ -240,6 +249,8 @@ class Component(ComponentBase):
         if not self._configuration.request_parameters:
             raise ValueError("_JOB_PATH is missing!")
         self._client.login()
+        # set back to debug because sync action mutes it
+        logging.getLogger().setLevel(logging.DEBUG)
 
         final_results = []
 
@@ -248,7 +259,7 @@ class Component(ComponentBase):
         def recursive_call(parent_result, config_index=0):
 
             if parent_result:
-                self._parent_results[config_index-1] = parent_result
+                self._parent_results[config_index - 1] = parent_result
 
             if config_index >= len(self._configurations):
                 return final_results, self._final_response.json(), self.log.getvalue()
@@ -301,7 +312,7 @@ class Component(ComponentBase):
 
         recursive_call({})
 
-        return final_results, self._final_response.json(), self.log.getvalue()
+        return final_results[-1], self._final_response, self.log.getvalue()
 
     @sync_action('load_from_curl')
     def load_from_curl(self) -> dict:
@@ -321,7 +332,7 @@ class Component(ComponentBase):
         """
         Load configuration from cURL command
         """
-        response, data = self.make_call()
+        data, response, log = self.make_call()
         if not data:
             raise UserException("The request returned no data to infer mapping from.")
         mapping = infer_mapping(data)
@@ -329,10 +340,24 @@ class Component(ComponentBase):
 
     @sync_action('test_request')
     def test_request(self):
-        self.make_call()
+        results, response, log = self.make_call()
 
-        return [self._final_response.status_code, self._final_response.json(),
-                self._final_results, self.log.getvalue()]
+        return {
+            "response": {
+                "status_code": self._final_response.status_code,
+                "reason": self._final_response.reason,
+                "headers": dict(self._final_response.headers),
+                "data": self._final_response.json()
+            },
+            "request": {
+                "url": self._final_response.request.url,
+                "method": self._final_response.request.method,
+                "headers": dict(self._final_response.request.headers),
+                "data": self._final_response.request.body
+            },
+            "records": results,
+            "debug_log": log
+        }
 
 
 """
