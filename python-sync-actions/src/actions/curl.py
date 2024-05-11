@@ -13,8 +13,8 @@ class JobTemplate:
     endpoint: str = ""
     children: List[Any] = field(default_factory=list)
     method: str = "GET"
-    dataType: str = "."
-    dataField: str = "."
+    dataField: dict = field(default_factory=dict)
+    dataType: str = ""
     params: Dict[str, Any] = field(default_factory=dict)
     headers: Dict[str, Any] = field(default_factory=dict)
 
@@ -197,5 +197,6 @@ def build_job_from_curl(curl_command: str, base_url: str = None, is_child_job: b
     job_template.method = parsed_curl['method'].upper()
     job_template.headers = parsed_curl.get('headers', {})
     job_template.dataType = job_template.endpoint.split('/')[-1]
+    job_template.dataField = {"path": ".", "separator": "."}
 
     return job_template

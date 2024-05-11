@@ -81,8 +81,14 @@ class ApiRequest(ConfigurationBase):
 
 @dataclass
 class DataPath(ConfigurationBase):
-    path: str
-    delimiter: str
+    path: str = '.'
+    delimiter: str = '.'
+
+    def to_dict(self):
+        return {
+            'path': self.path,
+            'delimiter': self.delimiter
+        }
 
 
 # CONFIGURATION OBJECT
