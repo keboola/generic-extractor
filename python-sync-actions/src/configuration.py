@@ -254,7 +254,6 @@ def build_api_request(configuration: dict) -> List[Tuple[ApiRequest, RequestCont
 
         placeholders = endpoint_config.get('placeholders', {})
 
-
         if isinstance(data_field, dict):
             path = data_field.get('path')
             delimiter = data_field.get("delimiter", ".")
