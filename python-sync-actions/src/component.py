@@ -21,6 +21,8 @@ from http_generic.client import GenericHttpClient
 from placeholders_utils import PlaceholdersUtils
 from user_functions import UserFunctions
 
+MAX_CHILD_CALLS = 20
+
 # configuration variables
 KEY_API_TOKEN = '#api_token'
 KEY_PRINT_HELLO = 'print_hello'
@@ -256,6 +258,7 @@ class Component(ComponentBase):
 
         self._parent_results = [{}] * len(self._configurations)
 
+        # TODO: omezit pocet callu z parent response na 10 kvuli timeoutu. E.g. zavolat child jen max 10x
         def recursive_call(parent_result, config_index=0):
 
             if parent_result:
@@ -302,17 +305,18 @@ class Component(ComponentBase):
             current_results = self._parse_data(self._final_response.json(), job.data_path)
 
             if config_index == len(self._configurations) - 1:
-                final_results.append(current_results)
+                final_results.extend(current_results)
             else:
                 if isinstance(current_results, list):
-                    for result in current_results:
+                    # limit the number of calls to 10 because of timeout
+                    for result in current_results[:MAX_CHILD_CALLS]:
                         recursive_call(result, config_index + 1)
                 else:
                     recursive_call(current_results, config_index + 1)
 
         recursive_call({})
 
-        return final_results[-1], self._final_response, self.log.getvalue()
+        return final_results, self._final_response, self.log.getvalue()
 
     @sync_action('load_from_curl')
     def load_from_curl(self) -> dict:
