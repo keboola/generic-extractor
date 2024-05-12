@@ -3,8 +3,6 @@ import json
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import List, Tuple, Optional
-from keboola.component.exceptions import UserException
-
 
 import dataconf
 
@@ -154,15 +152,14 @@ def convert_to_v2(configuration: dict) -> list[Configuration]:
     jobs = build_api_request(configuration)
 
     for api_request, request_content, data_path in jobs:
-
         requests.append(
-                        Configuration(api=api_config,
-                                      request_parameters=api_request,
-                                      request_content=request_content,
-                                      user_parameters=user_parameters,
-                                      data_path=data_path
-                                      )
-                        )
+            Configuration(api=api_config,
+                          request_parameters=api_request,
+                          request_content=request_content,
+                          user_parameters=user_parameters,
+                          data_path=data_path
+                          )
+        )
 
     return requests
 
@@ -214,7 +211,8 @@ def build_api_request(configuration: dict) -> List[Tuple[ApiRequest, RequestCont
     job_path: str = configuration.get('__SELECTED_JOB')
 
     if not job_path:
-        raise UserException('Job path not found in the configuration')
+        # job path may be empty for other actions
+        return [(None, None, None)]
 
     selected_jobs = job_path.split('_')
 
@@ -266,7 +264,7 @@ def build_api_request(configuration: dict) -> List[Tuple[ApiRequest, RequestCont
                         endpoint_path=endpoint_path,
                         placeholders=placeholders,
                         headers=endpoint_config.get('headers', {}),
-                        query_parameters=endpoint_config.get('params', {}),),
+                        query_parameters=endpoint_config.get('params', {}), ),
              request_content,
              DataPath(path=path, delimiter=delimiter)))
 
