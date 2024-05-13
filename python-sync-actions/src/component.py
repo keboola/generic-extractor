@@ -79,6 +79,7 @@ class Component(ComponentBase):
 
         self._configuration = self._configurations[0]
 
+
         # build authentication method
         auth_method = None
         authentication = self._configuration.api.authentication
@@ -100,6 +101,20 @@ class Component(ComponentBase):
                                          status_forcelist=self._configuration.api.retry_config.codes,
                                          auth_method=auth_method
                                          )
+
+    def _remove_auth_from_dict(self, dictionary):
+        filtered_dict = {}
+        for key, value in dictionary.items():
+            if isinstance(value, dict):
+                if key != 'Authorization':
+                    filtered_value = self._remove_auth_from_dict(value)
+                    if filtered_value:
+                        filtered_dict[key] = filtered_value
+            else:
+                if value not in ['#__AUTH_TOKEN', '#__API_key']:
+                    filtered_dict[key] = value
+
+        return filtered_dict
 
     def _fill_in_user_parameters(self, conf_objects: dict, user_param: dict):
         """
@@ -274,10 +289,12 @@ class Component(ComponentBase):
             # fix KBC bug
             user_params = job.user_parameters
             # evaluate user_params inside the user params itself
+            user_params = self._remove_auth_from_dict(user_params)
             user_params = self._fill_in_user_parameters(user_params, user_params)
 
             # build headers
             headers = {**api_cfg.default_headers.copy(), **request_cfg.headers.copy()}
+            headers = self._remove_auth_from_dict(headers)
             new_headers = self._fill_in_user_parameters(headers, user_params)
 
             # build additional parameters

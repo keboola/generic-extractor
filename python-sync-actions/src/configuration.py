@@ -271,6 +271,19 @@ def build_api_request(configuration: dict) -> List[Tuple[ApiRequest, RequestCont
     return result_requests
 
 
+def _find_api_key_location(dictionary):
+    def recurse(current_dict, parent_keys):
+        for key, value in current_dict.items():
+            if isinstance(value, dict):
+                if value.get('attr') == '#__AUTH_TOKEN':
+                    return parent_keys + [key]
+                result = recurse(value, parent_keys + [key])
+                if result:
+                    return result
+        return None
+    return recurse(dictionary, [])
+
+
 class AuthMethodConverter:
     SUPPORTED_METHODS = ['basic', 'api-key', 'bearer']
 
@@ -309,7 +322,10 @@ class AuthMethodConverter:
 
     @classmethod
     def _convert_api_key(cls, config_parameters: dict) -> Authentication:
-        pass
+        path = _find_api_key_location(config_parameters.get("api").get("http"))
+        token = config_parameters.get('config').get('#__AUTH_TOKEN')
+
+        return Authentication(type='ApiKey', parameters={'key': path[-1], 'token': token, 'position': path[0]})
 
     @classmethod
     def _convert_bearer(cls, config_parameters: dict) -> Authentication:

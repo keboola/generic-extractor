@@ -116,3 +116,29 @@ class BearerToken(AuthMethodBase, AuthBase):
     def __call__(self, r):
         r.headers['authorization'] = f"Bearer {self.token}"
         return r
+
+
+class ApiKey(AuthMethodBase, AuthBase):
+    def __init__(self, key:str, token:str, position:str):
+        self.token = token
+        self.key = key
+        self.position = position
+
+    def login(self) -> Union[AuthBase, Callable]:
+        return self
+
+    def __eq__(self, other):
+        return all([
+            self.token == getattr(other, 'token', None)
+        ])
+
+    def __ne__(self, other):
+        return not self == other
+
+    def __call__(self, r):
+        if self.position == 'headers':
+            r.headers[self.key] = f"{self.token}"
+
+        elif self.position == 'defaultOptions':
+            r.body = {"defaultOptions": {self.key: f"{self.token}"}}
+        return r
