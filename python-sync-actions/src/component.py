@@ -79,7 +79,6 @@ class Component(ComponentBase):
 
         self._configuration = self._configurations[0]
 
-
         # build authentication method
         auth_method = None
         authentication = self._configuration.api.authentication

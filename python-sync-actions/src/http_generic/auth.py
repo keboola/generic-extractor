@@ -119,7 +119,7 @@ class BearerToken(AuthMethodBase, AuthBase):
 
 
 class ApiKey(AuthMethodBase, AuthBase):
-    def __init__(self, key:str, token:str, position:str):
+    def __init__(self, key: str, token: str, position: str):
         self.token = token
         self.key = key
         self.position = position
