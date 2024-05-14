@@ -4,6 +4,7 @@ Template Component main class.
 """
 import json
 import logging
+from ast import literal_eval
 from io import StringIO
 from typing import List
 
@@ -346,6 +347,13 @@ class Component(ComponentBase):
         mapping = infer_mapping(data, primary_keys,
                                 max_level_nest_level=nesting_level)
         return mapping
+
+    @sync_action('perform_function')
+    def perform_function_sync(self) -> dict:
+        self.init_component()
+        function_cfg = literal_eval(self.configuration.parameters['__FUNCTION_CFG'])
+        return {"result": self._perform_custom_function('function',
+                                                        function_cfg, self._configuration.user_parameters)}
 
     @sync_action('test_request')
     def test_request(self):
