@@ -125,6 +125,39 @@ class ConfigurationKeysV2(Enum):
         return list(map(lambda c: c.value, cls))
 
 
+def _return_ui_params(data) -> list[str]:
+    results = []
+
+    def search_dict(d):
+        if isinstance(d, dict):
+            for key, value in d.items():
+                if key == "attr" and isinstance(value, str) and (value.startswith("#__") or value.startswith("__")):
+                    results.append(value)
+                elif isinstance(value, dict) or isinstance(value, list):
+                    search_dict(value)
+        elif isinstance(d, list):
+            for item in d:
+                search_dict(item)
+
+    search_dict(data)
+    return results
+
+
+def _remove_auth_from_dict(dictionary: dict, to_remove: list) -> dict:
+    filtered_dict = {}
+    for key, value in dictionary.items():
+        if isinstance(value, dict):
+            if key != 'Authorization':
+                filtered_value = _remove_auth_from_dict(value, to_remove)
+                if filtered_value:
+                    filtered_dict[key] = filtered_value
+        else:
+            if value not in to_remove:
+                filtered_dict[key] = value
+
+    return filtered_dict
+
+
 def convert_to_v2(configuration: dict) -> list[Configuration]:
     """
     Convert configuration to v2 format
@@ -138,8 +171,11 @@ def convert_to_v2(configuration: dict) -> list[Configuration]:
 
     api_json = configuration.get('api', {})
     base_url = api_json.get('baseUrl', '')
-    default_headers = api_json.get('http', {}).get('headers', {})
-    default_query_parameters = api_json.get('http', {}).get('defaultOptions', {}).get('params', {})
+    default_headers_org = api_json.get('http', {}).get('headers', {})
+    default_query_parameters_org = api_json.get('http', {}).get('defaultOptions', {}).get('params', {})
+
+    default_headers = _remove_auth_from_dict(default_headers_org, _return_ui_params(configuration))
+    default_query_parameters = _remove_auth_from_dict(default_query_parameters_org, _return_ui_params(configuration))
 
     api_config = ApiConfig(base_url=base_url, default_headers=default_headers,
                            default_query_parameters=default_query_parameters)
