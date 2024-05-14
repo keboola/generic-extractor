@@ -336,10 +336,15 @@ class Component(ComponentBase):
         """
         Load configuration from cURL command
         """
+        self.init_component()
         data, response, log = self.make_call()
+        nesting_level = self.configuration.parameters.get('__NESTING_LEVEL', 2)
+        primary_keys = self.configuration.parameters.get('__PRIMARY_KEY', [])
         if not data:
             raise UserException("The request returned no data to infer mapping from.")
-        mapping = infer_mapping(data)
+
+        mapping = infer_mapping(data, primary_keys,
+                                max_level_nest_level=nesting_level)
         return mapping
 
     @sync_action('test_request')
