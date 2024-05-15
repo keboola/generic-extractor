@@ -31,7 +31,7 @@ class StuctureAnalyzer:
 
     def infer_mapping(self, primary_keys: Optional[list[str]] = None,
                       path_separator: str = '.',
-                      max_level: int = 2,
+                      max_level: int = 2
                       ) -> dict:
         """
         Infer first level Generic Extractor mapping from data sample.

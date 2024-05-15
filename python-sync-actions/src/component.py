@@ -94,6 +94,12 @@ class Component(ComponentBase):
         except AuthBuilderError as e:
             raise UserException(e) from e
 
+        # evaluate user_params inside the user params itself
+        self._configuration.user_parameters = self._fill_in_user_parameters(self._configuration.user_parameters,
+                                                                            self._configuration.user_parameters)
+        self._configuration.user_data = self._fill_in_user_parameters(self._configuration.user_data,
+                                                                      self._configuration.user_parameters)
+
         # init client
         self._client = GenericHttpClient(base_url=self._configuration.api.base_url,
                                          max_retries=self._configuration.api.retry_config.max_retries,
@@ -272,7 +278,7 @@ class Component(ComponentBase):
         """
         self.init_component()
         if not self._configuration.request_parameters:
-            raise ValueError("_JOB_PATH is missing!")
+            raise ValueError("__SELECTED_JOB is missing!")
         self._client.login()
         # set back to debug because sync action mutes it
         logging.getLogger().setLevel(logging.DEBUG)
@@ -365,6 +371,14 @@ class Component(ComponentBase):
         primary_keys = self.configuration.parameters.get('__PRIMARY_KEY', [])
         if not data:
             raise UserException("The request returned no data to infer mapping from.")
+
+        if self._configuration.user_data:
+            for record in data:
+                for key, value in self._configuration.user_data.items():
+                    if key in record:
+                        raise UserException(f"User data key [{key}] already exists in the response data, "
+                                            f"please change the name.")
+                    record[key] = value
 
         mapping = infer_mapping(data, primary_keys,
                                 max_level_nest_level=nesting_level)

@@ -112,6 +112,7 @@ class Configuration(ConfigurationBase):
     request_parameters: ApiRequest
     request_content: RequestContent
     user_parameters: dict = field(default_factory=dict)
+    user_data: dict = field(default_factory=dict)
     data_path: DataPath = field(default_factory=DataPath)
 
 
@@ -193,6 +194,7 @@ def convert_to_v2(configuration: dict) -> list[Configuration]:
                           request_parameters=api_request,
                           request_content=request_content,
                           user_parameters=user_parameters,
+                          user_data=configuration.get('config', {}).get('userData', {}),
                           data_path=data_path
                           )
         )
@@ -224,7 +226,7 @@ def build_user_parameters(configuration: dict) -> dict:
 
     """
     config_excluded_keys = ['__AUTH_METHOD', '__NAME', '#__BEARER_TOKEN', 'jobs', 'outputBucket', 'incrementalOutput',
-                            'http', 'debug', 'mappings', ' #username', '#password']
+                            'http', 'debug', 'mappings', ' #username', '#password', 'userData']
     user_parameters = {}
     for key, value in configuration.get('config', {}).items():
         if key not in config_excluded_keys:
@@ -317,6 +319,7 @@ def _find_api_key_location(dictionary):
                 if result:
                     return result
         return None
+
     return recurse(dictionary, [])
 
 
