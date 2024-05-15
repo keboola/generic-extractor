@@ -4,6 +4,7 @@ Template Component main class.
 """
 import json
 import logging
+import time
 from io import StringIO
 from typing import List
 
@@ -133,6 +134,27 @@ class Component(ComponentBase):
                 'are not present in "user_parameters" field.'.format(non_matched))
         return new_steps
 
+    def _fill_in_time_references(self, conf_objects: dict):
+        """
+        This method replaces user parameter references via attr + parses functions inside user parameters,
+        evaluates them and fills in the resulting values
+
+        Args:
+            conf_objects: Configuration that contains the references via {"attr": "key"} to user parameters or function
+                            definitions
+
+        Returns:
+
+        """
+        # convert to string minified
+        steps_string = json.dumps(conf_objects, separators=(',', ':'))
+        # dirty and ugly replace
+
+        new_cfg_str = steps_string.replace('{"time":"currentStart"}', f'{int(time.time())}')
+        new_cfg_str = new_cfg_str.replace('{"time":"previousStart"}', f'{int(time.time())}')
+        new_config = json.loads(new_cfg_str)
+        return new_config
+
     def _fill_placeholders(self, placeholders, path):
         """
         Fill placeholders in the path
@@ -200,6 +222,7 @@ class Component(ComponentBase):
         if not function_cfg.get('function'):
             raise ValueError(
                 F'The user parameter {key} value is object and is not a valid function object: {function_cfg}')
+
         new_args = []
         if function_cfg.get('args'):
             for arg in function_cfg.get('args'):
@@ -351,6 +374,7 @@ class Component(ComponentBase):
     def perform_function_sync(self) -> dict:
         self.init_component()
         function_cfg = self.configuration.parameters['__FUNCTION_CFG']
+        function_cfg = self._fill_in_time_references(function_cfg)
         return {"result": self._perform_custom_function('function',
                                                         function_cfg, self._configuration.user_parameters)}
 
