@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from typing import Callable, Union, Dict
 
 from requests.auth import AuthBase, HTTPBasicAuth
+from urllib.parse import urlencode
 
 
 class AuthBuilderError(Exception):
@@ -140,5 +141,5 @@ class ApiKey(AuthMethodBase, AuthBase):
             r.headers[self.key] = f"{self.token}"
 
         elif self.position == 'defaultOptions':
-            r.body = {"defaultOptions": {self.key: f"{self.token}"}}
+            r.url = f"{r.url}?{urlencode({self.key: self.token})}"
         return r
