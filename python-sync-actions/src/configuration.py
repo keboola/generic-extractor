@@ -310,17 +310,20 @@ def build_api_request(configuration: dict) -> List[Tuple[ApiRequest, RequestCont
 
 
 def _find_api_key_location(dictionary):
-    def recurse(current_dict, parent_keys):
-        for key, value in current_dict.items():
-            if isinstance(value, dict):
-                if value.get('attr') == '#__AUTH_TOKEN':
-                    return parent_keys + [key]
-                result = recurse(value, parent_keys + [key])
-                if result:
-                    return result
-        return None
+    position = None
+    key = None
 
-    return recurse(dictionary, [])
+    for key, val in dictionary.get('defaultOptions', {}).get('params', {}).items():
+        if val == {'attr': '#__AUTH_TOKEN'}:
+            key = key
+            position = 'defaultOptions'
+
+    for key, val in dictionary.get('headers', {}).items():
+        if val == {'attr': '#__AUTH_TOKEN'}:
+            key = key
+            position = 'header'
+
+    return position, key
 
 
 class AuthMethodConverter:
@@ -361,10 +364,10 @@ class AuthMethodConverter:
 
     @classmethod
     def _convert_api_key(cls, config_parameters: dict) -> Authentication:
-        path = _find_api_key_location(config_parameters.get("api").get("http"))
+        position, key = _find_api_key_location(config_parameters.get("api").get("http"))
         token = config_parameters.get('config').get('#__AUTH_TOKEN')
 
-        return Authentication(type='ApiKey', parameters={'key': path[-1], 'token': token, 'position': path[0]})
+        return Authentication(type='ApiKey', parameters={'key': key, 'token': token, 'position': position})
 
     @classmethod
     def _convert_bearer(cls, config_parameters: dict) -> Authentication:
