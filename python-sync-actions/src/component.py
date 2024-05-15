@@ -347,7 +347,7 @@ class Component(ComponentBase):
         Load configuration from cURL command
         """
         self.init_component()
-        curl_command = self.configuration.parameters.get('_curl_command')
+        curl_command = self.configuration.parameters.get('__CURL_COMMAND')
         if not curl_command:
             raise ValueError('cURL command not provided')
         job = build_job_from_curl(curl_command, self._configuration.api.base_url)

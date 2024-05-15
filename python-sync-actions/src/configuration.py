@@ -224,7 +224,7 @@ def build_user_parameters(configuration: dict) -> dict:
 
     """
     config_excluded_keys = ['__AUTH_METHOD', '__NAME', '#__BEARER_TOKEN', 'jobs', 'outputBucket', 'incrementalOutput',
-                            'debug', 'mappings', ' #username', '#password']
+                            'http', 'debug', 'mappings', ' #username', '#password']
     user_parameters = {}
     for key, value in configuration.get('config', {}).items():
         if key not in config_excluded_keys:
