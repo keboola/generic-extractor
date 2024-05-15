@@ -1,11 +1,32 @@
 import base64
-import datetime
 import hashlib
-import hmac
+import subprocess
 import time
 
-import dateutil.parser
 import keboola.utils as kbcutils
+from keboola.component import UserException
+
+
+def perform_shell_command(command: str, context_detail: str = '') -> tuple[str, str]:
+    """
+    Perform shell command
+    Args:
+        command: shell command
+        context_detail: additional context detail for exception handling
+
+    Returns: command output
+
+    """
+    # Running the command
+    result = subprocess.run(command, shell=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    # Getting the results
+    stdout_str = result.stdout
+    stderr_str = result.stderr
+
+    if result.returncode != 0:
+        raise UserException(f"Error while performing {context_detail}: {stderr_str}")
+    return stdout_str, stderr_str
 
 
 class UserFunctions:
@@ -51,37 +72,56 @@ class UserFunctions:
         return delimiter.join(values)
 
     def hash_hmac(self, algorithm, key, message):
-        return hmac.new(bytes(message, 'UTF-8'), key.encode(), getattr(hashlib, algorithm)).hexdigest()
+        """
+        Execute PHP hash_hmac function
+        Args:
+            algorithm:
+            key:
+            message:
+
+        Returns:
+
+        """
+
+        command = f"php -r 'echo hash_hmac(\"{algorithm}\", \"{message}\", \"{key}\");'"
+        stdout, stderr = perform_shell_command(command, 'hash_hmac function')
+
+        return stdout
 
     def time(self):
         return int(time.time())
 
     def date(self, format_string, timestamp=None):
-        date_obj = datetime.datetime.fromtimestamp(timestamp) if timestamp is not None else datetime.datetime.now()
-        return date_obj.strftime(self.php_to_python_date_format(format_string))
+        """
+        Execute PHP date function
+        Args:
+            format_string:
+            timestamp:
 
-    def php_to_python_date_format(self, php_format):
-        replacements = {
-            'Y': '%Y', 'y': '%y', 'm': '%m', 'n': '%m', 'd': '%d', 'j': '%d',
-            'H': '%H', 'G': '%H', 'h': '%I', 'g': '%I', 'i': '%M', 's': '%S',
-            'a': '%p', 'A': '%p'
-        }
-        python_format = php_format
-        for php, python in replacements.items():
-            python_format = python_format.replace(php, python)
-        return python_format
+        Returns:
+
+            """
+
+        command = f"php -r 'echo date(\"{format_string}\", {timestamp or 'time()'});'"
+        stdout, stderr = perform_shell_command(command, 'date function')
+
+        return stdout
 
     def strtotime(self, string, base_time=None):
-        if not base_time:
-            date = dateutil.parser.parse(string)
-        else:
-            if isinstance(base_time, str):
-                base_time = dateutil.parser.parse(base_time)
-            else:
-                base_time = datetime.datetime.fromtimestamp(base_time)
-            date = kbcutils.get_past_date(string, base_time)
+        """
+        Execute PHP strtotime function
+        Args:
+            string:
+            base_time:
 
-        return int(date.timestamp())
+        Returns:
+
+        """
+
+        command = f"php -r 'echo strtotime(\"{string}\", {base_time or 'null'});'"
+        stdout, stderr = perform_shell_command(command, 'strotime function')
+
+        return int(stdout)
 
     def sprintf(self, format_string, *values):
         return format_string % values
