@@ -110,7 +110,6 @@ class StuctureAnalyzer:
                                                                       max_level, current_mapping,
                                                                       current_level)
                     else:
-                        column_name = path_key
                         current_mapping[path_key] = MappingElements.force_type_column(normalized_header_name)
                 case _:
                     # all other types including unknown map with forceType option
