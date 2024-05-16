@@ -426,13 +426,8 @@ class Component(ComponentBase):
     @sync_action('test_request')
     def test_request(self):
         results, response, log = self.make_call()
-        # TODO: temp override for demo
-        for header, value in self._final_response.request.headers.items():
-            secret = self.configuration.parameters.get('config', {}).get('#__AUTH_TOKEN', '')
-            if secret in value:
-                self._final_response.request.headers[header] = value.replace(secret, 'HIDDEN')
 
-        return {
+        result = {
             "response": {
                 "status_code": self._final_response.status_code,
                 "reason": self._final_response.reason,
@@ -448,6 +443,14 @@ class Component(ComponentBase):
             "records": results,
             "debug_log": log
         }
+        # filter secrets
+        # TODO: temp override for demo, do all secrets when ready
+        # TODO: handle situation when secret is number
+        #   -> replacing "some": 123 with "some": HIDDEN would lead to invalid json
+        secret = self.configuration.parameters.get('config', {}).get('#__AUTH_TOKEN', '')
+        result_str = json.dumps(result)
+        result_str = result_str.replace(secret, 'HIDDEN')
+        return json.loads(result_str)
 
 
 """
