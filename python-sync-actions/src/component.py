@@ -374,7 +374,7 @@ class Component(ComponentBase):
         primary_keys = self.configuration.parameters.get('__PRIMARY_KEY', [])
         parent_pkey = []
         if len(self._configurations) > 1:
-            parent_pkey = [f'parent_{p}' for p in self._configurations[-2].request_parameters.placeholders.key()]
+            parent_pkey = [f'parent_{p}' for p in self._configurations[-1].request_parameters.placeholders.keys()]
 
         if not data:
             raise UserException("The request returned no data to infer mapping from.")
