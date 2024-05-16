@@ -4,10 +4,10 @@ Template Component main class.
 """
 import json
 import logging
+import re
 import time
 from io import StringIO
 from typing import List
-import re
 
 import requests
 from keboola.component.base import ComponentBase, sync_action
@@ -49,6 +49,7 @@ class WordFilter(logging.Filter):
         record.msg = message
 
         return True
+
 
 class Component(ComponentBase):
     """
@@ -425,6 +426,11 @@ class Component(ComponentBase):
     @sync_action('test_request')
     def test_request(self):
         results, response, log = self.make_call()
+        # TODO: temp override for demo
+        for header, value in self._final_response.request.headers.items():
+            secret = self.configuration.parameters.get('config', {}).get('#__AUTH_TOKEN', '')
+            if secret in value:
+                self._final_response.request.headers[header] = value.replace(secret, 'HIDDEN')
 
         return {
             "response": {
