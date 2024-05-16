@@ -121,6 +121,9 @@ class Component(ComponentBase):
         Returns:
 
         """
+        # time references
+        conf_objects = self._fill_in_time_references(conf_objects)
+        user_param = self._fill_in_time_references(user_param)
         # convert to string minified
         steps_string = json.dumps(conf_objects, separators=(',', ':'))
         # dirty and ugly replace
