@@ -4,10 +4,11 @@ Template Component main class.
 """
 import json
 import logging
-import re
 import time
 from io import StringIO
 from typing import List
+import re
+import copy
 
 import requests
 from keboola.component.base import ComponentBase, sync_action
@@ -35,22 +36,6 @@ REQUIRED_PARAMETERS = [KEY_PRINT_HELLO]
 REQUIRED_IMAGE_PARS = []
 
 
-class WordFilter(logging.Filter):
-
-    def __init__(self, secrets):
-        super().__init__()
-        self.patterns = [re.compile(f"(?i){secret}", re.IGNORECASE) for secret in secrets]
-
-    def filter(self, record):
-        message = record.getMessage()
-        for pattern in self.patterns:
-            message = pattern.sub('--HIDDEN--', message)
-
-        record.msg = message
-
-        return True
-
-
 class Component(ComponentBase):
     """
         Extends base class for general Python components. Initializes the CommonInterface
@@ -71,14 +56,9 @@ class Component(ComponentBase):
             logging.getLogger().removeHandler(h)
 
         logging.getLogger().addHandler(logging.StreamHandler(self.log))
-        logging.getLogger().addFilter(WordFilter(["supertajneheslo", "orders"]))
-
-        # for h in logging.root.handlers:
-        #     h.setFormatter(RedactingFormatter(h.formatter, patterns=['supertajneheslo']))
 
         # always set debug mode
         self.set_debug_mode()
-        logging.info("calhost:8888 GET /002-token-body/orders?key=supertajneheslo HTTP/1.1")
 
         logging.info("Component initialized")
 
@@ -131,6 +111,62 @@ class Component(ComponentBase):
                                          status_forcelist=self._configuration.api.retry_config.codes,
                                          auth_method=auth_method
                                          )
+
+    def _get_values_to_hide(self, values: dict):
+        """
+        Get values to hide
+        Args:
+            values: values to hide
+        """
+        return [value for key, value in values.items() if key.startswith('#__') or key.startswith('__')]
+
+    def _replace_words(self, obj, words, replacement="--HIDDEN--"):
+        # Helper function to perform replacement in strings
+        def replace_in_string(s):
+            for word in words:
+                s = s.replace(word, replacement)
+            return s
+
+        # If the object is a dictionary
+        if isinstance(obj, dict):
+            new_obj = {}
+            for key, value in obj.items():
+                new_key = replace_in_string(key) if isinstance(key, str) else key
+                new_value = self._replace_words(value, words, replacement)
+                new_obj[new_key] = new_value
+            return new_obj
+
+        # If the object is a list
+        elif isinstance(obj, list):
+            return [self._replace_words(item, words, replacement) for item in obj]
+
+        # If the object is a tuple
+        elif isinstance(obj, tuple):
+            return tuple(self._replace_words(item, words, replacement) for item in obj)
+
+        # If the object is a set
+        elif isinstance(obj, set):
+            return {self._replace_words(item, words, replacement) for item in obj}
+
+        # If the object is a custom object
+        elif hasattr(obj, "__dict__"):
+            new_obj = copy.deepcopy(obj)
+            for attr in vars(new_obj):
+                setattr(new_obj, attr, self._replace_words(getattr(new_obj, attr), words, replacement))
+            return new_obj
+
+        # If the object is a string and contains any of the words
+        elif isinstance(obj, str):
+            return replace_in_string(obj)
+
+        # Return the object if it is of any other type
+        else:
+            return obj
+
+    # Function to deep copy the object and replace specified words with a replacement string
+    def _deep_copy_and_replace_words(self, original_obj, words):
+        copied_obj = copy.deepcopy(original_obj)
+        return self._replace_words(copied_obj, words)
 
     def _fill_in_user_parameters(self, conf_objects: dict, user_param: dict):
         """
@@ -372,7 +408,11 @@ class Component(ComponentBase):
 
         recursive_call({})
 
-        return final_results, self._final_response, self.log.getvalue()
+        secrets_to_hide = self._get_values_to_hide(self._configuration.user_parameters)
+        filtered_response = self._deep_copy_and_replace_words(self._final_response, secrets_to_hide)
+        filtered_log = self._deep_copy_and_replace_words(self.log.getvalue(), secrets_to_hide)
+
+        return final_results, filtered_response, filtered_log
 
     @sync_action('load_from_curl')
     def load_from_curl(self) -> dict:
