@@ -321,7 +321,7 @@ def _find_api_key_location(dictionary):
     for key, val in dictionary.get('headers', {}).items():
         if val == {'attr': '#__AUTH_TOKEN'}:
             key = key
-            position = 'header'
+            position = 'headers'
 
     return position, key
 
