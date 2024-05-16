@@ -73,7 +73,7 @@ class TestCurl(unittest.TestCase):
 
     def test_url_w_placeholders(self):
         command = """curl 'https://connection.{{stack}}.keboola.com/v2/storage/events?sinceId={sinceId}&maxId={maxId}&component={component}&configurationId={configurationId}&runId={runId}&q={q}&limit={limit}&offset={offset}'"""
-        expected = JobTemplate(endpoint='https://connection.__stack__.keboola.com/v2/storage/events', children=[],
+        expected = JobTemplate(endpoint='https://connection.{{stack}}.keboola.com/v2/storage/events', children=[],
                                method='GET', dataType='events', dataField={"path": ".", "separator": "."},
                                params={'sinceId': '_sinceId_', 'maxId': '_maxId_', 'component': '_component_',
                                        'configurationId': '_configurationId_', 'runId': '_runId_', 'q': '_q_',

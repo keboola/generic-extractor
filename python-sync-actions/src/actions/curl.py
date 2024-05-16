@@ -71,23 +71,28 @@ def retrieve_url(curl_command: str) -> str:
     return url
 
 
-def normalize_url_in_curl(curl_command: str) -> str:
+def normalize_url_in_curl(curl_command: str) -> tuple[str, str]:
     """
     Normalize the URL in the cURL command to remove globs and other unsupported characters
     Args:
         curl_command:
 
-    Returns:
+    Returns: converted command, original url
 
     """
     unsupported_characters = ['{', '}']
     url = retrieve_url(curl_command)
+    original_url = None
     new_url = url
+
+    if any([char in url for char in unsupported_characters]):
+        original_url = url.split('?')[0]
+
     for character in unsupported_characters:
         new_url = new_url.replace(character, '_')
 
     new_curl_command = curl_command.replace(url, new_url)
-    return new_curl_command
+    return new_curl_command, original_url
 
 
 def parse_curl(curl_command: str) -> dict:
@@ -108,7 +113,7 @@ def parse_curl(curl_command: str) -> dict:
 
     """
     # normalize the URL
-    curl_command = normalize_url_in_curl(curl_command)
+    curl_command, original_url = normalize_url_in_curl(curl_command)
     escaped_curl_command = curl_command.replace("'", "'\\''")
     command = f"echo '{escaped_curl_command}' | curlconverter --language json -"
 
@@ -122,7 +127,12 @@ def parse_curl(curl_command: str) -> dict:
     if result.returncode != 0:
         raise UserException(f"Error parsing cURL: {stderr_str}")
 
-    return json.loads(stdout_str)
+    result = json.loads(stdout_str)
+    # replace the original URL in case it was changed to enable child job detection
+    if original_url:
+        result['url'] = original_url
+
+    return result
 
 
 def _get_endpoint_path(base_url: str, url: str) -> str:
