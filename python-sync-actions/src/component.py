@@ -7,6 +7,7 @@ import logging
 import time
 from io import StringIO
 from typing import List
+import re
 
 import requests
 from keboola.component.base import ComponentBase, sync_action
@@ -34,6 +35,21 @@ REQUIRED_PARAMETERS = [KEY_PRINT_HELLO]
 REQUIRED_IMAGE_PARS = []
 
 
+class WordFilter(logging.Filter):
+
+    def __init__(self, secrets):
+        super().__init__()
+        self.patterns = [re.compile(f"(?i){secret}", re.IGNORECASE) for secret in secrets]
+
+    def filter(self, record):
+        message = record.getMessage()
+        for pattern in self.patterns:
+            message = pattern.sub('--HIDDEN--', message)
+
+        record.msg = message
+
+        return True
+
 class Component(ComponentBase):
     """
         Extends base class for general Python components. Initializes the CommonInterface
@@ -52,10 +68,17 @@ class Component(ComponentBase):
         # remove default handler
         for h in logging.getLogger().handlers:
             logging.getLogger().removeHandler(h)
+
         logging.getLogger().addHandler(logging.StreamHandler(self.log))
+        logging.getLogger().addFilter(WordFilter(["supertajneheslo", "orders"]))
+
+        # for h in logging.root.handlers:
+        #     h.setFormatter(RedactingFormatter(h.formatter, patterns=['supertajneheslo']))
 
         # always set debug mode
         self.set_debug_mode()
+        logging.info("calhost:8888 GET /002-token-body/orders?key=supertajneheslo HTTP/1.1")
+
         logging.info("Component initialized")
 
         self.user_functions = UserFunctions()
