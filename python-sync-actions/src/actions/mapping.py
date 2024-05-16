@@ -1,5 +1,6 @@
 from typing import Optional, Any
 
+from keboola.component import UserException
 from keboola.json_to_csv.analyzer import Analyzer
 from keboola.json_to_csv.node import NodeType, Node
 from keboola.utils.header_normalizer import DefaultHeaderNormalizer
@@ -29,7 +30,9 @@ class StuctureAnalyzer:
         for name, value in row.items():
             self.analyzer.analyze_object(current_path, name, value)
 
-    def infer_mapping(self, primary_keys: Optional[list[str]] = None,
+    def infer_mapping(self,
+                      primary_keys: Optional[list[str]] = None,
+                      parent_pkeys: Optional[list[str]] = None,
                       path_separator: str = '.',
                       max_level: int = 2
                       ) -> dict:
@@ -37,6 +40,7 @@ class StuctureAnalyzer:
         Infer first level Generic Extractor mapping from data sample.
         Args:
             primary_keys: optional list of columns to be used as primary keys
+            parent_pkeys: optional list of columns to be used as parent primary keys
             path_separator: JSON path separator to use in the mapping
             max_level: maximum level to flatten results
 
@@ -46,6 +50,13 @@ class StuctureAnalyzer:
         result_mapping = self.__infer_mapping_from_structure_recursive(self.analyzer.node_hierarchy['children'],
                                                                        primary_keys,
                                                                        path_separator, max_level)
+
+        if parent_pkeys:
+            for key in parent_pkeys:
+                if key in result_mapping:
+                    raise UserException(f"Parent {key} is already in the mapping, "
+                                        f"please change the placeholder name")
+                result_mapping[key] = MappingElements.parent_primary_key_column(key)
 
         return self.dedupe_values(result_mapping)
 
@@ -83,7 +94,7 @@ class StuctureAnalyzer:
         Infer first level Generic Extractor mapping from data sample.
         Args:
             node_hierarchy: sample data
-            primary_keys: optional list of columns to be used as primary keys
+            primary_keys: optional list of columns to be used as primary keys=
 
         Returns:
 
@@ -128,6 +139,16 @@ class MappingElements:
         }
 
     @staticmethod
+    def parent_primary_key_column(column_name: str) -> dict:
+        return {
+            "type": "user",
+            "mapping": {
+                "destination": column_name,
+                "primaryKey": True
+            }
+        }
+
+    @staticmethod
     def force_type_column(column_name: str) -> dict:
         return {
             "type": "column",
@@ -138,7 +159,9 @@ class MappingElements:
         }
 
 
-def infer_mapping(data: list[dict], primary_keys: Optional[list[str]] = None,
+def infer_mapping(data: list[dict],
+                  primary_keys: Optional[list[str]] = None,
+                  parent_pkeys: Optional[list[str]] = None,
                   path_separator: str = '.',
                   max_level_nest_level: int = 2) -> dict:
     """
@@ -146,6 +169,7 @@ def infer_mapping(data: list[dict], primary_keys: Optional[list[str]] = None,
     Args:
         data: sample data
         primary_keys: optional list of columns to be used as primary keys
+        parent_pkeys: optional list of columns to be used as parent primary keys
         path_separator: JSON path separator to use in the mapping
         max_level_nest_level: maximum level to flatten results
 
@@ -156,7 +180,20 @@ def infer_mapping(data: list[dict], primary_keys: Optional[list[str]] = None,
     for row in data:
         analyzer.parse_row(row)
 
-    result = analyzer.infer_mapping(primary_keys or [],
+    result = analyzer.infer_mapping(primary_keys or [], parent_pkeys or [],
                                     path_separator=path_separator,
                                     max_level=max_level_nest_level)
     return result
+
+
+def get_primary_key_columns(mapping: dict) -> list[str]:
+    """
+    Get primary key columns from mapping
+    Args:
+        mapping:
+
+    Returns:
+
+    """
+    return [key for key, value in mapping.items() if
+            isinstance(value, dict) and value.get('mapping', {}).get('primaryKey')]

@@ -372,6 +372,10 @@ class Component(ComponentBase):
         data, response, log = self.make_call()
         nesting_level = self.configuration.parameters.get('__NESTING_LEVEL', 2)
         primary_keys = self.configuration.parameters.get('__PRIMARY_KEY', [])
+        parent_pkey = []
+        if len(self._configurations) > 1:
+            parent_pkey = [f'parent_{p}' for p in self._configurations[-2].request_parameters.placeholders.key()]
+
         if not data:
             raise UserException("The request returned no data to infer mapping from.")
 
@@ -383,7 +387,7 @@ class Component(ComponentBase):
                                             f"please change the name.")
                     record[key] = value
 
-        mapping = infer_mapping(data, primary_keys,
+        mapping = infer_mapping(data, primary_keys, parent_pkey,
                                 max_level_nest_level=nesting_level)
         return mapping
 

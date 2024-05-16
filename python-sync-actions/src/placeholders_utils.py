@@ -73,7 +73,7 @@ class PlaceholdersUtils:
 
         except NoDataFoundException:
             raise UserException(
-                f"No value found for {placeholder} in parent result. (level: {level + 1})",
+                f"No value found for placeholder {placeholder} in parent result. (level: {level + 1})",
                 None, None, {'parents': parent_results}
             )
 
