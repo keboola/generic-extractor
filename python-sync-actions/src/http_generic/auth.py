@@ -143,3 +143,14 @@ class ApiKey(AuthMethodBase, AuthBase):
         elif self.position == 'defaultOptions':
             r.url = f"{r.url}?{urlencode({self.key: self.token})}"
         return r
+
+    class Query(AuthMethodBase, AuthBase):
+        def __init__(self, params: Dict):
+            self.params = params
+
+        def login(self) -> Union[AuthBase, Callable]:
+            return self
+
+        def __call__(self, r):
+            r.url = f"{r.url}?{urlencode(self.params)}"
+            return r
