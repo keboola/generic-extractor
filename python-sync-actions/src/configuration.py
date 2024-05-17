@@ -8,6 +8,7 @@ import dataconf
 from nested_lookup import nested_lookup
 import time
 from user_functions import UserFunctions
+import re
 
 
 class ConfigurationBase:
@@ -416,7 +417,12 @@ class ConfigHelpers:
         for key in user_param:
             if isinstance(user_param[key], dict):
                 # in case the parameter is function, validate, execute and replace value with result
-                user_param[key] = self.perform_custom_function(key, user_param[key], user_param)
+                res = self.perform_custom_function(key, user_param[key], user_param)
+                user_param[key] = res
+
+                lookup_str_func = r'"value":\{[^}]*\}'
+                new_str = f'"{key}":"{res}"'
+                steps_string = re.sub(lookup_str_func, new_str, steps_string)
 
             lookup_str = '{"attr":"' + key + '"}'
             steps_string = steps_string.replace(lookup_str, '"' + str(user_param[key]) + '"')

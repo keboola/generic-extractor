@@ -375,8 +375,8 @@ class Component(ComponentBase):
         self.init_component()
         function_cfg = self.configuration.parameters['__FUNCTION_CFG']
         function_cfg = self._conf_helpers.fill_in_time_references()
-        return {"result": self._perform_custom_function('function',
-                                                        function_cfg, self._configuration.user_parameters)}
+        return {"result": ConfigHelpers().perform_custom_function('function',
+                                                                  function_cfg, self._configuration.user_parameters)}
 
     @sync_action('test_request')
     def test_request(self):
