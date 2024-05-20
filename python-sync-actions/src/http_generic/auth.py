@@ -7,7 +7,7 @@ from urllib.parse import urlencode
 import requests
 from requests.auth import AuthBase, HTTPBasicAuth
 
-from configuration import RequestContent, ContentType
+from configuration import ContentType
 from placeholders_utils import get_data_from_path
 
 
@@ -54,21 +54,22 @@ class AuthMethodBuilder:
         return supported_actions[method_name](**parameters)
 
     @staticmethod
-    def _validate_method_arguments(method: object, **args):
-        class_prefix = f"_{method.__name__}__"
-        arguments = [p for p in inspect.signature(method.__init__).parameters if p != 'self']
+    def _validate_method_arguments(c_converted_method: object, **args):
+        class_prefix = f"_{c_converted_method.__name__}__"
+        arguments = [p for p in inspect.signature(c_converted_method.__init__).parameters if p != 'self']
         missing_arguments = []
         for p in arguments:
             if p not in args:
                 missing_arguments.append(p.replace(class_prefix, '#'))
         if missing_arguments:
-            raise AuthBuilderError(f'Some arguments of method {method.__name__} are missing: {missing_arguments}')
+            raise AuthBuilderError(f'Some arguments of method {c_converted_method.__name__} '
+                                   f'are missing: {missing_arguments}')
 
     @staticmethod
-    def _convert_secret_parameters(method: object, **parameters):
+    def _convert_secret_parameters(c_converted_method: object, **parameters):
         new_parameters = {}
         for p in parameters:
-            new_parameters[p.replace('#', f'_{method.__name__}__')] = parameters[p]
+            new_parameters[p.replace('#', f'_{c_converted_method.__name__}__')] = parameters[p]
         return new_parameters
 
     @staticmethod
@@ -166,8 +167,9 @@ class Query(AuthMethodBase, AuthBase):
 
 class Login(AuthMethodBase, AuthBase):
     def __init__(self, login_endpoint: str, method: str = 'GET',
-                 login_request_content: RequestContent = None,
                  login_query_parameters: dict = None,
+                 login_query_body=None,
+                 login_content_type: str = ContentType.json.value,
                  login_headers: dict = None,
                  api_request_headers: dict = None, api_request_query_parameters: dict = None):
         """
@@ -183,7 +185,8 @@ class Login(AuthMethodBase, AuthBase):
         self.login_endpoint = login_endpoint
         self.method = method
         self.login_query_parameters = login_query_parameters or {}
-        self.login_request_content = login_request_content
+        self.login_query_body = login_query_body
+        self.login_content_type = ContentType(login_content_type)
         self.login_headers = login_headers or {}
         self.api_request_headers = api_request_headers or {}
         self.api_request_query_parameters = api_request_query_parameters or {}
@@ -231,20 +234,19 @@ class Login(AuthMethodBase, AuthBase):
         source_object_params_str = json.dumps(source_object_params, separators=(',', ':'))
         for path, placeholder in response_placeholders.items():
             lookup_str = '{"response":"' + placeholder + '"}'
-            value_to_replace = get_data_from_path(path, response_data, separator='.')
+            value_to_replace = get_data_from_path(placeholder, response_data, separator='.', strict=False)
             source_object_params_str = source_object_params_str.replace(lookup_str, '"' + value_to_replace + '"')
         return json.loads(source_object_params_str)
 
     def login(self) -> Union[AuthBase, Callable]:
         request_parameters = {}
 
-        self._retrieve_response_placeholders(self.login_request_content.body)
-        if self.login_request_content.content_type == ContentType.json:
-            request_parameters['json'] = self.login_request_content.body
-        elif self.login_request_content.content_type == ContentType.form:
-            request_parameters['data'] = self.login_request_content.body
+        if self.login_content_type == ContentType.json:
+            request_parameters['json'] = self.login_query_body
+        elif self.login_content_type == ContentType.form:
+            request_parameters['data'] = self.login_query_body
 
-        response = requests.request(self.method, self.login_endpoint, params=self.login_headers,
+        response = requests.request(self.method, self.login_endpoint, params=self.login_query_parameters,
                                     headers=self.login_headers,
                                     **request_parameters)
 
@@ -257,6 +259,8 @@ class Login(AuthMethodBase, AuthBase):
 
     def __call__(self, r):
 
-        r.url = f"{r.url}?{urlencode(self.api_request_query_parameters)}"
+        r.url = f"{r.url}"
+        if self.api_request_query_parameters:
+            r.url = f"{r.url}?{urlencode(self.api_request_query_parameters)}"
         r.headers.update(self.api_request_headers)
         return r

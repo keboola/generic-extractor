@@ -14,7 +14,7 @@ from keboola.component.exceptions import UserException
 import configuration
 from actions.curl import build_job_from_curl
 from actions.mapping import infer_mapping
-from configuration import Configuration, DataPath, ConfigHelpers
+from configuration import Configuration, ConfigHelpers
 from http_generic.auth import AuthMethodBuilder, AuthBuilderError
 from http_generic.client import GenericHttpClient
 from placeholders_utils import PlaceholdersUtils
@@ -71,7 +71,7 @@ class Component(ComponentBase):
         Main component method
         """
         # self.make_call()
-        pass
+        self.test_request()
 
     def init_component(self):
 
@@ -179,42 +179,42 @@ class Component(ComponentBase):
             result_path = result_path.replace(f"{{{dict.get('placeholder')}}}", str(dict.get('value')))
         return result_path
 
-    def _process_nested_job(self, parent_result, config, parent_results_list, client,
-                            method, **request_parameters) -> list:
-        """
-        Process nested job
-        Args:
-            parent_result: result of the parent job
-            config: configuration of the nested job
-            parent_results_list: list of parent results
-            client: http client
-            method: method to use
-            request_parameters: request parameters
-        """
-        results = []
-        for row in parent_result or [{}]:
-
-            parent_results_ext = parent_results_list + [row]
-
-            placeholders = PlaceholdersUtils.get_params_for_child_jobs(config.get('placeholders', {}),
-                                                                       parent_results_ext, self._parent_params)
-
-            self._parent_params = placeholders[0]
-            row_path = self._fill_placeholders(placeholders, config['endpoint'])
-            response = client.send_request(method=method, endpoint_path=row_path, **request_parameters)
-            child_response = self._parse_data(response.json(), DataPath(config.get('dataType'),
-                                                                        config.get('dataField', '.')))
-            children = config.get('children', [])
-            results = []
-            if children[0] if children else None:
-                nested_data = self._process_nested_job(child_response, children[0], parent_results_ext,
-                                                       client, method, **request_parameters)
-                results.append(nested_data)
-            else:
-                self._final_results.append(child_response)
-                self._final_response = response
-
-        return results
+    # def _process_nested_job(self, parent_result, config, parent_results_list, client,
+    #                         method, **request_parameters) -> list:
+    #     """
+    #     Process nested job
+    #     Args:
+    #         parent_result: result of the parent job
+    #         config: configuration of the nested job
+    #         parent_results_list: list of parent results
+    #         client: http client
+    #         method: method to use
+    #         request_parameters: request parameters
+    #     """
+    #     results = []
+    #     for row in parent_result or [{}]:
+    #
+    #         parent_results_ext = parent_results_list + [row]
+    #
+    #         placeholders = PlaceholdersUtils.get_params_for_child_jobs(config.get('placeholders', {}),
+    #                                                                    parent_results_ext, self._parent_params)
+    #
+    #         self._parent_params = placeholders[0]
+    #         row_path = self._fill_placeholders(placeholders, config['endpoint'])
+    #         response = client.send_request(method=method, endpoint_path=row_path, **request_parameters)
+    #         child_response = self._parse_data(response.json(), DataPath(config.get('dataType'),
+    #                                                                     config.get('dataField', '.')))
+    #         children = config.get('children', [])
+    #         results = []
+    #         if children[0] if children else None:
+    #             nested_data = self._process_nested_job(child_response, children[0], parent_results_ext,
+    #                                                    client, method, **request_parameters)
+    #             results.append(nested_data)
+    #         else:
+    #             self._final_results.append(child_response)
+    #             self._final_response = response
+    #
+    #     return results
 
     def _parse_data(self, data, path) -> list:
         """

@@ -2,6 +2,7 @@ import dataclasses
 import json
 import re
 import time
+import urllib.parse as urlparse
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import List, Tuple, Optional, Literal
@@ -289,7 +290,7 @@ def build_api_request(configuration: dict) -> List[Tuple[ApiRequest, RequestCont
             path = data_field.get('path')
             delimiter = data_field.get("delimiter", ".")
         else:
-            path = data_field
+            path = data_field or '.'
             delimiter = "."
 
         result_requests.append(
@@ -347,6 +348,8 @@ class AuthMethodConverter:
             config_parameters (dict):
         """
         auth_method = config_parameters.get('config', {}).get('__AUTH_METHOD', None)
+        # or take it form the authentication section
+        auth_method = auth_method or config_parameters.get('api', {}).get('authentication', {}).get('type')
         if not auth_method:
             return None
 
@@ -354,7 +357,8 @@ class AuthMethodConverter:
             'basic': cls._convert_basic,
             'bearer': cls._convert_bearer,
             'api-key': cls._convert_api_key,
-            'query': cls._convert_query
+            'query': cls._convert_query,
+            'login': cls._convert_login
         }
 
         func = methods.get(auth_method)
@@ -402,14 +406,29 @@ class AuthMethodConverter:
         # evaluate functions and user parameters
         login_request_eval = ConfigHelpers().fill_in_user_parameters(login_request, config_parameters.get('config'))
         api_request_eval = ConfigHelpers().fill_in_user_parameters(api_request, config_parameters.get('config'))
-        
-
-
 
         if not login_request:
-            raise ValueError('loginRequest configuration not found in the Login Authentication configuration')
+            raise ValueError('loginRequest configuration not found in the Login 88Authentication configuration')
 
-        return Authentication(type='Login', parameters={'#token': token})
+        login_endpoint: str = login_request_eval.get('endpoint')
+        login_url = urlparse.urljoin(config_parameters.get('api', {}).get('baseUrl', ''), login_endpoint)
+        method: str = login_request_eval.get('method', 'GET')
+        login_request_content: RequestContent = build_request_content(method, login_request_eval.get('params', {}))
+        login_query_parameters: dict = login_request_content.query_parameters
+        login_headers: dict = login_request_eval.get('headers', {})
+        api_request_headers: dict = api_request_eval.get('headers', {})
+        api_request_query_parameters: dict = api_request_eval.get('params', {})
+
+        parameters = {'login_endpoint': login_url,
+                      'method': method,
+                      'login_query_parameters': login_query_parameters,
+                      'login_headers': login_headers,
+                      'login_query_body': login_request_content.body,
+                      'login_content_type': login_request_content.content_type.value,
+                      'api_request_headers': api_request_headers,
+                      'api_request_query_parameters': api_request_query_parameters}
+
+        return Authentication(type='Login', parameters=parameters)
 
 
 class ConfigHelpers:

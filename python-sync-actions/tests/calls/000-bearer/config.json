@@ -28,7 +28,7 @@
     "#__BEARER_TOKEN": "token"
   },
   "api": {
-    "baseUrl": "http://localhost:8888/",
+    "baseUrl": "http://mock-server:80/",
     "http": {
       "headers": {
         "Authorization": {

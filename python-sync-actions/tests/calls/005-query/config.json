@@ -29,7 +29,7 @@
     "__AUTH_METHOD": "query"
   },
   "api": {
-    "baseUrl": "http://localhost:8888",
+    "baseUrl": "http://mock-server:80",
     "http": {
       "defaultOptions": {
         "params": {}

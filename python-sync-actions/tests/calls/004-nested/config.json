@@ -35,7 +35,7 @@
       "#password": "pass"
     },
     "api": {
-    "baseUrl": "http://localhost:8888/",
+    "baseUrl": "http://mock-server:80/",
       "authentication": {
         "type": "basic"
       }
