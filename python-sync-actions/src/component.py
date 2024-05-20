@@ -2,13 +2,12 @@
 Template Component main class.
 
 """
+import copy
 import json
 import logging
 import time
 from io import StringIO
 from typing import List
-import re
-import copy
 
 import requests
 from keboola.component.base import ComponentBase, sync_action
