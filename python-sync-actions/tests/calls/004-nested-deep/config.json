@@ -1,0 +1,81 @@
+{
+  "storage": {},
+  "parameters": {
+    "__SELECTED_JOB": "0",
+    "config": {
+      "jobs": [
+        {
+          "endpoint": "004-nested-deep/users",
+          "dataField": "users",
+          "children": [
+            {
+              "endpoint": "004-nested-deep/user/{1:user-id}",
+              "dataField": ".",
+              "dataType": "user-detail",
+              "placeholders": {
+                "1:user-id": "id"
+              },
+              "children": [
+                {
+                  "endpoint": "004-nested-deep/user/{2:user-id}/orders",
+                  "dataType": "orders.items",
+                  "placeholders": {
+                    "2:user-id": "id"
+                  },
+                  "children": [
+                    {
+                      "endpoint": "004-nested-deep/user/{2:user-id}/order/{3:order-id}",
+                      "dataType": "order-detail",
+                      "dataField": ".",
+                      "placeholders": {
+                        "3:order-id": "order-id"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "test": "test-value",
+      "concat": {
+        "function": "concat",
+        "args": [
+          "hello",
+          "-world"
+        ]
+      },
+      "debug": false,
+      "outputBucket": "in.c-",
+      "incrementalOutput": false,
+      "key": "asdfadsfadsf",
+      "__AUTH_METHOD": "basic",
+      "username": "name",
+      "#password": "pass"
+    },
+    "api": {
+    "baseUrl": "http://localhost:8888/",
+      "authentication": {
+        "type": "basic"
+      }
+    },
+    "http": {
+      "maxRetries": 10,
+      "codes": [
+        500,
+        502,
+        503,
+        504,
+        408,
+        420,
+        429
+      ]
+    }
+  },
+  "action": "test_request",
+  "image_parameters": {
+  },
+  "authorization": {
+  }
+}

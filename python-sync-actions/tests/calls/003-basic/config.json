@@ -1,0 +1,56 @@
+{
+  "storage": {},
+  "parameters": {
+        "__SELECTED_JOB": "0",
+
+  "config": {
+    "jobs": [
+      {
+        "__NAME": "orders",
+        "endpoint": "003-basic/orders",
+        "method": "GET",
+        "dataType": "",
+        "dataField": "nested.orders"
+      }
+    ],
+    "test": "test-value",
+    "concat": {
+      "function": "concat",
+      "args": [
+        "hello",
+        "-world"
+      ]
+    },
+    "debug": false,
+    "outputBucket": "in.c-",
+    "incrementalOutput": false,
+    "key": "asdfadsfadsf",
+    "__AUTH_METHOD": "basic",
+    "username": "name",
+    "#password": "pass"
+  },
+  "api": {
+    "baseUrl": "http://localhost:8888/",
+    "authentication": {
+      "type": "basic"
+    }
+  },
+  "http": {
+    "maxRetries": 10,
+    "codes": [
+      500,
+      502,
+      503,
+      504,
+      408,
+      420,
+      429
+    ]
+  }
+},
+  "action": "test_request",
+  "image_parameters": {
+  },
+  "authorization": {
+  }
+}

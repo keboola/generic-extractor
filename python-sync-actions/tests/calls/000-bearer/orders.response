@@ -1,0 +1,82 @@
+{
+  "nested": {
+    "orders": [
+      {
+        "id": 1,
+        "customer": "John Doe",
+        "address": "123 Main St",
+        "items": [
+          {
+            "id": 1,
+            "name": "Widget",
+            "price": 9.99,
+            "quantity": 2
+          },
+          {
+            "id": 2,
+            "name": "Thing",
+            "price": 5.99,
+            "quantity": 5
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "customer": "Jan Novak",
+        "address": "123 Main St",
+        "items": [
+          {
+            "id": 1,
+            "name": "Widget",
+            "price": 9.99,
+            "quantity": 2
+          },
+          {
+            "id": 2,
+            "name": "Thing",
+            "price": 5.99,
+            "quantity": 5
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "customer": "Jana Novakova",
+        "address": "123 Main St",
+        "items": [
+          {
+            "id": 1,
+            "name": "Widget",
+            "price": 9.99,
+            "quantity": 2
+          },
+          {
+            "id": 2,
+            "name": "Thing",
+            "price": 5.99,
+            "quantity": 5
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "customer": "Bob Smith",
+        "address": "123 Main St",
+        "items": [
+          {
+            "id": 1,
+            "name": "Widget",
+            "price": 9.99,
+            "quantity": 2
+          },
+          {
+            "id": 2,
+            "name": "Thing",
+            "price": 5.99,
+            "quantity": 5
+          }
+        ]
+      }
+    ]
+  }
+}

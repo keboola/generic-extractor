@@ -1,0 +1,58 @@
+{
+  "storage": {},
+  "parameters": {
+        "__SELECTED_JOB": "0",
+
+  "config": {
+    "jobs": [
+      {
+        "__NAME": "orders",
+        "endpoint": "001-token-header/orders",
+        "method": "GET",
+        "dataType": "",
+        "dataField": "nested.orders"
+      }
+    ],
+    "test": "test-value",
+    "concat": {
+      "function": "concat",
+      "args": [
+        "hello",
+        "-world"
+      ]
+    },
+    "debug": false,
+    "outputBucket": "in.c-",
+    "incrementalOutput": false,
+    "__AUTH_METHOD": "api-key",
+    "#__AUTH_TOKEN": "token"
+  },
+  "api": {
+    "baseUrl": "http://localhost:8888/",
+    "http": {
+      "headers": {
+        "key": {
+          "attr": "#__AUTH_TOKEN"
+        }
+      }
+    }
+  },
+  "http": {
+    "maxRetries": 10,
+    "codes": [
+      500,
+      502,
+      503,
+      504,
+      408,
+      420,
+      429
+    ]
+  }
+},
+  "action": "test_request",
+  "image_parameters": {
+  },
+  "authorization": {
+  }
+}
