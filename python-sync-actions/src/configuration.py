@@ -1,10 +1,15 @@
 import dataclasses
 import json
+import re
+import time
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import List, Tuple, Optional
 
 import dataconf
+from nested_lookup import nested_lookup
+
+from user_functions import UserFunctions
 
 
 class ConfigurationBase:
@@ -343,7 +348,8 @@ class AuthMethodConverter:
         methods = {
             'basic': cls._convert_basic,
             'bearer': cls._convert_bearer,
-            'api-key': cls._convert_api_key
+            'api-key': cls._convert_api_key,
+            'query': cls._convert_query
         }
 
         func = methods.get(auth_method)
@@ -370,9 +376,111 @@ class AuthMethodConverter:
         return Authentication(type='ApiKey', parameters={'key': key, 'token': token, 'position': position})
 
     @classmethod
+    def _convert_query(cls, config_parameters: dict) -> Authentication:
+        query_params = config_parameters.get("api").get("authentication").get("query")
+        query_params_filled = ConfigHelpers().fill_in_user_parameters(query_params, config_parameters.get('config'))
+
+        return Authentication(type='Query', parameters={'params': query_params_filled})
+
+    @classmethod
     def _convert_bearer(cls, config_parameters: dict) -> Authentication:
         token = config_parameters.get('config').get('#__BEARER_TOKEN')
         if not token:
             raise ValueError('Bearer token not found in the Bearer Token Authentication configuration')
 
         return Authentication(type='BearerToken', parameters={'#token': token})
+
+
+class ConfigHelpers:
+
+    def __init__(self):
+        self.user_functions = UserFunctions()
+
+    def fill_in_user_parameters(self, conf_objects: dict, user_param: dict):
+        """
+        This method replaces user parameter references via attr + parses functions inside user parameters,
+        evaluates them and fills in the resulting values
+
+        Args:
+            conf_objects: Configuration that contains the references via {"attr": "key"} to user parameters or function
+                            definitions
+            user_param: User parameters that are used to fill in the values
+
+        Returns:
+
+        """
+        # time references
+        conf_objects = self.fill_in_time_references(conf_objects)
+        user_param = self.fill_in_time_references(user_param)
+        # convert to string minified
+        steps_string = json.dumps(conf_objects, separators=(',', ':'))
+        # dirty and ugly replace
+        for key in user_param:
+            if isinstance(user_param[key], dict):
+                # in case the parameter is function, validate, execute and replace value with result
+                res = self.perform_custom_function(key, user_param[key], user_param)
+                user_param[key] = res
+
+                lookup_str_func = r'"value":\{[^}]*\}'
+                new_str = f'"{key}":"{res}"'
+                steps_string = re.sub(lookup_str_func, new_str, steps_string)
+
+            lookup_str = '{"attr":"' + key + '"}'
+            steps_string = steps_string.replace(lookup_str, '"' + str(user_param[key]) + '"')
+        new_steps = json.loads(steps_string)
+        non_matched = nested_lookup('attr', new_steps)
+
+        if non_matched:
+            raise ValueError(
+                'Some user attributes [{}] specified in parameters '
+                'are not present in "user_parameters" field.'.format(non_matched))
+        return new_steps
+
+    @staticmethod
+    def fill_in_time_references(conf_objects: dict):
+        """
+        This method replaces user parameter references via attr + parses functions inside user parameters,
+        evaluates them and fills in the resulting values
+
+        Args:
+            conf_objects: Configuration that contains the references via {"attr": "key"} to user parameters or function
+                            definitions
+
+        Returns:
+
+        """
+        # convert to string minified
+        steps_string = json.dumps(conf_objects, separators=(',', ':'))
+        # dirty and ugly replace
+
+        new_cfg_str = steps_string.replace('{"time":"currentStart"}', f'{int(time.time())}')
+        new_cfg_str = new_cfg_str.replace('{"time":"previousStart"}', f'{int(time.time())}')
+        new_config = json.loads(new_cfg_str)
+        return new_config
+
+    def perform_custom_function(self, key: str, function_cfg: dict, user_params: dict):
+        """
+        Perform custom function recursively (may be nested)
+        Args:
+            key: key of the user parameter wher the function is
+            function_cfg: conf of the function
+            user_params:
+
+        Returns:
+
+        """
+        if function_cfg.get('attr'):
+            return user_params[function_cfg['attr']]
+        if not function_cfg.get('function'):
+            raise ValueError(
+                F'The user parameter {key} value is object and is not a valid function object: {function_cfg}')
+
+        new_args = []
+        if function_cfg.get('args'):
+            for arg in function_cfg.get('args'):
+                if isinstance(arg, dict):
+                    arg = self.perform_custom_function(key, arg, user_params)
+                new_args.append(arg)
+            function_cfg['args'] = new_args
+
+        return self.user_functions.execute_function(function_cfg['function'], *function_cfg.get('args', []))
