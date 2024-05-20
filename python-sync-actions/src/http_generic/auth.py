@@ -1,9 +1,14 @@
 import inspect
+import json
 from abc import ABC, abstractmethod
 from typing import Callable, Union, Dict
-
-from requests.auth import AuthBase, HTTPBasicAuth
 from urllib.parse import urlencode
+
+import requests
+from requests.auth import AuthBase, HTTPBasicAuth
+
+from configuration import RequestContent, ContentType
+from placeholders_utils import get_data_from_path
 
 
 class AuthBuilderError(Exception):
@@ -140,17 +145,118 @@ class ApiKey(AuthMethodBase, AuthBase):
         if self.position == 'headers':
             r.headers[self.key] = f"{self.token}"
 
-        elif self.position == 'defaultOptions':
+        elif self.position == 'query':
             r.url = f"{r.url}?{urlencode({self.key: self.token})}"
+        else:
+            raise AuthBuilderError(f"Unsupported position {self.position} for API Key auth method")
         return r
 
-    class Query(AuthMethodBase, AuthBase):
-        def __init__(self, params: Dict):
-            self.params = params
 
-        def login(self) -> Union[AuthBase, Callable]:
-            return self
+class Query(AuthMethodBase, AuthBase):
+    def __init__(self, params: Dict):
+        self.params = params
 
-        def __call__(self, r):
-            r.url = f"{r.url}?{urlencode(self.params)}"
-            return r
+    def login(self) -> Union[AuthBase, Callable]:
+        return self
+
+    def __call__(self, r):
+        r.url = f"{r.url}?{urlencode(self.params)}"
+        return r
+
+
+class Login(AuthMethodBase, AuthBase):
+    def __init__(self, login_endpoint: str, method: str = 'GET',
+                 login_request_content: RequestContent = None,
+                 login_query_parameters: dict = None,
+                 login_headers: dict = None,
+                 api_request_headers: dict = None, api_request_query_parameters: dict = None):
+        """
+
+        Args:
+            login_endpoint:
+            method:
+            login_query_parameters:
+            login_headers:
+            api_request_headers:
+            api_request_query_parameters:
+        """
+        self.login_endpoint = login_endpoint
+        self.method = method
+        self.login_query_parameters = login_query_parameters or {}
+        self.login_request_content = login_request_content
+        self.login_headers = login_headers or {}
+        self.api_request_headers = api_request_headers or {}
+        self.api_request_query_parameters = api_request_query_parameters or {}
+
+    @classmethod
+    def _retrieve_response_placeholders(cls, request_object: dict, separator: str = '.', current_path: str = ''):
+        """
+        Recursively retreive all values that contain object with key `response` and return it's value and json path
+        Args:
+            request_object:
+
+        Returns:
+
+        """
+        values = {}
+        for key, value in request_object.items():
+
+            if isinstance(value, dict):
+                if not current_path:
+                    current_path = key
+                else:
+                    current_path = f"{current_path}{separator}{key}"
+                values.update(cls._retrieve_response_placeholders(value, separator, current_path))
+            elif key == 'response':
+                values[current_path] = value
+
+        return values
+
+        # lookup_str = '{"response":"' + key + '"}'
+        # steps_string = steps_string.replace(lookup_str, '"' + str(user_param[key]) + '"')
+
+        # new_steps = json.loads(steps_string)
+
+    def _replace_placeholders_with_response(self, response_data: dict, source_object_params: dict) -> dict:
+        """
+        Replace placeholders in source_object_params with values from response_data
+        Args:
+            response_data:
+            source_object_params:
+
+        Returns:
+
+        """
+        response_placeholders = self._retrieve_response_placeholders(source_object_params)
+        source_object_params_str = json.dumps(source_object_params, separators=(',', ':'))
+        for path, placeholder in response_placeholders.items():
+            lookup_str = '{"response":"' + placeholder + '"}'
+            value_to_replace = get_data_from_path(path, response_data, separator='.')
+            source_object_params_str = source_object_params_str.replace(lookup_str, '"' + value_to_replace + '"')
+        return json.loads(source_object_params_str)
+
+    def login(self) -> Union[AuthBase, Callable]:
+        request_parameters = {}
+
+        self._retrieve_response_placeholders(self.login_request_content.body)
+        if self.login_request_content.content_type == ContentType.json:
+            request_parameters['json'] = self.login_request_content.body
+        elif self.login_request_content.content_type == ContentType.form:
+            request_parameters['data'] = self.login_request_content.body
+
+        response = requests.request(self.method, self.login_endpoint, params=self.login_headers,
+                                    headers=self.login_headers,
+                                    **request_parameters)
+
+        response.raise_for_status()
+
+        self.api_request_headers = self._replace_placeholders_with_response(response.json(), self.api_request_headers)
+        self.api_request_query_parameters = self._replace_placeholders_with_response(response.json(),
+                                                                                     self.api_request_query_parameters)
+        return self
+
+    def __call__(self, r):
+
+        r.url = f"{r.url}?{urlencode(self.api_request_query_parameters)}"
+        r.headers.update(self.api_request_headers)
+        return r

@@ -297,6 +297,11 @@ class Component(ComponentBase):
                                   'verify': ssl_verify,
                                   'timeout': timeout}
 
+            if job.request_content.content_type == configuration.ContentType.json:
+                request_parameters['json'] = job.request_content.body
+            elif job.request_content.content_type == configuration.ContentType.form:
+                request_parameters['data'] = job.request_content.body
+
             row_path = job.request_parameters.endpoint_path
 
             if job.request_parameters.placeholders:

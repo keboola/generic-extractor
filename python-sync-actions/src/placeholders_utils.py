@@ -11,7 +11,7 @@ class NoDataFoundException(Exception):
     pass
 
 
-Placeholder = namedtuple('Placeholder', ['placeholder', 'field', 'value'])
+Placeholder = namedtuple('Placeholder', ['placeholder', 'json_path', 'value'])
 
 
 class PlaceholdersUtils:
@@ -55,7 +55,7 @@ class PlaceholdersUtils:
 
         return {
             'placeholder': placeholder,
-            'field': field,
+            'json_path': field,
             'value': value
         }
 
@@ -84,7 +84,7 @@ class PlaceholdersUtils:
         for placeholder_name, placeholder in params.items():
             if isinstance(placeholder['value'], list):
                 flattened[placeholder_name] = [
-                    {'placeholder': placeholder_name, 'field': placeholder['field'], 'value': value}
+                    {'placeholder': placeholder_name, 'json_path': placeholder['json_path'], 'value': value}
                     for value in placeholder['value']
                 ]
             else:
@@ -94,17 +94,17 @@ class PlaceholdersUtils:
         return PlaceholdersUtils.cartesian(flattened)
 
     @staticmethod
-    def cartesian(input: Dict[str, List[Dict[str, Any]]]) -> List[Dict[str, Any]]:
+    def cartesian(input_data: Dict[str, List[Dict[str, Any]]]) -> List[Dict[str, Any]]:
         # Generate the Cartesian product of input lists
-        keys, values = zip(*input.items())
+        keys, values = zip(*input_data.items())
         product_list = [dict(zip(keys, combination)) for combination in product(*values)]
 
         return product_list
 
 
-def get_data_from_path(field: str, data: Dict[str, Any], separator: str = '.', strict: bool = True) -> Any:
+def get_data_from_path(json_path: str, data: Dict[str, Any], separator: str = '.', strict: bool = True) -> Any:
     """Mock function to fetch data using a dot-separated path notation. Replace with actual implementation."""
-    keys = field.split(separator)
+    keys = json_path.split(separator)
     for key in keys:
         if key not in data:
             if strict:

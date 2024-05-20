@@ -4,7 +4,7 @@ import re
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Literal
 
 import dataconf
 from nested_lookup import nested_lookup
@@ -277,17 +277,7 @@ def build_api_request(configuration: dict) -> List[Tuple[ApiRequest, RequestCont
 
         method = endpoint_config.get('method', 'GET')
 
-        match method:
-            case 'GET':
-                request_content = RequestContent(ContentType.none)
-            case 'POST':
-                request_content = RequestContent(ContentType.json,
-                                                 body=endpoint_config.get('params', {}))
-            case 'FORM':
-                request_content = RequestContent(ContentType.form,
-                                                 body=endpoint_config.get('params', {}))
-            case _:
-                raise ValueError(f'Unsupported method: {method}')
+        request_content = build_request_content(method, endpoint_config.get('params', {}))
 
         endpoint_path = endpoint_config.get('endpoint')
 
@@ -314,6 +304,21 @@ def build_api_request(configuration: dict) -> List[Tuple[ApiRequest, RequestCont
     return result_requests
 
 
+def build_request_content(method: Literal['GET', 'POST', 'FORM'], params: dict) -> RequestContent:
+    match method:
+        case 'GET':
+            request_content = RequestContent(ContentType.none, query_parameters=params)
+        case 'POST':
+            request_content = RequestContent(ContentType.json,
+                                             body=params)
+        case 'FORM':
+            request_content = RequestContent(ContentType.form,
+                                             body=params)
+        case _:
+            raise ValueError(f'Unsupported method: {method}')
+    return request_content
+
+
 def _find_api_key_location(dictionary):
     position = None
     key = None
@@ -321,7 +326,7 @@ def _find_api_key_location(dictionary):
     for key, val in dictionary.get('defaultOptions', {}).get('params', {}).items():
         if val == {'attr': '#__AUTH_TOKEN'}:
             key = key
-            position = 'defaultOptions'
+            position = 'query'
 
     for key, val in dictionary.get('headers', {}).items():
         if val == {'attr': '#__AUTH_TOKEN'}:
@@ -390,6 +395,22 @@ class AuthMethodConverter:
 
         return Authentication(type='BearerToken', parameters={'#token': token})
 
+    @classmethod
+    def _convert_login(cls, config_parameters: dict) -> Authentication:
+        login_request: dict = config_parameters.get('api', {}).get("authentication", {}).get("loginRequest", {})
+        api_request: dict = config_parameters.get('api', {}).get("authentication", {}).get("apiRequest", {})
+        # evaluate functions and user parameters
+        login_request_eval = ConfigHelpers().fill_in_user_parameters(login_request, config_parameters.get('config'))
+        api_request_eval = ConfigHelpers().fill_in_user_parameters(api_request, config_parameters.get('config'))
+        
+
+
+
+        if not login_request:
+            raise ValueError('loginRequest configuration not found in the Login Authentication configuration')
+
+        return Authentication(type='Login', parameters={'#token': token})
+
 
 class ConfigHelpers:
 
@@ -433,7 +454,7 @@ class ConfigHelpers:
         if non_matched:
             raise ValueError(
                 'Some user attributes [{}] specified in parameters '
-                'are not present in "user_parameters" field.'.format(non_matched))
+                'are not present in "user_parameters" json_path.'.format(non_matched))
         return new_steps
 
     @staticmethod
