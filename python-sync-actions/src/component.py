@@ -2,11 +2,10 @@
 Template Component main class.
 
 """
-import json
+import copy
 import logging
 from io import StringIO
 from typing import List
-import copy
 
 import requests
 from keboola.component.base import ComponentBase, sync_action
@@ -96,8 +95,8 @@ class Component(ComponentBase):
 
         # evaluate user_params inside the user params itself
         self._configuration.user_parameters = self._conf_helpers.fill_in_user_parameters(
-                                                                self._configuration.user_parameters,
-                                                                self._configuration.user_parameters)
+            self._configuration.user_parameters,
+            self._configuration.user_parameters)
 
         self._configuration.user_data = self._conf_helpers.fill_in_user_parameters(self._configuration.user_data,
                                                                                    self._configuration.user_parameters)

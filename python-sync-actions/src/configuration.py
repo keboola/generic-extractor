@@ -1,14 +1,15 @@
 import dataclasses
 import json
+import re
+import time
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import List, Tuple, Optional
 
 import dataconf
 from nested_lookup import nested_lookup
-import time
+
 from user_functions import UserFunctions
-import re
 
 
 class ConfigurationBase:
