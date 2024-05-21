@@ -509,7 +509,12 @@ class ConfigHelpers:
         Returns:
 
         """
-        if function_cfg.get('attr'):
+        function_cfg = self.fill_in_time_references(function_cfg)
+        if not isinstance(function_cfg, dict):
+            # in case the function was evaluated as time
+            return function_cfg
+
+        elif function_cfg.get('attr'):
             return user_params[function_cfg['attr']]
         if not function_cfg.get('function'):
             raise ValueError(
