@@ -107,6 +107,9 @@ jobs:
           tag_as_latest: true
       - name: Python Tests
         run: docker-compose run --rm ci python -m unittest discover /code/python-sync-actions
+      - name: Run Python Functional Tests
+        working-directory: ./python-sync-actions
+        run: docker compose run test-calls
       - name: PHP Tests
         run: docker-compose run --rm -v $(pwd)/build:/code/build ci
 
@@ -132,6 +135,7 @@ jobs:
         run: |
           cd doc
           ./run-samples.sh
+          
 
 
   tests-in-kbc:
