@@ -125,3 +125,7 @@ class UserFunctions:
 
     def sprintf(self, format_string, *values):
         return format_string % values
+
+    def ifempty(self, test_value: str, return_value: str | bool | int | dict) -> str | bool | int | dict:
+        if not test_value:
+            return return_value
