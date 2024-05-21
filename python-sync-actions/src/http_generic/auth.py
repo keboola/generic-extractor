@@ -1,5 +1,6 @@
 import inspect
 import json
+import re
 from abc import ABC, abstractmethod
 from typing import Callable, Union, Dict, Literal
 from urllib.parse import urlencode
@@ -7,7 +8,7 @@ from urllib.parse import urlencode
 import requests
 from requests.auth import AuthBase, HTTPBasicAuth
 
-from configuration import ContentType
+from configuration import ContentType, ConfigHelpers
 from placeholders_utils import get_data_from_path
 
 
@@ -192,7 +193,8 @@ class Login(AuthMethodBase, AuthBase):
         self.api_request_query_parameters = api_request_query_parameters or {}
 
     @classmethod
-    def _retrieve_response_placeholders(cls, request_object: dict, separator: str = '.', current_path: str = ''):
+    def _retrieve_response_placeholders(cls, request_object: dict, separator: str = '.', current_path: str = '') -> \
+            list[str]:
         """
         Recursively retreive all values that contain object with key `response` and return it's value and json path
         Args:
@@ -201,24 +203,12 @@ class Login(AuthMethodBase, AuthBase):
         Returns:
 
         """
-        values = {}
-        for key, value in request_object.items():
+        request_object_str = json.dumps(request_object, separators=(',', ':'))
+        lookup_str_func = r'"response":"([^"]*)"'
+        # Use re.search to find the pattern in your_string
+        matches = re.findall(lookup_str_func, request_object_str)
 
-            if isinstance(value, dict):
-                if not current_path:
-                    current_path = key
-                else:
-                    current_path = f"{current_path}{separator}{key}"
-                values.update(cls._retrieve_response_placeholders(value, separator, current_path))
-            elif key == 'response':
-                values[current_path] = value
-
-        return values
-
-        # lookup_str = '{"response":"' + key + '"}'
-        # steps_string = steps_string.replace(lookup_str, '"' + str(user_param[key]) + '"')
-
-        # new_steps = json.loads(steps_string)
+        return matches
 
     def _replace_placeholders_with_response(self, response_data: dict, source_object_params: dict) -> dict:
         """
@@ -232,7 +222,7 @@ class Login(AuthMethodBase, AuthBase):
         """
         response_placeholders = self._retrieve_response_placeholders(source_object_params)
         source_object_params_str = json.dumps(source_object_params, separators=(',', ':'))
-        for path, placeholder in response_placeholders.items():
+        for placeholder in response_placeholders:
             lookup_str = '{"response":"' + placeholder + '"}'
             value_to_replace = get_data_from_path(placeholder, response_data, separator='.', strict=False)
             source_object_params_str = source_object_params_str.replace(lookup_str, '"' + value_to_replace + '"')
@@ -255,6 +245,12 @@ class Login(AuthMethodBase, AuthBase):
         self.api_request_headers = self._replace_placeholders_with_response(response.json(), self.api_request_headers)
         self.api_request_query_parameters = self._replace_placeholders_with_response(response.json(),
                                                                                      self.api_request_query_parameters)
+        cfg_helpers = ConfigHelpers()
+        self.api_request_headers = cfg_helpers.fill_in_user_parameters(self.api_request_headers, {},
+                                                                       True)
+        self.api_request_query_parameters = cfg_helpers.fill_in_user_parameters(self.api_request_query_parameters,
+                                                                                {},
+                                                                                True)
         return self
 
     def __call__(self, r):

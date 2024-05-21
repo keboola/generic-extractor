@@ -88,7 +88,8 @@ class Component(ComponentBase):
                 user_params = self._configuration.user_parameters
                 user_params = self._conf_helpers.fill_in_user_parameters(user_params, user_params)
                 # apply user parameters
-                auth_method_params = self._conf_helpers.fill_in_user_parameters(authentication.parameters, user_params)
+                auth_method_params = self._conf_helpers.fill_in_user_parameters(authentication.parameters, user_params,
+                                                                                False)
                 auth_method = AuthMethodBuilder.build(authentication.type, **auth_method_params)
         except AuthBuilderError as e:
             raise UserException(e) from e

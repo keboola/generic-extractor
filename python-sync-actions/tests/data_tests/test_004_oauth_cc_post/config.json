@@ -1,0 +1,106 @@
+{
+  "parameters": {
+    "api": {
+      "baseUrl": "https://private-834388-extractormock.apiary-mock.com/",
+      "http": {
+        "retryHeader": "Retry-After",
+        "maxRetries": 10,
+        "codes": [
+          408,
+          420,
+          429,
+          500,
+          502,
+          503,
+          504
+        ],
+        "connectTimeout": 30,
+        "requestTimeout": 300
+      },
+      "authentication": {
+        "type": "login",
+        "format": "json",
+        "loginRequest": {
+          "endpoint": "https://login-demo.curity.io/oauth/v2/oauth-token",
+          "method": "FORM",
+          "headers": {
+            "Accept": "application/json"
+          },
+          "params": {
+            "grant_type": "client_credentials",
+            "scope": "read",
+            "client_id": {
+              "attr": "__CLIENT_ID"
+            },
+            "client_secret": {
+              "attr": "#__CLIENT_SECRET"
+            }
+          }
+        },
+        "apiRequest": {
+          "headers": {
+            "Authorization": {
+              "function": "concat",
+              "args": [
+                "Bearer ",
+                {
+                  "response": "access_token"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "config": {
+      "outputBucket": "TESTUPPER",
+      "incrementalOutput": true,
+      "jobs": [
+        {
+          "__NAME": "post",
+          "endpoint": "get",
+          "method": "GET",
+          "dataType": "buckets",
+          "dataField": {
+            "path": ".",
+            "delimiter": "."
+          },
+          "scroller": "events"
+        }
+      ],
+      "includes": {
+        "function": "date",
+        "args": [
+          "Y-m-d H:i:s",
+          {
+            "function": "strtotime",
+            "args": [
+              "-2 day",
+              {
+                "time": "currentStart"
+              }
+            ]
+          }
+        ]
+      },
+      "mappings": {},
+      "userData": {
+        "extraction_date": {
+          "function": "date",
+          "args": [
+            "Y-m-d H:i:s",
+            {
+              "time": "currentStart"
+            }
+          ]
+        }
+      },
+      "debug": true,
+      "__AUTH_METHOD": "oauth2",
+      "__CLIENT_ID": "demo-backend-client",
+      "#__CLIENT_SECRET": "MJlO3binatD9jk1"
+    },
+    "__SELECTED_JOB": "0"
+  },
+  "action": "test_request"
+}

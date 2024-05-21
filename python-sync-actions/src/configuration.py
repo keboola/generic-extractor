@@ -1,6 +1,5 @@
 import dataclasses
 import json
-import re
 import time
 import urllib.parse as urlparse
 from dataclasses import dataclass, field
@@ -402,26 +401,39 @@ class AuthMethodConverter:
 
     @classmethod
     def _convert_login(cls, config_parameters: dict) -> Authentication:
+        method_mapping = {'GET': 'GET', 'POST': 'POST', 'FORM': 'POST'}
+        helpers = ConfigHelpers()
         login_request: dict = config_parameters.get('api', {}).get("authentication", {}).get("loginRequest", {})
         api_request: dict = config_parameters.get('api', {}).get("authentication", {}).get("apiRequest", {})
         # evaluate functions and user parameters
-        login_request_eval = ConfigHelpers().fill_in_user_parameters(login_request, config_parameters.get('config'))
-        api_request_eval = ConfigHelpers().fill_in_user_parameters(api_request, config_parameters.get('config'))
+        user_parameters = build_user_parameters(config_parameters)
+        user_parameters = helpers.fill_in_user_parameters(user_parameters, user_parameters)
+        login_request_eval = helpers.fill_in_user_parameters(login_request, user_parameters)
+        # the function evaluation is left for the Auth method because of the response placeholder
+        api_request_eval = helpers.fill_in_user_parameters(api_request, user_parameters, False)
 
         if not login_request:
             raise ValueError('loginRequest configuration not found in the Login 88Authentication configuration')
 
         login_endpoint: str = login_request_eval.get('endpoint')
         login_url = urlparse.urljoin(config_parameters.get('api', {}).get('baseUrl', ''), login_endpoint)
-        method: str = login_request_eval.get('method', 'GET')
+
+        method = login_request_eval.get('method', 'GET')
+
         login_request_content: RequestContent = build_request_content(method, login_request_eval.get('params', {}))
+
+        try:
+            result_method: str = method_mapping[login_request_eval.get('method', 'GET').upper()]
+        except KeyError:
+            raise ValueError(f'Unsupported method: {login_request_eval.get("method")}')
+
         login_query_parameters: dict = login_request_content.query_parameters
         login_headers: dict = login_request_eval.get('headers', {})
         api_request_headers: dict = api_request_eval.get('headers', {})
         api_request_query_parameters: dict = api_request_eval.get('params', {})
 
         parameters = {'login_endpoint': login_url,
-                      'method': method,
+                      'method': result_method,
                       'login_query_parameters': login_query_parameters,
                       'login_headers': login_headers,
                       'login_query_body': login_request_content.body,
@@ -437,7 +449,8 @@ class ConfigHelpers:
     def __init__(self):
         self.user_functions = UserFunctions()
 
-    def fill_in_user_parameters(self, conf_objects: dict, user_param: dict):
+    def fill_in_user_parameters(self, conf_objects: dict, user_param: dict,
+                                evaluate_conf_objects_functions: bool = True):
         """
         This method replaces user parameter references via attr + parses functions inside user parameters,
         evaluates them and fills in the resulting values
@@ -462,14 +475,17 @@ class ConfigHelpers:
                 res = self.perform_custom_function(key, user_param[key], user_param)
                 user_param[key] = res
 
-                lookup_str_func = r'"value":\{[^}]*\}'
-                new_str = f'"{key}":"{res}"'
-                steps_string = re.sub(lookup_str_func, new_str, steps_string)
-
             lookup_str = '{"attr":"' + key + '"}'
             steps_string = steps_string.replace(lookup_str, '"' + str(user_param[key]) + '"')
         new_steps = json.loads(steps_string)
         non_matched = nested_lookup('attr', new_steps)
+
+        if evaluate_conf_objects_functions:
+            for key in new_steps:
+                if isinstance(new_steps[key], dict):
+                    # in case the parameter is function, validate, execute and replace value with result
+                    res = self.perform_custom_function(key, new_steps[key], user_param)
+                    new_steps[key] = res
 
         if non_matched:
             raise ValueError(
@@ -517,9 +533,10 @@ class ConfigHelpers:
 
         elif function_cfg.get('attr'):
             return user_params[function_cfg['attr']]
+
         if not function_cfg.get('function'):
-            raise ValueError(
-                F'The user parameter {key} value is object and is not a valid function object: {function_cfg}')
+            for key in function_cfg:
+                function_cfg[key] = self.perform_custom_function(key, function_cfg[key], user_params)
 
         new_args = []
         if function_cfg.get('args'):
@@ -528,5 +545,6 @@ class ConfigHelpers:
                     arg = self.perform_custom_function(key, arg, user_params)
                 new_args.append(arg)
             function_cfg['args'] = new_args
-
+        if isinstance(function_cfg, dict) and not function_cfg.get('function'):
+            return function_cfg
         return self.user_functions.execute_function(function_cfg['function'], *function_cfg.get('args', []))
