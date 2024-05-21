@@ -1,7 +1,7 @@
 import inspect
 import json
 from abc import ABC, abstractmethod
-from typing import Callable, Union, Dict
+from typing import Callable, Union, Dict, Literal
 from urllib.parse import urlencode
 
 import requests
@@ -263,4 +263,51 @@ class Login(AuthMethodBase, AuthBase):
         if self.api_request_query_parameters:
             r.url = f"{r.url}?{urlencode(self.api_request_query_parameters)}"
         r.headers.update(self.api_request_headers)
+        return r
+
+
+class OAuth20ClientCredentials(AuthMethodBase, AuthBase):
+    def __init__(self, login_endpoint: str,
+                 client_secret: str,
+                 client_id: str,
+                 method: Literal['client_secret_post', 'client_secret_basic'] = 'client_secret_basic',
+                 scopes: list[str] = None):
+        """
+
+        Args:
+            login_endpoint:
+            client_secret:
+            client_id:
+            method: 'client_secret_post' or 'client_secret_basic'
+            scopes:
+        """
+        self.login_endpoint = login_endpoint
+        self.method = method
+        self.client_secret = client_secret
+        self.client_id = client_id
+        self.scopes = scopes or []
+        self.auth_header = {}
+
+    def login(self) -> Union[AuthBase, Callable]:
+        data = {"grant_type": "client_credentials"}
+        auth = None
+        if self.scopes:
+            data['scope'] = ' '.join(self.scopes)
+
+        if self.method == 'client_secret_post':
+            data['client_id'] = self.client_id
+            data['client_secret'] = self.client_secret
+        elif self.method == 'client_secret_basic':
+            auth = (self.client_id, self.client_secret)
+
+        response = requests.request('POST', self.login_endpoint, data=data, auth=auth)
+
+        response.raise_for_status()
+
+        self.auth_header = {'Authorization': f"Bearer {response.json()['access_token']}"}
+
+        return self
+
+    def __call__(self, r):
+        r.headers.update(self.auth_header)
         return r

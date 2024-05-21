@@ -358,7 +358,8 @@ class AuthMethodConverter:
             'bearer': cls._convert_bearer,
             'api-key': cls._convert_api_key,
             'query': cls._convert_query,
-            'login': cls._convert_login
+            'login': cls._convert_login,
+            'oauth2': cls._convert_login
         }
 
         func = methods.get(auth_method)
