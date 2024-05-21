@@ -1,13 +1,18 @@
 from typing import Tuple, Dict
 
 import requests
-from keboola.component import UserException
 from keboola.http_client import HttpClient
 from requests.adapters import HTTPAdapter
 from requests.exceptions import HTTPError, InvalidJSONError, ConnectionError
 from urllib3 import Retry
 
 from http_generic.auth import AuthMethodBase
+
+
+class HttpClientError(Exception):
+    def __init__(self, message, response=None):
+        self.response = response
+        super().__init__(message)
 
 
 # TODO: add support for pagination methods
@@ -48,15 +53,14 @@ class GenericHttpClient(HttpClient):
             else:
                 message = f'Request "{method}: {endpoint_path}" failed with non-retryable error. ' \
                           f'Status Code: {e.response.status_code}. Response: {e.response.text}'
-            raise UserException(message) from e
+            raise HttpClientError(message, resp) from e
         except InvalidJSONError:
             message = f'Request "{method}: {endpoint_path}" failed. The JSON payload is invalid (more in detail). ' \
                       f'Verify the datatype conversion.'
-            data = kwargs.get('data') or kwargs.get('json')
-            raise UserException(message, data)
+            raise HttpClientError(message, resp)
         except ConnectionError as e:
             message = f'Request "{method}: {endpoint_path}" failed with the following error: {e}'
-            raise UserException(message) from e
+            raise HttpClientError(message, resp) from e
 
     def build_url(self, base_url, endpoint_path):
         self.base_url = base_url

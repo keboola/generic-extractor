@@ -51,6 +51,24 @@ class TestComponent(unittest.TestCase):
         self.assertEqual(output['response']['data'], expected_data)
         self.assertTrue(output['request']['headers']['Authorization'].startswith('Bearer '))
 
+    def test_005_post(self):
+        component = self._get_test_component(self._testMethodName)
+        output = component.test_request()
+        expected_data = [{'id': '123', 'status': 'post'}, {'id': 'potato', 'status': 'mashed'}]
+        self.assertEqual(output['response']['data'], expected_data)
+        expected_request_data = '{"parameter": "value"}'
+        self.assertEqual(output['request']['data'], expected_request_data)
+
+    def test_006_post_fail(self):
+        component = self._get_test_component(self._testMethodName)
+        output = component.test_request()
+
+        self.assertEqual(output['response']['status_code'], 404)
+        self.assertEqual(output['response']['reason'], 'Not Found')
+
+        expected_request_data = '{"parameter": "value"}'
+        self.assertEqual(output['request']['data'], expected_request_data)
+
 
 if __name__ == '__main__':
     unittest.main()

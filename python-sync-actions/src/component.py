@@ -5,6 +5,7 @@ Template Component main class.
 import copy
 import logging
 from io import StringIO
+from json import JSONDecodeError
 from typing import List
 
 import requests
@@ -16,7 +17,7 @@ from actions.curl import build_job_from_curl
 from actions.mapping import infer_mapping
 from configuration import Configuration, ConfigHelpers
 from http_generic.auth import AuthMethodBuilder, AuthBuilderError
-from http_generic.client import GenericHttpClient
+from http_generic.client import GenericHttpClient, HttpClientError
 from placeholders_utils import PlaceholdersUtils
 
 MAX_CHILD_CALLS = 20
@@ -248,7 +249,7 @@ class Component(ComponentBase):
 
         return result
 
-    def make_call(self) -> tuple[list, any, str]:
+    def make_call(self) -> tuple[list, any, str, str]:
         """
         Make call to the API
         Returns:
@@ -326,13 +327,21 @@ class Component(ComponentBase):
                 else:
                     recursive_call(current_results, config_index + 1)
 
-        recursive_call({})
+        try:
+            recursive_call({})
+            error_message = ''
+        except HttpClientError as e:
+            error_message = str(e)
+            if e.response is not None:
+                self._final_response = e.response
+            else:
+                raise UserException(e) from e
 
         secrets_to_hide = self._get_values_to_hide(self._configuration.user_parameters)
         filtered_response = self._deep_copy_and_replace_words(self._final_response, secrets_to_hide)
         filtered_log = self._deep_copy_and_replace_words(self.log.getvalue(), secrets_to_hide)
 
-        return final_results, filtered_response, filtered_log
+        return final_results, filtered_response, filtered_log, error_message
 
     @sync_action('load_from_curl')
     def load_from_curl(self) -> dict:
@@ -353,7 +362,11 @@ class Component(ComponentBase):
         Load configuration from cURL command
         """
         self.init_component()
-        data, response, log = self.make_call()
+        data, response, log, error = self.make_call()
+
+        if error:
+            raise UserException(error)
+
         nesting_level = self.configuration.parameters.get('__NESTING_LEVEL', 2)
         primary_keys = self.configuration.parameters.get('__PRIMARY_KEY', [])
         parent_pkey = []
@@ -384,20 +397,31 @@ class Component(ComponentBase):
 
     @sync_action('test_request')
     def test_request(self):
-        results, response, log = self.make_call()
+        results, response, log, error_message = self.make_call()
 
+        # TODO: UI to parse the response status code
+
+        body = None
+        if self._final_response.request.body:
+            body = self._final_response.request.body.decode('utf-8')
+
+        # get response data:
+        try:
+            response_data = self._final_response.json()
+        except JSONDecodeError:
+            response_data = self._final_response.text
         result = {
             "response": {
                 "status_code": self._final_response.status_code,
                 "reason": self._final_response.reason,
                 "headers": dict(self._final_response.headers),
-                "data": self._final_response.json()
+                "data": response_data
             },
             "request": {
                 "url": self._final_response.request.url,
                 "method": self._final_response.request.method,
                 "headers": dict(self._final_response.request.headers),
-                "data": self._final_response.request.body
+                "data": body
             },
             "records": results,
             "debug_log": log
