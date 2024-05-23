@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "88fa176c9784b276372582be0dcfdfe2",
+    "content-hash": "7dbcf6f90555bae6ba2cb278e6ad106f",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -758,16 +758,16 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "5.1.0",
+            "version": "dev-ES-160",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "4cb9d1395c6ebeb1fe6c1f25aa5d88e7280e2bcd"
+                "reference": "c222e7f5ced48f1ab0489352331b9b7c1e2d4641"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/4cb9d1395c6ebeb1fe6c1f25aa5d88e7280e2bcd",
-                "reference": "4cb9d1395c6ebeb1fe6c1f25aa5d88e7280e2bcd",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/c222e7f5ced48f1ab0489352331b9b7c1e2d4641",
+                "reference": "c222e7f5ced48f1ab0489352331b9b7c1e2d4641",
                 "shasum": ""
             },
             "require": {
@@ -815,9 +815,9 @@
             ],
             "support": {
                 "issues": "https://github.com/keboola/juicer/issues",
-                "source": "https://github.com/keboola/juicer/tree/5.1.0"
+                "source": "https://github.com/keboola/juicer/tree/ES-160"
             },
-            "time": "2023-09-05T11:21:25+00:00"
+            "time": "2024-05-22T09:14:35+00:00"
         },
         {
             "name": "keboola/php-csvtable",
@@ -5318,9 +5318,18 @@
             "time": "2021-03-09T10:59:23+00:00"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "package": "keboola/juicer",
+            "version": "dev-ES-160",
+            "alias": "5.1.0",
+            "alias_normalized": "5.1.0.0"
+        }
+    ],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "keboola/juicer": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
