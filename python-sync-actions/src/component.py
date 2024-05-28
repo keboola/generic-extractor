@@ -414,14 +414,14 @@ class Component(ComponentBase):
             "response": {
                 "status_code": self._final_response.status_code,
                 "reason": self._final_response.reason,
-                "headers": dict(self._final_response.headers),
-                "data": response_data
+                "data": response_data,
+                "headers": dict(self._final_response.headers)
             },
             "request": {
                 "url": self._final_response.request.url,
                 "method": self._final_response.request.method,
-                "headers": dict(self._final_response.request.headers),
-                "data": body
+                "data": body,
+                "headers": dict(self._final_response.request.headers)
             },
             "records": results,
             "debug_log": log
