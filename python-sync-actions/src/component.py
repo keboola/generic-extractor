@@ -19,6 +19,7 @@ from configuration import Configuration, ConfigHelpers
 from http_generic.auth import AuthMethodBuilder, AuthBuilderError
 from http_generic.client import GenericHttpClient, HttpClientError
 from placeholders_utils import PlaceholdersUtils
+from dlt.sources.helpers.rest_client import paginators
 
 MAX_CHILD_CALLS = 20
 
@@ -249,6 +250,37 @@ class Component(ComponentBase):
 
         return result
 
+    def _get_paginator(self, job):
+        """
+        Get paginator object for the given job.
+
+        Args:
+            job: The job for which to get the paginator.
+
+        Returns:
+            The paginator object for the job.
+        """
+
+        paginator = {}
+
+        if job.request_parameters.scroller:
+            paginator_params = job.api.pagination.get("scrollers").get(job.request_parameters.scroller)
+
+            if paginator_params.get("method") == "offset":
+                # paginator = paginators.OffsetPaginator(limit=paginator_params.get("limit"),
+                #                                        offset=paginator_params.get("offset"),
+                #                                        offset_param=paginator_params.get("offsetParam"),
+                #                                        limit_param=paginator_params.get("limitParam")
+                #                                        )
+                paginator[paginator_params.get("offsetParam")] = paginator_params.get("offset", 0)
+                paginator[paginator_params.get("limitParam")] = paginator_params.get("limit")
+
+            elif paginator_params.get("method") == "pagenum":
+                if paginator_params.get("firstPageParams"):
+                    paginator[paginator_params.get("pageParam")] = paginator_params.get("page", 1)
+
+        return paginator
+
     def make_call(self) -> tuple[list, any, str, str]:
         """
         Make call to the API
@@ -294,6 +326,10 @@ class Component(ComponentBase):
             ssl_verify = api_cfg.ssl_verification
             timeout = api_cfg.timeout
             # additional_params = self._build_request_parameters(additional_params_cfg)
+
+            paginator = self._get_paginator(job)
+            query_parameters.update(paginator)
+
             request_parameters = {'params': query_parameters,
                                   'headers': new_headers,
                                   'verify': ssl_verify,
