@@ -6,6 +6,7 @@ from typing import Callable, Union, Dict, Literal
 from urllib.parse import urlencode
 
 import requests
+from requests import auth
 from requests.auth import AuthBase, HTTPBasicAuth
 
 from configuration import ContentType, ConfigHelpers
@@ -26,6 +27,15 @@ class AuthMethodBase(ABC):
     def login(self):
         """
         Perform steps to login and returns requests.aut.AuthBase callable that modifies the request.
+
+        """
+        pass
+
+    @abstractmethod
+    def get_secrets(self) -> list[str]:
+        """
+        Helper method to apply loging filters
+        Returns:
 
         """
         pass
@@ -104,8 +114,14 @@ class BasicHttp(AuthMethodBase):
             self.password == getattr(other, 'password', None)
         ])
 
+    def get_secrets(self):
+        return auth._basic_auth_str(self.username, self.password)
+
 
 class BearerToken(AuthMethodBase, AuthBase):
+
+    def get_secrets(self) -> list[str]:
+        return [self.token]
 
     def __init__(self, __token):
         self.token = __token
@@ -127,6 +143,9 @@ class BearerToken(AuthMethodBase, AuthBase):
 
 
 class ApiKey(AuthMethodBase, AuthBase):
+    def get_secrets(self) -> list[str]:
+        return [self.token]
+
     def __init__(self, key: str, token: str, position: str):
         self.token = token
         self.key = key
@@ -155,6 +174,9 @@ class ApiKey(AuthMethodBase, AuthBase):
 
 
 class Query(AuthMethodBase, AuthBase):
+    def get_secrets(self) -> list[str]:
+        return [value for value in self.params.values()]
+
     def __init__(self, params: Dict):
         self.params = params
 
@@ -167,6 +189,7 @@ class Query(AuthMethodBase, AuthBase):
 
 
 class Login(AuthMethodBase, AuthBase):
+
     def __init__(self, login_endpoint: str, method: str = 'GET',
                  login_query_parameters: dict = None,
                  login_query_body=None,
@@ -253,6 +276,16 @@ class Login(AuthMethodBase, AuthBase):
                                                                                 True)
         return self
 
+    def get_secrets(self) -> list[str]:
+        secrets = []
+        for key, value in self.api_request_query_parameters.items():
+            secrets.append(value)
+
+        for key, value in self.api_request_headers.items():
+            secrets.append(value)
+
+        return secrets
+
     def __call__(self, r):
 
         r.url = f"{r.url}"
@@ -263,6 +296,7 @@ class Login(AuthMethodBase, AuthBase):
 
 
 class OAuth20ClientCredentials(AuthMethodBase, AuthBase):
+
     def __init__(self, login_endpoint: str,
                  client_secret: str,
                  client_id: str,
@@ -303,6 +337,9 @@ class OAuth20ClientCredentials(AuthMethodBase, AuthBase):
         self.auth_header = {'Authorization': f"Bearer {response.json()['access_token']}"}
 
         return self
+
+    def get_secrets(self) -> list[str]:
+        return [self.auth_header['Authorization']]
 
     def __call__(self, r):
         r.headers.update(self.auth_header)

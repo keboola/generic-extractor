@@ -111,13 +111,19 @@ class Component(ComponentBase):
                                          auth_method=auth_method
                                          )
 
-    def _get_values_to_hide(self, values: dict):
+    def _get_values_to_hide(self) -> list[str]:
         """
         Get values to hide
         Args:
-            values: values to hide
         """
-        return [value for key, value in values.items() if key.startswith('#') or key.startswith('__')]
+        user_params = self._configuration.user_parameters
+        secrets = [value for key, value in user_params.items() if key.startswith('#') or key.startswith('__')]
+
+        # get secrets from the auth method
+        if self._client._auth_method:  # noqa
+            auth_secrets = self._client._auth_method.get_secrets()  # noqa
+            secrets.extend(auth_secrets)
+        return secrets
 
     def _replace_words(self, obj, words, replacement="--HIDDEN--"):
         # Helper function to perform replacement in strings
@@ -337,11 +343,7 @@ class Component(ComponentBase):
             else:
                 raise UserException(e) from e
 
-        secrets_to_hide = self._get_values_to_hide(self._configuration.user_parameters)
-        filtered_response = self._deep_copy_and_replace_words(self._final_response, secrets_to_hide)
-        filtered_log = self._deep_copy_and_replace_words(self.log.getvalue(), secrets_to_hide)
-
-        return final_results, filtered_response, filtered_log, error_message
+        return final_results, self._final_response, self.log.getvalue(), error_message
 
     @sync_action('load_from_curl')
     def load_from_curl(self) -> dict:
@@ -399,41 +401,37 @@ class Component(ComponentBase):
     def test_request(self):
         results, response, log, error_message = self.make_call()
 
-        # TODO: UI to parse the response status code
-
         body = None
-        if self._final_response.request.body:
-            body = self._final_response.request.body.decode('utf-8')
+        if response.request.body:
+            body = response.request.body.decode('utf-8')
+
+        secrets_to_hide = self._get_values_to_hide()
+        filtered_response = self._deep_copy_and_replace_words(self._final_response, secrets_to_hide)
+        filtered_log = self._deep_copy_and_replace_words(self.log.getvalue(), secrets_to_hide)
+        filtered_body = self._deep_copy_and_replace_words(body, secrets_to_hide)
 
         # get response data:
         try:
-            response_data = self._final_response.json()
+            response_data = filtered_response.json()
         except JSONDecodeError:
-            response_data = self._final_response.text
+            response_data = filtered_response.text
+
         result = {
             "response": {
-                "status_code": self._final_response.status_code,
-                "reason": self._final_response.reason,
+                "status_code": filtered_response.status_code,
+                "reason": filtered_response.reason,
                 "data": response_data,
-                "headers": dict(self._final_response.headers)
+                "headers": dict(filtered_response.headers)
             },
             "request": {
-                "url": self._final_response.request.url,
-                "method": self._final_response.request.method,
-                "data": body,
-                "headers": dict(self._final_response.request.headers)
+                "url": response.request.url,
+                "method": response.request.method,
+                "data": filtered_body,
+                "headers": dict(filtered_response.request.headers)
             },
             "records": results,
-            "debug_log": log
+            "debug_log": filtered_log
         }
-        # # filter secrets
-        # # TODO: temp override for demo, do all secrets when ready
-        # # TODO: handle situation when secret is number
-        # #   -> replacing "some": 123 with "some": HIDDEN would lead to invalid json
-        # secret = self.configuration.parameters.get('config', {}).get('#__AUTH_TOKEN', '')
-        # result_str = json.dumps(result)
-        # result_str = result_str.replace(secret, 'HIDDEN')
-        # return json.loads(result_str)
         return result
 
 

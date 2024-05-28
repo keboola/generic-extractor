@@ -39,17 +39,27 @@ class TestComponent(unittest.TestCase):
 
     def test_003_oauth_cc(self):
         component = self._get_test_component(self._testMethodName)
-        output = component.test_request()
+        results, response, log, error_message = component.make_call()
         expected_data = [{'id': '321', 'status': 'get'}, {'id': 'girlfriend', 'status': 'imaginary'}]
-        self.assertEqual(output['response']['data'], expected_data)
-        self.assertTrue(output['request']['headers']['Authorization'].startswith('Bearer '))
+        self.assertEqual(results, expected_data)
+        self.assertTrue(response.request.headers['Authorization'].startswith('Bearer '))
+
+    def test_003_oauth_cc_filtered(self):
+        component = self._get_test_component('test_003_oauth_cc')
+        results = component.test_request()
+        self.assertEqual(results['request']['headers']['Authorization'], '--HIDDEN--')
 
     def test_004_oauth_cc_post(self):
         component = self._get_test_component(self._testMethodName)
-        output = component.test_request()
+        results, response, log, error_message = component.make_call()
         expected_data = [{'id': '321', 'status': 'get'}, {'id': 'girlfriend', 'status': 'imaginary'}]
-        self.assertEqual(output['response']['data'], expected_data)
-        self.assertTrue(output['request']['headers']['Authorization'].startswith('Bearer '))
+        self.assertEqual(results, expected_data)
+        self.assertTrue(response.request.headers['Authorization'].startswith('Bearer '))
+
+    def test_004_oauth_cc_post_filtered(self):
+        component = self._get_test_component('test_004_oauth_cc_post')
+        results = component.test_request()
+        self.assertEqual(results['request']['headers']['Authorization'], '--HIDDEN--')
 
     def test_005_post(self):
         component = self._get_test_component(self._testMethodName)
