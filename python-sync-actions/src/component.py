@@ -265,7 +265,7 @@ class Component(ComponentBase):
         if job.request_parameters.scroller:
             paginator_params = job.api.pagination.get(job.request_parameters.scroller)
             if not paginator_params:
-                raise UserException(f"Paginator '{job.request_parameters.scroller}' not found in the API configuration.")
+                raise UserException(f"Paginator '{job.request_parameters.scroller}' not found in the configuration.")
 
         else:
             paginator_params = job.api.pagination.get("common")
