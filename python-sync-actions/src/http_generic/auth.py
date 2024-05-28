@@ -115,7 +115,7 @@ class BasicHttp(AuthMethodBase):
         ])
 
     def get_secrets(self):
-        return auth._basic_auth_str(self.username, self.password)
+        return [auth._basic_auth_str(self.username, self.password)]
 
 
 class BearerToken(AuthMethodBase, AuthBase):
