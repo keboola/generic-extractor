@@ -7,4 +7,3 @@ mock
 freezegun
 nested-lookup
 python-dateutil
-dlt==0.4.12

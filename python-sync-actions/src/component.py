@@ -19,7 +19,6 @@ from configuration import Configuration, ConfigHelpers
 from http_generic.auth import AuthMethodBuilder, AuthBuilderError
 from http_generic.client import GenericHttpClient, HttpClientError
 from placeholders_utils import PlaceholdersUtils
-from dlt.sources.helpers.rest_client import paginators
 
 MAX_CHILD_CALLS = 20
 
@@ -264,20 +263,24 @@ class Component(ComponentBase):
         paginator = {}
 
         if job.request_parameters.scroller:
-            paginator_params = job.api.pagination.get("scrollers").get(job.request_parameters.scroller)
+            paginator_params = job.api.pagination.get(job.request_parameters.scroller)
+            if not paginator_params:
+                raise UserException(f"Paginator '{job.request_parameters.scroller}' not found in the API configuration.")
 
-            if paginator_params.get("method") == "offset":
-                # paginator = paginators.OffsetPaginator(limit=paginator_params.get("limit"),
-                #                                        offset=paginator_params.get("offset"),
-                #                                        offset_param=paginator_params.get("offsetParam"),
-                #                                        limit_param=paginator_params.get("limitParam")
-                #                                        )
-                paginator[paginator_params.get("offsetParam")] = paginator_params.get("offset", 0)
-                paginator[paginator_params.get("limitParam")] = paginator_params.get("limit")
+        else:
+            paginator_params = job.api.pagination.get("common")
 
-            elif paginator_params.get("method") == "pagenum":
-                if paginator_params.get("firstPageParams"):
-                    paginator[paginator_params.get("pageParam")] = paginator_params.get("page", 1)
+        if paginator_params.get("method") == "offset":
+            if paginator_params.get("firstPageParams", True):
+                paginator[paginator_params.get("offsetParam", "offset")] = paginator_params.get("offset", 0)
+                paginator[paginator_params.get("limitParam", "limit")] = paginator_params.get("limit")
+
+        elif paginator_params.get("method") == "pagenum":
+            if paginator_params.get("firstPageParams"):
+                paginator[paginator_params.get("pageParam", "page")] = paginator_params.get("firstPage", 1)
+
+                if paginator_params.get("limit"):
+                    paginator[paginator_params.get("limitParam", "limit")] = paginator_params.get("limit")
 
         return paginator
 

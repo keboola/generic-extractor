@@ -185,7 +185,11 @@ def convert_to_v2(configuration: dict) -> list[Configuration]:
     default_headers = _remove_auth_from_dict(default_headers_org, _return_ui_params(configuration))
     default_query_parameters = _remove_auth_from_dict(default_query_parameters_org, _return_ui_params(configuration))
 
-    pagination = api_json.get('pagination', {})
+    pagination = {}
+    if api_json.get('pagination', {}).get('scrollers'):
+        pagination = api_json.get('pagination', {}).get('scrollers')
+    else:
+        pagination['common'] = api_json.get('pagination', {})
 
     api_config = ApiConfig(base_url=base_url, default_headers=default_headers,
                            default_query_parameters=default_query_parameters, pagination=pagination)
