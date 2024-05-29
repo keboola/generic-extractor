@@ -1,0 +1,25 @@
+{
+  "parameters": {
+    "api": {
+      "baseUrl": "http://private-834388-extractormock.apiary-mock.com",
+      "pagination": {
+        "method": "response.url",
+        "urlKey": "next"
+      }
+    },
+    "config": {
+      "outputBucket": "getPost",
+      "jobs": [
+        {
+          "endpoint": "post",
+          "method": "POST",
+          "params": {
+            "parameter": "value"
+          }
+        }
+      ]
+    },
+    "__SELECTED_JOB": "0"
+  },
+  "action": "test_request"
+}

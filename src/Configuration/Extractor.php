@@ -17,6 +17,9 @@ use League\Flysystem\Adapter\Local;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
+use Throwable;
 
 /**
  * Class Extractor provides interfaces for processing configuration files and
@@ -38,6 +41,9 @@ class Extractor
     {
         $this->logger = $logger;
         $this->config = $this->loadConfigFile($dataDir);
+        if ($this->isSyncAction()) {
+            $this->runSyncActionProcess();
+        }
         $this->state = $this->loadStateFile($dataDir);
         $this->dataDir = $dataDir;
     }
@@ -110,6 +116,15 @@ class Extractor
         }
         $configuration = array_replace($this->config['parameters']['config'], $params);
         return new Config($configuration);
+    }
+
+    private function isSyncAction(): bool
+    {
+        if (isset($this->config['action']) && $this->config['action'] !== 'run') {
+            return true;
+        }
+
+        return false;
     }
 
     public function getSshProxy(): ?array
@@ -245,6 +260,31 @@ class Extractor
             && (!is_null($apiNode['clientCertificate']) && !is_string($apiNode['clientCertificate']))
         ) {
             throw new UserException("The 'clientCertificate' must be string.");
+        }
+    }
+
+    private function runSyncActionProcess(): void
+    {
+        try {
+            $command = [
+                'python',
+                '-u',
+                './python-sync-actions/src/component.py',
+            ];
+
+            $process = new Process($command);
+            $process->mustRun();
+
+            echo $process->getOutput();
+            fwrite(STDERR, $process->getErrorOutput());
+            exit($process->getExitCode());
+        } catch (ProcessFailedException $e) {
+            $this->logger->error('Process failed to start: ' . $e->getMessage());
+            fwrite(STDERR, 'Process error output: ' . $e->getProcess()->getErrorOutput());
+            exit($e->getProcess()->getExitCode());
+        } catch (Throwable $e) {
+            $this->logger->error('Unexpected error: ' . $e->getMessage());
+            throw new ApplicationException('Unexpected error: ' . $e->getMessage());
         }
     }
 }

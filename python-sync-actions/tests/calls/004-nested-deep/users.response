@@ -1,0 +1,14 @@
+{
+  "users": [
+      {
+        "id": 1,
+        "customer": "John Doe",
+        "address": "123 Main St"
+      },
+      {
+        "id": 2,
+        "customer": "Jan Novak",
+        "address": "123 Main St"
+      }
+    ]
+}

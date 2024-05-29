@@ -1,0 +1,42 @@
+version: "2"
+services:
+  # for development purposes
+  dev:
+    build: .
+    volumes:
+        - ./:/code
+        - ./data:/data
+    environment:
+      - KBC_DATADIR=./data
+  test:
+    # Use to run flake8 and unittests checks
+    build: .
+    volumes:
+      - ./:/code
+      - ./data:/data
+    environment:
+      - KBC_DATADIR=./data
+    command:
+      - /bin/sh
+      - /code/scripts/build_n_test.sh
+
+  test-calls:
+    # Run examples against mock server
+    build: .
+    volumes:
+      - ./:/code
+      - ./data:/data
+    command: python /code/tests/_test_calls.py
+    links:
+      - mock-server
+  mock-server:
+    container_name: mock-server
+    image: quay.io/keboola/ex-generic-mock-server:latest
+    tty: true
+    stdin_open: true
+    ports:
+      - "8888:80"
+    volumes:
+      - ./tests/calls:/examples/
+    environment:
+      - KBC_EXAMPLES_DIR=/examples/

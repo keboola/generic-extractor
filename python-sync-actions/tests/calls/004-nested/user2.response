@@ -1,0 +1,19 @@
+{
+  "id": 2,
+  "customer": "John Doe2",
+  "address": "123 Main St",
+  "items": [
+    {
+      "id": 1,
+      "name": "Widget2",
+      "price": 9.99,
+      "quantity": 2
+    },
+    {
+      "id": 2,
+      "name": "Thing2",
+      "price": 5.99,
+      "quantity": 5
+    }
+  ]
+}

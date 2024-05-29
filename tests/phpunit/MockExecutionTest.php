@@ -63,6 +63,14 @@ class MockExecutionTest extends TestCase
         self::assertEquals(2, $retval);
     }
 
+    public function testSyncAction(): void
+    {
+        $dataDir = __DIR__ . '/data/syncAction';
+        $runPhp = __DIR__ . '/../../src/run.php';
+        exec("KBC_DATADIR=$dataDir php $runPhp  2>&1", $output, $retval);
+        self::assertEquals(0, $retval, implode("\n", $output));
+    }
+
     public function testDynamicUserData(): void
     {
         $dataDir = __DIR__ . '/data/dynamicUserData';

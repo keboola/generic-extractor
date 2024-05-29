@@ -1,0 +1,21 @@
+{
+  "orders": {
+    "id": 1,
+    "customer": "John Doe",
+    "address": "123 Main St",
+    "items": [
+      {
+        "order-id": 11,
+        "name": "Widget",
+        "price": 9.99,
+        "quantity": 2
+      },
+      {
+        "order-id": 12,
+        "name": "Thing",
+        "price": 5.99,
+        "quantity": 5
+      }
+    ]
+  }
+}
