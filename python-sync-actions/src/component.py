@@ -272,7 +272,6 @@ class Component(ComponentBase):
 
         self._parent_results = [{}] * len(self._configurations)
 
-        # TODO: omezit pocet callu z parent response na 10 kvuli timeoutu. E.g. zavolat child jen max 10x
         def recursive_call(parent_result, config_index=0):
 
             if parent_result:
@@ -371,6 +370,7 @@ class Component(ComponentBase):
 
         nesting_level = self.configuration.parameters.get('__NESTING_LEVEL', 2)
         primary_keys = self.configuration.parameters.get('__PRIMARY_KEY', [])
+        is_child_job = len(self.configuration.parameters.get('__SELECTED_JOB', '').split('_')) > 1
         parent_pkey = []
         if len(self._configurations) > 1:
             parent_pkey = [f'parent_{p}' for p in self._configurations[-1].request_parameters.placeholders.keys()]
@@ -378,15 +378,18 @@ class Component(ComponentBase):
         if not data:
             raise UserException("The request returned no data to infer mapping from.")
 
-        if self._configuration.user_data:
+        user_data_columns = []
+        if self._configuration.user_data and not is_child_job:
             for record in data:
                 for key, value in self._configuration.user_data.items():
+                    user_data_columns.append(key)
                     if key in record:
                         raise UserException(f"User data key [{key}] already exists in the response data, "
                                             f"please change the name.")
                     record[key] = value
 
         mapping = infer_mapping(data, primary_keys, parent_pkey,
+                                user_data_columns=user_data_columns,
                                 max_level_nest_level=nesting_level)
         return mapping
 
