@@ -1,0 +1,36 @@
+{
+  "parameters": {
+    "api": {
+      "baseUrl": "http://private-834388-extractormock.apiary-mock.com",
+      "pagination": {
+        "method": "response.url",
+        "urlKey": "next"
+      }
+    },
+    "config": {
+      "outputBucket": "getPost",
+      "jobs": [
+        {
+          "endpoint": "get",
+          "method": "GET",
+          "params": {
+            "parameter": "value"
+          }
+        }
+      ],
+      "userData": {
+        "start_date": {
+          "function": "date",
+          "args": [
+            "Y-m-d H:i:s",
+            {
+              "time": "currentStart"
+            }
+          ]
+        }
+      }
+    },
+    "__SELECTED_JOB": "0"
+  },
+  "action": "infer_mapping"
+}

@@ -33,6 +33,7 @@ class StuctureAnalyzer:
     def infer_mapping(self,
                       primary_keys: Optional[list[str]] = None,
                       parent_pkeys: Optional[list[str]] = None,
+                      user_data_columns: Optional[list[str]] = None,
                       path_separator: str = '.',
                       max_level: int = 2
                       ) -> dict:
@@ -41,6 +42,7 @@ class StuctureAnalyzer:
         Args:
             primary_keys: optional list of columns to be used as primary keys
             parent_pkeys: optional list of columns to be used as parent primary keys
+            user_data_columns: optional list of columns to be used as user data columns
             path_separator: JSON path separator to use in the mapping
             max_level: maximum level to flatten results
 
@@ -57,6 +59,10 @@ class StuctureAnalyzer:
                     raise UserException(f"Parent {key} is already in the mapping, "
                                         f"please change the placeholder name")
                 result_mapping[key] = MappingElements.parent_primary_key_column(key)
+        if user_data_columns:
+            for key in user_data_columns:
+                if key in result_mapping:
+                    result_mapping[key] = MappingElements.user_data_column(key)
 
         return self.dedupe_values(result_mapping)
 
@@ -158,10 +164,20 @@ class MappingElements:
             "forceType": True
         }
 
+    @staticmethod
+    def user_data_column(column_name: str) -> dict:
+        return {
+            "type": "user",
+            "mapping": {
+                "destination": column_name
+            }
+        }
+
 
 def infer_mapping(data: list[dict],
                   primary_keys: Optional[list[str]] = None,
                   parent_pkeys: Optional[list[str]] = None,
+                  user_data_columns: Optional[list[str]] = None,
                   path_separator: str = '.',
                   max_level_nest_level: int = 2) -> dict:
     """
@@ -170,6 +186,7 @@ def infer_mapping(data: list[dict],
         data: sample data
         primary_keys: optional list of columns to be used as primary keys
         parent_pkeys: optional list of columns to be used as parent primary keys
+        user_data_columns: optional list of columns to be used as user data columns
         path_separator: JSON path separator to use in the mapping
         max_level_nest_level: maximum level to flatten results
 
@@ -181,6 +198,7 @@ def infer_mapping(data: list[dict],
         analyzer.parse_row(row)
 
     result = analyzer.infer_mapping(primary_keys or [], parent_pkeys or [],
+                                    user_data_columns or [],
                                     path_separator=path_separator,
                                     max_level=max_level_nest_level)
     return result

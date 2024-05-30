@@ -1,6 +1,12 @@
+import os
 import unittest
+from copy import deepcopy
+from pathlib import Path
+
+from freezegun import freeze_time
 
 from actions.mapping import infer_mapping, StuctureAnalyzer
+from component import Component
 
 
 class TestCurl(unittest.TestCase):
@@ -23,6 +29,14 @@ class TestCurl(unittest.TestCase):
             "array": [1, 2, 3]
         }
     ]
+
+    def setUp(self):
+        self.tests_dir = Path(__file__).absolute().parent.joinpath('data_tests').as_posix()
+
+    def _get_test_component(self, test_name):
+        test_dir = os.path.join(self.tests_dir, test_name)
+        os.environ['KBC_DATADIR'] = test_dir
+        return Component()
 
     def test_nested_levels_pkeys(self):
         # nesting level 0
@@ -47,6 +61,21 @@ class TestCurl(unittest.TestCase):
                     'contacts.email': 'contacts_email', 'contacts.skype': 'contacts_skype',
                     'id': 'id', 'name': 'name'}
         res = infer_mapping(self.SAMPLE_DATA, max_level_nest_level=1)
+
+        self.assertEqual(res, expected)
+
+    def test_user_data(self):
+        # nesting level 1
+        expected = {'array': {'forceType': True, 'mapping': {'destination': 'array'}, 'type': 'column'},
+                    'contacts.email': 'contacts_email', 'contacts.skype': 'contacts_skype',
+                    'id': 'id', 'name': 'name',
+                    "date_start": {'mapping': {'destination': 'date_start'}, 'type': 'user'}}
+        user_data_columns = ['date_start']
+        sample_data = deepcopy(self.SAMPLE_DATA)
+        for row in sample_data:
+            row['date_start'] = '2021-01-01'
+
+        res = infer_mapping(sample_data, max_level_nest_level=1, user_data_columns=user_data_columns)
 
         self.assertEqual(res, expected)
 
@@ -75,3 +104,20 @@ class TestCurl(unittest.TestCase):
                     'name': 'name', 'test_array': 'array'}
         res = StuctureAnalyzer.dedupe_values(data)
         self.assertEqual(res, expected)
+
+    @freeze_time("2021-01-01")
+    def test_infer_mapping_userdata(self):
+        component = self._get_test_component('test_007_infer_mapping_userdata')
+        output = component.infer_mapping()
+        expected_output = {'id': 'id',
+                           'start_date': {'mapping': {'destination': 'start_date'}, 'type': 'user'},
+                           'status': 'status'}
+        self.assertEqual(output, expected_output)
+
+    def test_infer_mapping_userdata_child(self):
+        component = self._get_test_component('test_008_infer_mapping_userdata_child')
+        output = component.infer_mapping()
+        # child job can't have user data
+        expected_output = {'id': 'id',
+                           'status': 'status'}
+        self.assertEqual(output, expected_output)
