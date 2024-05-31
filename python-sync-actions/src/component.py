@@ -235,7 +235,38 @@ class Component(ComponentBase):
 
         """
 
-        if path.path == '.':
+        def find_array_property_path(response_data: dict, result_arrays: list = None) -> list[dict] | None:
+            """
+            Travers all object and find the first array property, return None if there are two array properties
+            Args:
+                response_data:
+                result_arrays
+
+            Returns:
+
+            """
+            result_arrays = []
+            if isinstance(response_data, list):
+                return response_data
+
+            for k, data_value in response_data.items():
+                if isinstance(data_value, list):
+                    result_arrays.append(data_value)
+                if isinstance(data_value, dict):
+                    res = find_array_property_path(data_value)
+                    if res is not None:
+                        result_arrays.extend(res)
+
+            if len(result_arrays) == 1:
+                return result_arrays[0]
+            else:
+                return None
+
+        if not path:
+            # find array property in data, if there is only one
+            result = find_array_property_path(data)
+
+        elif path.path == '.':
             result = data
         else:
             keys = path.path.split(path.delimiter)
@@ -248,6 +279,8 @@ class Component(ComponentBase):
                 return [f"Path {path.path} not found in the response data"]
 
         # TODO: check if the result is list
+        if result is None:
+            return [f"No suitable array element found in the response data, please define the Data Selector path."]
         if not isinstance(result, list):
             element_name = 'root' if path.path == '.' else path.path
             return [f"The {element_name} element of the response is not a list, "
