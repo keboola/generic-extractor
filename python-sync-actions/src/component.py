@@ -276,15 +276,15 @@ class Component(ComponentBase):
                     value = value[key]
                 result = value
             except KeyError:
-                return [f"Path {path.path} not found in the response data"]
+                result = [f"Path {path.path} not found in the response data"]
 
         # TODO: check if the result is list
         if result is None:
-            return [f"No suitable array element found in the response data, please define the Data Selector path."]
+            result = ["No suitable array element found in the response data, please define the Data Selector path."]
         if not isinstance(result, list):
             element_name = 'root' if path.path == '.' else path.path
-            return [f"The {element_name} element of the response is not a list, "
-                    f"please change your Data Selector path to list"]
+            result = [f"The {element_name} element of the response is not a list, "
+                      f"please change your Data Selector path to list"]
 
         return result
 
