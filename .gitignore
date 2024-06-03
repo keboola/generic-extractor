@@ -13,4 +13,4 @@ vendor/
 /venv
 /python-sync-actions/src/test.py
 /python-sync-actions/data
-__pycache__
+__pycache__/

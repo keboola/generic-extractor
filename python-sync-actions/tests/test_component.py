@@ -79,6 +79,39 @@ class TestComponent(unittest.TestCase):
         expected_request_data = '{"parameter": "value"}'
         self.assertEqual(output['request']['data'], expected_request_data)
 
+    def test_009_empty_datafield(self):
+        component = self._get_test_component(self._testMethodName)
+        results, response, log, error_message = component.make_call()
+        expected_data = [
+            {
+                "id": "1.0",
+                "status": "first"
+            },
+            {
+                "id": "1.1",
+                "status": "page"
+            }
+        ]
+        self.assertEqual(results, expected_data)
+
+    def test_parse_data_null_datafield(self):
+        component = self._get_test_component('test_009_empty_datafield')
+        # test array of primitives
+        data = {"some_property": "asd",
+                "some_object": {"some_property": "asd"},
+                "data": [1, 2, 3]
+                }
+        results = component._parse_data(data, None)
+        self.assertEqual(results, data['data'])
+
+        # test array of arrays
+        data = {"some_property": "asd",
+                "some_object": {"some_property": "asd"},
+                "data": [[{"col": "a"}], [{"col": "b"}]]
+                }
+        results = component._parse_data(data, None)
+        self.assertEqual(results, data['data'])
+
 
 if __name__ == '__main__':
     unittest.main()

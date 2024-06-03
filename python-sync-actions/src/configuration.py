@@ -288,9 +288,13 @@ def build_api_request(configuration: dict) -> List[Tuple[ApiRequest, RequestCont
         if isinstance(data_field, dict):
             path = data_field.get('path')
             delimiter = data_field.get("delimiter", ".")
+            data_path = DataPath(path=path, delimiter=delimiter)
+        elif data_field is None:
+            data_path = None
         else:
             path = data_field or '.'
             delimiter = "."
+            data_path = DataPath(path=path, delimiter=delimiter)
 
         result_requests.append(
             (ApiRequest(method=method,
@@ -299,7 +303,7 @@ def build_api_request(configuration: dict) -> List[Tuple[ApiRequest, RequestCont
                         headers=endpoint_config.get('headers', {}),
                         query_parameters=endpoint_config.get('params', {}), ),
              request_content,
-             DataPath(path=path, delimiter=delimiter)))
+             data_path))
 
     return result_requests
 
