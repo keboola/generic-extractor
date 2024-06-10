@@ -288,6 +288,45 @@ class Component(ComponentBase):
 
         return result
 
+    def _add_page_params(self, job: Configuration, query_parameters: dict) -> dict:
+        """
+        Add page parameters to the query parameters
+        Args:
+            job: job configuration
+            query_parameters: query parameters
+
+        Returns:
+            query_parameters: updated query parameters
+        """
+
+        paginator = {}
+
+        if job.api.pagination:
+            paginator_params = job.api.pagination.get(job.request_parameters.scroller)
+            if not paginator_params:
+                raise UserException(f"Paginator '{job.request_parameters.scroller}' not found in the configuration.")
+
+            if paginator_params.get("method") == "offset":
+                if paginator_params.get("firstPageParams", True):
+                    paginator[paginator_params.get("offsetParam", "offset")] = paginator_params.get("offset", 0)
+                    paginator[paginator_params.get("limitParam", "limit")] = paginator_params.get("limit")
+
+            elif paginator_params.get("method") == "pagenum":
+                if paginator_params.get("firstPageParams"):
+                    paginator[paginator_params.get("pageParam", "page")] = paginator_params.get("firstPage", 1)
+
+                    if paginator_params.get("limit"):
+                        paginator[paginator_params.get("limitParam", "limit")] = paginator_params.get("limit")
+
+            if paginator_params.get("offsetFromJob"):
+                for key, value in paginator.items():
+                    if key not in query_parameters:
+                        query_parameters[key] = value
+            else:
+                query_parameters.update(paginator)
+
+        return query_parameters
+
     def make_call(self) -> tuple[list, any, str, str]:
         """
         Make call to the API
@@ -332,6 +371,9 @@ class Component(ComponentBase):
             ssl_verify = api_cfg.ssl_verification
             timeout = api_cfg.timeout
             # additional_params = self._build_request_parameters(additional_params_cfg)
+
+            query_parameters = self._add_page_params(job, query_parameters)
+
             request_parameters = {'params': query_parameters,
                                   'headers': new_headers,
                                   'verify': ssl_verify,
