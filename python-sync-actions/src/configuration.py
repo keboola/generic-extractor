@@ -64,6 +64,12 @@ class Authentication(ConfigurationBase):
 
 
 @dataclass
+class Pagination(ConfigurationBase):
+    type: str
+    parameters: dict = field(default_factory=dict)
+
+
+@dataclass
 class ApiConfig(ConfigurationBase):
     base_url: str
     default_query_parameters: dict = field(default_factory=dict)
@@ -85,6 +91,7 @@ class ApiRequest(ConfigurationBase):
     continue_on_failure: bool = False
     nested_job: dict = field(default_factory=dict)
     scroller: str = None
+    pagination: Pagination = None
 
 
 @dataclass

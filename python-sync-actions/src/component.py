@@ -18,6 +18,7 @@ from actions.mapping import infer_mapping
 from configuration import Configuration, ConfigHelpers
 from http_generic.auth import AuthMethodBuilder, AuthBuilderError
 from http_generic.client import GenericHttpClient, HttpClientError
+from http_generic.pagination import PaginationBuilder
 from placeholders_utils import PlaceholdersUtils
 
 MAX_CHILD_CALLS = 20
@@ -299,31 +300,22 @@ class Component(ComponentBase):
             query_parameters: updated query parameters
         """
 
-        paginator = {}
+        if not job.api.pagination:
+            return query_parameters
 
-        if job.api.pagination:
-            paginator_params = job.api.pagination.get(job.request_parameters.scroller)
-            if not paginator_params:
-                raise UserException(f"Paginator '{job.request_parameters.scroller}' not found in the configuration.")
+        paginator_config = job.api.pagination.get(job.request_parameters.scroller)
+        if not paginator_config:
+            raise UserException(f"Paginator '{job.request_parameters.scroller}' not found in the configuration.")
 
-            if paginator_params.get("method") == "offset":
-                if paginator_params.get("firstPageParams", True):
-                    paginator[paginator_params.get("offsetParam", "offset")] = paginator_params.get("offset", 0)
-                    paginator[paginator_params.get("limitParam", "limit")] = paginator_params.get("limit")
+        paginaton_method = PaginationBuilder.get_paginator(paginator_config.get("method"))
+        paginator_params = paginaton_method.get_page_params(paginator_config)
 
-            elif paginator_params.get("method") == "pagenum":
-                if paginator_params.get("firstPageParams"):
-                    paginator[paginator_params.get("pageParam", "page")] = paginator_params.get("firstPage", 1)
-
-                    if paginator_params.get("limit"):
-                        paginator[paginator_params.get("limitParam", "limit")] = paginator_params.get("limit")
-
-            if paginator_params.get("offsetFromJob"):
-                for key, value in paginator.items():
-                    if key not in query_parameters:
-                        query_parameters[key] = value
-            else:
-                query_parameters.update(paginator)
+        if paginator_config.get("offsetFromJob"):
+            for key, value in paginator_params.items():
+                if key not in query_parameters:
+                    query_parameters[key] = value
+        else:
+            query_parameters.update(paginator_params)
 
         return query_parameters
 
