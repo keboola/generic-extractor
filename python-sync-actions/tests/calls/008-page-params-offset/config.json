@@ -1,0 +1,70 @@
+{
+  "storage": {},
+  "parameters": {
+        "__SELECTED_JOB": "0",
+
+  "config": {
+    "jobs": [
+      {
+        "__NAME": "orders",
+        "endpoint": "008-page-params-offset/orders",
+        "method": "GET",
+        "dataType": "",
+        "dataField": "nested.orders",
+        "scroller": "pagenumber"
+      }
+    ],
+    "test": "test-value",
+    "concat": {
+      "function": "concat",
+      "args": [
+        "hello",
+        "-world"
+      ]
+    },
+    "debug": false,
+    "outputBucket": "in.c-",
+    "incrementalOutput": false,
+    "key": "asdfadsfadsf",
+    "__AUTH_METHOD": "basic",
+    "username": "name",
+    "#password": "pass"
+  },
+  "api": {
+    "baseUrl": "http://mock-server:80/",
+    "authentication": {
+      "type": "basic"
+    },
+    "pagination": {
+      "method": "multiple",
+      "scrollers": {
+        "pagenumber": {
+          "method": "offset",
+          "limit": 100,
+          "limitParam": "limit",
+          "offsetParam": "offset",
+          "firstPageParams": true,
+          "offset": 0
+        }
+      }
+    }
+  },
+  "http": {
+    "maxRetries": 10,
+    "codes": [
+      500,
+      502,
+      503,
+      504,
+      408,
+      420,
+      429
+    ]
+  }
+},
+  "action": "test_request",
+  "image_parameters": {
+  },
+  "authorization": {
+  }
+}
