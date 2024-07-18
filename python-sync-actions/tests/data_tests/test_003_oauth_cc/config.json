@@ -81,8 +81,7 @@
           "dataField": {
             "path": ".",
             "delimiter": "."
-          },
-          "scroller": "events"
+          }
         }
       ],
       "includes": {

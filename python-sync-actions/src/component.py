@@ -18,6 +18,7 @@ from actions.mapping import infer_mapping
 from configuration import Configuration, ConfigHelpers
 from http_generic.auth import AuthMethodBuilder, AuthBuilderError
 from http_generic.client import GenericHttpClient, HttpClientError
+from http_generic.pagination import PaginationBuilder
 from placeholders_utils import PlaceholdersUtils
 
 MAX_CHILD_CALLS = 20
@@ -288,6 +289,36 @@ class Component(ComponentBase):
 
         return result
 
+    def _add_page_params(self, job: Configuration, query_parameters: dict) -> dict:
+        """
+        Add page parameters to the query parameters
+        Args:
+            job: job configuration
+            query_parameters: query parameters
+
+        Returns:
+            query_parameters: updated query parameters
+        """
+
+        if not job.api.pagination:
+            return query_parameters
+
+        paginator_config = job.api.pagination.get(job.request_parameters.scroller)
+        if not paginator_config:
+            raise UserException(f"Paginator '{job.request_parameters.scroller}' not found in the configuration.")
+
+        paginaton_method = PaginationBuilder.get_paginator(paginator_config.get("method"))
+        paginator_params = paginaton_method.get_page_params(paginator_config)
+
+        if paginator_config.get("offsetFromJob"):
+            for key, value in paginator_params.items():
+                if key not in query_parameters:
+                    query_parameters[key] = value
+        else:
+            query_parameters.update(paginator_params)
+
+        return query_parameters
+
     def make_call(self) -> tuple[list, any, str, str]:
         """
         Make call to the API
@@ -332,6 +363,9 @@ class Component(ComponentBase):
             ssl_verify = api_cfg.ssl_verification
             timeout = api_cfg.timeout
             # additional_params = self._build_request_parameters(additional_params_cfg)
+
+            query_parameters = self._add_page_params(job, query_parameters)
+
             request_parameters = {'params': query_parameters,
                                   'headers': new_headers,
                                   'verify': ssl_verify,

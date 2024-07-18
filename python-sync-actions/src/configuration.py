@@ -64,10 +64,17 @@ class Authentication(ConfigurationBase):
 
 
 @dataclass
+class Pagination(ConfigurationBase):
+    type: str
+    parameters: dict = field(default_factory=dict)
+
+
+@dataclass
 class ApiConfig(ConfigurationBase):
     base_url: str
     default_query_parameters: dict = field(default_factory=dict)
     default_headers: dict = field(default_factory=dict)
+    pagination: dict = field(default_factory=dict)
     authentication: Authentication = None
     retry_config: RetryConfig = field(default_factory=RetryConfig)
     ssl_verification: bool = True
@@ -83,6 +90,8 @@ class ApiRequest(ConfigurationBase):
     query_parameters: dict = field(default_factory=dict)
     continue_on_failure: bool = False
     nested_job: dict = field(default_factory=dict)
+    scroller: str = None
+    pagination: Pagination = None
 
 
 @dataclass
@@ -183,8 +192,14 @@ def convert_to_v2(configuration: dict) -> list[Configuration]:
     default_headers = _remove_auth_from_dict(default_headers_org, _return_ui_params(configuration))
     default_query_parameters = _remove_auth_from_dict(default_query_parameters_org, _return_ui_params(configuration))
 
+    pagination = {}
+    if api_json.get('pagination', {}).get('scrollers'):
+        pagination = api_json.get('pagination', {}).get('scrollers')
+    elif api_json.get('pagination'):
+        pagination['common'] = api_json.get('pagination')
+
     api_config = ApiConfig(base_url=base_url, default_headers=default_headers,
-                           default_query_parameters=default_query_parameters)
+                           default_query_parameters=default_query_parameters, pagination=pagination)
 
     api_config.retry_config = build_retry_config(configuration)
     api_config.authentication = AuthMethodConverter.convert(configuration)
@@ -285,6 +300,8 @@ def build_api_request(configuration: dict) -> List[Tuple[ApiRequest, RequestCont
 
         placeholders = endpoint_config.get('placeholders', {})
 
+        scroller = endpoint_config.get('scroller', 'common')
+
         if isinstance(data_field, dict):
             path = data_field.get('path')
             delimiter = data_field.get("delimiter", ".")
@@ -301,7 +318,8 @@ def build_api_request(configuration: dict) -> List[Tuple[ApiRequest, RequestCont
                         endpoint_path=endpoint_path,
                         placeholders=placeholders,
                         headers=endpoint_config.get('headers', {}),
-                        query_parameters=endpoint_config.get('params', {}), ),
+                        query_parameters=endpoint_config.get('params', {}),
+                        scroller=scroller),
              request_content,
              data_path))
 
