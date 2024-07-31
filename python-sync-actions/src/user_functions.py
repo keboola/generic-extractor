@@ -118,7 +118,7 @@ class UserFunctions:
 
         """
 
-        command = f"php -r 'echo strtotime(\"{string}\", {base_time or int(time.time())});'"
+        command = f"php -r 'echo strtotime(\"{string}\", {base_time or 'time()'});'"
         stdout, stderr = perform_shell_command(command, 'strotime function')
 
         return int(stdout)
