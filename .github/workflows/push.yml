@@ -106,7 +106,7 @@ jobs:
           target_image: ${{ env.APP_IMAGE}}
           tag_as_latest: true
       - name: Python Tests
-        run: docker-compose run --rm ci python -m unittest discover /code/python-sync-actions
+        run: docker-compose run --rm ci python -v -m unittest discover /code/python-sync-actions
       - name: Run Python Functional Tests
         working-directory: ./python-sync-actions
         run: docker compose run test-calls

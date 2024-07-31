@@ -32,8 +32,7 @@ class TestFunctionTemplates(unittest.TestCase):
             ]
         }
         expected = '2020-12-30'
-        result = self.config_helpers.perform_custom_function('test', function_cfg, {})
-        self.assertEqual(expected, result)
+        self.execute_function_test(function_cfg, expected)
 
     @freeze_time("2021-01-01")
     def test_date_strtotime_timestamp(self):
@@ -53,6 +52,17 @@ class TestFunctionTemplates(unittest.TestCase):
             ]
         }
         expected = '2020-12-30 00:00:00'
+        self.execute_function_test(function_cfg, expected)
+
+    @freeze_time("2021-01-01")
+    def test_date_empty_timestamp(self):
+        function_cfg = {
+            "function": "date",
+            "args": [
+                "Y-m-d H:i:s"
+            ]
+        }
+        expected = '2021-01-01 00:00:00'
         self.execute_function_test(function_cfg, expected)
 
     @freeze_time("2021-01-01")
@@ -157,6 +167,28 @@ class TestFunctionTemplates(unittest.TestCase):
             ]
         }
         expected = 1608854400
+        self.execute_function_test(function_cfg, expected)
+
+    @freeze_time("2021-01-01")
+    def test_strtotime_empty_base_time(self):
+        function_cfg = {
+            "function": "strtotime",
+            "args": [
+                "now"
+            ]
+        }
+        expected = 1609459200
+        self.execute_function_test(function_cfg, expected)
+
+    @freeze_time("2021-01-01")
+    def test_strtotime_empty_base_time_before_days(self):
+        function_cfg = {
+            "function": "strtotime",
+            "args": [
+                "-2 days"
+            ]
+        }
+        expected = 1609286400
         self.execute_function_test(function_cfg, expected)
 
     def test_concat_ws(self):
