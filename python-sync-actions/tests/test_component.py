@@ -70,6 +70,8 @@ class TestComponent(unittest.TestCase):
         self.assertEqual(output['request']['data'], expected_request_data)
         # url params are dropped
         self.assertEqual(output['request']['url'], 'http://private-834388-extractormock.apiary-mock.com/post')
+        # correct content type
+        self.assertEqual(output['request']['headers']['Content-Type'], 'application/json')
 
     def test_006_post_fail(self):
         component = self._get_test_component(self._testMethodName)
@@ -80,6 +82,20 @@ class TestComponent(unittest.TestCase):
 
         expected_request_data = '{"parameter": "value"}'
         self.assertEqual(output['request']['data'], expected_request_data)
+
+    def test_006_post_form(self):
+        component = self._get_test_component(self._testMethodName)
+        output = component.test_request()
+        expected_data = [{'id': '123', 'status': 'post'}, {'id': 'potato', 'status': 'mashed'}]
+        self.assertEqual(output['response']['data'], expected_data)
+        expected_request_data = 'parameter=value'
+        self.assertEqual(output['request']['data'], expected_request_data)
+        # url params are dropped
+        self.assertEqual(output['request']['url'], 'http://private-834388-extractormock.apiary-mock.com/post')
+        # request method is POST
+        self.assertEqual(output['request']['method'], 'POST')
+        # correct content type
+        self.assertEqual(output['request']['headers']['Content-Type'], 'application/x-www-form-urlencoded')
 
     def test_009_empty_datafield(self):
         component = self._get_test_component(self._testMethodName)

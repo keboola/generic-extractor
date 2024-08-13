@@ -293,6 +293,9 @@ def build_api_request(configuration: dict) -> List[Tuple[ApiRequest, RequestCont
         method = endpoint_config.get('method', 'GET')
 
         request_content = build_request_content(method, endpoint_config.get('params', {}))
+        # use real method
+        if method.upper() == 'FORM':
+            method = 'POST'
 
         endpoint_path = endpoint_config.get('endpoint')
 
