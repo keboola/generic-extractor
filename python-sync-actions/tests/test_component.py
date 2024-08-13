@@ -68,6 +68,8 @@ class TestComponent(unittest.TestCase):
         self.assertEqual(output['response']['data'], expected_data)
         expected_request_data = '{"parameter": "value"}'
         self.assertEqual(output['request']['data'], expected_request_data)
+        # url params are dropped
+        self.assertEqual(output['request']['url'], 'http://private-834388-extractormock.apiary-mock.com/post')
 
     def test_006_post_fail(self):
         component = self._get_test_component(self._testMethodName)
