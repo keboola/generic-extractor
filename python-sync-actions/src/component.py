@@ -473,7 +473,10 @@ class Component(ComponentBase):
 
         body = None
         if response.request.body:
-            body = response.request.body.decode('utf-8')
+            if isinstance(response.request.body, bytes):
+                body = response.request.body.decode('utf-8')
+            else:
+                body = response.request.body
 
         secrets_to_hide = self._get_values_to_hide()
         filtered_response = self._deep_copy_and_replace_words(self._final_response, secrets_to_hide)
