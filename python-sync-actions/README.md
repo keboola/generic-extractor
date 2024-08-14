@@ -150,7 +150,7 @@ The above value is then available in contexts as:
 
 ## Development
 
-If required, change local data folder (the `CUSTOM_FOLDER` placeholder) path to your custom path in the docker-compose
+If required, change local data folder (the `CUSTOM_FOLDER` placeholder) path to your custom path in the docker compose
 file:
 
 ```yaml
@@ -164,14 +164,14 @@ Clone this repository, init the workspace and run the component with following c
 ```
 git clone repo_path my-new-component
 cd my-new-component
-docker-compose build
-docker-compose run --rm dev
+docker compose build
+docker compose run --rm dev
 ```
 
 Run the test suite and lint check using this command:
 
 ```
-docker-compose run --rm test
+docker compose run --rm test
 ```
 
 # Integration

@@ -293,6 +293,9 @@ def build_api_request(configuration: dict) -> List[Tuple[ApiRequest, RequestCont
         method = endpoint_config.get('method', 'GET')
 
         request_content = build_request_content(method, endpoint_config.get('params', {}))
+        # use real method
+        if method.upper() == 'FORM':
+            method = 'POST'
 
         endpoint_path = endpoint_config.get('endpoint')
 
@@ -313,12 +316,18 @@ def build_api_request(configuration: dict) -> List[Tuple[ApiRequest, RequestCont
             delimiter = "."
             data_path = DataPath(path=path, delimiter=delimiter)
 
+        # query params are supported only for GET requests
+        if request_content.content_type == ContentType.none:
+            query_params = endpoint_config.get('params', {})
+        else:
+            query_params = {}
+
         result_requests.append(
             (ApiRequest(method=method,
                         endpoint_path=endpoint_path,
                         placeholders=placeholders,
                         headers=endpoint_config.get('headers', {}),
-                        query_parameters=endpoint_config.get('params', {}),
+                        query_parameters=query_params,
                         scroller=scroller),
              request_content,
              data_path))
