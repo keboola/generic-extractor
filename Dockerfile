@@ -95,7 +95,7 @@ RUN pip install -r /tmp/requirements.txt
 
 # Install Node.js and set up symlinks
 RUN set -eux; \
-    NODE_VERSION="$(curl -fsSL https://nodejs.org/dist/latest/SHASUMS256.txt | head -n1 | awk '{ print $2 }' | awk -F - '{ print $2 }')" \
+    NODE_VERSION="v22.10.0" \
     ARCH= && dpkgArch="$(dpkg --print-architecture)"; \
     case "${dpkgArch##*-}" in \
         amd64) ARCH='x64';; \
