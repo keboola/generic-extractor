@@ -105,6 +105,16 @@ class TestCurl(unittest.TestCase):
         res = StuctureAnalyzer.dedupe_values(data)
         self.assertEqual(res, expected)
 
+    def test_list(self):
+        data = {"maxResults": 100, "startAt": 0, "total": 375, "values": [{"id": "12", "value":{ "name": "Max", "age": 25}},
+                                                                          {"id": "13", "value":{ "name": "Tom", "age": 30}},
+                                                                          {"id": "14", "value":{ "name": "John", "age": 35}}]}
+
+        expected = {'id': 'id', 'value.age': 'value_age', 'value.name': 'value_name'}
+        res = infer_mapping(data, max_level_nest_level=1)
+
+        self.assertEqual(res, expected)
+
     @freeze_time("2021-01-01")
     def test_infer_mapping_userdata(self):
         component = self._get_test_component('test_007_infer_mapping_userdata')
