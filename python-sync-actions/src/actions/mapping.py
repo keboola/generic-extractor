@@ -100,7 +100,7 @@ class StuctureAnalyzer:
         Infer first level Generic Extractor mapping from data sample.
         Args:
             node_hierarchy: sample data
-            primary_keys: optional list of columns to be used as primary keys=
+            primary_keys: optional list of columns to be used as primary keys
 
         Returns:
 
@@ -110,27 +110,42 @@ class StuctureAnalyzer:
         if not current_mapping:
             current_mapping = {}
         for key, value in node_hierarchy.items():
-            current_node: Node = value['node']
-            path_key = path_separator.join(current_node.path)
-            normalized_header_name = self.header_normalizer._normalize_column_name(current_node.header_name)  # noqa
-            match current_node.data_type:
-                case NodeType.SCALAR:
-                    if path_key in primary_keys:
-                        current_mapping[path_key] = MappingElements.primary_key_column(normalized_header_name)
-                    else:
-                        current_mapping[path_key] = normalized_header_name
+            if isinstance(value, dict):
+                current_node: Node = value['node']
+                path_key = path_separator.join(current_node.path)
+                normalized_header_name = self.header_normalizer._normalize_column_name(current_node.header_name)  # noqa
+                match current_node.data_type:
+                    case NodeType.SCALAR:
+                        if path_key in primary_keys:
+                            current_mapping[path_key] = MappingElements.primary_key_column(normalized_header_name)
+                        else:
+                            current_mapping[path_key] = normalized_header_name
 
-                case NodeType.DICT:
-                    if current_level <= max_level:
-                        self.__infer_mapping_from_structure_recursive(value['children'], primary_keys,
-                                                                      path_separator,
-                                                                      max_level, current_mapping,
-                                                                      current_level)
-                    else:
+                    case NodeType.DICT:
+                        if current_level <= max_level:
+                            self.__infer_mapping_from_structure_recursive(value['children'], primary_keys,
+                                                                          path_separator,
+                                                                          max_level, current_mapping,
+                                                                          current_level)
+                        else:
+                            current_mapping[path_key] = MappingElements.force_type_column(normalized_header_name)
+                    case _:
+                        # all other types including unknown map with forceType option
                         current_mapping[path_key] = MappingElements.force_type_column(normalized_header_name)
-                case _:
-                    # all other types including unknown map with forceType option
-                    current_mapping[path_key] = MappingElements.force_type_column(normalized_header_name)
+            elif isinstance(value, list):
+                # Handle list of dictionaries
+                if all(isinstance(item, dict) for item in value):
+                    for idx, item in enumerate(value):
+                        list_key = f"{key}[{idx}]"
+                        self.__infer_mapping_from_structure_recursive({list_key: item}, primary_keys,
+                                                                      path_separator, max_level,
+                                                                      current_mapping, current_level)
+                else:
+                    # Handle list of non-dictionary items
+                    current_mapping[key] = MappingElements.force_type_column(key)
+            else:
+                # Handle scalar values directly
+                current_mapping[key] = MappingElements.force_type_column(key)
         return current_mapping
 
 
@@ -194,6 +209,13 @@ def infer_mapping(data: list[dict],
 
     """
     analyzer = StuctureAnalyzer()
+
+    if not isinstance(data, list):
+        for _, item in data.items():
+            if isinstance(item, list):
+                data = item
+                break
+
     for row in data:
         analyzer.parse_row(row)
 

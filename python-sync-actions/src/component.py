@@ -5,10 +5,10 @@ Template Component main class.
 import copy
 import logging
 from io import StringIO
-from json import JSONDecodeError
 from typing import List
 
 import requests
+from requests.exceptions import JSONDecodeError
 from keboola.component.base import ComponentBase, sync_action
 from keboola.component.exceptions import UserException
 
