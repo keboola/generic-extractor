@@ -352,19 +352,19 @@ def build_request_content(method: Literal['GET', 'POST', 'FORM'], params: dict) 
 
 def _find_api_key_location(dictionary):
     position = None
-    key = None
+    final_key = None
 
     for key, val in dictionary.get('defaultOptions', {}).get('params', {}).items():
         if val == {'attr': '#__AUTH_TOKEN'}:
-            key = key
+            final_key = key
             position = 'query'
 
     for key, val in dictionary.get('headers', {}).items():
         if val == {'attr': '#__AUTH_TOKEN'}:
-            key = key
+            final_key = key
             position = 'headers'
 
-    return position, key
+    return position, final_key
 
 
 class AuthMethodConverter:
