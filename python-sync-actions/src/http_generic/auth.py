@@ -167,7 +167,10 @@ class ApiKey(AuthMethodBase, AuthBase):
             r.headers[self.key] = f"{self.token}"
 
         elif self.position == 'query':
-            r.url = f"{r.url}?{urlencode({self.key: self.token})}"
+            if '?' in r.url:
+                r.url = f"{r.url}&{urlencode({self.key: self.token})}"
+            else:
+                r.url = f"{r.url}?{urlencode({self.key: self.token})}"
         else:
             raise AuthBuilderError(f"Unsupported position {self.position} for API Key auth method")
         return r
