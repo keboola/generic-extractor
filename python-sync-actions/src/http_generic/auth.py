@@ -3,7 +3,7 @@ import json
 import re
 from abc import ABC, abstractmethod
 from typing import Callable, Union, Dict, Literal
-from urllib.parse import urlencode
+from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 
 import requests
 from requests import auth
@@ -167,7 +167,12 @@ class ApiKey(AuthMethodBase, AuthBase):
             r.headers[self.key] = f"{self.token}"
 
         elif self.position == 'query':
-            r.url = f"{r.url}?{urlencode({self.key: self.token})}"
+            parsed_url = urlparse(r.url)
+            query_params = parse_qs(parsed_url.query)
+            query_params.update({self.key: self.token})
+            new_query = urlencode(query_params, doseq=True)
+            r.url = urlunparse(parsed_url._replace(query=new_query))
+
         else:
             raise AuthBuilderError(f"Unsupported position {self.position} for API Key auth method")
         return r
