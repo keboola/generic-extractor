@@ -90,19 +90,19 @@ class UserFunctions:
 
     def hash(self, algorithm, message):
         """
-            Execute PHP hash function
-            Args:
-                algorithm:
-                message:
+        Execute PHP hash function
+        Args:
+            algorithm:
+            message:
 
-            Returns:
+        Returns:
 
-            """
+        """
 
-            command = f"php -r 'echo hash(\"{algorithm}\", \"{message}\");'"
-            stdout, stderr = perform_shell_command(command, 'hash function')
+        command = f"php -r 'echo hash(\"{algorithm}\", \"{message}\");'"
+        stdout, stderr = perform_shell_command(command, 'hash function')
 
-            return stdout
+        return stdout
 
     def time(self):
         return int(time.time())
