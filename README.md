@@ -1029,6 +1029,7 @@ Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/func
 - `concat`: Concatenate its arguments into a single string
 - `implode`: Concatenate an array from the second argument, using glue string from the first arg
 - `ifempty`: Return first argument if is not empty, otherwise return second argument
+- `hash`: [See PHP documentation](https://www.php.net/manual/en/function.hash.php)
 
 ## Syntax
 
