@@ -493,16 +493,16 @@
         },
         {
             "name": "keboola/codebuilder",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-codebuilder.git",
-                "reference": "1e96e94995546f8cac6afaa8fb31ee5d9397f80a"
+                "reference": "44959f4dfd1b893a7f3bc3f5b827573fc417ec5f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-codebuilder/zipball/1e96e94995546f8cac6afaa8fb31ee5d9397f80a",
-                "reference": "1e96e94995546f8cac6afaa8fb31ee5d9397f80a",
+                "url": "https://api.github.com/repos/keboola/php-codebuilder/zipball/44959f4dfd1b893a7f3bc3f5b827573fc417ec5f",
+                "reference": "44959f4dfd1b893a7f3bc3f5b827573fc417ec5f",
                 "shasum": ""
             },
             "require": {
@@ -540,9 +540,9 @@
             ],
             "support": {
                 "issues": "https://github.com/keboola/php-codebuilder/issues",
-                "source": "https://github.com/keboola/php-codebuilder/tree/1.0.0"
+                "source": "https://github.com/keboola/php-codebuilder/tree/1.0.2"
             },
-            "time": "2021-01-15T15:41:41+00:00"
+            "time": "2024-11-20T10:34:26+00:00"
         },
         {
             "name": "keboola/csv",
@@ -5320,13 +5320,13 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": ">=7.4",
         "ext-json": "*"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }
