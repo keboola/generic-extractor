@@ -7,3 +7,4 @@ mock
 freezegun
 nested-lookup
 python-dateutil
+camel-tools
