@@ -4,6 +4,7 @@ import requests
 from keboola.http_client import HttpClient
 from requests.adapters import HTTPAdapter
 from requests.exceptions import HTTPError, InvalidJSONError, ConnectionError
+import urllib.parse as urlparse
 from urllib3 import Retry
 
 from http_generic.auth import AuthMethodBase
@@ -62,9 +63,20 @@ class GenericHttpClient(HttpClient):
             message = f'Request "{method}: {endpoint_path}" failed with the following error: {e}'
             raise HttpClientError(message, resp) from e
 
-    def build_url(self, base_url, endpoint_path):
-        self.base_url = base_url
-        return self._build_url(endpoint_path)
+    def build_url(self, base_url, endpoint_path, is_absolute_path=False):
+        url_path = str(endpoint_path).strip() if endpoint_path is not None else ''
+
+        if not url_path:
+            url = base_url
+
+        elif not is_absolute_path:
+            full_path = urlparse.urljoin(base_url, url_path)
+            url = urlparse.quote(full_path, safe="/()=<>-&")
+
+        else:
+            url = urlparse.quote(url_path, safe="/()=<>-&")
+
+        return url
 
     # override to continue on retry error
     def _requests_retry_session(self, session=None):
