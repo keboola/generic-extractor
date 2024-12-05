@@ -1,7 +1,7 @@
 keboola.component==1.6.8
 dataconf==3.3.0
 keboola.http-client==1.0.1
-keboola.utils==1.1.2
+keboola.utils==1.1.0
 keboola.json-to-csv==0.0.12
 mock==5.1.0
 freezegun==1.5.1
