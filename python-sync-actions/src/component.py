@@ -279,13 +279,8 @@ class Component(ComponentBase):
             except KeyError:
                 result = [f"Path {path.path} not found in the response data"]
 
-        # TODO: check if the result is list
         if result is None:
             result = ["No suitable array element found in the response data, please define the Data Selector path."]
-        if not isinstance(result, list):
-            element_name = 'root' if path.path == '.' else path.path
-            result = [f"The {element_name} element of the response is not a list, "
-                      f"please change your Data Selector path to list"]
 
         return result
 
@@ -390,7 +385,11 @@ class Component(ComponentBase):
             current_results = self._parse_data(self._final_response.json(), job.data_path)
 
             if config_index == len(self._configurations) - 1:
-                final_results.extend(current_results)
+                if isinstance(current_results, list):
+                    final_results.extend(current_results)
+                else:
+                    final_results.append(current_results)
+
             else:
                 if isinstance(current_results, list):
                     # limit the number of calls to 10 because of timeout
