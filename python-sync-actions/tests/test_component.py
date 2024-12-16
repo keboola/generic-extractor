@@ -3,6 +3,7 @@ import unittest
 from pathlib import Path
 
 from component import Component
+from configuration import DataPath
 
 
 class TestComponent(unittest.TestCase):
@@ -128,6 +129,16 @@ class TestComponent(unittest.TestCase):
                 "data": [[{"col": "a"}], [{"col": "b"}]]
                 }
         results = component._parse_data(data, None)
+        self.assertEqual(results, data['data'])
+
+    def test_parse_object_instead_of_list(self):
+        component = self._get_test_component('test_009_empty_datafield')
+        # test array of primitives
+        data = {"some_property": "asd",
+                "some_object": {"some_property": "asd"},
+                "data": {"id": 1, "name": "John"}
+                }
+        results = component._parse_data(data, DataPath("data"))
         self.assertEqual(results, data['data'])
 
 
