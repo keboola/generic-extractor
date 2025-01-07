@@ -158,10 +158,10 @@ def _return_ui_params(data) -> list[str]:
     return results
 
 
-def _remove_auth_from_dict(dictionary: dict, to_remove: list) -> dict:
+def _remove_auth_from_dict(dictionary: dict, to_remove: list, auth_method: str) -> dict:
     filtered_dict = {}
     for key, value in dictionary.items():
-        if isinstance(value, dict):
+        if isinstance(value, dict) and auth_method == 'bearer':
             if key != 'Authorization':
                 filtered_value = _remove_auth_from_dict(value, to_remove)
                 if filtered_value:
@@ -189,8 +189,11 @@ def convert_to_v2(configuration: dict) -> list[Configuration]:
     default_headers_org = api_json.get('http', {}).get('headers', {})
     default_query_parameters_org = api_json.get('http', {}).get('defaultOptions', {}).get('params', {})
 
-    default_headers = _remove_auth_from_dict(default_headers_org, _return_ui_params(configuration))
-    default_query_parameters = _remove_auth_from_dict(default_query_parameters_org, _return_ui_params(configuration))
+    auth_method = configuration.get('config').get('__AUTH_METHOD')
+
+    default_headers = _remove_auth_from_dict(default_headers_org, _return_ui_params(configuration), auth_method)
+    default_query_parameters = _remove_auth_from_dict(default_query_parameters_org, _return_ui_params(configuration),
+                                                      auth_method)
 
     pagination = {}
     if api_json.get('pagination', {}).get('scrollers'):
@@ -380,7 +383,7 @@ class AuthMethodConverter:
         auth_method = config_parameters.get('config', {}).get('__AUTH_METHOD', None)
         # or take it form the authentication section
         auth_method = auth_method or config_parameters.get('api', {}).get('authentication', {}).get('type')
-        if not auth_method:
+        if not auth_method or auth_method == 'custom':
             return None
 
         methods = {
