@@ -131,3 +131,70 @@ class TestCurl(unittest.TestCase):
         expected_output = {'id': 'id',
                            'status': 'status'}
         self.assertEqual(output, expected_output)
+
+    def test_types(self):
+        data = [[
+            {
+                'id': 'asdf',
+                'firstWorkingDay': '2024-07-16',
+                'workingDays': [
+                    {
+                        'day': 'monday'
+                    },
+                    {
+                        'day': 'tuesday'
+                    },
+                    {
+                        'day': 'wednesday'
+                    },
+                    {
+                        'day': 'thursday'
+                    },
+                    {
+                        'day': 'friday'
+                    }
+                ],
+                'teams': [
+                    {
+                        'name': 'Dream Team',
+                    }
+                ]
+            },
+            {
+                'id': 'asdf2',
+                'firstWorkingDay': '2024-07-16',
+                'workingDays': [
+                    {
+                        'day': 'monday'
+                    },
+                    {
+                        'day': 'tuesday'
+                    },
+                    {
+                        'day': 'wednesday'
+                    },
+                    {
+                        'day': 'thursday'
+                    },
+                    {
+                        'day': 'friday'
+                    }
+                ],
+                'teams': [
+                    {
+                        'name': 'Dream Team',
+                    }
+                ]
+            }]]
+
+        expected = {'firstWorkingDay': 'firstWorkingDay',
+                    'id': 'id',
+                    'teams': {'forceType': True,
+                              'mapping': {'destination': 'teams'},
+                              'type': 'column'},
+                    'workingDays': {'forceType': True,
+                                    'mapping': {'destination': 'workingDays'},
+                                    'type': 'column'}}
+        res = infer_mapping(data, max_level_nest_level=1)
+
+        self.assertEqual(res, expected)
