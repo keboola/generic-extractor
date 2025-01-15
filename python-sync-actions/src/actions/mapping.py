@@ -27,6 +27,10 @@ class StuctureAnalyzer:
 
     def parse_row(self, row: dict[str, Any]):
         current_path = []
+
+        if isinstance(row, list):
+            row = row[0]
+
         for name, value in row.items():
             self.analyzer.analyze_object(current_path, name, value)
 
