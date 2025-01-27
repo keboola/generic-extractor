@@ -1226,6 +1226,18 @@ or (with local source code and vendor copy)
 docker compose run --rm tests-local
 ``` 
 
+# mTLS
+1. `cd docker/keys` and then run `./genkeys.sh`
+2. ```
+    "api": {
+        "baseUrl": "https://server.local/",
+        "caCertificate": "conent of file rootCA.crt with \n at the end",
+        "#clientCertificate": "conent of file client.crt with \n at the end",
+        "#clientKey": "conent of file client.key with \n at the end"
+    }
+   ```
+3. restart nginx
+
 ## License
 
 MIT licensed, see [LICENSE](./LICENSE) file.
