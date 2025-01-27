@@ -14,3 +14,5 @@ vendor/
 /python-sync-actions/src/test.py
 /python-sync-actions/data
 __pycache__/
+docker/keys/*
+!docker/keys/genkeys.sh
