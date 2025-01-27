@@ -17,6 +17,7 @@ class Api
             ->children()
                 ->scalarNode('caCertificate')->cannotBeEmpty()->end()
                 ->scalarNode('clientCertificate')->cannotBeEmpty()->end()
+                ->scalarNode('clientKey')->cannotBeEmpty()->end()
             ->end();
         // @formatter:on
     }
