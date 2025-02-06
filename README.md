@@ -1226,18 +1226,69 @@ or (with local source code and vendor copy)
 docker compose run --rm tests-local
 ```
 
-# mTLS
-1. Run `cd docker/keys` and then `./genkeys.sh`. The script generates CA, server and client certificates
-    and also a config.json file with the following structure to be pasted into your own config.json:
+# Debugging mTLS support
+
+## Generating certificates
+
+Generate CA, server and client certificates:
+
+```
+# starting from project root
+cd docker/keys
+./genkeys.sh
+```
+
+The script also creates a `config.json` file with the following structure to be pasted into your own `config.json`:
+
+```
+"api": {
+    "baseUrl": "https://server.local/",
+    "caCertificate": "-- rootCA.crt --",
+    "#clientCertificate": "-- client.crt bundled with client.key --",
+}
+```
+
+## Testing in PHP
+
+```
+to be written…
+```
+
+## Testing in Python
+
+1. Run local nginx server:
     ```
-    "api": {
-        "baseUrl": "https://server.local/",
-        "caCertificate": "-- rootCA.crt --",
-        "#clientCertificate": "-- client.crt bundled with client.key --",
+    # starting from project root
+    cd python-sync-actions
+    docker compose up server.local
+    ```
+1. Create a `config.json` file in `python-sync-actions/data` with the following content:
+    ```
+    {
+        "parameters": {
+            "__SELECTED_JOB": "0",
+            "config": {
+                "jobs": [
+                    {
+                        "__NAME": "mTLS check",
+                        "endpoint": "",
+                        "method": "GET"
+                    }
+                ]
+            },
+            "api": {
+            }
+        }
     }
     ```
-1. Restart nginx
+1. Paste the `"api"` section generated in the `Generate certificates section` into the newly created config file.
+1. Run the python-sync-actions component:
+    ```
+    cd python-sync-actions
+    docker compose up dev
+    ```
 
-## License
+
+# License
 
 MIT licensed, see [LICENSE](./LICENSE) file.
