@@ -4,22 +4,22 @@ Template Component main class.
 """
 import copy
 import logging
+import tempfile
 from io import StringIO
-from typing import List
-
-import requests
-from requests.exceptions import JSONDecodeError
-from keboola.component.base import ComponentBase, sync_action
-from keboola.component.exceptions import UserException
+from typing import Any
 
 import configuration
+import requests
 from actions.curl import build_job_from_curl
 from actions.mapping import infer_mapping
-from configuration import Configuration, ConfigHelpers
-from http_generic.auth import AuthMethodBuilder, AuthBuilderError
+from configuration import ConfigHelpers, Configuration
+from http_generic.auth import AuthBuilderError, AuthMethodBuilder
 from http_generic.client import GenericHttpClient, HttpClientError
 from http_generic.pagination import PaginationBuilder
+from keboola.component.base import ComponentBase, sync_action
+from keboola.component.exceptions import UserException
 from placeholders_utils import PlaceholdersUtils
+from requests.exceptions import JSONDecodeError
 
 MAX_CHILD_CALLS = 20
 
@@ -59,7 +59,7 @@ class Component(ComponentBase):
 
         logging.info("Component initialized")
 
-        self._configurations: List[Configuration] = None
+        self._configurations: list[Configuration] = None
         self._configuration: Configuration = None
         self._client: GenericHttpClient = None
         self._parent_params = {}
@@ -236,7 +236,7 @@ class Component(ComponentBase):
 
         """
 
-        def find_array_property_path(response_data: dict, result_arrays: list = None) -> list[dict] | None:
+        def find_array_property_path(response_data: dict, result_arrays: list | None = None) -> list[dict] | None:
             """
             Travers all object and find the first array property, return None if there are two array properties
             Args:
@@ -314,7 +314,7 @@ class Component(ComponentBase):
 
         return query_parameters
 
-    def make_call(self) -> tuple[list, any, str, str]:
+    def make_call(self) -> tuple[list, Any, str, str]:
         """
         Make call to the API
         Returns:
@@ -355,16 +355,35 @@ class Component(ComponentBase):
             # build additional parameters
             query_parameters = {**api_cfg.default_query_parameters.copy(), **request_cfg.query_parameters.copy()}
             query_parameters = self._conf_helpers.fill_in_user_parameters(query_parameters, user_params)
-            ssl_verify = api_cfg.ssl_verification
             timeout = api_cfg.timeout
             # additional_params = self._build_request_parameters(additional_params_cfg)
 
             query_parameters = self._add_page_params(job, query_parameters)
 
-            request_parameters = {'params': query_parameters,
-                                  'headers': new_headers,
-                                  'verify': ssl_verify,
-                                  'timeout': timeout}
+            # if user provided CA certificate or client certificate & key, those will be written to a temp file and used
+            if not api_cfg.ca_cert:
+                ca_cert_file = ""
+            else:
+                with tempfile.NamedTemporaryFile("w", delete=False) as cafp:
+                    ca_cert_file = cafp.name
+                    cafp.write(api_cfg.ca_cert)
+
+            if not api_cfg.client_cert_key:
+                client_cert_key_file = ""
+            else:
+                with tempfile.NamedTemporaryFile("w", delete=False) as ccfp:
+                    client_cert_key_file = ccfp.name
+                    ccfp.write(api_cfg.client_cert_key)
+
+            verify = ca_cert_file if ca_cert_file else api_cfg.ssl_verify
+
+            request_parameters = {
+                "params": query_parameters,
+                "headers": new_headers,
+                "timeout": timeout,
+                "verify": verify,
+                "cert": client_cert_key_file,
+            }
 
             if job.request_content.content_type == configuration.ContentType.json:
                 request_parameters['json'] = job.request_content.body
@@ -374,13 +393,15 @@ class Component(ComponentBase):
             row_path = job.request_parameters.endpoint_path
 
             if job.request_parameters.placeholders:
-                placeholders = PlaceholdersUtils.get_params_for_child_jobs(job.request_parameters.placeholders,
-                                                                           self._parent_results, self._parent_params)
+                placeholders = PlaceholdersUtils.get_params_for_child_jobs(
+                    job.request_parameters.placeholders, self._parent_results, self._parent_params
+                )
                 self._parent_params = placeholders[0]
                 row_path = self._fill_placeholders(placeholders, job.request_parameters.endpoint_path)
 
-            self._final_response = self._client.send_request(method=job.request_parameters.method,
-                                                             endpoint_path=row_path, **request_parameters)
+            self._final_response = self._client.send_request(
+                method=job.request_parameters.method, endpoint_path=row_path, **request_parameters
+            )
 
             current_results = self._parse_data(self._final_response.json(), job.data_path)
 

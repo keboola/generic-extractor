@@ -1,0 +1,9 @@
+keboola.component
+dataconf
+keboola.http-client
+keboola.utils
+keboola.json-to-csv==0.0.12
+mock==5.1.0
+freezegun==1.5.1
+nested-lookup==0.2.25
+python-dateutil==2.9.0.post0

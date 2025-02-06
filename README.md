@@ -29,7 +29,7 @@ Example:
 
 ```
 https://yourDomain.zendesk.com/api/v2/
-```   
+```
 
 -- OR --
 
@@ -148,7 +148,7 @@ Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/conf
 - **authentication.type**: `query`
 - **authentication.query.apiKey**: `{"attr": "apiKey"}`
     - this will look for the *apiKey* query parameter value in the config attribute named *apiKey*
-- **authentication.query.sig**: 
+- **authentication.query.sig**:
     ```
     {
         "function": "md5",
@@ -169,7 +169,7 @@ Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/conf
             }
         ]
     }
-    ```   
+    ```
     - this will generate a *sig* parameter value from MD5 of merged configuration table attributes *apiKey* and *secret*, followed by current *time()* at the time of the request (time() being the PHP function)
     - Allowed functions are listed below in the *User functions* section
     - If you're using any config parameter by using `"attr": "parameterName"`, it has to be identical string to the one in the actual config, including eventual `#` if KBC Docker's encryption is used.
@@ -468,7 +468,7 @@ Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/conf
     - sets which query parameter should contain the limit value (default to `limit`)
 - **pagination.offsetParam**(optional)
     - sets which query parameter should contain the offset value (default to `offset`)
-        
+
         ```
             "api": {
                 "pagination": {
@@ -478,7 +478,7 @@ Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/conf
                     "offsetParam": "offset"
                 }
             }
-        ``` 
+        ```
 
 - **pagination.firstPageParams**(optional)
     - Whether or not include limit and offset params in the first request (default to `true`)
@@ -769,7 +769,7 @@ Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/conf
                 }
             ]
         }
-        ```    
+        ```
     - **dataType**: Type of data returned by the endpoint. It also describes a table name, where the results will be stored
     - **dataField**: Allows to override which field of the response will be exported.
         - If there's multiple arrays in the response "root" the extractor may not know which array to export and fail
@@ -842,7 +842,7 @@ Moved to [new docs](https://developers.keboola.com/extend/generic-extractor/conf
                 "data": {"object": "can't really parse this!"}
             }
         ]
-        ```  
+        ```
 
         - To be able to work with such response, set `"responseFilter": "data"` - it should be a path within each object of the response array, **not** including the key of the response array
         - To filter values within nested arrays, use `"responseFilter": "data.array[].key"`
@@ -1218,25 +1218,25 @@ Best way to create and test new configurations is run extractor in docker contai
 # Running tests:
 ```
 docker compose run --rm tests
-``` 
+```
 
 or (with local source code and vendor copy)
 
 ```
 docker compose run --rm tests-local
-``` 
+```
 
 # mTLS
-1. `cd docker/keys` and then run `./genkeys.sh`
-2. ```
+1. Run `cd docker/keys` and then `./genkeys.sh`. The script generates CA, server and client certificates
+    and also a config.json file with the following structure to be pasted into your own config.json:
+    ```
     "api": {
         "baseUrl": "https://server.local/",
-        "caCertificate": "conent of file rootCA.crt with \n at the end",
-        "#clientCertificate": "conent of file client.crt with \n at the end",
-        "#clientKey": "conent of file client.key with \n at the end"
+        "caCertificate": "-- rootCA.crt --",
+        "#clientCertificate": "-- client.crt bundled with client.key --",
     }
-   ```
-3. restart nginx
+    ```
+1. Restart nginx
 
 ## License
 

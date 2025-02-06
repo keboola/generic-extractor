@@ -16,3 +16,4 @@ vendor/
 __pycache__/
 docker/keys/*
 !docker/keys/genkeys.sh
+!docker/keys/keys-to-config-json.py
