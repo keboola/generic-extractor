@@ -103,10 +103,6 @@ class GenericExtractor
             $defaults['cert'] = $this->api->getClientCertificateFile();
         }
 
-        if ($this->api->hasClientKey()) {
-            $defaults['ssl_key'] = $this->api->getClientKeyFile();
-        }
-
         $client = new RestClient(
             $this->logger,
             $this->api->getBaseUrl(),

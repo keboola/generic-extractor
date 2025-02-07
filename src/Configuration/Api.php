@@ -43,8 +43,6 @@ class Api
 
     private ?string $clientCertificate = null;
 
-    private ?string $clientKey = null;
-
     private float $connectTimeout = RestClient::DEFAULT_CONNECT_TIMEOUT;
 
     private float $requestTimeout = RestClient::DEFAULT_REQUEST_TIMEOUT;
@@ -55,7 +53,6 @@ class Api
         $this->auth = $this->createAuth($api, $configAttributes, $authorization);
         $this->caCertificate = $api['caCertificate'] ?? null;
         $this->clientCertificate = $api['#clientCertificate'] ?? null;
-        $this->clientKey = $api['#clientKey'] ?? null;
         $this->headers = new Headers($api, $configAttributes);
         if (!empty($api['pagination']) && is_array($api['pagination'])) {
             if (isset($api['pagination']['pages'])) {
@@ -216,11 +213,6 @@ class Api
         return $this->clientCertificate !== null;
     }
 
-    public function hasClientKey(): bool
-    {
-        return $this->clientKey !== null;
-    }
-
     public function getClientCertificate(): string
     {
         if (!$this->clientCertificate) {
@@ -230,26 +222,10 @@ class Api
         return $this->clientCertificate;
     }
 
-    public function getClientKey(): string
-    {
-        if (!$this->clientKey) {
-            throw new ApplicationException('Key "api.clientKey" is not configured.');
-        }
-
-        return $this->clientKey;
-    }
-
     public function getClientCertificateFile(): string
     {
         $filePath = '/tmp/generic-extractor-client-certificate-' . uniqid((string) rand(), true) . '.pem';
         file_put_contents($filePath, $this->getClientCertificate());
-        return $filePath;
-    }
-
-    public function getClientKeyFile(): string
-    {
-        $filePath = '/tmp/generic-extractor-client-key-' . uniqid((string) rand(), true) . '.pem';
-        file_put_contents($filePath, $this->getClientKey());
         return $filePath;
     }
 
