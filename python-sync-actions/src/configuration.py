@@ -77,8 +77,10 @@ class ApiConfig(ConfigurationBase):
     pagination: dict = field(default_factory=dict)
     authentication: Authentication = None
     retry_config: RetryConfig = field(default_factory=RetryConfig)
-    ssl_verification: bool = True
-    timeout: float = None
+    timeout: float | None = None
+    ssl_verify: bool = True  # toggles requests.[method](verify=True/False)
+    ca_cert: str = ""  # if provided, this value will be written to a temp file and used instead of ssl_verify
+    client_cert_key: str = ""  # client certificate bundled with private key (will also be written to a temp file)
 
 
 @dataclass
@@ -192,8 +194,9 @@ def convert_to_v2(configuration: dict) -> list[Configuration]:
     auth_method = configuration.get('config').get('__AUTH_METHOD')
 
     default_headers = _remove_auth_from_dict(default_headers_org, _return_ui_params(configuration), auth_method)
-    default_query_parameters = _remove_auth_from_dict(default_query_parameters_org, _return_ui_params(configuration),
-                                                      auth_method)
+    default_query_parameters = _remove_auth_from_dict(
+        default_query_parameters_org, _return_ui_params(configuration), auth_method
+    )
 
     pagination = {}
     if api_json.get('pagination', {}).get('scrollers'):
@@ -201,8 +204,25 @@ def convert_to_v2(configuration: dict) -> list[Configuration]:
     elif api_json.get('pagination'):
         pagination['common'] = api_json.get('pagination')
 
-    api_config = ApiConfig(base_url=base_url, default_headers=default_headers,
-                           default_query_parameters=default_query_parameters, pagination=pagination)
+    if ca_cert := api_json.get("caCertificate"):
+        ca_cert = ca_cert.strip()
+    else:
+        ca_cert = ""
+
+    if client_cert_key := api_json.get("#clientCertificate"):
+        client_cert_ley = client_cert_key.strip()
+    else:
+        client_cert_ley = ""
+
+    api_config = ApiConfig(
+        base_url=base_url,
+        default_headers=default_headers,
+        default_query_parameters=default_query_parameters,
+        pagination=pagination,
+        ssl_verify=api_json.get("ssl_verify", True),
+        ca_cert=ca_cert,
+        client_cert_key=client_cert_ley,
+    )
 
     api_config.retry_config = build_retry_config(configuration)
     api_config.authentication = AuthMethodConverter.convert(configuration)
