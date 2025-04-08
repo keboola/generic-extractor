@@ -64,6 +64,9 @@ class Extractor
     private function loadConfigFile(string $dataDir): array
     {
         $data = $this->loadJSONFile($dataDir, 'config.json');
+
+        $this->validateAllowedHosts($data);
+
         $processor = new Processor();
         try {
             $processor->processConfiguration(new ConfigFile(), $data);
@@ -285,6 +288,114 @@ class Extractor
         } catch (Throwable $e) {
             $this->logger->error('Unexpected error: ' . $e->getMessage());
             throw new ApplicationException('Unexpected error: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Builds complete URLs from base URL and endpoints
+     *
+     * @param string $baseUrl Base URL
+     * @param array $endpoints Array of endpoint configurations
+     * @return array List of complete URLs
+     */
+    private function buildUrls(string $baseUrl, array $endpoints): array
+    {
+        $urls = [$baseUrl];
+
+        foreach ($endpoints as $endpointData) {
+            $endpoint = $endpointData['endpoint'];
+
+            // Replace placeholders if present
+            if (!empty($endpointData['placeholders'])) {
+                foreach ($endpointData['placeholders'] as $placeholder => $value) {
+                    $endpoint = str_replace('{' . $placeholder . '}', $value, $endpoint);
+                }
+            }
+
+            // Add params if present
+            if (!empty($endpointData['params'])) {
+                $queryString = http_build_query($endpointData['params']);
+                $endpoint .= (strpos($endpoint, '?') === false ? '?' : '&') . $queryString;
+            }
+
+            $urls[] = rtrim($baseUrl, '/') . '/' . ltrim($endpoint, '/');
+        }
+
+        return $urls;
+    }
+
+    /**
+     * Validates URLs against whitelist
+     *
+     * @param array $config Configuration array
+     * @throws UserException If URL validation fails
+     */
+    private function validateAllowedHosts(array $config): void
+    {
+        if (!isset($config['image_parameters']['allowed_hosts'])) {
+            return;
+        }
+
+        if (empty($config['image_parameters']['allowed_hosts'])) {
+            throw new UserException('No allowed hosts configured');
+        }
+
+        $baseUrl = $config['parameters']['api']['baseUrl'];
+        $endpoints = $config['parameters']['config']['jobs'];
+        $urls = $this->buildUrls($baseUrl, $endpoints);
+
+        $allowedHosts = array_map(function ($host) {
+            return $host['host'];
+        }, $config['image_parameters']['allowed_hosts']);
+
+        foreach ($urls as $url) {
+            $isAllowed = false;
+            $parsedUrl = parse_url($url);
+            $urlPath = $parsedUrl['path'] ?? '';
+            $urlHost = $parsedUrl['host'] ?? '';
+            $urlPort = $parsedUrl['port'] ?? null;
+            $urlScheme = $parsedUrl['scheme'] ?? '';
+
+            foreach ($allowedHosts as $allowedHost) {
+                $parsedAllowedHost = parse_url($allowedHost);
+                $allowedHostPath = $parsedAllowedHost['path'] ?? '';
+                $allowedHostHost = $parsedAllowedHost['host'] ?? '';
+                $allowedHostPort = $parsedAllowedHost['port'] ?? null;
+                $allowedHostScheme = $parsedAllowedHost['scheme'] ?? '';
+
+                // Porovnání schématu
+                if ($urlScheme !== $allowedHostScheme) {
+                    continue;
+                }
+
+                // Porovnání portu
+                if ($urlPort !== $allowedHostPort) {
+                    continue;
+                }
+
+                // Porovnání hostu
+                if ($urlHost !== $allowedHostHost) {
+                    continue;
+                }
+
+                // Porovnání cesty
+                $normalizedUrlPath = rtrim($urlPath, '/');
+                $normalizedAllowedPath = rtrim($allowedHostPath, '/');
+
+                if ($normalizedAllowedPath === '') {
+                    $isAllowed = true;
+                    break;
+                }
+
+                if (strpos($normalizedUrlPath . '/', $normalizedAllowedPath . '/') === 0) {
+                    $isAllowed = true;
+                    break;
+                }
+            }
+
+            if (!$isAllowed) {
+                throw new UserException(sprintf('URL "%s" is not in the allowed hosts whitelist.', $url));
+            }
         }
     }
 }
