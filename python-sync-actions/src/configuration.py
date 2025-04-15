@@ -70,6 +70,11 @@ class Pagination(ConfigurationBase):
 
 
 @dataclass
+class ImageParameters(ConfigurationBase):
+    allowed_hosts: list[dict] = field(default_factory=list)
+
+
+@dataclass
 class ApiConfig(ConfigurationBase):
     base_url: str
     default_query_parameters: dict = field(default_factory=dict)
@@ -81,6 +86,7 @@ class ApiConfig(ConfigurationBase):
     ssl_verify: bool = True  # toggles requests.[method](verify=True/False)
     ca_cert: str = ""  # if provided, this value will be written to a temp file and used instead of ssl_verify
     client_cert_key: str = ""  # client certificate bundled with private key (will also be written to a temp file)
+    jobs: list[dict] = field(default_factory=list)
 
 
 @dataclass
@@ -188,6 +194,7 @@ def convert_to_v2(configuration: dict) -> list[Configuration]:
 
     api_json = configuration.get('api', {})
     base_url = api_json.get('baseUrl', '')
+    jobs = configuration.get('config', {}).get('jobs', [])
     default_headers_org = api_json.get('http', {}).get('headers', {})
     default_query_parameters_org = api_json.get('http', {}).get('defaultOptions', {}).get('params', {})
 
@@ -222,6 +229,7 @@ def convert_to_v2(configuration: dict) -> list[Configuration]:
         ssl_verify=api_json.get("ssl_verify", True),
         ca_cert=ca_cert,
         client_cert_key=client_cert_ley,
+        jobs=jobs
     )
 
     api_config.retry_config = build_retry_config(configuration)
