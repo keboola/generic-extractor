@@ -82,7 +82,11 @@ class Component(ComponentBase):
         self._configuration = self._configurations[0]
 
         # Validate allowed hosts
-        self._validate_allowed_hosts(self._configuration.api.base_url, self._configuration.api.jobs)
+        self._validate_allowed_hosts(
+            self.configuration.image_parameters.get('allowed_hosts', []),
+            self._configuration.api.base_url,
+            self._configuration.api.jobs
+            )
 
         # build authentication method
         auth_method = None

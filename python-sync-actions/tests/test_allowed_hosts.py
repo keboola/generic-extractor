@@ -300,6 +300,29 @@ class TestAllowedHosts(unittest.TestCase):
             base_url=config['parameters']['api']['baseUrl'],
             jobs=config['parameters']['config']['jobs'])
 
+    def test_validate_allowed_multiple_hosts_success(self):
+        """Test multiple hosts success"""
+        config = create_test_config(
+            base_url='https://example.com/api',
+            allowed_hosts=['https://example.com/api', 'https://sub.example.com/api']
+        )
+        self.component._validate_allowed_hosts(
+            allowed_hosts=config['image_parameters']['allowed_hosts'],
+            base_url=config['parameters']['api']['baseUrl'],
+            jobs=config['parameters']['config']['jobs'])
+
+    def test_validate_allowed_multiple_hosts_failure(self):
+        """Test multiple hosts failure"""
+        config = create_test_config(
+            base_url='https://example.com/api',
+            allowed_hosts=['https://example.com/api1', 'https://example.com/api2']
+        )
+        with self.assertRaises(UserException):
+            self.component._validate_allowed_hosts(
+                allowed_hosts=config['image_parameters']['allowed_hosts'],
+                base_url=config['parameters']['api']['baseUrl'],
+                jobs=config['parameters']['config']['jobs'])
+
 
 if __name__ == '__main__':
     unittest.main()
