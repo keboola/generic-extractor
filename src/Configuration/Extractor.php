@@ -337,7 +337,7 @@ class Extractor
         }
 
         if (empty($config['image_parameters']['allowed_hosts'])) {
-            throw new UserException('No allowed hosts configured');
+            return;
         }
 
         $baseUrl = $config['parameters']['api']['baseUrl'];
