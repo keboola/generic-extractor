@@ -1,0 +1,54 @@
+{
+    "parameters": {
+        "api": {
+            "baseUrl": "https:\/\/apimocha.com\/qaywsxedc\/",
+            "http": {
+                "retryHeader": "Retry-After",
+                "maxRetries": 10,
+                "codes": [
+                    408,
+                    420,
+                    429,
+                    500,
+                    502,
+                    503,
+                    504
+                ],
+                "connectTimeout": 30,
+                "requestTimeout": 300
+            }
+        },
+        "config": {
+            "outputBucket": "c-data",
+            "incrementalOutput": false,
+            "jobs": [
+                {
+                    "__NAME": "test",
+                    "endpoint": "test",
+                    "method": "GET",
+                    "dataType": "test",
+                    "dataField": {
+                        "path": ".",
+                        "delimiter": "."
+                    }
+                }
+            ],
+            "mappings": [],
+            "debug": true
+        },
+        "__SELECTED_JOB": "0"
+    },
+    "shared_code_row_ids": [],
+    "image_parameters": {
+        "allowed_hosts": [
+            {
+                "host": "https:\/\/apimocha.com\/qaywsxedc\/"
+            }
+        ]
+    },
+    "authorization": {
+        "context": "9382-extractor"
+    },
+    "action": "run",
+    "storage": {}
+}

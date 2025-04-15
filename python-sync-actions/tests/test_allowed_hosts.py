@@ -2,6 +2,8 @@
 Tests for allowed hosts validation
 """
 import unittest
+import os
+from pathlib import Path
 
 from keboola.component.exceptions import UserException
 from src.component import Component
@@ -40,6 +42,9 @@ class TestAllowedHosts(unittest.TestCase):
 
     def setUp(self):
         """Set up test cases"""
+        self.tests_dir = Path(__file__).absolute().parent.joinpath('data_tests').as_posix()
+        test_dir = os.path.join(self.tests_dir, "test_allowed_hosts_dummy")
+        os.environ['KBC_DATADIR'] = test_dir
         self.component = Component()
 
     def test_validate_allowed_hosts_exact_match(self):
