@@ -81,13 +81,8 @@ class Component(ComponentBase):
         self._configurations = configuration.convert_to_v2(self.configuration.parameters)
         self._configuration = self._configurations[0]
 
-        print("_____________________")
-        print(self._configuration.api.jobs)
-        print("_____________________")
-        print(self._configuration.api.base_url)
-        print("_____________________")
         # Validate allowed hosts
-        # self._validate_allowed_hosts()
+        self._validate_allowed_hosts(self._configuration.api.base_url, self._configuration.api.jobs)
 
         # build authentication method
         auth_method = None
@@ -120,82 +115,51 @@ class Component(ComponentBase):
                                          auth_method=auth_method
                                          )
 
-    def _validate_allowed_hosts(
-        self,
-        allowed_hosts: list,
-        base_url: str,
-        jobs: list[dict]
-    ) -> None:
+    def _validate_allowed_hosts(self, allowed_hosts: list[dict], base_url: str, jobs: list[dict]) -> None:
         """
-        Validates URLs against whitelist of allowed hosts
+        Validates URLs against a whitelist of allowed hosts.
 
         Args:
-            allowed_hosts: List of allowed hosts from image_parameters
-            base_url: Base URL from API configuration
-            jobs: List of job configurations containing endpoint_path, query_parameters and placeholders
+            allowed_hosts: List of allowed hosts from image_parameters.
+            base_url: Base URL from API configuration.
+            jobs: List of job configurations containing endpoint_path, query_parameters, and placeholders.
         """
         if not allowed_hosts:
             return
 
-        # Build complete URL using the new method
         urls = self._build_urls(base_url, jobs)
-        url = urls[1]  # Get the first endpoint URL
+        url = urls[1]
 
-        # Parse URL
         parsed_url = urlparse(url)
         url_scheme = parsed_url.scheme
         url_host = parsed_url.hostname
         url_port = parsed_url.port
-        url_path = parsed_url.path
+        url_path = parsed_url.path.rstrip('/')
 
-        is_allowed = False
-        for allowed_host in allowed_hosts:
-            parsed_allowed = urlparse(allowed_host['host'])
-            allowed_scheme = parsed_allowed.scheme
-            allowed_hostname = parsed_allowed.hostname
-            allowed_port = parsed_allowed.port
-            allowed_path = parsed_allowed.path
-
-            # Compare scheme
-            if url_scheme != allowed_scheme:
+        for allowed in allowed_hosts:
+            parsed_allowed = urlparse(allowed['host'])
+            if (
+                url_scheme != parsed_allowed.scheme
+                or url_host != parsed_allowed.hostname
+                or url_port != parsed_allowed.port
+            ):
                 continue
 
-            # Compare port
-            if url_port != allowed_port:
+            allowed_path = parsed_allowed.path.rstrip('/')
+
+            if not allowed_path:
+                return  # Allowed without path restriction
+
+            url_segments = url_path.split('/')
+            allowed_segments = allowed_path.split('/')
+
+            if len(url_segments) < len(allowed_segments):
                 continue
 
-            # Compare host
-            if url_host != allowed_hostname:
-                continue
+            if url_segments[:len(allowed_segments)] == allowed_segments:
+                return  # Path matches
 
-            # Compare path
-            normalized_url_path = url_path.rstrip('/')
-            normalized_allowed_path = allowed_path.rstrip('/')
-
-            if normalized_allowed_path == '':
-                is_allowed = True
-                break
-
-            # Split paths into segments and compare them
-            url_path_segments = normalized_url_path.split('/')
-            allowed_path_segments = normalized_allowed_path.split('/')
-
-            # Check if allowed path is a prefix of the URL path
-            if len(url_path_segments) < len(allowed_path_segments):
-                continue
-
-            is_prefix = True
-            for i in range(len(allowed_path_segments)):
-                if url_path_segments[i] != allowed_path_segments[i]:
-                    is_prefix = False
-                    break
-
-            if is_prefix:
-                is_allowed = True
-                break
-
-        if not is_allowed:
-            raise UserException(f'URL "{url}" is not in the allowed hosts whitelist.')
+        raise UserException(f'URL "{url}" is not in the allowed hosts whitelist.')
 
     def _build_urls(self, base_url: str, endpoints: list[dict]) -> list[str]:
         normalized_base_url = base_url[:-1] if base_url.endswith("/") else base_url
