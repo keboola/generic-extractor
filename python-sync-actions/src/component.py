@@ -601,7 +601,6 @@ class Component(ComponentBase):
             "records": results,
             "debug_log": filtered_log
         }
-        print(result)
         return result
 
 

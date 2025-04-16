@@ -70,11 +70,6 @@ class Pagination(ConfigurationBase):
 
 
 @dataclass
-class ImageParameters(ConfigurationBase):
-    allowed_hosts: list[dict] = field(default_factory=list)
-
-
-@dataclass
 class ApiConfig(ConfigurationBase):
     base_url: str
     default_query_parameters: dict = field(default_factory=dict)
