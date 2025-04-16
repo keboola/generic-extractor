@@ -328,6 +328,18 @@ class TestAllowedHosts(unittest.TestCase):
                 base_url=config['parameters']['api']['baseUrl'],
                 jobs=config['parameters']['config']['jobs'])
 
+    def test_validate_allowed_hosts_port_prefix_not_allowed(self):
+        """Test port prefix not allowed"""
+        config = create_test_config(
+            base_url='https://example.com:8/api',
+            allowed_hosts=['https://example.com:88/api']
+        )
+        with self.assertRaises(UserException):
+            self.component._validate_allowed_hosts(
+                allowed_hosts=config['image_parameters']['allowed_hosts'],
+                base_url=config['parameters']['api']['baseUrl'],
+                jobs=config['parameters']['config']['jobs'])
+
 
 if __name__ == '__main__':
     unittest.main()

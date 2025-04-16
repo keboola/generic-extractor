@@ -773,4 +773,16 @@ class ConfigurationTest extends ExtractorTestCase
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
         self::assertNull($this->invokeMethod($extractor, 'validateAllowedHosts', [$config]));
     }
+
+    public function testValidateAllowedHostsPortPrefixNotAllowed(): void
+    {
+        $config = $this->createTestConfig(
+            'https://example.com:8/api',
+            ['https://example.com:88/api']
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        $this->expectException(UserException::class);
+        $this->invokeMethod($extractor, 'validateAllowedHosts', [$config]);
+    }
 }
