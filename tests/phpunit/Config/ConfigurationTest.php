@@ -771,8 +771,6 @@ class ConfigurationTest extends ExtractorTestCase
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
-        $this->expectException(UserException::class);
-        $this->expectExceptionMessage('No allowed hosts configured');
-        $this->invokeMethod($extractor, 'validateAllowedHosts', [$config]);
+        self::assertNull($this->invokeMethod($extractor, 'validateAllowedHosts', [$config]));
     }
 }
