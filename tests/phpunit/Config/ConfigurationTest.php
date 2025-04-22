@@ -471,6 +471,32 @@ class ConfigurationTest extends ExtractorTestCase
         );
     }
 
+    public function testBuildUrlsWithMultipleParams(): void
+    {
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+
+        $baseUrl = 'https://api.example.com';
+        $endpoints = [
+            [
+                'endpoint' => 'users',
+                'params' => [
+                    'page' => 1,
+                    'limit' => 100,
+                    'sort' => 'name',
+                    'filter' => 'active',
+                ],
+                'placeholders' => [],
+            ],
+        ];
+
+        $urls = $this->invokeMethod($extractor, 'buildUrls', [$baseUrl, $endpoints]);
+
+        self::assertEquals([
+            'https://api.example.com',
+            'https://api.example.com/users?page=1&limit=100&sort=name&filter=active',
+        ], $urls);
+    }
+
     /**
      * Call protected/private method of a class.
      *

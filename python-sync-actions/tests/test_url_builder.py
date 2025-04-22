@@ -31,7 +31,7 @@ class TestUrlBuilder(unittest.TestCase):
         ], urls)
 
     def test_build_urls_with_domain_name(self):
-        # Test bez lomítka na konci
+        # Test without trailing slash
         urls = self.component._build_urls('https://example.com', [
             {
                 'endpoint': 'users',
@@ -48,7 +48,7 @@ class TestUrlBuilder(unittest.TestCase):
             urls
         )
 
-        # Test s lomítkem na konci
+        # Test with trailing slash
         urls = self.component._build_urls('https://example.com/', [
             {
                 'endpoint': 'users',
@@ -65,7 +65,7 @@ class TestUrlBuilder(unittest.TestCase):
             urls
         )
 
-        # Test s subdoménou a cestou
+        # Test with subdomain and path
         urls = self.component._build_urls('https://sub.domain.example.com/path/', [
             {
                 'endpoint': 'users',
@@ -157,7 +157,7 @@ class TestUrlBuilder(unittest.TestCase):
         ], urls)
 
     def test_build_urls_with_localhost(self):
-        # Test s localhost IP
+        # Test with localhost IP
         urls = self.component._build_urls('http://127.0.0.1', [
             {
                 'endpoint': 'users',
@@ -174,7 +174,7 @@ class TestUrlBuilder(unittest.TestCase):
             urls
         )
 
-        # Test s localhost IP a portem
+        # Test with localhost IP and port
         urls = self.component._build_urls('http://127.0.0.1:5000', [
             {
                 'endpoint': 'users',
@@ -192,7 +192,7 @@ class TestUrlBuilder(unittest.TestCase):
         )
 
     def test_build_urls_with_different_protocols(self):
-        # Test s HTTP
+        # Test with HTTP
         urls = self.component._build_urls('http://example.com', [
             {
                 'endpoint': 'users',
@@ -209,7 +209,7 @@ class TestUrlBuilder(unittest.TestCase):
             urls
         )
 
-        # Test s HTTPS
+        # Test with HTTPS
         urls = self.component._build_urls('https://example.com', [
             {
                 'endpoint': 'users',
@@ -225,6 +225,28 @@ class TestUrlBuilder(unittest.TestCase):
             ],
             urls
         )
+
+    def test_build_urls_with_multiple_params(self):
+        base_url = 'https://api.example.com'
+        endpoints = [
+            {
+                'endpoint': 'users',
+                'params': {
+                    'page': 1,
+                    'limit': 100,
+                    'sort': 'name',
+                    'filter': 'active'
+                },
+                'placeholders': {},
+            },
+        ]
+
+        urls = self.component._build_urls(base_url, endpoints)
+
+        self.assertEqual([
+            'https://api.example.com',
+            'https://api.example.com/users?page=1&limit=100&sort=name&filter=active',
+        ], urls)
 
 
 if __name__ == '__main__':

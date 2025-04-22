@@ -363,22 +363,22 @@ class Extractor
                 $allowedHostPort = $parsedAllowedHost['port'] ?? null;
                 $allowedHostScheme = $parsedAllowedHost['scheme'] ?? '';
 
-                // Porovnání schématu
+                // Schema comparison
                 if ($urlScheme !== $allowedHostScheme) {
                     continue;
                 }
 
-                // Porovnání portu
+                // Port comparison
                 if ($urlPort !== $allowedHostPort) {
                     continue;
                 }
 
-                // Porovnání hostu
+                // Host comparison
                 if ($urlHost !== $allowedHostHost) {
                     continue;
                 }
 
-                // Porovnání cesty
+                // Path comparison
                 $normalizedUrlPath = rtrim($urlPath, '/');
                 $normalizedAllowedPath = rtrim($allowedHostPath, '/');
 

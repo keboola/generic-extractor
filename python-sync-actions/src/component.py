@@ -178,7 +178,7 @@ class Component(ComponentBase):
             except KeyError as e:
                 raise ValueError(f"Missing placeholder for: {e.args[0]} in endpoint: {endpoint}")
 
-            # Vytvořit úplnou URL kombinací
+            # Create full URL
             full_url = f"{normalized_base_url}/{formatted_path}" if formatted_path else normalized_base_url
 
             if params:
