@@ -220,7 +220,6 @@ class ConfigurationTest extends ExtractorTestCase
         $urls = $this->invokeMethod($extractor, 'buildUrls', [$baseUrl, $endpoints]);
 
         self::assertEquals([
-            'https://api.example.com',
             'https://api.example.com/users/123?page=1',
             'https://api.example.com/orders?status=completed',
         ], $urls);
@@ -244,7 +243,6 @@ class ConfigurationTest extends ExtractorTestCase
 
         self::assertEquals(
             [
-                'https://example.com',
                 'https://example.com/users?page=1',
             ],
             $urls
@@ -264,7 +262,6 @@ class ConfigurationTest extends ExtractorTestCase
 
         self::assertEquals(
             [
-                'https://example.com/',
                 'https://example.com/users?page=1',
             ],
             $urls
@@ -284,7 +281,6 @@ class ConfigurationTest extends ExtractorTestCase
 
         self::assertEquals(
             [
-                'https://sub.domain.example.com/path/',
                 'https://sub.domain.example.com/path/users?page=1',
             ],
             $urls
@@ -307,7 +303,6 @@ class ConfigurationTest extends ExtractorTestCase
         $urls = $this->invokeMethod($extractor, 'buildUrls', [$baseUrl, $endpoints]);
 
         self::assertEquals([
-            'https://api.example.com:8080',
             'https://api.example.com:8080/users/123?page=1',
         ], $urls);
     }
@@ -333,7 +328,6 @@ class ConfigurationTest extends ExtractorTestCase
         $urls = $this->invokeMethod($extractor, 'buildUrls', [$baseUrl, $endpoints]);
 
         self::assertEquals([
-            'https://api.example.com:8080/v1',
             'https://api.example.com:8080/v1/users/123?page=1',
             'https://api.example.com:8080/v1/orders?status=completed',
         ], $urls);
@@ -355,7 +349,6 @@ class ConfigurationTest extends ExtractorTestCase
         $urls = $this->invokeMethod($extractor, 'buildUrls', [$baseUrl, $endpoints]);
 
         self::assertEquals([
-            'https://192.168.1.1',
             'https://192.168.1.1/api/users?page=1',
         ], $urls);
     }
@@ -376,7 +369,6 @@ class ConfigurationTest extends ExtractorTestCase
         $urls = $this->invokeMethod($extractor, 'buildUrls', [$baseUrl, $endpoints]);
 
         self::assertEquals([
-            'https://192.168.1.1:8080',
             'https://192.168.1.1:8080/api/users?page=1',
         ], $urls);
     }
@@ -399,7 +391,6 @@ class ConfigurationTest extends ExtractorTestCase
 
         self::assertEquals(
             [
-                'http://127.0.0.1',
                 'http://127.0.0.1/users?page=1',
             ],
             $urls
@@ -419,7 +410,6 @@ class ConfigurationTest extends ExtractorTestCase
 
         self::assertEquals(
             [
-                'http://127.0.0.1:5000',
                 'http://127.0.0.1:5000/users?page=1',
             ],
             $urls
@@ -444,7 +434,6 @@ class ConfigurationTest extends ExtractorTestCase
 
         self::assertEquals(
             [
-                'http://example.com',
                 'http://example.com/users?page=1',
             ],
             $urls
@@ -464,7 +453,6 @@ class ConfigurationTest extends ExtractorTestCase
 
         self::assertEquals(
             [
-                'https://example.com',
                 'https://example.com/users?page=1',
             ],
             $urls
@@ -492,7 +480,6 @@ class ConfigurationTest extends ExtractorTestCase
         $urls = $this->invokeMethod($extractor, 'buildUrls', [$baseUrl, $endpoints]);
 
         self::assertEquals([
-            'https://api.example.com',
             'https://api.example.com/users?page=1&limit=100&sort=name&filter=active',
         ], $urls);
     }
@@ -554,7 +541,21 @@ class ConfigurationTest extends ExtractorTestCase
         if ($allowedHosts !== null) {
             $config['image_parameters'] = [
                 'allowed_hosts' => array_map(function ($host) {
-                    return ['host' => $host];
+                    if (is_string($host)) {
+                        $parsedUrl = parse_url($host);
+                        return [
+                            'scheme' => $parsedUrl['scheme'] ?? null,
+                            'host' => $parsedUrl['host'] ?? '',
+                            'port' => $parsedUrl['port'] ?? null,
+                            'endpoint' => $parsedUrl['path'] ?? null,
+                        ];
+                    }
+                    return [
+                        'scheme' => $host['scheme'] ?? null,
+                        'host' => $host['host'] ?? $host,
+                        'port' => $host['port'] ?? null,
+                        'endpoint' => $host['endpoint'] ?? null,
+                    ];
                 }, $allowedHosts),
             ];
         }
@@ -566,7 +567,18 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api',
-            ['https://example.com/api']
+            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api']]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        self::assertNull($this->invokeMethod($extractor, 'validateAllowedHosts', [$config]));
+    }
+
+    public function testValidateAllowedHostsExactMatchWithoutScheme(): void
+    {
+        $config = $this->createTestConfig(
+            'https://example.com/api',
+            [['host' => 'example.com', 'endpoint' => '/api']]
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -577,7 +589,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api?x=1',
-            ['https://example.com/api']
+            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api']]
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -588,7 +600,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api/',
-            ['https://example.com/api']
+            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api']]
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -599,7 +611,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api',
-            ['http://example.com/api']
+            [['scheme' => 'http', 'host' => 'example.com', 'endpoint' => '/api']]
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -611,7 +623,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api',
-            ['https://example.com:443/api']
+            [['scheme' => 'https', 'host' => 'example.com', 'port' => 443, 'endpoint' => '/api']]
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -623,7 +635,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api/resource',
-            ['https://example.com/api']
+            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api']]
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -634,7 +646,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api/v1/data',
-            ['https://example.com/api']
+            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api']]
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -645,7 +657,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api/v1',
-            ['https://example.com/api/']
+            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api/']]
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -656,7 +668,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api',
-            ['https://example.com/ap']
+            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/ap']]
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -668,7 +680,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://sub.example.com/path',
-            ['https://example.com/']
+            [['scheme' => 'https', 'host' => 'example.com']]
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -680,7 +692,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'http://127.0.0.1:8080/api',
-            ['http://127.0.0.1:8080/api']
+            [['scheme' => 'http', 'host' => '127.0.0.1', 'port' => 8080, 'endpoint' => '/api']]
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -691,7 +703,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'http://127.0.0.1:8080/api/v1/data',
-            ['http://127.0.0.1:8080/api']
+            [['scheme' => 'http', 'host' => '127.0.0.1', 'port' => 8080, 'endpoint' => '/api']]
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -702,7 +714,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'http://127.0.0.1:8000/api',
-            ['http://127.0.0.1:8080/api']
+            [['scheme' => 'http', 'host' => '127.0.0.1', 'port' => 8080, 'endpoint' => '/api']]
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -714,19 +726,18 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'http://127.0.0.1:80/api',
-            ['http://127.0.0.1/api']
+            [['scheme' => 'http', 'host' => '127.0.0.1', 'endpoint' => '/api']]
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
-        $this->expectException(UserException::class);
-        $this->invokeMethod($extractor, 'validateAllowedHosts', [$config]);
+        self::assertNull($this->invokeMethod($extractor, 'validateAllowedHosts', [$config]));
     }
 
     public function testValidateAllowedHostsSubdomain(): void
     {
         $config = $this->createTestConfig(
             'https://sub.example.com/path1',
-            ['https://sub.example.com/']
+            [['scheme' => 'https', 'host' => 'sub.example.com']]
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -737,7 +748,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://sub.domain.com/path/1/2',
-            ['https://sub.domain.com/']
+            [['scheme' => 'https', 'host' => 'sub.domain.com']]
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -748,7 +759,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://sub.domain.com/path',
-            ['https://sub.domain.com']
+            [['scheme' => 'https', 'host' => 'sub.domain.com']]
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -759,7 +770,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://sub.domain.com/extra/data',
-            ['https://sub.domain.com/extra']
+            [['scheme' => 'https', 'host' => 'sub.domain.com', 'endpoint' => '/extra']]
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -770,7 +781,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://sub.domain.com/pathology',
-            ['https://sub.domain.com/path']
+            [['scheme' => 'https', 'host' => 'sub.domain.com', 'endpoint' => '/path']]
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -804,7 +815,362 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com:8/api',
-            ['https://example.com:88/api']
+            [['scheme' => 'https', 'host' => 'example.com', 'port' => 88, 'endpoint' => '/api']]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        $this->expectException(UserException::class);
+        $this->invokeMethod($extractor, 'validateAllowedHosts', [$config]);
+    }
+
+    public function testValidateAllowedHostsMultipleHosts(): void
+    {
+        $config = $this->createTestConfig(
+            'https://example.com/api',
+            [
+                ['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api'],
+                ['scheme' => 'https', 'host' => 'other.com', 'endpoint' => '/api'],
+            ]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        self::assertNull($this->invokeMethod($extractor, 'validateAllowedHosts', [$config]));
+    }
+
+    public function testValidateAllowedHostsMultipleHostsWithDifferentPorts(): void
+    {
+        $config = $this->createTestConfig(
+            'https://example.com:8080/api',
+            [
+                ['scheme' => 'https', 'host' => 'example.com', 'port' => 8080, 'endpoint' => '/api'],
+                ['scheme' => 'https', 'host' => 'other.com', 'port' => 443, 'endpoint' => '/api'],
+            ]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        self::assertNull($this->invokeMethod($extractor, 'validateAllowedHosts', [$config]));
+    }
+
+    public function testValidateAllowedHostsMultipleHostsWithMixedPorts(): void
+    {
+        $config = $this->createTestConfig(
+            'https://example.com:8080/api',
+            [
+                ['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api'], // no port specified
+                ['scheme' => 'https', 'host' => 'other.com', 'port' => 8080, 'endpoint' => '/api'],
+            ]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        self::assertNull($this->invokeMethod($extractor, 'validateAllowedHosts', [$config]));
+    }
+
+    public function testValidateAllowedHostsMultipleHostsWithDifferentEndpoints(): void
+    {
+        $config = $this->createTestConfig(
+            'https://example.com/api/v1/users',
+            [
+                ['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api/v1'],
+                ['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api/v2'],
+            ]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        self::assertNull($this->invokeMethod($extractor, 'validateAllowedHosts', [$config]));
+    }
+
+    public function testValidateAllowedHostsMultipleHostsWithDifferentSchemes(): void
+    {
+        $config = $this->createTestConfig(
+            'https://example.com/api',
+            [
+                ['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api'],
+                ['scheme' => 'http', 'host' => 'example.com', 'endpoint' => '/api'],
+            ]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        self::assertNull($this->invokeMethod($extractor, 'validateAllowedHosts', [$config]));
+    }
+
+    public function testValidateAllowedHostsMultipleHostsWithInvalidPort(): void
+    {
+        $config = $this->createTestConfig(
+            'https://example.com:8080/api',
+            [
+                ['scheme' => 'https', 'host' => 'example.com', 'port' => 443, 'endpoint' => '/api'],
+                ['scheme' => 'https', 'host' => 'other.com', 'port' => 80, 'endpoint' => '/api'],
+            ]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        $this->expectException(UserException::class);
+        $this->invokeMethod($extractor, 'validateAllowedHosts', [$config]);
+    }
+
+    public function testValidateAllowedHostsMultipleHostsWithInvalidEndpoint(): void
+    {
+        $config = $this->createTestConfig(
+            'https://example.com/api/v1/users',
+            [
+                ['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api/v2'],
+                ['scheme' => 'https', 'host' => 'other.com', 'endpoint' => '/api/v3'],
+            ]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        $this->expectException(UserException::class);
+        $this->invokeMethod($extractor, 'validateAllowedHosts', [$config]);
+    }
+
+    public function testValidateAllowedHostsMultipleHostsWithInvalidHost(): void
+    {
+        $config = $this->createTestConfig(
+            'https://example.com/api',
+            [
+                ['scheme' => 'https', 'host' => 'other.com', 'endpoint' => '/api'],
+                ['scheme' => 'https', 'host' => 'another.com', 'endpoint' => '/api'],
+            ]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        $this->expectException(UserException::class);
+        $this->invokeMethod($extractor, 'validateAllowedHosts', [$config]);
+    }
+
+    public function testValidateAllowedHostsWithScheme(): void
+    {
+        $config = $this->createTestConfig(
+            'https://example.com/api',
+            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api']]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        self::assertNull($this->invokeMethod($extractor, 'validateAllowedHosts', [$config]));
+    }
+
+    public function testValidateAllowedHostsWithoutScheme(): void
+    {
+        $config = $this->createTestConfig(
+            'https://example.com/api',
+            [['host' => 'example.com', 'endpoint' => '/api']]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        self::assertNull($this->invokeMethod($extractor, 'validateAllowedHosts', [$config]));
+    }
+
+    public function testValidateAllowedHostsWithDifferentSchemes(): void
+    {
+        $config = $this->createTestConfig(
+            'https://example.com/api',
+            [
+                ['scheme' => 'http', 'host' => 'example.com', 'endpoint' => '/api'],
+                ['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api'],
+            ]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        self::assertNull($this->invokeMethod($extractor, 'validateAllowedHosts', [$config]));
+    }
+
+    public function testValidateAllowedHostsWithInvalidScheme(): void
+    {
+        $config = $this->createTestConfig(
+            'https://example.com/api',
+            [['scheme' => 'http', 'host' => 'example.com', 'endpoint' => '/api']]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        $this->expectException(UserException::class);
+        $this->invokeMethod($extractor, 'validateAllowedHosts', [$config]);
+    }
+
+    public function testValidateAllowedHostsWithMultipleHostsAndSchemes(): void
+    {
+        $config = $this->createTestConfig(
+            'https://example.com/api',
+            [
+                ['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api'],
+                ['host' => 'other.com', 'endpoint' => '/api'],
+                ['scheme' => 'http', 'host' => 'another.com', 'endpoint' => '/api'],
+            ]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        self::assertNull($this->invokeMethod($extractor, 'validateAllowedHosts', [$config]));
+    }
+
+    public function testValidateAllowedHostsWithIpAddress(): void
+    {
+        $config = $this->createTestConfig(
+            'http://192.168.1.1/api',
+            [['scheme' => 'http', 'host' => '192.168.1.1', 'endpoint' => '/api']]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        self::assertNull($this->invokeMethod($extractor, 'validateAllowedHosts', [$config]));
+    }
+
+    public function testValidateAllowedHostsWithIpAddressAndPort(): void
+    {
+        $config = $this->createTestConfig(
+            'http://192.168.1.1:8080/api',
+            [['scheme' => 'http', 'host' => '192.168.1.1', 'port' => 8080, 'endpoint' => '/api']]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        self::assertNull($this->invokeMethod($extractor, 'validateAllowedHosts', [$config]));
+    }
+
+    public function testValidateAllowedHostsWithIpAddressDifferentPort(): void
+    {
+        $config = $this->createTestConfig(
+            'http://192.168.1.1:8080/api',
+            [['scheme' => 'http', 'host' => '192.168.1.1', 'port' => 80, 'endpoint' => '/api']]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        $this->expectException(UserException::class);
+        $this->invokeMethod($extractor, 'validateAllowedHosts', [$config]);
+    }
+
+    public function testValidateAllowedHostsWithIpAddressNoPort(): void
+    {
+        $config = $this->createTestConfig(
+            'http://192.168.1.1:8080/api',
+            [['scheme' => 'http', 'host' => '192.168.1.1', 'endpoint' => '/api']]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        self::assertNull($this->invokeMethod($extractor, 'validateAllowedHosts', [$config]));
+    }
+
+    public function testValidateAllowedHostsWithIpAddressAndHttps(): void
+    {
+        $config = $this->createTestConfig(
+            'https://192.168.1.1/api',
+            [['scheme' => 'https', 'host' => '192.168.1.1', 'endpoint' => '/api']]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        self::assertNull($this->invokeMethod($extractor, 'validateAllowedHosts', [$config]));
+    }
+
+    public function testValidateAllowedHostsWithIpAddressAndDifferentScheme(): void
+    {
+        $config = $this->createTestConfig(
+            'https://192.168.1.1/api',
+            [['scheme' => 'http', 'host' => '192.168.1.1', 'endpoint' => '/api']]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        $this->expectException(UserException::class);
+        $this->invokeMethod($extractor, 'validateAllowedHosts', [$config]);
+    }
+
+    public function testValidateAllowedHostsWithIpAddressAndMultiplePorts(): void
+    {
+        $config = $this->createTestConfig(
+            'http://192.168.1.1:8080/api',
+            [
+                ['scheme' => 'http', 'host' => '192.168.1.1', 'port' => 8080, 'endpoint' => '/api'],
+                ['scheme' => 'http', 'host' => '192.168.1.1', 'port' => 80, 'endpoint' => '/api'],
+            ]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        self::assertNull($this->invokeMethod($extractor, 'validateAllowedHosts', [$config]));
+    }
+
+    public function testValidateAllowedHostsWithIpAddressAndMultipleSchemes(): void
+    {
+        $config = $this->createTestConfig(
+            'https://192.168.1.1/api',
+            [
+                ['scheme' => 'https', 'host' => '192.168.1.1', 'endpoint' => '/api'],
+                ['scheme' => 'http', 'host' => '192.168.1.1', 'endpoint' => '/api'],
+            ]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        self::assertNull($this->invokeMethod($extractor, 'validateAllowedHosts', [$config]));
+    }
+
+    public function testValidateAllowedHostsWithIpAddressAndInvalidHost(): void
+    {
+        $config = $this->createTestConfig(
+            'http://192.168.1.1/api',
+            [['scheme' => 'http', 'host' => '192.168.1.2', 'endpoint' => '/api']]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        $this->expectException(UserException::class);
+        $this->invokeMethod($extractor, 'validateAllowedHosts', [$config]);
+    }
+
+    public function testValidateAllowedHostsWithIpAddressAndInvalidEndpoint(): void
+    {
+        $config = $this->createTestConfig(
+            'http://192.168.1.1/api/v1',
+            [['scheme' => 'http', 'host' => '192.168.1.1', 'endpoint' => '/api/v2']]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        $this->expectException(UserException::class);
+        $this->invokeMethod($extractor, 'validateAllowedHosts', [$config]);
+    }
+
+    public function testValidateAllowedHostsWithIpAddressNoScheme(): void
+    {
+        $config = $this->createTestConfig(
+            '192.168.1.1/api',
+            [['host' => '192.168.1.1', 'endpoint' => '/api']]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        self::assertNull($this->invokeMethod($extractor, 'validateAllowedHosts', [$config]));
+    }
+
+    public function testValidateAllowedHostsWithIpAddressNoSchemeWithPort(): void
+    {
+        $config = $this->createTestConfig(
+            '192.168.1.1:8080/api',
+            [['host' => '192.168.1.1', 'port' => 8080, 'endpoint' => '/api']]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        self::assertNull($this->invokeMethod($extractor, 'validateAllowedHosts', [$config]));
+    }
+
+    public function testValidateAllowedHostsWithIpAddressNoSchemeWithPortAndApi(): void
+    {
+        $config = $this->createTestConfig(
+            '192.168.1.1:8080/api/v1/users',
+            [['host' => '192.168.1.1', 'port' => 8080, 'endpoint' => '/api/v1']]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        self::assertNull($this->invokeMethod($extractor, 'validateAllowedHosts', [$config]));
+    }
+
+    public function testValidateAllowedHostsWithIpAddressNoSchemeWithPortAndDifferentApi(): void
+    {
+        $config = $this->createTestConfig(
+            '192.168.1.1:8080/api/v1/users',
+            [['host' => '192.168.1.1', 'port' => 8080, 'endpoint' => '/api/v2']]
+        );
+
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+        $this->expectException(UserException::class);
+        $this->invokeMethod($extractor, 'validateAllowedHosts', [$config]);
+    }
+
+    public function testValidateAllowedHostsRootUrl(): void
+    {
+        $config = $this->createTestConfig(
+            'https://catfact.ninja/',
+            [['host' => 'catfact.ninja', 'endpoint' => '/fact']]
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
