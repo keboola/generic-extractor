@@ -7,6 +7,8 @@ import logging
 import tempfile
 from io import StringIO
 from typing import Any
+from urllib.parse import urlparse
+from urllib.parse import urlencode
 
 import configuration
 import requests
@@ -76,10 +78,15 @@ class Component(ComponentBase):
         self.test_request()
 
     def init_component(self):
-
         self._configurations = configuration.convert_to_v2(self.configuration.parameters)
-
         self._configuration = self._configurations[0]
+
+        # Validate allowed hosts
+        self._validate_allowed_hosts(
+            self.configuration.image_parameters.get('allowed_hosts', []),
+            self._configuration.api.base_url,
+            self._configuration.api.jobs
+            )
 
         # build authentication method
         auth_method = None
@@ -111,6 +118,75 @@ class Component(ComponentBase):
                                          status_forcelist=self._configuration.api.retry_config.codes,
                                          auth_method=auth_method
                                          )
+
+    def _validate_allowed_hosts(self, allowed_hosts: list[dict], base_url: str, jobs: list[dict]) -> None:
+        """
+        Validates URLs against a whitelist of allowed hosts.
+
+        Args:
+            allowed_hosts: List of allowed hosts from image_parameters.
+            base_url: Base URL from API configuration.
+            jobs: List of job configurations containing endpoint_path, query_parameters, and placeholders.
+        """
+        if not allowed_hosts:
+            return
+
+        urls = self._build_urls(base_url, jobs)
+        url = urls[1]
+
+        parsed_url = urlparse(url)
+        url_scheme = parsed_url.scheme
+        url_host = parsed_url.hostname
+        url_port = parsed_url.port
+        url_path = parsed_url.path.rstrip('/')
+
+        for allowed in allowed_hosts:
+            parsed_allowed = urlparse(allowed['host'])
+            if (
+                url_scheme != parsed_allowed.scheme
+                or url_host != parsed_allowed.hostname
+                or url_port != parsed_allowed.port
+            ):
+                continue
+
+            allowed_path = parsed_allowed.path.rstrip('/')
+
+            if not allowed_path:
+                return  # Allowed without path restriction
+
+            url_segments = url_path.split('/')
+            allowed_segments = allowed_path.split('/')
+
+            if len(url_segments) < len(allowed_segments):
+                continue
+
+            if url_segments[:len(allowed_segments)] == allowed_segments:
+                return  # Path matches
+
+        raise UserException(f'URL "{url}" is not in the allowed hosts whitelist.')
+
+    def _build_urls(self, base_url: str, endpoints: list[dict]) -> list[str]:
+        normalized_base_url = base_url[:-1] if base_url.endswith("/") else base_url
+        urls = [normalized_base_url]
+        for ep in endpoints:
+            endpoint = ep.get("endpoint", "").lstrip("/")
+            placeholders = ep.get("placeholders", {})
+            params = ep.get("params", {})
+
+            try:
+                formatted_path = endpoint.format(**placeholders)
+            except KeyError as e:
+                raise ValueError(f"Missing placeholder for: {e.args[0]} in endpoint: {endpoint}")
+
+            # Create full URL
+            full_url = f"{normalized_base_url}/{formatted_path}" if formatted_path else normalized_base_url
+
+            if params:
+                full_url += "?" + urlencode(params)
+
+            urls.append(full_url)
+
+        return urls
 
     def _get_values_to_hide(self) -> list[str]:
         """

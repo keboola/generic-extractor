@@ -13,10 +13,12 @@ services:
 
   dev:
     << : *ci
-    command: bash
+    command: php /code/src/run.php
     volumes:
       - ./:/code
       - ./data:/data
+    environment:
+      - KBC_DATADIR=/data
 
   jsontest:
       build: ./docker/jsontest

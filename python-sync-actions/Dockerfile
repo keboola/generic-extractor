@@ -1,6 +1,6 @@
 FROM nikolaik/python-nodejs:python3.12-nodejs18
 
-RUN apt-get update && apt-get install -y curl
+RUN apt-get update && apt-get install -y curl php
 
 RUN npm install --global curlconverter
 
@@ -13,6 +13,7 @@ COPY flake8.cfg /code/flake8.cfg
 
 COPY /src /code/src/
 COPY /tests /code/tests/
+COPY /scripts /code/scripts/
 
 WORKDIR /code/
 
