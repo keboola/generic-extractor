@@ -332,11 +332,8 @@ class Extractor
      */
     private function validateAllowedHosts(array $config): void
     {
-        if (!isset($config['image_parameters']['allowed_hosts'])) {
-            return;
-        }
-
-        if (empty($config['image_parameters']['allowed_hosts'])) {
+        $allowedHosts = $config['image_parameters']['allowed_hosts'] ?? [];
+        if (empty($allowedHosts)) {
             return;
         }
 
@@ -345,9 +342,8 @@ class Extractor
         $urls = $this->buildUrls($baseUrl, $endpoints);
 
         foreach ($urls as $url) {
-            $isAllowed = false;
             $parsedUrl = parse_url($url);
-            $urlPath = $parsedUrl['path'] ?? '';
+            $urlPath = rtrim($parsedUrl['path'] ?? '', '/');
             $urlHost = $parsedUrl['host'] ?? '';
             $urlPort = $parsedUrl['port'] ?? null;
             $urlScheme = $parsedUrl['scheme'] ?? '';
@@ -359,44 +355,37 @@ class Extractor
                 $urlPath = isset($pathParts[1]) ? '/' . $pathParts[1] : '';
             }
 
-            foreach ($config['image_parameters']['allowed_hosts'] as $allowedHost) {
-                $allowedHostScheme = $allowedHost['scheme'] ?? null;
-                $allowedHostHost = $allowedHost['host'];
-                $allowedHostPort = $allowedHost['port'] ?? null;
-                $allowedHostEndpoint = $allowedHost['endpoint'] ?? null;
-
-                // Scheme comparison - if scheme is not defined in allowed hosts, any scheme is allowed
-                if ($allowedHostScheme !== null && $urlScheme !== $allowedHostScheme) {
+            $isAllowed = false;
+            foreach ($allowedHosts as $allowedHost) {
+                // Check if host matches
+                if ($allowedHost['host'] !== $urlHost) {
                     continue;
                 }
 
-                // Port comparison - if port is not defined in allowed hosts, any port is allowed
-                if ($allowedHostPort !== null && $urlPort !== $allowedHostPort) {
+                // Check scheme if specified
+                if (isset($allowedHost['scheme']) && $allowedHost['scheme'] !== $urlScheme) {
                     continue;
                 }
 
-                // Host comparison
-                if ($urlHost !== $allowedHostHost) {
+                // Check port if specified
+                if (isset($allowedHost['port']) && $allowedHost['port'] !== $urlPort) {
                     continue;
                 }
 
-                // Path comparison
-                $normalizedUrlPath = rtrim($urlPath, '/');
-                $normalizedAllowedPath = rtrim($allowedHostEndpoint ?? '', '/');
-
-                if ($normalizedAllowedPath === '') {
+                $allowedPath = rtrim($allowedHost['endpoint'] ?? '', '/');
+                if (empty($allowedPath)) {
                     $isAllowed = true;
                     break;
                 }
 
-                // If URL path is empty, it's allowed if allowed path is root
-                if ($normalizedUrlPath === '' && $normalizedAllowedPath === '') {
-                    $isAllowed = true;
-                    break;
+                $urlSegments = explode('/', trim($urlPath, '/'));
+                $allowedSegments = explode('/', trim($allowedPath, '/'));
+
+                if (count($urlSegments) < count($allowedSegments)) {
+                    continue;
                 }
 
-                // If URL path is not empty, check if it starts with allowed path
-                if ($normalizedUrlPath !== '' && strpos($normalizedUrlPath . '/', $normalizedAllowedPath . '/') === 0) {
+                if (array_slice($urlSegments, 0, count($allowedSegments)) === $allowedSegments) {
                     $isAllowed = true;
                     break;
                 }

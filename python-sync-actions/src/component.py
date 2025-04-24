@@ -145,22 +145,18 @@ class Component(ComponentBase):
 
         for allowed in allowed_hosts:
             # Check if host matches
-            if allowed['host'] != url_host:
+            if allowed.get('host') != url_host:
                 continue
 
             # Check scheme if specified
-            if 'scheme' in allowed and allowed['scheme'] != url_scheme:
+            if allowed.get('scheme', url_scheme) != url_scheme:
                 continue
 
             # Check port if specified
-            if 'port' in allowed and allowed['port'] != url_port:
+            if allowed.get('port', url_port) != url_port:
                 continue
 
-            # Check path if specified
-            if 'path' not in allowed:
-                return  # Allowed without path restriction
-
-            allowed_path = allowed['path'].rstrip('/')
+            allowed_path = allowed.get('path', '').rstrip('/')
             if not allowed_path:
                 return  # Empty path means all paths are allowed
 
