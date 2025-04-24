@@ -81,13 +81,6 @@ class Component(ComponentBase):
         self._configurations = configuration.convert_to_v2(self.configuration.parameters)
         self._configuration = self._configurations[0]
 
-        # Validate allowed hosts
-        self._validate_allowed_hosts(
-            self.configuration.image_parameters.get('allowed_hosts', []),
-            self._configuration.api.base_url,
-            self._configuration.api.jobs
-            )
-
         # build authentication method
         auth_method = None
         authentication = self._configuration.api.authentication
@@ -119,21 +112,31 @@ class Component(ComponentBase):
                                          auth_method=auth_method
                                          )
 
-    def _validate_allowed_hosts(self, allowed_hosts: list[dict], base_url: str, jobs: list[dict]) -> None:
+    def _validate_allowed_hosts(
+        self,
+        allowed_hosts: list[dict],
+        base_url: str,
+        jobs: list[dict],
+        selected_job: str,
+    ) -> None:
         """
         Validates URLs against a whitelist of allowed hosts.
 
         Args:
-            allowed_hosts: List of allowed hosts from image_parameters.
+            allowed_hosts: List of allowed hosts from image_parameters containing:
+                - scheme (optional): URL scheme (http, https)
+                - host: Hostname
+                - port (optional): Port number
+                - path (optional): Endpoint path
             base_url: Base URL from API configuration.
             jobs: List of job configurations containing endpoint_path, query_parameters, and placeholders.
+            selected_job: Selected job identifier
         """
         if not allowed_hosts:
             return
 
-        urls = self._build_urls(base_url, jobs)
-        url = urls[1]
-
+        urls = self._build_url(base_url, jobs, selected_job)
+        url = urls[0]
         parsed_url = urlparse(url)
         url_scheme = parsed_url.scheme
         url_host = parsed_url.hostname
@@ -141,18 +144,25 @@ class Component(ComponentBase):
         url_path = parsed_url.path.rstrip('/')
 
         for allowed in allowed_hosts:
-            parsed_allowed = urlparse(allowed['host'])
-            if (
-                url_scheme != parsed_allowed.scheme
-                or url_host != parsed_allowed.hostname
-                or url_port != parsed_allowed.port
-            ):
+            # Check if host matches
+            if allowed['host'] != url_host:
                 continue
 
-            allowed_path = parsed_allowed.path.rstrip('/')
+            # Check scheme if specified
+            if 'scheme' in allowed and allowed['scheme'] != url_scheme:
+                continue
 
-            if not allowed_path:
+            # Check port if specified
+            if 'port' in allowed and allowed['port'] != url_port:
+                continue
+
+            # Check path if specified
+            if 'path' not in allowed:
                 return  # Allowed without path restriction
+
+            allowed_path = allowed['path'].rstrip('/')
+            if not allowed_path:
+                return  # Empty path means all paths are allowed
 
             url_segments = url_path.split('/')
             allowed_segments = allowed_path.split('/')
@@ -165,26 +175,45 @@ class Component(ComponentBase):
 
         raise UserException(f'URL "{url}" is not in the allowed hosts whitelist.')
 
-    def _build_urls(self, base_url: str, endpoints: list[dict]) -> list[str]:
+    def _build_url(self, base_url: str, endpoints: list[dict], selected_job: str) -> list[str]:
+        """
+        Build URL for selected job
+
+        Args:
+            base_url: Base URL for the API
+            endpoints: List of endpoint configurations
+            selected_job: Selected job identifier
+
+        Returns:
+            List of full URLs
+        """
         normalized_base_url = base_url[:-1] if base_url.endswith("/") else base_url
-        urls = [normalized_base_url]
-        for ep in endpoints:
-            endpoint = ep.get("endpoint", "").lstrip("/")
-            placeholders = ep.get("placeholders", {})
-            params = ep.get("params", {})
+        urls = []
 
-            try:
-                formatted_path = endpoint.format(**placeholders)
-            except KeyError as e:
-                raise ValueError(f"Missing placeholder for: {e.args[0]} in endpoint: {endpoint}")
+        # Get selected job index
+        job_index = int(selected_job.split('_')[0])  # Get parent job index
 
-            # Create full URL
-            full_url = f"{normalized_base_url}/{formatted_path}" if formatted_path else normalized_base_url
+        if job_index >= len(endpoints):
+            return urls
 
-            if params:
-                full_url += "?" + urlencode(params)
+        # Get only the selected job's endpoint
+        ep = endpoints[job_index]
+        endpoint = ep.get("endpoint", "").lstrip("/")
+        placeholders = ep.get("placeholders", {})
+        params = ep.get("params", {})
 
-            urls.append(full_url)
+        try:
+            formatted_path = endpoint.format(**placeholders)
+        except KeyError as e:
+            raise ValueError(f"Missing placeholder for: {e.args[0]} in endpoint: {endpoint}")
+
+        # Create full URL
+        full_url = f"{normalized_base_url}/{formatted_path}" if formatted_path else normalized_base_url
+
+        if params:
+            full_url += "?" + urlencode(params)
+
+        urls.append(full_url)
 
         return urls
 
@@ -399,6 +428,14 @@ class Component(ComponentBase):
         self.init_component()
         if not self._configuration.request_parameters:
             raise ValueError("__SELECTED_JOB is missing!")
+
+        # Validate allowed hosts
+        self._validate_allowed_hosts(
+            self.configuration.image_parameters.get('allowed_hosts', []),
+            self._configuration.api.base_url,
+            self._configuration.api.jobs,
+            self.configuration.parameters.get('__SELECTED_JOB', '')
+            )
         self._client.login()
         # set back to debug because sync action mutes it
         logging.getLogger().setLevel(logging.DEBUG)

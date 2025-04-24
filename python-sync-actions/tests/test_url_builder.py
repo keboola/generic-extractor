@@ -7,7 +7,7 @@ class TestUrlBuilder(unittest.TestCase):
     def setUp(self):
         self.component = Component()
 
-    def test_build_urls(self):
+    def test_build_url(self):
         base_url = 'https://api.example.com'
         endpoints = [
             {
@@ -22,61 +22,56 @@ class TestUrlBuilder(unittest.TestCase):
             },
         ]
 
-        urls = self.component._build_urls(base_url, endpoints)
+        urls = self.component._build_url(base_url, endpoints, '0')
 
         self.assertEqual([
-            'https://api.example.com',
             'https://api.example.com/users/123?page=1',
-            'https://api.example.com/orders?status=completed',
         ], urls)
 
     def test_build_urls_with_domain_name(self):
         # Test without trailing slash
-        urls = self.component._build_urls('https://example.com', [
+        urls = self.component._build_url('https://example.com', [
             {
                 'endpoint': 'users',
                 'params': {'page': 1},
                 'placeholders': {},
             },
-        ])
+        ], '0')
 
         self.assertEqual(
             [
-                'https://example.com',
                 'https://example.com/users?page=1',
             ],
             urls
         )
 
         # Test with trailing slash
-        urls = self.component._build_urls('https://example.com/', [
+        urls = self.component._build_url('https://example.com/', [
             {
                 'endpoint': 'users',
                 'params': {'page': 1},
                 'placeholders': {},
             },
-        ])
+        ], '0')
 
         self.assertEqual(
             [
-                'https://example.com',
                 'https://example.com/users?page=1',
             ],
             urls
         )
 
         # Test with subdomain and path
-        urls = self.component._build_urls('https://sub.domain.example.com/path/', [
+        urls = self.component._build_url('https://sub.domain.example.com/path/', [
             {
                 'endpoint': 'users',
                 'params': {'page': 1},
                 'placeholders': {},
             },
-        ])
+        ], '0')
 
         self.assertEqual(
             [
-                'https://sub.domain.example.com/path',
                 'https://sub.domain.example.com/path/users?page=1',
             ],
             urls
@@ -92,10 +87,9 @@ class TestUrlBuilder(unittest.TestCase):
             },
         ]
 
-        urls = self.component._build_urls(base_url, endpoints)
+        urls = self.component._build_url(base_url, endpoints, '0')
 
         self.assertEqual([
-            'https://api.example.com:8080',
             'https://api.example.com:8080/users/123?page=1',
         ], urls)
 
@@ -114,12 +108,10 @@ class TestUrlBuilder(unittest.TestCase):
             },
         ]
 
-        urls = self.component._build_urls(base_url, endpoints)
+        urls = self.component._build_url(base_url, endpoints, '0')
 
         self.assertEqual([
-            'https://api.example.com:8080/v1',
             'https://api.example.com:8080/v1/users/123?page=1',
-            'https://api.example.com:8080/v1/orders?status=completed',
         ], urls)
 
     def test_build_urls_with_ip_address(self):
@@ -132,10 +124,9 @@ class TestUrlBuilder(unittest.TestCase):
             },
         ]
 
-        urls = self.component._build_urls(base_url, endpoints)
+        urls = self.component._build_url(base_url, endpoints, '0')
 
         self.assertEqual([
-            'https://192.168.1.1',
             'https://192.168.1.1/api/users?page=1',
         ], urls)
 
@@ -149,43 +140,40 @@ class TestUrlBuilder(unittest.TestCase):
             },
         ]
 
-        urls = self.component._build_urls(base_url, endpoints)
+        urls = self.component._build_url(base_url, endpoints, '0')
 
         self.assertEqual([
-            'https://192.168.1.1:8080',
             'https://192.168.1.1:8080/api/users?page=1',
         ], urls)
 
     def test_build_urls_with_localhost(self):
         # Test with localhost IP
-        urls = self.component._build_urls('http://127.0.0.1', [
+        urls = self.component._build_url('http://127.0.0.1', [
             {
                 'endpoint': 'users',
                 'params': {'page': 1},
                 'placeholders': {},
             },
-        ])
+        ], '0')
 
         self.assertEqual(
             [
-                'http://127.0.0.1',
                 'http://127.0.0.1/users?page=1',
             ],
             urls
         )
 
         # Test with localhost IP and port
-        urls = self.component._build_urls('http://127.0.0.1:5000', [
+        urls = self.component._build_url('http://127.0.0.1:5000', [
             {
                 'endpoint': 'users',
                 'params': {'page': 1},
                 'placeholders': {},
             },
-        ])
+        ], '0')
 
         self.assertEqual(
             [
-                'http://127.0.0.1:5000',
                 'http://127.0.0.1:5000/users?page=1',
             ],
             urls
@@ -193,34 +181,32 @@ class TestUrlBuilder(unittest.TestCase):
 
     def test_build_urls_with_different_protocols(self):
         # Test with HTTP
-        urls = self.component._build_urls('http://example.com', [
+        urls = self.component._build_url('http://example.com', [
             {
                 'endpoint': 'users',
                 'params': {'page': 1},
                 'placeholders': {},
             },
-        ])
+        ], '0')
 
         self.assertEqual(
             [
-                'http://example.com',
                 'http://example.com/users?page=1',
             ],
             urls
         )
 
         # Test with HTTPS
-        urls = self.component._build_urls('https://example.com', [
+        urls = self.component._build_url('https://example.com', [
             {
                 'endpoint': 'users',
                 'params': {'page': 1},
                 'placeholders': {},
             },
-        ])
+        ], '0')
 
         self.assertEqual(
             [
-                'https://example.com',
                 'https://example.com/users?page=1',
             ],
             urls
@@ -241,11 +227,76 @@ class TestUrlBuilder(unittest.TestCase):
             },
         ]
 
-        urls = self.component._build_urls(base_url, endpoints)
+        urls = self.component._build_url(base_url, endpoints, '0')
 
         self.assertEqual([
-            'https://api.example.com',
             'https://api.example.com/users?page=1&limit=100&sort=name&filter=active',
+        ], urls)
+
+    def test_build_urls_with_selected_job(self):
+        base_url = 'https://api.example.com'
+        endpoints = [
+            {
+                'endpoint': 'users/{id}',
+                'params': {'page': 1},
+                'placeholders': {'id': 123},
+            },
+            {
+                'endpoint': 'orders',
+                'params': {'status': 'completed'},
+                'placeholders': {},
+            },
+        ]
+
+        # Test with first job
+        urls = self.component._build_url(base_url, endpoints, '0')
+        self.assertEqual([
+            'https://api.example.com/users/123?page=1',
+        ], urls)
+
+        # Test with second job
+        urls = self.component._build_url(base_url, endpoints, '1')
+        self.assertEqual([
+            'https://api.example.com/orders?status=completed',
+        ], urls)
+
+    def test_build_urls_with_nested_selected_job(self):
+        base_url = 'https://api.example.com'
+        endpoints = [
+            {
+                'endpoint': 'users/{id}',
+                'params': {'page': 1},
+                'placeholders': {'id': 123},
+            },
+            {
+                'endpoint': 'orders',
+                'params': {'status': 'completed'},
+                'placeholders': {},
+            },
+        ]
+
+        # Test with nested job format (0_0)
+        urls = self.component._build_url(base_url, endpoints, '0_0')
+        self.assertEqual([
+            'https://api.example.com/users/123?page=1',
+        ], urls)
+
+        # Test with nested job format (1_0)
+        urls = self.component._build_url(base_url, endpoints, '1_0')
+        self.assertEqual([
+            'https://api.example.com/orders?status=completed',
+        ], urls)
+
+        # Test with nested job format (0_1)
+        urls = self.component._build_url(base_url, endpoints, '0_1')
+        self.assertEqual([
+            'https://api.example.com/users/123?page=1',
+        ], urls)
+
+        # Test with nested job format (0_2)
+        urls = self.component._build_url(base_url, endpoints, '0_2')
+        self.assertEqual([
+            'https://api.example.com/users/123?page=1',
         ], urls)
 
 
