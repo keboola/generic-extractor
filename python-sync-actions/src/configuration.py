@@ -212,9 +212,9 @@ def convert_to_v2(configuration: dict) -> list[Configuration]:
         ca_cert = ""
 
     if client_cert_key := api_json.get("#clientCertificate"):
-        client_cert_ley = client_cert_key.strip()
+        client_cert_key = client_cert_key.strip()
     else:
-        client_cert_ley = ""
+        client_cert_key = ""
 
     api_config = ApiConfig(
         base_url=base_url,
@@ -223,7 +223,7 @@ def convert_to_v2(configuration: dict) -> list[Configuration]:
         pagination=pagination,
         ssl_verify=api_json.get("ssl_verify", True),
         ca_cert=ca_cert,
-        client_cert_key=client_cert_ley,
+        client_cert_key=client_cert_key,
         jobs=jobs
     )
 
