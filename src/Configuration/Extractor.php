@@ -65,8 +65,6 @@ class Extractor
     {
         $data = $this->loadJSONFile($dataDir, 'config.json');
 
-        $this->validateAllowedHosts($data);
-
         $processor = new Processor();
         try {
             $processor->processConfiguration(new ConfigFile(), $data);
@@ -167,6 +165,7 @@ class Extractor
         }
 
         $this->validateApiConfig();
+        $this->validateAllowedHosts($this->config, $configAttributes);
 
         return new Api($this->logger, $this->config['parameters']['api'], $configAttributes, $authorization);
     }
@@ -294,12 +293,22 @@ class Extractor
     /**
      * Builds complete URLs from base URL and endpoints
      *
-     * @param string $baseUrl Base URL
+     * @param string|array $baseUrl Base URL (string nebo pole)
      * @param array $endpoints Array of endpoint configurations
      * @return array List of complete URLs
      */
-    private function buildUrls(string $baseUrl, array $endpoints): array
+    private function buildUrls($baseUrl, array $endpoints, array $configAttributes = []): array
     {
+        if (is_string($baseUrl)) {
+            $baseUrlCreated = $baseUrl;
+        } else {
+            try {
+                $baseUrlCreated = UserFunction::build([$baseUrl], ['attr' => $configAttributes])[0];
+            } catch (\Throwable $e) {
+                throw new UserException('Error in baseUrl function: ' . $e->getMessage());
+            }
+        }
+
         $urls = [];
 
         foreach ($endpoints as $endpointData) {
@@ -318,7 +327,7 @@ class Extractor
                 $endpoint .= (strpos($endpoint, '?') === false ? '?' : '&') . $queryString;
             }
 
-            $urls[] = rtrim($baseUrl, '/') . '/' . ltrim($endpoint, '/');
+            $urls[] = rtrim($baseUrlCreated, '/') . '/' . ltrim($endpoint, '/');
         }
 
         return $urls;
@@ -330,7 +339,7 @@ class Extractor
      * @param array $config Configuration array
      * @throws UserException If URL validation fails
      */
-    private function validateAllowedHosts(array $config): void
+    private function validateAllowedHosts(array $config, array $configAttributes = []): void
     {
         $allowedHosts = $config['image_parameters']['allowed_hosts'] ?? [];
         if (empty($allowedHosts)) {
@@ -339,7 +348,7 @@ class Extractor
 
         $baseUrl = $config['parameters']['api']['baseUrl'];
         $endpoints = $config['parameters']['config']['jobs'];
-        $urls = $this->buildUrls($baseUrl, $endpoints);
+        $urls = $this->buildUrls($baseUrl, $endpoints, $configAttributes);
 
         foreach ($urls as $url) {
             $parsedUrl = parse_url($url);

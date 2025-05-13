@@ -484,6 +484,63 @@ class ConfigurationTest extends ExtractorTestCase
         ], $urls);
     }
 
+    public function testBuildUrlsWithBaseUrlFromFunction(): void
+    {
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+
+        $baseUrl = [
+            'function' => 'concat',
+            'args' => [
+                'https://',
+                'keboola',
+                '.example.com/',
+            ],
+        ];
+        $endpoints = [
+            [
+                'endpoint' => 'users/{id}',
+                'params' => ['page' => 1],
+                'placeholders' => ['id' => 123],
+            ],
+        ];
+        $urls = $this->invokeMethod($extractor, 'buildUrls', [$baseUrl, $endpoints]);
+        self::assertEquals([
+            'https://keboola.example.com/users/123?page=1',
+        ], $urls);
+    }
+
+    public function testBuildUrlsWithBaseUrlFunctionAndMultipleEndpoints(): void
+    {
+        $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
+
+        $baseUrl = [
+            'function' => 'concat',
+            'args' => [
+                'https://',
+                'keboola',
+                '.example.com/',
+            ],
+        ];
+        $endpoints = [
+            [
+                'endpoint' => 'users/{id}',
+                'params' => ['page' => 1],
+                'placeholders' => ['id' => 123],
+            ],
+            [
+                'endpoint' => 'orders/{orderId}',
+                'params' => ['status' => 'completed'],
+                'placeholders' => ['orderId' => 456],
+            ],
+        ];
+        $urls = $this->invokeMethod($extractor, 'buildUrls', [$baseUrl, $endpoints]);
+        self::assertEquals([
+            'https://keboola.example.com/users/123?page=1',
+            'https://keboola.example.com/orders/456?status=completed',
+        ], $urls);
+    }
+
+
     /**
      * Call protected/private method of a class.
      *
