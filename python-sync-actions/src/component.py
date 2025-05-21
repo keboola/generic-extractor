@@ -572,43 +572,46 @@ class Component(ComponentBase):
 
     @sync_action("test_request")
     def test_request(self):
-        results, response, log, error_message = self.make_call()
-
-        body = None
-        if response.request.body:
-            if isinstance(response.request.body, bytes):
-                body = response.request.body.decode("utf-8")
-            else:
-                body = response.request.body
-
-        secrets_to_hide = self._get_values_to_hide()
-        filtered_response = self._deep_copy_and_replace_words(self._final_response, secrets_to_hide)
-        filtered_log = self._deep_copy_and_replace_words(self.log.getvalue(), secrets_to_hide)
-        filtered_body = self._deep_copy_and_replace_words(body, secrets_to_hide)
-
-        # get response data:
         try:
-            response_data = filtered_response.json()
-        except JSONDecodeError:
-            response_data = filtered_response.text
+            results, response, log, error_message = self.make_call()
 
-        result = {
-            "response": {
-                "status_code": filtered_response.status_code,
-                "reason": filtered_response.reason,
-                "data": response_data,
-                "headers": dict(filtered_response.headers),
-            },
-            "request": {
-                "url": response.request.url,
-                "method": response.request.method,
-                "data": filtered_body,
-                "headers": dict(filtered_response.request.headers),
-            },
-            "records": results,
-            "debug_log": filtered_log,
-        }
-        return result
+            body = None
+            if response.request.body:
+                if isinstance(response.request.body, bytes):
+                    body = response.request.body.decode("utf-8")
+                else:
+                    body = response.request.body
+
+            secrets_to_hide = self._get_values_to_hide()
+            filtered_response = self._deep_copy_and_replace_words(self._final_response, secrets_to_hide)
+            filtered_log = self._deep_copy_and_replace_words(self.log.getvalue(), secrets_to_hide)
+            filtered_body = self._deep_copy_and_replace_words(body, secrets_to_hide)
+
+            # get response data:
+            try:
+                response_data = filtered_response.json()
+            except JSONDecodeError:
+                response_data = filtered_response.text
+
+            result = {
+                "response": {
+                    "status_code": filtered_response.status_code,
+                    "reason": filtered_response.reason,
+                    "data": response_data,
+                    "headers": dict(filtered_response.headers),
+                },
+                "request": {
+                    "url": response.request.url,
+                    "method": response.request.method,
+                    "data": filtered_body,
+                    "headers": dict(filtered_response.request.headers),
+                },
+                "records": results,
+                "debug_log": filtered_log,
+            }
+            return result
+        except Exception as e:
+            logging.exception(e)
 
 
 """
