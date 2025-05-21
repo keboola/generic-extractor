@@ -28,13 +28,12 @@ class PageNumPagination(BasePagination):
 
 
 class PaginationBuilder:
-
     @classmethod
     def get_paginator(cls, pagination):
         """Factory function to create the appropriate paginator configuration."""
-        if pagination == 'offset':
+        if pagination == "offset":
             return OffsetPagination()
-        elif pagination == 'pagenum':
+        elif pagination == "pagenum":
             return PageNumPagination()
         else:
             return DummyPagination()

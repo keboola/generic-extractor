@@ -7,23 +7,21 @@ from keboola.utils.header_normalizer import DefaultHeaderNormalizer
 
 
 class HeaderNormalizer(DefaultHeaderNormalizer):
-
     def _normalize_column_name(self, column_name: str) -> str:
         # Your implementation here
 
         column_name = self._replace_whitespace(column_name)
         column_name = self._replace_forbidden(column_name)
-        if column_name.startswith('_'):
+        if column_name.startswith("_"):
             column_name = column_name[1:]
 
         return column_name
 
 
 class StuctureAnalyzer:
-
     def __init__(self):
         self.analyzer: Analyzer = Analyzer()
-        self.header_normalizer = HeaderNormalizer(forbidden_sub='_')
+        self.header_normalizer = HeaderNormalizer(forbidden_sub="_")
 
     def parse_row(self, row: dict[str, Any]):
         current_path = []
@@ -34,13 +32,14 @@ class StuctureAnalyzer:
         for name, value in row.items():
             self.analyzer.analyze_object(current_path, name, value)
 
-    def infer_mapping(self,
-                      primary_keys: Optional[list[str]] = None,
-                      parent_pkeys: Optional[list[str]] = None,
-                      user_data_columns: Optional[list[str]] = None,
-                      path_separator: str = '.',
-                      max_level: int = 2
-                      ) -> dict:
+    def infer_mapping(
+        self,
+        primary_keys: Optional[list[str]] = None,
+        parent_pkeys: Optional[list[str]] = None,
+        user_data_columns: Optional[list[str]] = None,
+        path_separator: str = ".",
+        max_level: int = 2,
+    ) -> dict:
         """
         Infer first level Generic Extractor mapping from data sample.
         Args:
@@ -53,15 +52,14 @@ class StuctureAnalyzer:
         Returns:
 
         """
-        result_mapping = self.__infer_mapping_from_structure_recursive(self.analyzer.node_hierarchy['children'],
-                                                                       primary_keys,
-                                                                       path_separator, max_level)
+        result_mapping = self.__infer_mapping_from_structure_recursive(
+            self.analyzer.node_hierarchy["children"], primary_keys, path_separator, max_level
+        )
 
         if parent_pkeys:
             for key in parent_pkeys:
                 if key in result_mapping:
-                    raise UserException(f"Parent {key} is already in the mapping, "
-                                        f"please change the placeholder name")
+                    raise UserException(f"Parent {key} is already in the mapping, please change the placeholder name")
                 result_mapping[key] = MappingElements.parent_primary_key_column(key)
         if user_data_columns:
             for key in user_data_columns:
@@ -82,7 +80,7 @@ class StuctureAnalyzer:
             simple_mapping = True
             col_name = value
             if isinstance(value, dict):
-                col_name = value['mapping']['destination']
+                col_name = value["mapping"]["destination"]
                 simple_mapping = False
 
             if col_name in seen.keys():
@@ -90,16 +88,20 @@ class StuctureAnalyzer:
                 if simple_mapping:
                     mapping[key] = f"{col_name}_{seen[col_name]}"
                 else:
-                    mapping[key]['mapping']['destination'] = f"{col_name}_{seen[col_name]}"
+                    mapping[key]["mapping"]["destination"] = f"{col_name}_{seen[col_name]}"
             else:
                 seen[col_name] = 0
         return mapping
 
-    def __infer_mapping_from_structure_recursive(self, node_hierarchy: dict[str, Any],
-                                                 primary_keys: Optional[list[str]] = None,
-                                                 path_separator: str = '.',
-                                                 max_level: int = 2, current_mapping: dict = None,
-                                                 current_level: int = 0) -> dict:
+    def __infer_mapping_from_structure_recursive(
+        self,
+        node_hierarchy: dict[str, Any],
+        primary_keys: Optional[list[str]] = None,
+        path_separator: str = ".",
+        max_level: int = 2,
+        current_mapping: dict = None,
+        current_level: int = 0,
+    ) -> dict:
         """
         Infer first level Generic Extractor mapping from data sample.
         Args:
@@ -115,7 +117,7 @@ class StuctureAnalyzer:
             current_mapping = {}
         for key, value in node_hierarchy.items():
             if isinstance(value, dict):
-                current_node: Node = value['node']
+                current_node: Node = value["node"]
                 path_key = path_separator.join(current_node.path)
                 normalized_header_name = self.header_normalizer._normalize_column_name(current_node.header_name)  # noqa
                 match current_node.data_type:
@@ -127,10 +129,14 @@ class StuctureAnalyzer:
 
                     case NodeType.DICT:
                         if current_level <= max_level:
-                            self.__infer_mapping_from_structure_recursive(value['children'], primary_keys,
-                                                                          path_separator,
-                                                                          max_level, current_mapping,
-                                                                          current_level)
+                            self.__infer_mapping_from_structure_recursive(
+                                value["children"],
+                                primary_keys,
+                                path_separator,
+                                max_level,
+                                current_mapping,
+                                current_level,
+                            )
                         else:
                             current_mapping[path_key] = MappingElements.force_type_column(normalized_header_name)
                     case _:
@@ -141,9 +147,9 @@ class StuctureAnalyzer:
                 if all(isinstance(item, dict) for item in value):
                     for idx, item in enumerate(value):
                         list_key = f"{key}[{idx}]"
-                        self.__infer_mapping_from_structure_recursive({list_key: item}, primary_keys,
-                                                                      path_separator, max_level,
-                                                                      current_mapping, current_level)
+                        self.__infer_mapping_from_structure_recursive(
+                            {list_key: item}, primary_keys, path_separator, max_level, current_mapping, current_level
+                        )
                 else:
                     # Handle list of non-dictionary items
                     current_mapping[key] = MappingElements.force_type_column(key)
@@ -156,49 +162,29 @@ class StuctureAnalyzer:
 class MappingElements:
     @staticmethod
     def primary_key_column(column_name: str) -> dict:
-        return {
-            "mapping": {
-                "destination": column_name,
-                "primaryKey": True
-            }
-        }
+        return {"mapping": {"destination": column_name, "primaryKey": True}}
 
     @staticmethod
     def parent_primary_key_column(column_name: str) -> dict:
-        return {
-            "type": "user",
-            "mapping": {
-                "destination": column_name,
-                "primaryKey": True
-            }
-        }
+        return {"type": "user", "mapping": {"destination": column_name, "primaryKey": True}}
 
     @staticmethod
     def force_type_column(column_name: str) -> dict:
-        return {
-            "type": "column",
-            "mapping": {
-                "destination": column_name
-            },
-            "forceType": True
-        }
+        return {"type": "column", "mapping": {"destination": column_name}, "forceType": True}
 
     @staticmethod
     def user_data_column(column_name: str) -> dict:
-        return {
-            "type": "user",
-            "mapping": {
-                "destination": column_name
-            }
-        }
+        return {"type": "user", "mapping": {"destination": column_name}}
 
 
-def infer_mapping(data: list[dict],
-                  primary_keys: Optional[list[str]] = None,
-                  parent_pkeys: Optional[list[str]] = None,
-                  user_data_columns: Optional[list[str]] = None,
-                  path_separator: str = '.',
-                  max_level_nest_level: int = 2) -> dict:
+def infer_mapping(
+    data: list[dict],
+    primary_keys: Optional[list[str]] = None,
+    parent_pkeys: Optional[list[str]] = None,
+    user_data_columns: Optional[list[str]] = None,
+    path_separator: str = ".",
+    max_level_nest_level: int = 2,
+) -> dict:
     """
     Infer first level Generic Extractor mapping from data sample.
     Args:
@@ -223,10 +209,13 @@ def infer_mapping(data: list[dict],
     for row in data:
         analyzer.parse_row(row)
 
-    result = analyzer.infer_mapping(primary_keys or [], parent_pkeys or [],
-                                    user_data_columns or [],
-                                    path_separator=path_separator,
-                                    max_level=max_level_nest_level)
+    result = analyzer.infer_mapping(
+        primary_keys or [],
+        parent_pkeys or [],
+        user_data_columns or [],
+        path_separator=path_separator,
+        max_level=max_level_nest_level,
+    )
     return result
 
 
@@ -239,5 +228,6 @@ def get_primary_key_columns(mapping: dict) -> list[str]:
     Returns:
 
     """
-    return [key for key, value in mapping.items() if
-            isinstance(value, dict) and value.get('mapping', {}).get('primaryKey')]
+    return [
+        key for key, value in mapping.items() if isinstance(value, dict) and value.get("mapping", {}).get("primaryKey")
+    ]
