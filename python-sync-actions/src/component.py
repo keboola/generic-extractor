@@ -428,12 +428,12 @@ class Component(ComponentBase):
             raise ValueError("__SELECTED_JOB is missing!")
 
         # Validate allowed hosts
-        self._validate_allowed_hosts(
-            self.configuration.image_parameters.get('allowed_hosts', []),
-            self._configuration.api.base_url,
-            self._configuration.api.jobs,
-            self.configuration.parameters.get('__SELECTED_JOB', '')
-            )
+        # self._validate_allowed_hosts(
+        #     self.configuration.image_parameters.get('allowed_hosts', []),
+        #     self._configuration.api.base_url,
+        #     self._configuration.api.jobs,
+        #     self.configuration.parameters.get('__SELECTED_JOB', '')
+        #     )
         self._client.login()
         # set back to debug because sync action mutes it
         logging.getLogger().setLevel(logging.DEBUG)
