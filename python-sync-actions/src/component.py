@@ -634,7 +634,7 @@ class Component(ComponentBase):
                 "headers": dict(filtered_response.request.headers)
             },
             "records": results,
-            "debug_log": filtered_log
+            "debug_log": f"Version2 \n {filtered_log}"
         }
         return result
 
