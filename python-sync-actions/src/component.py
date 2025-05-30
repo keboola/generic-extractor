@@ -350,14 +350,14 @@ class Component(ComponentBase):
             result_arrays = []
             if isinstance(response_data, list):
                 return response_data
-
-            for k, data_value in response_data.items():
-                if isinstance(data_value, list):
-                    result_arrays.append(data_value)
-                if isinstance(data_value, dict):
-                    res = find_array_property_path(data_value)
-                    if res is not None:
-                        result_arrays.extend(res)
+            elif isinstance(response_data, dict):
+                for k, data_value in response_data.items():
+                    if isinstance(data_value, list):
+                        result_arrays.append(data_value)
+                    if isinstance(data_value, dict):
+                        res = find_array_property_path(data_value)
+                        if res is not None:
+                            result_arrays.extend(res)
 
             if len(result_arrays) == 1:
                 return result_arrays[0]
@@ -371,14 +371,16 @@ class Component(ComponentBase):
         elif path.path == '.':
             result = data
         else:
-            keys = path.path.split(path.delimiter)
-            value = data.copy()
             try:
+                keys = path.path.split(path.delimiter)
+                value = data.copy()
                 for key in keys:
                     value = value[key]
                 result = value
             except KeyError:
                 result = [f"Path {path.path} not found in the response data"]
+            except AttributeError:
+                result = data
 
         if result is None:
             result = ["No suitable array element found in the response data, please define the Data Selector path."]
