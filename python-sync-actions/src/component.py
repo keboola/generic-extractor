@@ -7,6 +7,7 @@ import copy
 import logging
 import tempfile
 from io import StringIO
+import traceback
 from typing import Any
 from urllib.parse import urlparse
 from urllib.parse import urlencode
@@ -611,7 +612,7 @@ class Component(ComponentBase):
             }
             return result
         except Exception as e:
-            logging.exception(e)
+            return {"traceback": traceback.format_exception(e)}
 
 
 """
