@@ -190,7 +190,11 @@ def convert_to_v2(configuration: dict) -> list[Configuration]:
     base_url = api_json.get("baseUrl", "")
     jobs = configuration.get("config", {}).get("jobs", [])
     default_headers_org = api_json.get("http", {}).get("headers", {})
-    default_query_parameters_org = api_json.get("http", {}).get("defaultOptions", {}).get("params", {})
+
+    default_query_parameters_org = {}
+    if http_conf := api_json.get("http"):
+        if default_options := http_conf.get("defaultOptions"):
+            default_query_parameters_org = default_options.get("params") or {}
 
     auth_method = configuration.get("config").get("__AUTH_METHOD")
 
