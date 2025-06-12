@@ -6,24 +6,25 @@ Template Component main class.
 import copy
 import logging
 import tempfile
-from io import StringIO
 import traceback
+from functools import wraps
+from io import StringIO
 from typing import Any
-from urllib.parse import urlparse
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlparse
+
+import requests
+from keboola.component.base import ComponentBase, sync_action
+from keboola.component.exceptions import UserException
+from requests.exceptions import JSONDecodeError
 
 import configuration
-import requests
 from actions.curl import build_job_from_curl
 from actions.mapping import infer_mapping
 from configuration import ConfigHelpers, Configuration
 from http_generic.auth import AuthBuilderError, AuthMethodBuilder
 from http_generic.client import GenericHttpClient, HttpClientError
 from http_generic.pagination import PaginationBuilder
-from keboola.component.base import ComponentBase, sync_action
-from keboola.component.exceptions import UserException
 from placeholders_utils import PlaceholdersUtils
-from requests.exceptions import JSONDecodeError
 
 MAX_CHILD_CALLS = 20
 
@@ -35,6 +36,20 @@ KEY_PRINT_HELLO = "print_hello"
 # component will fail with readable message on initialization.
 REQUIRED_PARAMETERS = [KEY_PRINT_HELLO]
 REQUIRED_IMAGE_PARS = []
+
+
+def sync_action_exception_handler(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            return {
+                "status": "exception",
+                "traceback": traceback.format_exception(e),
+            }
+
+    return wrapper
 
 
 class Component(ComponentBase):
@@ -512,6 +527,7 @@ class Component(ComponentBase):
         return final_results, self._final_response, self.log.getvalue(), error_message
 
     @sync_action("load_from_curl")
+    @sync_action_exception_handler
     def load_from_curl(self) -> dict:
         """
         Load configuration from cURL command
@@ -525,6 +541,7 @@ class Component(ComponentBase):
         return job.to_dict()
 
     @sync_action("infer_mapping")
+    @sync_action_exception_handler
     def infer_mapping(self) -> dict:
         """
         Load configuration from cURL command
@@ -562,6 +579,7 @@ class Component(ComponentBase):
         return mapping
 
     @sync_action("perform_function")
+    @sync_action_exception_handler
     def perform_function_sync(self) -> dict:
         self.init_component()
         function_cfg = self.configuration.parameters["__FUNCTION_CFG"]
@@ -572,47 +590,45 @@ class Component(ComponentBase):
         }
 
     @sync_action("test_request")
+    @sync_action_exception_handler
     def test_request(self):
+        results, response, log, error_message = self.make_call()
+
+        body = None
+        if response.request.body:
+            if isinstance(response.request.body, bytes):
+                body = response.request.body.decode("utf-8")
+            else:
+                body = response.request.body
+
+        secrets_to_hide = self._get_values_to_hide()
+        filtered_response = self._deep_copy_and_replace_words(self._final_response, secrets_to_hide)
+        filtered_log = self._deep_copy_and_replace_words(self.log.getvalue(), secrets_to_hide)
+        filtered_body = self._deep_copy_and_replace_words(body, secrets_to_hide)
+
+        # get response data:
         try:
-            results, response, log, error_message = self.make_call()
+            response_data = filtered_response.json()
+        except JSONDecodeError:
+            response_data = filtered_response.text
 
-            body = None
-            if response.request.body:
-                if isinstance(response.request.body, bytes):
-                    body = response.request.body.decode("utf-8")
-                else:
-                    body = response.request.body
-
-            secrets_to_hide = self._get_values_to_hide()
-            filtered_response = self._deep_copy_and_replace_words(self._final_response, secrets_to_hide)
-            filtered_log = self._deep_copy_and_replace_words(self.log.getvalue(), secrets_to_hide)
-            filtered_body = self._deep_copy_and_replace_words(body, secrets_to_hide)
-
-            # get response data:
-            try:
-                response_data = filtered_response.json()
-            except JSONDecodeError:
-                response_data = filtered_response.text
-
-            result = {
-                "response": {
-                    "status_code": filtered_response.status_code,
-                    "reason": filtered_response.reason,
-                    "data": response_data,
-                    "headers": dict(filtered_response.headers),
-                },
-                "request": {
-                    "url": response.request.url,
-                    "method": response.request.method,
-                    "data": filtered_body,
-                    "headers": dict(filtered_response.request.headers),
-                },
-                "records": results,
-                "debug_log": filtered_log,
-            }
-            return result
-        except Exception as e:
-            return {"traceback": traceback.format_exception(e)}
+        result = {
+            "response": {
+                "status_code": filtered_response.status_code,
+                "reason": filtered_response.reason,
+                "data": response_data,
+                "headers": dict(filtered_response.headers),
+            },
+            "request": {
+                "url": response.request.url,
+                "method": response.request.method,
+                "data": filtered_body,
+                "headers": dict(filtered_response.request.headers),
+            },
+            "records": results,
+            "debug_log": filtered_log,
+        }
+        return result
 
 
 """
