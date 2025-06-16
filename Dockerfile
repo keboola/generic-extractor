@@ -132,6 +132,11 @@ RUN curl https://cacerts.digicert.com/GeoTrustRSACA2018.crt.pem --output /usr/lo
     && update-ca-certificates
 
 
+ENV REQUESTS_CA_BUNDLE="/etc/ssl/certs/ca-certificates.crt"
+ENV SSL_CERT_FILE="/etc/ssl/certs/ca-certificates.crt"
+ENV CURL_CA_BUNDLE="/etc/ssl/certs/ca-certificates.crt"
+
+
 ## Composer - deps always cached unless changed
 # First copy only composer files
 COPY composer.* /code/
