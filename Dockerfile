@@ -131,10 +131,8 @@ RUN curl https://cacerts.digicert.com/GeoTrustRSACA2018.crt.pem --output /usr/lo
     && curl https://cacerts.digicert.com/DigiCertGlobalRootCA.crt.pem --output /usr/local/share/ca-certificates/DigiCertGlobalRootCA.crt \
     && update-ca-certificates
 
-
-ENV REQUESTS_CA_BUNDLE="/etc/ssl/certs/ca-certificates.crt"
-ENV SSL_CERT_FILE="/etc/ssl/certs/ca-certificates.crt"
-ENV CURL_CA_BUNDLE="/etc/ssl/certs/ca-certificates.crt"
+RUN cat /usr/local/share/ca-certificates/GeoTrustRSACA2018.crt >> /etc/ssl/certs/ca-certificates.crt \
+    && cat /usr/local/share/ca-certificates/DigiCertGlobalRootCA.crt >> /etc/ssl/certs/ca-certificates.crt
 
 
 ## Composer - deps always cached unless changed
