@@ -127,12 +127,16 @@ ENV LC_ALL=en_US.UTF-8
 ## From "man update-ca-certificates":
 ## > Furthermore all certificates with a .crt  extension found below
 ## > /usr/local/share/ca-certificates are also included as implicitly trusted.
-RUN curl https://cacerts.digicert.com/GeoTrustRSACA2018.crt.pem --output /usr/local/share/ca-certificates/GeoTrustRSACA2018.crt \
-    && curl https://cacerts.digicert.com/DigiCertGlobalRootCA.crt.pem --output /usr/local/share/ca-certificates/DigiCertGlobalRootCA.crt \
-    && update-ca-certificates
+RUN curl https://cacerts.digicert.com/GeoTrustRSACA2018.crt.pem --output /usr/local/share/ca-certificates/GeoTrustRSACA2018.crt
+RUN curl https://cacerts.digicert.com/DigiCertGlobalRootCA.crt.pem --output /usr/local/share/ca-certificates/DigiCertGlobalRootCA.crt
+RUN curl -o /tmp/ThawteEVRSACAG2.crt https://cacerts.digicert.com/ThawteEVRSACAG2.crt \
+    && openssl x509 -inform der -in /tmp/ThawteEVRSACAG2.crt -out /usr/local/share/ca-certificates/ThawteEVRSACAG2.crt \
+    && rm /tmp/ThawteEVRSACAG2.crt
+RUN update-ca-certificates
 
-RUN cat /usr/local/share/ca-certificates/GeoTrustRSACA2018.crt >> /etc/ssl/certs/ca-certificates.crt \
-    && cat /usr/local/share/ca-certificates/DigiCertGlobalRootCA.crt >> /etc/ssl/certs/ca-certificates.crt
+ENV REQUESTS_CA_BUNDLE="/etc/ssl/certs/ca-certificates.crt"
+ENV SSL_CERT_FILE="/etc/ssl/certs/ca-certificates.crt"
+ENV CURL_CA_BUNDLE="/etc/ssl/certs/ca-certificates.crt"
 
 
 ## Composer - deps always cached unless changed
@@ -148,4 +152,5 @@ COPY . /code/
 # Run normal composer - all deps are cached already
 RUN composer install $COMPOSER_FLAGS
 
-CMD ["php", "/code/src/run.php"]
+# CMD ["php", "/code/src/run.php"]
+CMD ["/bin/bash"]
