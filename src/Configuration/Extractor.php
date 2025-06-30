@@ -65,8 +65,6 @@ class Extractor
     {
         $data = $this->loadJSONFile($dataDir, 'config.json');
 
-        $this->validateAllowedHosts($data);
-
         $processor = new Processor();
         try {
             $processor->processConfiguration(new ConfigFile(), $data);
@@ -167,6 +165,7 @@ class Extractor
         }
 
         $this->validateApiConfig();
+        $this->validateAllowedHosts($this->config, $configAttributes);
 
         return new Api($this->logger, $this->config['parameters']['api'], $configAttributes, $authorization);
     }
@@ -294,13 +293,23 @@ class Extractor
     /**
      * Builds complete URLs from base URL and endpoints
      *
-     * @param string $baseUrl Base URL
+     * @param string|array $baseUrl Base URL (string nebo pole)
      * @param array $endpoints Array of endpoint configurations
      * @return array List of complete URLs
      */
-    private function buildUrls(string $baseUrl, array $endpoints): array
+    private function buildUrls($baseUrl, array $endpoints, array $configAttributes = []): array
     {
-        $urls = [$baseUrl];
+        if (is_string($baseUrl)) {
+            $baseUrlCreated = $baseUrl;
+        } else {
+            try {
+                $baseUrlCreated = UserFunction::build([$baseUrl], ['attr' => $configAttributes])[0];
+            } catch (\Throwable $e) {
+                throw new UserException('Error in baseUrl function: ' . $e->getMessage());
+            }
+        }
+
+        $urls = [];
 
         foreach ($endpoints as $endpointData) {
             $endpoint = $endpointData['endpoint'];
@@ -318,7 +327,7 @@ class Extractor
                 $endpoint .= (strpos($endpoint, '?') === false ? '?' : '&') . $queryString;
             }
 
-            $urls[] = rtrim($baseUrl, '/') . '/' . ltrim($endpoint, '/');
+            $urls[] = rtrim($baseUrlCreated, '/') . '/' . ltrim($endpoint, '/');
         }
 
         return $urls;
@@ -330,64 +339,62 @@ class Extractor
      * @param array $config Configuration array
      * @throws UserException If URL validation fails
      */
-    private function validateAllowedHosts(array $config): void
+    private function validateAllowedHosts(array $config, array $configAttributes = []): void
     {
-        if (!isset($config['image_parameters']['allowed_hosts'])) {
-            return;
-        }
-
-        if (empty($config['image_parameters']['allowed_hosts'])) {
+        $allowedHosts = $config['image_parameters']['allowed_hosts'] ?? [];
+        if (empty($allowedHosts)) {
             return;
         }
 
         $baseUrl = $config['parameters']['api']['baseUrl'];
         $endpoints = $config['parameters']['config']['jobs'];
-        $urls = $this->buildUrls($baseUrl, $endpoints);
-
-        $allowedHosts = array_map(function ($host) {
-            return $host['host'];
-        }, $config['image_parameters']['allowed_hosts']);
+        $urls = $this->buildUrls($baseUrl, $endpoints, $configAttributes);
 
         foreach ($urls as $url) {
-            $isAllowed = false;
             $parsedUrl = parse_url($url);
-            $urlPath = $parsedUrl['path'] ?? '';
+            $urlPath = rtrim($parsedUrl['path'] ?? '', '/');
             $urlHost = $parsedUrl['host'] ?? '';
             $urlPort = $parsedUrl['port'] ?? null;
             $urlScheme = $parsedUrl['scheme'] ?? '';
 
+            // Handle URLs without scheme where host is in path
+            if (empty($urlHost) && !empty($urlPath)) {
+                $pathParts = explode('/', $urlPath, 2);
+                $urlHost = $pathParts[0];
+                $urlPath = isset($pathParts[1]) ? '/' . $pathParts[1] : '';
+            }
+
+            $isAllowed = false;
             foreach ($allowedHosts as $allowedHost) {
-                $parsedAllowedHost = parse_url($allowedHost);
-                $allowedHostPath = $parsedAllowedHost['path'] ?? '';
-                $allowedHostHost = $parsedAllowedHost['host'] ?? '';
-                $allowedHostPort = $parsedAllowedHost['port'] ?? null;
-                $allowedHostScheme = $parsedAllowedHost['scheme'] ?? '';
-
-                // Schema comparison
-                if ($urlScheme !== $allowedHostScheme) {
+                // Check if host matches
+                if ($allowedHost['host'] !== $urlHost) {
                     continue;
                 }
 
-                // Port comparison
-                if ($urlPort !== $allowedHostPort) {
+                // Check scheme if specified
+                if (isset($allowedHost['scheme']) && $allowedHost['scheme'] !== $urlScheme) {
                     continue;
                 }
 
-                // Host comparison
-                if ($urlHost !== $allowedHostHost) {
+                // Check port if specified
+                if (isset($allowedHost['port']) && $allowedHost['port'] !== $urlPort) {
                     continue;
                 }
 
-                // Path comparison
-                $normalizedUrlPath = rtrim($urlPath, '/');
-                $normalizedAllowedPath = rtrim($allowedHostPath, '/');
-
-                if ($normalizedAllowedPath === '') {
+                $allowedPath = rtrim($allowedHost['endpoint'] ?? '', '/');
+                if (empty($allowedPath)) {
                     $isAllowed = true;
                     break;
                 }
 
-                if (strpos($normalizedUrlPath . '/', $normalizedAllowedPath . '/') === 0) {
+                $urlSegments = explode('/', trim($urlPath, '/'));
+                $allowedSegments = explode('/', trim($allowedPath, '/'));
+
+                if (count($urlSegments) < count($allowedSegments)) {
+                    continue;
+                }
+
+                if (array_slice($urlSegments, 0, count($allowedSegments)) === $allowedSegments) {
                     $isAllowed = true;
                     break;
                 }
