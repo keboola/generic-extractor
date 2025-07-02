@@ -42,7 +42,6 @@ class AuthMethodBase(ABC):
 
 
 class AuthMethodBuilder:
-
     @classmethod
     def build(cls, method_name: str, **parameters):
         """
@@ -57,8 +56,9 @@ class AuthMethodBuilder:
         supported_actions = cls.get_methods()
 
         if method_name not in list(supported_actions.keys()):
-            raise AuthBuilderError(f'{method_name} is not supported auth method, '
-                                   f'supported values are: [{list(supported_actions.keys())}]')
+            raise AuthBuilderError(
+                f"{method_name} is not supported auth method, supported values are: [{list(supported_actions.keys())}]"
+            )
         parameters = cls._convert_secret_parameters(supported_actions[method_name], **parameters)
         cls._validate_method_arguments(supported_actions[method_name], **parameters)
 
@@ -67,20 +67,21 @@ class AuthMethodBuilder:
     @staticmethod
     def _validate_method_arguments(c_converted_method: object, **args):
         class_prefix = f"_{c_converted_method.__name__}__"
-        arguments = [p for p in inspect.signature(c_converted_method.__init__).parameters if p != 'self']
+        arguments = [p for p in inspect.signature(c_converted_method.__init__).parameters if p != "self"]
         missing_arguments = []
         for p in arguments:
             if p not in args:
-                missing_arguments.append(p.replace(class_prefix, '#'))
+                missing_arguments.append(p.replace(class_prefix, "#"))
         if missing_arguments:
-            raise AuthBuilderError(f'Some arguments of method {c_converted_method.__name__} '
-                                   f'are missing: {missing_arguments}')
+            raise AuthBuilderError(
+                f"Some arguments of method {c_converted_method.__name__} are missing: {missing_arguments}"
+            )
 
     @staticmethod
     def _convert_secret_parameters(c_converted_method: object, **parameters):
         new_parameters = {}
         for p in parameters:
-            new_parameters[p.replace('#', f'_{c_converted_method.__name__}__')] = parameters[p]
+            new_parameters[p.replace("#", f"_{c_converted_method.__name__}__")] = parameters[p]
         return new_parameters
 
     @staticmethod
@@ -99,8 +100,8 @@ class AuthMethodBuilder:
 
 # TODO: Add all supported authentication methods that will be covered by the UI
 
-class BasicHttp(AuthMethodBase):
 
+class BasicHttp(AuthMethodBase):
     def __init__(self, username, __password):
         self.username = username
         self.password = __password
@@ -109,17 +110,15 @@ class BasicHttp(AuthMethodBase):
         return HTTPBasicAuth(username=self.username, password=self.password)
 
     def __eq__(self, other):
-        return all([
-            self.username == getattr(other, 'username', None),
-            self.password == getattr(other, 'password', None)
-        ])
+        return all(
+            [self.username == getattr(other, "username", None), self.password == getattr(other, "password", None)]
+        )
 
     def get_secrets(self):
         return [auth._basic_auth_str(self.username, self.password)]
 
 
 class BearerToken(AuthMethodBase, AuthBase):
-
     def get_secrets(self) -> list[str]:
         return [self.token]
 
@@ -130,15 +129,13 @@ class BearerToken(AuthMethodBase, AuthBase):
         return self
 
     def __eq__(self, other):
-        return all([
-            self.token == getattr(other, 'token', None)
-        ])
+        return all([self.token == getattr(other, "token", None)])
 
     def __ne__(self, other):
         return not self == other
 
     def __call__(self, r):
-        r.headers['authorization'] = f"Bearer {self.token}"
+        r.headers["authorization"] = f"Bearer {self.token}"
         return r
 
 
@@ -155,18 +152,16 @@ class ApiKey(AuthMethodBase, AuthBase):
         return self
 
     def __eq__(self, other):
-        return all([
-            self.token == getattr(other, 'token', None)
-        ])
+        return all([self.token == getattr(other, "token", None)])
 
     def __ne__(self, other):
         return not self == other
 
     def __call__(self, r):
-        if self.position == 'headers':
+        if self.position == "headers":
             r.headers[self.key] = f"{self.token}"
 
-        elif self.position == 'query':
+        elif self.position == "query":
             parsed_url = urlparse(r.url)
             query_params = parse_qs(parsed_url.query)
             query_params.update({self.key: self.token})
@@ -194,13 +189,17 @@ class Query(AuthMethodBase, AuthBase):
 
 
 class Login(AuthMethodBase, AuthBase):
-
-    def __init__(self, login_endpoint: str, method: str = 'GET',
-                 login_query_parameters: dict = None,
-                 login_query_body=None,
-                 login_content_type: str = ContentType.json.value,
-                 login_headers: dict = None,
-                 api_request_headers: dict = None, api_request_query_parameters: dict = None):
+    def __init__(
+        self,
+        login_endpoint: str,
+        method: str = "GET",
+        login_query_parameters: dict = None,
+        login_query_body=None,
+        login_content_type: str = ContentType.json.value,
+        login_headers: dict = None,
+        api_request_headers: dict = None,
+        api_request_query_parameters: dict = None,
+    ):
         """
 
         Args:
@@ -221,8 +220,9 @@ class Login(AuthMethodBase, AuthBase):
         self.api_request_query_parameters = api_request_query_parameters or {}
 
     @classmethod
-    def _retrieve_response_placeholders(cls, request_object: dict, separator: str = '.', current_path: str = '') -> \
-            list[str]:
+    def _retrieve_response_placeholders(
+        cls, request_object: dict, separator: str = ".", current_path: str = ""
+    ) -> list[str]:
         """
         Recursively retreive all values that contain object with key `response` and return it's value and json path
         Args:
@@ -231,7 +231,7 @@ class Login(AuthMethodBase, AuthBase):
         Returns:
 
         """
-        request_object_str = json.dumps(request_object, separators=(',', ':'))
+        request_object_str = json.dumps(request_object, separators=(",", ":"))
         lookup_str_func = r'"response":"([^"]*)"'
         # Use re.search to find the pattern in your_string
         matches = re.findall(lookup_str_func, request_object_str)
@@ -249,10 +249,10 @@ class Login(AuthMethodBase, AuthBase):
 
         """
         response_placeholders = self._retrieve_response_placeholders(source_object_params)
-        source_object_params_str = json.dumps(source_object_params, separators=(',', ':'))
+        source_object_params_str = json.dumps(source_object_params, separators=(",", ":"))
         for placeholder in response_placeholders:
             lookup_str = '{"response":"' + placeholder + '"}'
-            value_to_replace = get_data_from_path(placeholder, response_data, separator='.', strict=False)
+            value_to_replace = get_data_from_path(placeholder, response_data, separator=".", strict=False)
             source_object_params_str = source_object_params_str.replace(lookup_str, '"' + value_to_replace + '"')
         return json.loads(source_object_params_str)
 
@@ -260,25 +260,29 @@ class Login(AuthMethodBase, AuthBase):
         request_parameters = {}
 
         if self.login_content_type == ContentType.json:
-            request_parameters['json'] = self.login_query_body
+            request_parameters["json"] = self.login_query_body
         elif self.login_content_type == ContentType.form:
-            request_parameters['data'] = self.login_query_body
+            request_parameters["data"] = self.login_query_body
 
-        response = requests.request(self.method, self.login_endpoint, params=self.login_query_parameters,
-                                    headers=self.login_headers,
-                                    **request_parameters)
+        response = requests.request(
+            self.method,
+            self.login_endpoint,
+            params=self.login_query_parameters,
+            headers=self.login_headers,
+            **request_parameters,
+        )
 
         response.raise_for_status()
 
         self.api_request_headers = self._replace_placeholders_with_response(response.json(), self.api_request_headers)
-        self.api_request_query_parameters = self._replace_placeholders_with_response(response.json(),
-                                                                                     self.api_request_query_parameters)
+        self.api_request_query_parameters = self._replace_placeholders_with_response(
+            response.json(), self.api_request_query_parameters
+        )
         cfg_helpers = ConfigHelpers()
-        self.api_request_headers = cfg_helpers.fill_in_user_parameters(self.api_request_headers, {},
-                                                                       True)
-        self.api_request_query_parameters = cfg_helpers.fill_in_user_parameters(self.api_request_query_parameters,
-                                                                                {},
-                                                                                True)
+        self.api_request_headers = cfg_helpers.fill_in_user_parameters(self.api_request_headers, {}, True)
+        self.api_request_query_parameters = cfg_helpers.fill_in_user_parameters(
+            self.api_request_query_parameters, {}, True
+        )
         return self
 
     def get_secrets(self) -> list[str]:
@@ -292,7 +296,6 @@ class Login(AuthMethodBase, AuthBase):
         return secrets
 
     def __call__(self, r):
-
         r.url = f"{r.url}"
         if self.api_request_query_parameters:
             r.url = f"{r.url}?{urlencode(self.api_request_query_parameters)}"
@@ -301,12 +304,14 @@ class Login(AuthMethodBase, AuthBase):
 
 
 class OAuth20ClientCredentials(AuthMethodBase, AuthBase):
-
-    def __init__(self, login_endpoint: str,
-                 client_secret: str,
-                 client_id: str,
-                 method: Literal['client_secret_post', 'client_secret_basic'] = 'client_secret_basic',
-                 scopes: list[str] = None):
+    def __init__(
+        self,
+        login_endpoint: str,
+        client_secret: str,
+        client_id: str,
+        method: Literal["client_secret_post", "client_secret_basic"] = "client_secret_basic",
+        scopes: list[str] = None,
+    ):
         """
 
         Args:
@@ -327,24 +332,24 @@ class OAuth20ClientCredentials(AuthMethodBase, AuthBase):
         data = {"grant_type": "client_credentials"}
         auth = None
         if self.scopes:
-            data['scope'] = ' '.join(self.scopes)
+            data["scope"] = " ".join(self.scopes)
 
-        if self.method == 'client_secret_post':
-            data['client_id'] = self.client_id
-            data['client_secret'] = self.client_secret
-        elif self.method == 'client_secret_basic':
+        if self.method == "client_secret_post":
+            data["client_id"] = self.client_id
+            data["client_secret"] = self.client_secret
+        elif self.method == "client_secret_basic":
             auth = (self.client_id, self.client_secret)
 
-        response = requests.request('POST', self.login_endpoint, data=data, auth=auth)
+        response = requests.request("POST", self.login_endpoint, data=data, auth=auth)
 
         response.raise_for_status()
 
-        self.auth_header = {'Authorization': f"Bearer {response.json()['access_token']}"}
+        self.auth_header = {"Authorization": f"Bearer {response.json()['access_token']}"}
 
         return self
 
     def get_secrets(self) -> list[str]:
-        return [self.auth_header['Authorization']]
+        return [self.auth_header["Authorization"]]
 
     def __call__(self, r):
         r.headers.update(self.auth_header)

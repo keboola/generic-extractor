@@ -15,18 +15,24 @@ class HttpClientError(Exception):
 
 # TODO: add support for pagination methods
 class GenericHttpClient(HttpClient):
-
-    def __init__(self, base_url: str,
-                 default_http_header: dict = None,
-                 default_params: dict = None,
-                 auth_method: AuthMethodBase = None,
-                 max_retries: int = 10,
-                 backoff_factor: float = 0.3,
-                 status_forcelist: tuple[int, ...] = (500, 502, 504)
-                 ):
-        super().__init__(base_url=base_url, max_retries=max_retries, backoff_factor=backoff_factor,
-                         status_forcelist=status_forcelist,
-                         default_http_header=default_http_header, default_params=default_params)
+    def __init__(
+        self,
+        base_url: str,
+        default_http_header: dict = None,
+        default_params: dict = None,
+        auth_method: AuthMethodBase = None,
+        max_retries: int = 10,
+        backoff_factor: float = 0.3,
+        status_forcelist: tuple[int, ...] = (500, 502, 504),
+    ):
+        super().__init__(
+            base_url=base_url,
+            max_retries=max_retries,
+            backoff_factor=backoff_factor,
+            status_forcelist=status_forcelist,
+            default_http_header=default_http_header,
+            default_params=default_params,
+        )
 
         self._auth_method = auth_method
 
@@ -47,15 +53,21 @@ class GenericHttpClient(HttpClient):
             return resp
         except HTTPError as e:
             if e.response.status_code in self.status_forcelist:
-                message = f'Request "{method}: {endpoint_path}" failed, too many retries. ' \
-                          f'Status Code: {e.response.status_code}. Response: {e.response.text}'
+                message = (
+                    f'Request "{method}: {endpoint_path}" failed, too many retries. '
+                    f"Status Code: {e.response.status_code}. Response: {e.response.text}"
+                )
             else:
-                message = f'Request "{method}: {endpoint_path}" failed with non-retryable error. ' \
-                          f'Status Code: {e.response.status_code}. Response: {e.response.text}'
+                message = (
+                    f'Request "{method}: {endpoint_path}" failed with non-retryable error. '
+                    f"Status Code: {e.response.status_code}. Response: {e.response.text}"
+                )
             raise HttpClientError(message, resp) from e
         except InvalidJSONError:
-            message = f'Request "{method}: {endpoint_path}" failed. The JSON payload is invalid (more in detail). ' \
-                      f'Verify the datatype conversion.'
+            message = (
+                f'Request "{method}: {endpoint_path}" failed. The JSON payload is invalid (more in detail). '
+                f"Verify the datatype conversion."
+            )
             raise HttpClientError(message, resp)
         except ConnectionError as e:
             message = f'Request "{method}: {endpoint_path}" failed with the following error: {e}'
@@ -75,9 +87,9 @@ class GenericHttpClient(HttpClient):
             backoff_factor=self.backoff_factor,
             status_forcelist=self.status_forcelist,
             allowed_methods=self.allowed_methods,
-            raise_on_status=False
+            raise_on_status=False,
         )
         adapter = HTTPAdapter(max_retries=retry)
-        session.mount('http://', adapter)
-        session.mount('https://', adapter)
+        session.mount("http://", adapter)
+        session.mount("https://", adapter)
         return session

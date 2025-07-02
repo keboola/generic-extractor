@@ -27,7 +27,7 @@ class JobTemplate:
             "dataType": self.dataType,
             "dataField": self.dataField,
             "params": self.params,
-            "headers": self.headers
+            "headers": self.headers,
         }
 
 
@@ -56,7 +56,7 @@ def retrieve_url(curl_command: str) -> str:
         raise ValueError("Not a valid cURL command")
 
     # find valid URL
-    url = ''
+    url = ""
     for t in tokens:
         token_string = t
         if t.startswith("'") and t.endswith("'"):
@@ -80,16 +80,16 @@ def normalize_url_in_curl(curl_command: str) -> tuple[str, str]:
     Returns: converted command, original url
 
     """
-    unsupported_characters = ['{', '}']
+    unsupported_characters = ["{", "}"]
     url = retrieve_url(curl_command)
     original_url = None
     new_url = url
 
     if any([char in url for char in unsupported_characters]):
-        original_url = url.split('?')[0]
+        original_url = url.split("?")[0]
 
     for character in unsupported_characters:
-        new_url = new_url.replace(character, '_')
+        new_url = new_url.replace(character, "_")
 
     new_curl_command = curl_command.replace(url, new_url)
     return new_curl_command, original_url
@@ -130,7 +130,7 @@ def parse_curl(curl_command: str) -> dict:
     result = json.loads(stdout_str)
     # replace the original URL in case it was changed to enable child job detection
     if original_url:
-        result['url'] = original_url
+        result["url"] = original_url
 
     return result
 
@@ -146,7 +146,7 @@ def _get_endpoint_path(base_url: str, url: str) -> str:
 
     """
     if url.startswith(base_url):
-        return url[len(base_url):]
+        return url[len(base_url) :]
     else:
         return url
 
@@ -161,10 +161,10 @@ def _get_content_type(headers: dict) -> str:
 
     """
     for key, value in headers.items():
-        if key.lower() == 'content-type':
+        if key.lower() == "content-type":
             return value
 
-    return ''
+    return ""
 
 
 def build_job_from_curl(curl_command: str, base_url: str = None, is_child_job: bool = False) -> JobTemplate:
@@ -181,32 +181,33 @@ def build_job_from_curl(curl_command: str, base_url: str = None, is_child_job: b
     parsed_curl = parse_curl(curl_command)
 
     if base_url:
-        job_template.endpoint = _get_endpoint_path(base_url, parsed_curl['url'])
+        job_template.endpoint = _get_endpoint_path(base_url, parsed_curl["url"])
     else:
-        job_template.endpoint = parsed_curl['url']
+        job_template.endpoint = parsed_curl["url"]
 
-    parsed_method = parsed_curl['method'].upper()
-    content_type = _get_content_type(parsed_curl.get('headers', {})).lower()
+    parsed_method = parsed_curl["method"].upper()
+    content_type = _get_content_type(parsed_curl.get("headers", {})).lower()
     if parsed_method == "POST" and content_type == "application/json":
-        job_template.params = parsed_curl.get('data', {})
+        job_template.params = parsed_curl.get("data", {})
         job_template.method = "POST"
 
-        if parsed_curl.get('queries'):
+        if parsed_curl.get("queries"):
             raise UserException("Query parameters are not supported for POST requests with JSON content type")
 
     elif parsed_method == "POST" and content_type == "application/x-www-form-urlencoded":
-        job_template.params = parsed_curl.get('data', {})
+        job_template.params = parsed_curl.get("data", {})
         job_template.method = "FORM"
     elif parsed_method == "GET":
-        job_template.params = parsed_curl.get('queries', {})
+        job_template.params = parsed_curl.get("queries", {})
         job_template.method = "GET"
     else:
-        raise UserException(f"Unsupported method {parsed_method}, "
-                            f"only GET, POST with JSON and POST with form data are supported.")
+        raise UserException(
+            f"Unsupported method {parsed_method}, only GET, POST with JSON and POST with form data are supported."
+        )
 
-    job_template.method = parsed_curl['method'].upper()
-    job_template.headers = parsed_curl.get('headers', {})
-    job_template.dataType = job_template.endpoint.split('/')[-1]
+    job_template.method = parsed_curl["method"].upper()
+    job_template.headers = parsed_curl.get("headers", {})
+    job_template.dataType = job_template.endpoint.split("/")[-1]
     job_template.dataField = {"path": ".", "separator": "."}
 
     return job_template

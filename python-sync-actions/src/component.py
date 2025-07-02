@@ -2,32 +2,35 @@
 Template Component main class.
 
 """
+
 import copy
 import logging
 import tempfile
+import traceback
+from functools import wraps
 from io import StringIO
 from typing import Any
-from urllib.parse import urlparse
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlparse
+
+import requests
+from keboola.component.base import ComponentBase, sync_action
+from keboola.component.exceptions import UserException
+from requests.exceptions import JSONDecodeError
 
 import configuration
-import requests
 from actions.curl import build_job_from_curl
 from actions.mapping import infer_mapping
 from configuration import ConfigHelpers, Configuration
 from http_generic.auth import AuthBuilderError, AuthMethodBuilder
 from http_generic.client import GenericHttpClient, HttpClientError
 from http_generic.pagination import PaginationBuilder
-from keboola.component.base import ComponentBase, sync_action
-from keboola.component.exceptions import UserException
 from placeholders_utils import PlaceholdersUtils
-from requests.exceptions import JSONDecodeError
 
 MAX_CHILD_CALLS = 20
 
 # configuration variables
-KEY_API_TOKEN = '#api_token'
-KEY_PRINT_HELLO = 'print_hello'
+KEY_API_TOKEN = "#api_token"
+KEY_PRINT_HELLO = "print_hello"
 
 # list of mandatory parameters => if some is missing,
 # component will fail with readable message on initialization.
@@ -35,15 +38,29 @@ REQUIRED_PARAMETERS = [KEY_PRINT_HELLO]
 REQUIRED_IMAGE_PARS = []
 
 
+def sync_action_exception_handler(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            return {
+                "status": "exception",
+                "traceback": traceback.format_exception(e),
+            }
+
+    return wrapper
+
+
 class Component(ComponentBase):
     """
-        Extends base class for general Python components. Initializes the CommonInterface
-        and performs configuration validation.
+    Extends base class for general Python components. Initializes the CommonInterface
+    and performs configuration validation.
 
-        For easier debugging the data folder is picked up by default from `../data` path,
-        relative to working directory.
+    For easier debugging the data folder is picked up by default from `../data` path,
+    relative to working directory.
 
-        If `debug` parameter is present in the `config.json`, the default logger is set to verbose DEBUG mode.
+    If `debug` parameter is present in the `config.json`, the default logger is set to verbose DEBUG mode.
     """
 
     def __init__(self):
@@ -90,27 +107,30 @@ class Component(ComponentBase):
                 user_params = self._configuration.user_parameters
                 user_params = self._conf_helpers.fill_in_user_parameters(user_params, user_params)
                 # apply user parameters
-                auth_method_params = self._conf_helpers.fill_in_user_parameters(authentication.parameters, user_params,
-                                                                                False)
+                auth_method_params = self._conf_helpers.fill_in_user_parameters(
+                    authentication.parameters, user_params, False
+                )
                 auth_method = AuthMethodBuilder.build(authentication.type, **auth_method_params)
         except AuthBuilderError as e:
             raise UserException(e) from e
 
         # evaluate user_params inside the user params itself
         self._configuration.user_parameters = self._conf_helpers.fill_in_user_parameters(
-            self._configuration.user_parameters,
-            self._configuration.user_parameters)
+            self._configuration.user_parameters, self._configuration.user_parameters
+        )
 
-        self._configuration.user_data = self._conf_helpers.fill_in_user_parameters(self._configuration.user_data,
-                                                                                   self._configuration.user_parameters)
+        self._configuration.user_data = self._conf_helpers.fill_in_user_parameters(
+            self._configuration.user_data, self._configuration.user_parameters
+        )
 
         # init client
-        self._client = GenericHttpClient(base_url=self._configuration.api.base_url,
-                                         max_retries=self._configuration.api.retry_config.max_retries,
-                                         backoff_factor=self._configuration.api.retry_config.backoff_factor,
-                                         status_forcelist=self._configuration.api.retry_config.codes,
-                                         auth_method=auth_method
-                                         )
+        self._client = GenericHttpClient(
+            base_url=self._configuration.api.base_url,
+            max_retries=self._configuration.api.retry_config.max_retries,
+            backoff_factor=self._configuration.api.retry_config.backoff_factor,
+            status_forcelist=self._configuration.api.retry_config.codes,
+            auth_method=auth_method,
+        )
 
     def _validate_allowed_hosts(
         self,
@@ -141,32 +161,32 @@ class Component(ComponentBase):
         url_scheme = parsed_url.scheme
         url_host = parsed_url.hostname
         url_port = parsed_url.port
-        url_path = parsed_url.path.rstrip('/')
+        url_path = parsed_url.path.rstrip("/")
 
         for allowed in allowed_hosts:
             # Check if host matches
-            if allowed.get('host') != url_host:
+            if allowed.get("host") != url_host:
                 continue
 
             # Check scheme if specified
-            if allowed.get('scheme', url_scheme) != url_scheme:
+            if allowed.get("scheme", url_scheme) != url_scheme:
                 continue
 
             # Check port if specified
-            if allowed.get('port', url_port) != url_port:
+            if allowed.get("port", url_port) != url_port:
                 continue
 
-            allowed_path = allowed.get('path', '').rstrip('/')
+            allowed_path = allowed.get("path", "").rstrip("/")
             if not allowed_path:
                 return  # Empty path means all paths are allowed
 
-            url_segments = url_path.split('/')
-            allowed_segments = allowed_path.split('/')
+            url_segments = url_path.split("/")
+            allowed_segments = allowed_path.split("/")
 
             if len(url_segments) < len(allowed_segments):
                 continue
 
-            if url_segments[:len(allowed_segments)] == allowed_segments:
+            if url_segments[: len(allowed_segments)] == allowed_segments:
                 return  # Path matches
 
         raise UserException(f'URL "{url}" is not in the allowed hosts whitelist.')
@@ -187,7 +207,7 @@ class Component(ComponentBase):
         urls = []
 
         # Get selected job index
-        job_index = int(selected_job.split('_')[0])  # Get parent job index
+        job_index = int(selected_job.split("_")[0])  # Get parent job index
 
         if job_index >= len(endpoints):
             return urls
@@ -219,7 +239,7 @@ class Component(ComponentBase):
         Args:
         """
         user_params = self._configuration.user_parameters
-        secrets = [value for key, value in user_params.items() if key.startswith('#') or key.startswith('__')]
+        secrets = [value for key, value in user_params.items() if key.startswith("#") or key.startswith("__")]
 
         # get secrets from the auth method
         if self._client._auth_method:  # noqa
@@ -286,7 +306,7 @@ class Component(ComponentBase):
 
         result_path = path
         for key, dict in placeholders[0].items():
-            result_path = result_path.replace(f"{{{dict.get('placeholder')}}}", str(dict.get('value')))
+            result_path = result_path.replace(f"{{{dict.get('placeholder')}}}", str(dict.get("value")))
         return result_path
 
     # def _process_nested_job(self, parent_result, config, parent_results_list, client,
@@ -368,7 +388,7 @@ class Component(ComponentBase):
             # find array property in data, if there is only one
             result = find_array_property_path(data)
 
-        elif path.path == '.':
+        elif path.path == ".":
             result = data
         else:
             keys = path.path.split(path.delimiter)
@@ -427,11 +447,11 @@ class Component(ComponentBase):
 
         # Validate allowed hosts
         self._validate_allowed_hosts(
-            self.configuration.image_parameters.get('allowed_hosts', []),
+            self.configuration.image_parameters.get("allowed_hosts", []),
             self._configuration.api.base_url,
             self._configuration.api.jobs,
-            self.configuration.parameters.get('__SELECTED_JOB', '')
-            )
+            self.configuration.parameters.get("__SELECTED_JOB", ""),
+        )
         self._client.login()
         # set back to debug because sync action mutes it
         logging.getLogger().setLevel(logging.DEBUG)
@@ -441,7 +461,6 @@ class Component(ComponentBase):
         self._parent_results = [{}] * len(self._configurations)
 
         def recursive_call(parent_result, config_index=0):
-
             if parent_result:
                 self._parent_results[config_index - 1] = parent_result
 
@@ -495,9 +514,9 @@ class Component(ComponentBase):
             }
 
             if job.request_content.content_type == configuration.ContentType.json:
-                request_parameters['json'] = job.request_content.body
+                request_parameters["json"] = job.request_content.body
             elif job.request_content.content_type == configuration.ContentType.form:
-                request_parameters['data'] = job.request_content.body
+                request_parameters["data"] = job.request_content.body
 
             row_path = job.request_parameters.endpoint_path
 
@@ -530,7 +549,7 @@ class Component(ComponentBase):
 
         try:
             recursive_call({})
-            error_message = ''
+            error_message = ""
         except HttpClientError as e:
             error_message = str(e)
             if e.response is not None:
@@ -540,20 +559,22 @@ class Component(ComponentBase):
 
         return final_results, self._final_response, self.log.getvalue(), error_message
 
-    @sync_action('load_from_curl')
+    @sync_action("load_from_curl")
+    @sync_action_exception_handler
     def load_from_curl(self) -> dict:
         """
         Load configuration from cURL command
         """
         self.init_component()
-        curl_command = self.configuration.parameters.get('__CURL_COMMAND')
+        curl_command = self.configuration.parameters.get("__CURL_COMMAND")
         if not curl_command:
-            raise ValueError('cURL command not provided')
+            raise ValueError("cURL command not provided")
         job = build_job_from_curl(curl_command, self._configuration.api.base_url)
 
         return job.to_dict()
 
-    @sync_action('infer_mapping')
+    @sync_action("infer_mapping")
+    @sync_action_exception_handler
     def infer_mapping(self) -> dict:
         """
         Load configuration from cURL command
@@ -564,12 +585,12 @@ class Component(ComponentBase):
         if error:
             raise UserException(error)
 
-        nesting_level = self.configuration.parameters.get('__NESTING_LEVEL', 2)
-        primary_keys = self.configuration.parameters.get('__PRIMARY_KEY', [])
-        is_child_job = len(self.configuration.parameters.get('__SELECTED_JOB', '').split('_')) > 1
+        nesting_level = self.configuration.parameters.get("__NESTING_LEVEL", 2)
+        primary_keys = self.configuration.parameters.get("__PRIMARY_KEY", [])
+        is_child_job = len(self.configuration.parameters.get("__SELECTED_JOB", "").split("_")) > 1
         parent_pkey = []
         if len(self._configurations) > 1:
-            parent_pkey = [f'parent_{p}' for p in self._configurations[-1].request_parameters.placeholders.keys()]
+            parent_pkey = [f"parent_{p}" for p in self._configurations[-1].request_parameters.placeholders.keys()]
 
         if not data:
             raise UserException("The request returned no data to infer mapping from.")
@@ -580,30 +601,36 @@ class Component(ComponentBase):
                 for key, value in self._configuration.user_data.items():
                     user_data_columns.append(key)
                     if key in record:
-                        raise UserException(f"User data key [{key}] already exists in the response data, "
-                                            f"please change the name.")
+                        raise UserException(
+                            f"User data key [{key}] already exists in the response data, please change the name."
+                        )
                     record[key] = value
 
-        mapping = infer_mapping(data, primary_keys, parent_pkey,
-                                user_data_columns=user_data_columns,
-                                max_level_nest_level=nesting_level)
+        mapping = infer_mapping(
+            data, primary_keys, parent_pkey, user_data_columns=user_data_columns, max_level_nest_level=nesting_level
+        )
         return mapping
 
-    @sync_action('perform_function')
+    @sync_action("perform_function")
+    @sync_action_exception_handler
     def perform_function_sync(self) -> dict:
         self.init_component()
-        function_cfg = self.configuration.parameters['__FUNCTION_CFG']
-        return {"result": ConfigHelpers().perform_custom_function('function',
-                                                                  function_cfg, self._configuration.user_parameters)}
+        function_cfg = self.configuration.parameters["__FUNCTION_CFG"]
+        return {
+            "result": ConfigHelpers().perform_custom_function(
+                "function", function_cfg, self._configuration.user_parameters
+            )
+        }
 
-    @sync_action('test_request')
+    @sync_action("test_request")
+    @sync_action_exception_handler
     def test_request(self):
         results, response, log, error_message = self.make_call()
 
         body = None
         if response.request.body:
             if isinstance(response.request.body, bytes):
-                body = response.request.body.decode('utf-8')
+                body = response.request.body.decode("utf-8")
             else:
                 body = response.request.body
 
@@ -623,16 +650,16 @@ class Component(ComponentBase):
                 "status_code": filtered_response.status_code,
                 "reason": filtered_response.reason,
                 "data": response_data,
-                "headers": dict(filtered_response.headers)
+                "headers": dict(filtered_response.headers),
             },
             "request": {
                 "url": response.request.url,
                 "method": response.request.method,
                 "data": filtered_body,
-                "headers": dict(filtered_response.request.headers)
+                "headers": dict(filtered_response.request.headers),
             },
             "records": results,
-            "debug_log": filtered_log
+            "debug_log": filtered_log,
         }
         return result
 

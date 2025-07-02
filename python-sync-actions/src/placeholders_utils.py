@@ -11,14 +11,14 @@ class NoDataFoundException(Exception):
     pass
 
 
-Placeholder = namedtuple('Placeholder', ['placeholder', 'json_path', 'value'])
+Placeholder = namedtuple("Placeholder", ["placeholder", "json_path", "value"])
 
 
 class PlaceholdersUtils:
-
     @staticmethod
-    def get_params_for_child_jobs(placeholders: Dict[str, Any], parent_results: List[Dict[str, Any]],
-                                  parent_params: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def get_params_for_child_jobs(
+        placeholders: Dict[str, Any], parent_results: List[Dict[str, Any]], parent_params: Dict[str, Any]
+    ) -> List[Dict[str, Any]]:
         params = {}
         for placeholder, field in placeholders.items():
             params[placeholder] = PlaceholdersUtils.get_placeholder(placeholder, field, parent_results)
@@ -32,39 +32,38 @@ class PlaceholdersUtils:
         return PlaceholdersUtils.get_params_per_child_job(params)
 
     @staticmethod
-    def get_placeholder(placeholder: str, field: Union[str, Dict[str, Any]],
-                        parent_results: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def get_placeholder(
+        placeholder: str, field: Union[str, Dict[str, Any]], parent_results: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
         # Determine the level based on the presence of ':' in the placeholder name
-        level = 0 if ':' not in placeholder else int(placeholder.split(':')[0]) - 1
+        level = 0 if ":" not in placeholder else int(placeholder.split(":")[0]) - 1
 
         # Check function (defined as dict)
         if not isinstance(field, str):
-            if 'path' not in field:
-                raise UserException(f"The path for placeholder '{placeholder}' must be a string value"
-                                    f"or an object containing 'path' and 'function'.")
+            if "path" not in field:
+                raise UserException(
+                    f"The path for placeholder '{placeholder}' must be a string value"
+                    f"or an object containing 'path' and 'function'."
+                )
             fn = field.copy()
-            field = fn.pop('path')
+            field = fn.pop("path")
 
         # Get value
         value = PlaceholdersUtils.get_placeholder_value(str(field), parent_results, level, placeholder)
 
         # Run function if provided
-        if 'fn' in locals():
+        if "fn" in locals():
             # Example function to be replaced by actual implementation
             value = value
 
-        return {
-            'placeholder': placeholder,
-            'json_path': field,
-            'value': value
-        }
+        return {"placeholder": placeholder, "json_path": field, "value": value}
 
     @staticmethod
     def get_placeholder_value(field: str, parent_results: List[Dict[str, Any]], level: int, placeholder: str) -> Any:
         try:
             if level >= len(parent_results):
                 max_level = 0 if not parent_results else len(parent_results)
-                raise UserException(f'Level {level + 1} not found in parent results! Maximum level: {max_level}')
+                raise UserException(f"Level {level + 1} not found in parent results! Maximum level: {max_level}")
 
             # Implement get_data_from_path to fetch data using a dot notation
             data = get_data_from_path(field, parent_results[level])
@@ -74,7 +73,9 @@ class PlaceholdersUtils:
         except NoDataFoundException:
             raise UserException(
                 f"No value found for placeholder {placeholder} in parent result. (level: {level + 1})",
-                None, None, {'parents': parent_results}
+                None,
+                None,
+                {"parents": parent_results},
             )
 
     @staticmethod
@@ -82,10 +83,10 @@ class PlaceholdersUtils:
         # Flatten parameters to a list of lists
         flattened = {}
         for placeholder_name, placeholder in params.items():
-            if isinstance(placeholder['value'], list):
+            if isinstance(placeholder["value"], list):
                 flattened[placeholder_name] = [
-                    {'placeholder': placeholder_name, 'json_path': placeholder['json_path'], 'value': value}
-                    for value in placeholder['value']
+                    {"placeholder": placeholder_name, "json_path": placeholder["json_path"], "value": value}
+                    for value in placeholder["value"]
                 ]
             else:
                 flattened[placeholder_name] = [placeholder]
@@ -102,7 +103,7 @@ class PlaceholdersUtils:
         return product_list
 
 
-def get_data_from_path(json_path: str, data: Dict[str, Any], separator: str = '.', strict: bool = True) -> Any:
+def get_data_from_path(json_path: str, data: Dict[str, Any], separator: str = ".", strict: bool = True) -> Any:
     """Mock function to fetch data using a dot-separated path notation. Replace with actual implementation."""
     keys = json_path.split(separator)
     for key in keys:

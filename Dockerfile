@@ -1,5 +1,8 @@
 FROM php:7.4-cli
 
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
 ARG COMPOSER_FLAGS="--prefer-dist --no-interaction"
 ARG DEBIAN_FRONTEND=noninteractive
 ENV COMPOSER_ALLOW_SUPERUSER 1
@@ -103,8 +106,8 @@ RUN set -eux; \
         *) echo "unsupported architecture"; exit 1 ;; \
     esac; \
     for key in $(curl -sL https://raw.githubusercontent.com/nodejs/docker-node/HEAD/keys/node.keys); do \
-        gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
-        gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key"; \
+        { gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" && gpg --list-keys "$key" > /dev/null; } || \
+        { gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" && gpg --list-keys "$key" > /dev/null; } \
     done; \
     curl -fsSLO --compressed "https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-$ARCH.tar.xz"; \
     curl -fsSLO --compressed "https://nodejs.org/dist/$NODE_VERSION/SHASUMS256.txt.asc"; \
