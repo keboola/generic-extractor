@@ -126,10 +126,12 @@ ENV LC_ALL=en_US.UTF-8
 
 ## Add additional certificates
 ## Certificates downloaded from: https://www.digicert.com/digicert-root-certificates.htm
+## Sectigo certificate downloaded from: https://www.sectigo.com/knowledge-base/detail/Sectigo-Intermediate-Certificates/kA01N000000rfBO
 ##
 ## From "man update-ca-certificates":
 ## > Furthermore all certificates with a .crt  extension found below
 ## > /usr/local/share/ca-certificates are also included as implicitly trusted.
+COPY docker/SectigoPublicServerAuthenticationRootR46.crt /usr/local/share/ca-certificates/SectigoPublicServerAuthenticationRootR46.crt
 RUN curl https://cacerts.digicert.com/GeoTrustRSACA2018.crt.pem --output /usr/local/share/ca-certificates/GeoTrustRSACA2018.crt \
     && curl https://cacerts.digicert.com/DigiCertGlobalRootCA.crt.pem --output /usr/local/share/ca-certificates/DigiCertGlobalRootCA.crt \
     && update-ca-certificates
