@@ -125,14 +125,16 @@ ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
 
 ## Add additional certificates
-## Certificates downloaded from: https://www.digicert.com/digicert-root-certificates.htm
+## Certificates sourced from: https://www.digicert.com/digicert-root-certificates.htm
+## Bundled locally to avoid SSL issues when downloading from cacerts.digicert.com
+## during Docker build (the old base image CA bundle may not trust DigiCert's current server cert).
 ##
 ## From "man update-ca-certificates":
 ## > Furthermore all certificates with a .crt  extension found below
 ## > /usr/local/share/ca-certificates are also included as implicitly trusted.
-RUN curl https://cacerts.digicert.com/GeoTrustRSACA2018.crt.pem --output /usr/local/share/ca-certificates/GeoTrustRSACA2018.crt \
-    && curl https://cacerts.digicert.com/DigiCertGlobalRootCA.crt.pem --output /usr/local/share/ca-certificates/DigiCertGlobalRootCA.crt \
-    && update-ca-certificates
+COPY docker/GeoTrustRSACA2018.crt /usr/local/share/ca-certificates/GeoTrustRSACA2018.crt
+COPY docker/DigiCertGlobalRootCA.crt /usr/local/share/ca-certificates/DigiCertGlobalRootCA.crt
+RUN update-ca-certificates
 
 
 ## Composer - deps always cached unless changed
