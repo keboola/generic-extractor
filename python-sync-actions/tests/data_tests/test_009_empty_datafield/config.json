@@ -19,7 +19,7 @@
     "incrementalOutput": false
   },
   "api": {
-    "baseUrl": "https://private-834388-extractormock.apiary-mock.com/"
+    "baseUrl": "http://jsontest/"
   },
   "http": {
     "maxRetries": 10,

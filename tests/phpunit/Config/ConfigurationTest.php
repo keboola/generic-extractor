@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor\Tests\Config;
 
+use FilesystemIterator;
+use Keboola\CsvTable\Table;
 use Keboola\GenericExtractor\Configuration\Extractor;
 use Keboola\GenericExtractor\Exception\ApplicationException;
 use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\GenericExtractor\Tests\ExtractorTestCase;
 use Keboola\Juicer\Config\Config;
 use Keboola\Temp\Temp;
-use Keboola\CsvTable\Table;
 use Psr\Log\NullLogger;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use ReflectionClass;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ConfigurationTest extends ExtractorTestCase
@@ -51,7 +55,7 @@ class ConfigurationTest extends ExtractorTestCase
         $configuration->storeResults($files);
 
         /** @var \SplFileInfo $file */
-        foreach (new \FilesystemIterator(__DIR__ . '/../data/storeResultsDefaultBucket/out/tables/') as $file) {
+        foreach (new FilesystemIterator(__DIR__ . '/../data/storeResultsDefaultBucket/out/tables/') as $file) {
             self::assertFileEquals($file->getPathname(), $resultsPath . '/out/tables/' . $file->getFilename());
         }
 
@@ -76,10 +80,10 @@ class ConfigurationTest extends ExtractorTestCase
         $configuration->storeResults($files, $name, true, $incremental);
 
         /** @var \SplFileInfo $file */
-        foreach (new \FilesystemIterator(__DIR__ . '/../data/storeResultsTest/out/tables/' . $name) as $file) {
+        foreach (new FilesystemIterator(__DIR__ . '/../data/storeResultsTest/out/tables/' . $name) as $file) {
             self::assertFileEquals(
                 $file->getPathname(),
-                $resultsPath . '/out/tables/' . $name . '/' . $file->getFilename()
+                $resultsPath . '/out/tables/' . $name . '/' . $file->getFilename(),
             );
         }
 
@@ -113,7 +117,7 @@ class ConfigurationTest extends ExtractorTestCase
             'more' => [
                 'woah' => 'such recursive',
             ],
-            ]
+            ],
         );
 
         self::assertFileEquals(__DIR__ . '/../data/metadataTest/out/state.json', $resultsPath . '/out/state.json');
@@ -134,9 +138,9 @@ class ConfigurationTest extends ExtractorTestCase
                         'id' => $json['parameters']['config']['id'],
                         'outputBucket' => $json['parameters']['config']['outputBucket'],
                     ],
-                    $params
+                    $params,
                 ),
-                $configs[$i]->getAttributes()
+                $configs[$i]->getAttributes(),
             );
         }
         self::assertEquals($configs[0]->getJobs(), $configs[1]->getJobs());
@@ -245,7 +249,7 @@ class ConfigurationTest extends ExtractorTestCase
             [
                 'https://example.com/users?page=1',
             ],
-            $urls
+            $urls,
         );
 
         // Test s lomítkem na konci
@@ -264,7 +268,7 @@ class ConfigurationTest extends ExtractorTestCase
             [
                 'https://example.com/users?page=1',
             ],
-            $urls
+            $urls,
         );
 
         // Test s subdoménou a cestou
@@ -283,7 +287,7 @@ class ConfigurationTest extends ExtractorTestCase
             [
                 'https://sub.domain.example.com/path/users?page=1',
             ],
-            $urls
+            $urls,
         );
     }
 
@@ -393,7 +397,7 @@ class ConfigurationTest extends ExtractorTestCase
             [
                 'http://127.0.0.1/users?page=1',
             ],
-            $urls
+            $urls,
         );
 
         // Test s localhost IP a portem
@@ -412,7 +416,7 @@ class ConfigurationTest extends ExtractorTestCase
             [
                 'http://127.0.0.1:5000/users?page=1',
             ],
-            $urls
+            $urls,
         );
     }
 
@@ -436,7 +440,7 @@ class ConfigurationTest extends ExtractorTestCase
             [
                 'http://example.com/users?page=1',
             ],
-            $urls
+            $urls,
         );
 
         // Test s HTTPS
@@ -455,7 +459,7 @@ class ConfigurationTest extends ExtractorTestCase
             [
                 'https://example.com/users?page=1',
             ],
-            $urls
+            $urls,
         );
     }
 
@@ -551,7 +555,7 @@ class ConfigurationTest extends ExtractorTestCase
      */
     private function invokeMethod(object $object, string $methodName, array $parameters = [])
     {
-        $reflection = new \ReflectionClass(get_class($object));
+        $reflection = new ReflectionClass(get_class($object));
         $method = $reflection->getMethod($methodName);
         $method->setAccessible(true);
 
@@ -560,12 +564,12 @@ class ConfigurationTest extends ExtractorTestCase
 
     protected function rmDir(string $dirPath): bool
     {
-        $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator(
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator(
                 $dirPath,
-                \FilesystemIterator::SKIP_DOTS
+                FilesystemIterator::SKIP_DOTS,
             ),
-            \RecursiveIteratorIterator::CHILD_FIRST
+            RecursiveIteratorIterator::CHILD_FIRST,
         );
 
         foreach ($iterator as $path) {
@@ -580,7 +584,7 @@ class ConfigurationTest extends ExtractorTestCase
     private function createTestConfig(
         string $baseUrl,
         ?array $allowedHosts = null,
-        array $endpoints = ['/path/']
+        array $endpoints = ['/path/'],
     ): array {
         $config = [
             'parameters' => [
@@ -624,7 +628,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api',
-            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api']]
+            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -635,7 +639,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api',
-            [['host' => 'example.com', 'endpoint' => '/api']]
+            [['host' => 'example.com', 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -646,7 +650,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api?x=1',
-            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api']]
+            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -657,7 +661,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api/',
-            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api']]
+            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -668,7 +672,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api',
-            [['scheme' => 'http', 'host' => 'example.com', 'endpoint' => '/api']]
+            [['scheme' => 'http', 'host' => 'example.com', 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -680,7 +684,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api',
-            [['scheme' => 'https', 'host' => 'example.com', 'port' => 443, 'endpoint' => '/api']]
+            [['scheme' => 'https', 'host' => 'example.com', 'port' => 443, 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -692,7 +696,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api/resource',
-            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api']]
+            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -703,7 +707,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api/v1/data',
-            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api']]
+            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -714,7 +718,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api/v1',
-            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api/']]
+            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api/']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -725,7 +729,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api',
-            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/ap']]
+            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/ap']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -737,7 +741,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://sub.example.com/path',
-            [['scheme' => 'https', 'host' => 'example.com']]
+            [['scheme' => 'https', 'host' => 'example.com']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -749,7 +753,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'http://127.0.0.1:8080/api',
-            [['scheme' => 'http', 'host' => '127.0.0.1', 'port' => 8080, 'endpoint' => '/api']]
+            [['scheme' => 'http', 'host' => '127.0.0.1', 'port' => 8080, 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -760,7 +764,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'http://127.0.0.1:8080/api/v1/data',
-            [['scheme' => 'http', 'host' => '127.0.0.1', 'port' => 8080, 'endpoint' => '/api']]
+            [['scheme' => 'http', 'host' => '127.0.0.1', 'port' => 8080, 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -771,7 +775,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'http://127.0.0.1:8000/api',
-            [['scheme' => 'http', 'host' => '127.0.0.1', 'port' => 8080, 'endpoint' => '/api']]
+            [['scheme' => 'http', 'host' => '127.0.0.1', 'port' => 8080, 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -783,7 +787,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'http://127.0.0.1:80/api',
-            [['scheme' => 'http', 'host' => '127.0.0.1', 'endpoint' => '/api']]
+            [['scheme' => 'http', 'host' => '127.0.0.1', 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -794,7 +798,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://sub.example.com/path1',
-            [['scheme' => 'https', 'host' => 'sub.example.com']]
+            [['scheme' => 'https', 'host' => 'sub.example.com']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -805,7 +809,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://sub.domain.com/path/1/2',
-            [['scheme' => 'https', 'host' => 'sub.domain.com']]
+            [['scheme' => 'https', 'host' => 'sub.domain.com']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -816,7 +820,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://sub.domain.com/path',
-            [['scheme' => 'https', 'host' => 'sub.domain.com']]
+            [['scheme' => 'https', 'host' => 'sub.domain.com']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -827,7 +831,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://sub.domain.com/extra/data',
-            [['scheme' => 'https', 'host' => 'sub.domain.com', 'endpoint' => '/extra']]
+            [['scheme' => 'https', 'host' => 'sub.domain.com', 'endpoint' => '/extra']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -838,7 +842,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://sub.domain.com/pathology',
-            [['scheme' => 'https', 'host' => 'sub.domain.com', 'endpoint' => '/path']]
+            [['scheme' => 'https', 'host' => 'sub.domain.com', 'endpoint' => '/path']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -850,7 +854,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api',
-            null
+            null,
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -861,7 +865,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api',
-            []
+            [],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -872,7 +876,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com:8/api',
-            [['scheme' => 'https', 'host' => 'example.com', 'port' => 88, 'endpoint' => '/api']]
+            [['scheme' => 'https', 'host' => 'example.com', 'port' => 88, 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -887,7 +891,7 @@ class ConfigurationTest extends ExtractorTestCase
             [
                 ['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api'],
                 ['scheme' => 'https', 'host' => 'other.com', 'endpoint' => '/api'],
-            ]
+            ],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -901,7 +905,7 @@ class ConfigurationTest extends ExtractorTestCase
             [
                 ['scheme' => 'https', 'host' => 'example.com', 'port' => 8080, 'endpoint' => '/api'],
                 ['scheme' => 'https', 'host' => 'other.com', 'port' => 443, 'endpoint' => '/api'],
-            ]
+            ],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -915,7 +919,7 @@ class ConfigurationTest extends ExtractorTestCase
             [
                 ['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api'], // no port specified
                 ['scheme' => 'https', 'host' => 'other.com', 'port' => 8080, 'endpoint' => '/api'],
-            ]
+            ],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -929,7 +933,7 @@ class ConfigurationTest extends ExtractorTestCase
             [
                 ['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api/v1'],
                 ['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api/v2'],
-            ]
+            ],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -943,7 +947,7 @@ class ConfigurationTest extends ExtractorTestCase
             [
                 ['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api'],
                 ['scheme' => 'http', 'host' => 'example.com', 'endpoint' => '/api'],
-            ]
+            ],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -957,7 +961,7 @@ class ConfigurationTest extends ExtractorTestCase
             [
                 ['scheme' => 'https', 'host' => 'example.com', 'port' => 443, 'endpoint' => '/api'],
                 ['scheme' => 'https', 'host' => 'other.com', 'port' => 80, 'endpoint' => '/api'],
-            ]
+            ],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -972,7 +976,7 @@ class ConfigurationTest extends ExtractorTestCase
             [
                 ['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api/v2'],
                 ['scheme' => 'https', 'host' => 'other.com', 'endpoint' => '/api/v3'],
-            ]
+            ],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -987,7 +991,7 @@ class ConfigurationTest extends ExtractorTestCase
             [
                 ['scheme' => 'https', 'host' => 'other.com', 'endpoint' => '/api'],
                 ['scheme' => 'https', 'host' => 'another.com', 'endpoint' => '/api'],
-            ]
+            ],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -999,7 +1003,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api',
-            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api']]
+            [['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -1010,7 +1014,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api',
-            [['host' => 'example.com', 'endpoint' => '/api']]
+            [['host' => 'example.com', 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -1024,7 +1028,7 @@ class ConfigurationTest extends ExtractorTestCase
             [
                 ['scheme' => 'http', 'host' => 'example.com', 'endpoint' => '/api'],
                 ['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api'],
-            ]
+            ],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -1035,7 +1039,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://example.com/api',
-            [['scheme' => 'http', 'host' => 'example.com', 'endpoint' => '/api']]
+            [['scheme' => 'http', 'host' => 'example.com', 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -1051,7 +1055,7 @@ class ConfigurationTest extends ExtractorTestCase
                 ['scheme' => 'https', 'host' => 'example.com', 'endpoint' => '/api'],
                 ['host' => 'other.com', 'endpoint' => '/api'],
                 ['scheme' => 'http', 'host' => 'another.com', 'endpoint' => '/api'],
-            ]
+            ],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -1062,7 +1066,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'http://192.168.1.1/api',
-            [['scheme' => 'http', 'host' => '192.168.1.1', 'endpoint' => '/api']]
+            [['scheme' => 'http', 'host' => '192.168.1.1', 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -1073,7 +1077,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'http://192.168.1.1:8080/api',
-            [['scheme' => 'http', 'host' => '192.168.1.1', 'port' => 8080, 'endpoint' => '/api']]
+            [['scheme' => 'http', 'host' => '192.168.1.1', 'port' => 8080, 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -1084,7 +1088,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'http://192.168.1.1:8080/api',
-            [['scheme' => 'http', 'host' => '192.168.1.1', 'port' => 80, 'endpoint' => '/api']]
+            [['scheme' => 'http', 'host' => '192.168.1.1', 'port' => 80, 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -1096,7 +1100,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'http://192.168.1.1:8080/api',
-            [['scheme' => 'http', 'host' => '192.168.1.1', 'endpoint' => '/api']]
+            [['scheme' => 'http', 'host' => '192.168.1.1', 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -1107,7 +1111,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://192.168.1.1/api',
-            [['scheme' => 'https', 'host' => '192.168.1.1', 'endpoint' => '/api']]
+            [['scheme' => 'https', 'host' => '192.168.1.1', 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -1118,7 +1122,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://192.168.1.1/api',
-            [['scheme' => 'http', 'host' => '192.168.1.1', 'endpoint' => '/api']]
+            [['scheme' => 'http', 'host' => '192.168.1.1', 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -1133,7 +1137,7 @@ class ConfigurationTest extends ExtractorTestCase
             [
                 ['scheme' => 'http', 'host' => '192.168.1.1', 'port' => 8080, 'endpoint' => '/api'],
                 ['scheme' => 'http', 'host' => '192.168.1.1', 'port' => 80, 'endpoint' => '/api'],
-            ]
+            ],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -1147,7 +1151,7 @@ class ConfigurationTest extends ExtractorTestCase
             [
                 ['scheme' => 'https', 'host' => '192.168.1.1', 'endpoint' => '/api'],
                 ['scheme' => 'http', 'host' => '192.168.1.1', 'endpoint' => '/api'],
-            ]
+            ],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -1158,7 +1162,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'http://192.168.1.1/api',
-            [['scheme' => 'http', 'host' => '192.168.1.2', 'endpoint' => '/api']]
+            [['scheme' => 'http', 'host' => '192.168.1.2', 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -1170,7 +1174,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'http://192.168.1.1/api/v1',
-            [['scheme' => 'http', 'host' => '192.168.1.1', 'endpoint' => '/api/v2']]
+            [['scheme' => 'http', 'host' => '192.168.1.1', 'endpoint' => '/api/v2']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -1182,7 +1186,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             '192.168.1.1/api',
-            [['host' => '192.168.1.1', 'endpoint' => '/api']]
+            [['host' => '192.168.1.1', 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -1193,7 +1197,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             '192.168.1.1:8080/api',
-            [['host' => '192.168.1.1', 'port' => 8080, 'endpoint' => '/api']]
+            [['host' => '192.168.1.1', 'port' => 8080, 'endpoint' => '/api']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -1204,7 +1208,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             '192.168.1.1:8080/api/v1/users',
-            [['host' => '192.168.1.1', 'port' => 8080, 'endpoint' => '/api/v1']]
+            [['host' => '192.168.1.1', 'port' => 8080, 'endpoint' => '/api/v1']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -1215,7 +1219,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             '192.168.1.1:8080/api/v1/users',
-            [['host' => '192.168.1.1', 'port' => 8080, 'endpoint' => '/api/v2']]
+            [['host' => '192.168.1.1', 'port' => 8080, 'endpoint' => '/api/v2']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());
@@ -1227,7 +1231,7 @@ class ConfigurationTest extends ExtractorTestCase
     {
         $config = $this->createTestConfig(
             'https://catfact.ninja/',
-            [['host' => 'catfact.ninja', 'endpoint' => '/fact']]
+            [['host' => 'catfact.ninja', 'endpoint' => '/fact']],
         );
 
         $extractor = new Extractor(__DIR__ . '/../data/simple_basic', new NullLogger());

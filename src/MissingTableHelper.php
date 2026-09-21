@@ -35,7 +35,7 @@ class MissingTableHelper
                         $outputBucket,
                         $config->getAttribute('incrementalOutput'),
                         $name,
-                        $mapping
+                        $mapping,
                     );
                 }
             }
@@ -48,7 +48,7 @@ class MissingTableHelper
         bool $incremental,
         string $name,
         array $mapping,
-        array $parentKey = []
+        array $parentKey = [],
     ): void {
         $columns = [];
         $primaryKey = [];
@@ -82,7 +82,7 @@ class MissingTableHelper
                     $incremental,
                     $item['destination'],
                     $item['tableMapping'] ?? [],
-                    $parentKeyParam
+                    $parentKeyParam,
                 );
             } else {
                 throw new UserException(sprintf('Invalid mapping type "%s".', $item['type']));

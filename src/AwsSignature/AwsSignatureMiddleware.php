@@ -18,17 +18,17 @@ class AwsSignatureMiddleware
             return function (RequestInterface $request, array $options) use ($handler, $awsSignatureCredentials) {
                 $awsCredentials = new Credentials(
                     $awsSignatureCredentials['accessKeyId'],
-                    $awsSignatureCredentials['#secretKey']
+                    $awsSignatureCredentials['#secretKey'],
                 );
 
                 $signatureV4 = new SignatureV4(
                     $awsSignatureCredentials['serviceName'],
-                    $awsSignatureCredentials['regionName']
+                    $awsSignatureCredentials['regionName'],
                 );
 
                 return $handler(
                     $signatureV4->signRequest($request, $awsCredentials),
-                    $options
+                    $options,
                 );
             };
         };

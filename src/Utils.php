@@ -20,7 +20,6 @@ class Utils
      * Merge HTTP queries, query2 values take precedence over query1 values.
      * @param string|array $query1
      * @param string|array $query2
-     * @param bool $mergeToArray
      */
     public static function mergeQueries($query1, $query2, bool $mergeToArray = false): string
     {
@@ -32,7 +31,7 @@ class Utils
             if (array_key_exists($key, $query1) && $mergeToArray) {
                 $mergeToArrayValues[$key] = array_merge(
                     $mergeToArrayValues[$key] ?? [$query1[$key]],
-                    [$value]
+                    [$value],
                 );
                 unset($query1[$key]);
             } else {
@@ -71,7 +70,7 @@ class Utils
                 throw new UserException(sprintf(
                     'Invalid configuration: invalid type "%s" in headers at path: %s',
                     gettype($value),
-                    implode('.', $currentPath)
+                    implode('.', $currentPath),
                 ));
             }
         }

@@ -6,6 +6,7 @@ namespace Keboola\GenericExtractor\Tests;
 
 use GuzzleHttp\Psr7\Query;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Utils as Psr7Utils;
 use Keboola\GenericExtractor\Utils;
 use PHPUnit\Framework\TestCase;
 
@@ -16,10 +17,10 @@ class UtilsTest extends TestCase
      */
     public function testGerResources(string $uri, string $resource): void
     {
-        $this->assertSame($resource, Utils::getResource(\GuzzleHttp\Psr7\Utils::uriFor($uri)));
+        $this->assertSame($resource, Utils::getResource(Psr7Utils::uriFor($uri)));
     }
 
-    public function getTestUris(): iterable
+    public static function getTestUris(): iterable
     {
         yield ['http://example.com', ''];
         yield ['http://example.com/', '/'];
@@ -62,7 +63,7 @@ class UtilsTest extends TestCase
         $this->assertSame($expected, Utils::mergeQueries($query1, $query2, true));
     }
 
-    public function getTestQueries(): iterable
+    public static function getTestQueries(): iterable
     {
         yield ['', '', ''];
         yield ['param1=value1', 'param2=value2', 'param1=value1&param2=value2'];
@@ -88,7 +89,7 @@ class UtilsTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public function getTestHeaders(): iterable
+    public static function getTestHeaders(): iterable
     {
         yield [[],[],[]];
         yield [['k1' => 'v1'],[],['k1' => ['v1']]];

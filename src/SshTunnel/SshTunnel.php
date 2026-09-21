@@ -6,15 +6,16 @@ namespace Keboola\GenericExtractor\SshTunnel;
 
 use GuzzleHttp\Middleware;
 use Keboola\GenericExtractor\Exception\ApplicationException;
+use Keboola\GenericExtractor\Exception\SshTunnelOpenException;
+use Keboola\GenericExtractor\Exception\UserException;
+use Keboola\Temp\Temp;
 use Psr\Http\Message\RequestInterface;
 use Psr\Log\LoggerInterface;
 use Retry\BackOff\ExponentialBackOffPolicy;
 use Retry\Policy\SimpleRetryPolicy;
 use Retry\RetryProxy;
 use Symfony\Component\Process\Process;
-use Keboola\GenericExtractor\Exception\SshTunnelOpenException;
-use Keboola\GenericExtractor\Exception\UserException;
-use Keboola\Temp\Temp;
+use Throwable;
 
 class SshTunnel
 {
@@ -38,7 +39,7 @@ class SshTunnel
         string $sshHost,
         int $sshPort,
         int $localPort,
-        string $privateKey
+        string $privateKey,
     ) {
         $this->logger = $logger;
         $this->temp = new Temp('ssh-tunnel');
@@ -72,25 +73,30 @@ class SshTunnel
             '-o BatchMode=yes ' . // don't ask for password
             '-o ExitOnForwardFailure=yes ' . // exit on error
             '-o StrictHostKeyChecking=no ' .
+            // Keep tunnels working with legacy SSH servers (OpenSSH < 7.2, ssh-rsa/SHA-1 only),
+            // which OpenSSH 9.x on the php:8.5-cli-bookworm base disables by default. This
+            // preserves the connectivity the php:7.4-cli image had.
+            '-o PubkeyAcceptedAlgorithms=+ssh-rsa ' .
+            '-o HostKeyAlgorithms=+ssh-rsa ' .
             '-o ServerAliveInterval=%d -o ServerAliveCountMax=1', // exit if server not alive
             $this->localPort,
             $this->sshUser,
             $this->sshHost,
             $this->sshPort,
             $this->writeKeyToFile($this->privateKey),
-            self::SSH_SERVER_ALIVE_INTERVAL
+            self::SSH_SERVER_ALIVE_INTERVAL,
         );
 
         $simplyRetryPolicy = new SimpleRetryPolicy(
             self::CREATE_SSH_MAX_RETRY,
-            [SshTunnelOpenException::class,\Throwable::class]
+            [SshTunnelOpenException::class,Throwable::class],
         );
 
         $exponentialBackOffPolicy = new ExponentialBackOffPolicy();
         $proxy = new RetryProxy(
             $simplyRetryPolicy,
             $exponentialBackOffPolicy,
-            $this->logger
+            $this->logger,
         );
 
         $proxy->call(function () use ($cmd): void {
@@ -112,8 +118,8 @@ class SshTunnel
                     sprintf(
                         'Unable to create ssh tunnel. Output: %s ErrorOutput: %s',
                         $this->process->getOutput(),
-                        $this->process->getErrorOutput()
-                    )
+                        $this->process->getErrorOutput(),
+                    ),
                 );
             }
         });
@@ -174,7 +180,7 @@ class SshTunnel
             if ($retryNumber === null) {
                 throw new ApplicationException(
                     'Missing "retires" key in $options. ' .
-                    'SSH tunnel middleware must be registered after retry middleware.'
+                    'SSH tunnel middleware must be registered after retry middleware.',
                 );
             }
 

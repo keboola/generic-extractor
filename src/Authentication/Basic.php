@@ -8,6 +8,7 @@ use GuzzleHttp\Middleware;
 use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\Juicer\Client\RestClient;
 use Psr\Http\Message\RequestInterface;
+use function base64_encode;
 
 /**
  * Basic HTTP Authentication using name and password
@@ -41,9 +42,9 @@ class Basic implements AuthInterface
             function (RequestInterface $request): RequestInterface {
                 return $request->withHeader(
                     'Authorization',
-                    'Basic ' . \base64_encode("$this->username:$this->password")
+                    'Basic ' . base64_encode("$this->username:$this->password"),
                 );
-            }
+            },
         ));
     }
 }

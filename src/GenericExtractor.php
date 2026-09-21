@@ -9,17 +9,19 @@ use Keboola\GenericExtractor\Configuration\Api;
 use Keboola\GenericExtractor\Configuration\JuicerRest;
 use Keboola\GenericExtractor\Configuration\UserFunction;
 use Keboola\GenericExtractor\Logger\LoggerMiddleware;
-use Keboola\Juicer\Config\JobConfig;
-use Keboola\Juicer\Config\Config;
 use Keboola\Juicer\Client\RestClient;
+use Keboola\Juicer\Config\Config;
+use Keboola\Juicer\Config\JobConfig;
 use Keboola\Juicer\Parser\Json;
 use Keboola\Juicer\Parser\JsonMap;
 use Keboola\Juicer\Parser\ParserInterface;
 use Keboola\Temp\Temp;
 use Kevinrob\GuzzleCache\CacheMiddleware;
 use Kevinrob\GuzzleCache\Strategy\CacheStrategyInterface;
+use LogicException;
 use Psr\Log\LoggerInterface;
 use stdClass;
+use UnexpectedValueException;
 
 class GenericExtractor
 {
@@ -44,13 +46,15 @@ class GenericExtractor
     /** @var callable|null */
     private $clientInitCallback;
 
+    private ?array $awsSignatureCredentials;
+
     public function __construct(
         Temp $temp,
         LoggerInterface $logger,
         Api $api,
         ?string $proxy = null,
         ?callable $clientInitCallback = null,
-        ?array $awsSignatureCredentials = null
+        ?array $awsSignatureCredentials = null,
     ) {
         $this->temp = $temp;
         $this->logger = $logger;
@@ -84,7 +88,7 @@ class GenericExtractor
     {
         $headers = UserFunction::build(
             $this->api->getHeaders()->getHeaders(),
-            ['attr' => $config->getAttributes()]
+            ['attr' => $config->getAttributes()],
         );
 
         Utils::checkHeadersForStdClass($headers);
@@ -109,7 +113,7 @@ class GenericExtractor
             $defaults,
             JuicerRest::convertRetry($this->api->getRetryConfig()),
             $this->api->getDefaultRequestOptions(),
-            $this->api->getIgnoreErrors()
+            $this->api->getIgnoreErrors(),
         );
 
         // Attach auth middleware
@@ -127,7 +131,7 @@ class GenericExtractor
         if ($this->awsSignatureCredentials) {
             $client->getHandlerStack()->push(
                 AwsSignatureMiddleware::create($this->awsSignatureCredentials),
-                'aws-signature'
+                'aws-signature',
             );
         }
 
@@ -142,7 +146,7 @@ class GenericExtractor
     protected function runJob(JobConfig $jobConfig, RestClient $client, Config $config): void
     {
         if (!$this->parser) {
-            throw new \UnexpectedValueException('Parser is not set.');
+            throw new UnexpectedValueException('Parser is not set.');
         }
 
         $job = new GenericExtractorJob(
@@ -153,13 +157,13 @@ class GenericExtractor
             $this->api->getNewScroller(),
             $config->getAttributes(),
             $this->metadata,
-            $this->getCompatLevel($config)
+            $this->getCompatLevel($config),
         );
         if (!empty($config->getAttribute('userData'))) {
             $job->setUserParentId(
                 is_scalar($config->getAttribute('userData'))
                 ? ['userData' => $config->getAttribute('userData')]
-                : $config->getAttribute('userData')
+                : $config->getAttribute('userData'),
             );
         }
 
@@ -174,7 +178,7 @@ class GenericExtractor
     public function getParser(): ParserInterface
     {
         if (!$this->parser) {
-            throw new \LogicException('Parser is not set.');
+            throw new LogicException('Parser is not set.');
         }
 
         return $this->parser;
@@ -194,12 +198,10 @@ class GenericExtractor
             return $this->parser;
         }
 
-        if ($this->getCompatLevel($config) <= self::COMPAT_LEVEL_OLD_PARSER) {
-            $compatLevel = Json::LEGACY_VERSION;
-        } else {
-            $compatLevel = Json::LATEST_VERSION;
-        }
-        $parser = new Json($this->logger, $this->metadata, $compatLevel, 2000000);
+        // juicer dropped the legacy JSON parser; the modern parser is always used now.
+        // A config with compatLevel <= COMPAT_LEVEL_OLD_PARSER (1) that previously opted into
+        // the legacy parser now transparently uses the modern parser.
+        $parser = new Json($this->logger, $this->metadata, 2000000);
 
         if (empty($config->getAttribute('mappings'))) {
             $this->parser = $parser;

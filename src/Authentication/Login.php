@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor\Authentication;
 
-use Keboola\GenericExtractor\Context\LoginAuthApiRequestContext;
-use Keboola\GenericExtractor\Context\LoginAuthLoginRequestContext;
-use Keboola\GenericExtractor\Utils;
-use Keboola\Utils\Exception\NoDataFoundException;
-use LogicException;
 use GuzzleHttp\Middleware;
 use Keboola\GenericExtractor\Configuration\UserFunction;
+use Keboola\GenericExtractor\Context\LoginAuthApiRequestContext;
+use Keboola\GenericExtractor\Context\LoginAuthLoginRequestContext;
 use Keboola\GenericExtractor\Exception\UserException;
+use Keboola\GenericExtractor\Utils;
 use Keboola\Juicer\Client\RestClient;
 use Keboola\Juicer\Client\RestRequest;
+use Keboola\Utils\Exception\NoDataFoundException;
+use LogicException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use stdClass;
 use function Keboola\Utils\getDataFromPath;
 
 /**
@@ -77,7 +78,7 @@ class Login implements AuthInterface
         ) {
             throw new UserException(
                 "The 'expires' attribute must be either an integer or an array with 'response' " .
-                'key containing a path in the response'
+                'key containing a path in the response',
             );
         }
     }
@@ -99,7 +100,7 @@ class Login implements AuthInterface
 
                 // Modify request
                 return $this->addSignature($request);
-            }
+            },
         ));
     }
 
@@ -110,7 +111,7 @@ class Login implements AuthInterface
         // For historical reasons, we HERE merge same keys into the array.
         // TODO: Make a flag to configure queries merging.
         $request = $request->withUri($uri->withQuery(
-            Utils::mergeQueries($uri->getQuery(), $this->signatureQuery, true)
+            Utils::mergeQueries($uri->getQuery(), $this->signatureQuery, true),
         ));
 
         // Add headers
@@ -170,7 +171,7 @@ class Login implements AuthInterface
         return $this->client->createRequest($config, false);
     }
 
-    private function processResponse(\stdClass $loginResponse): void
+    private function processResponse(stdClass $loginResponse): void
     {
         $this->signatureQuery = $this->buildApiRequestFunctions(
             $this->authentication['apiRequest']['query'] ?? [],
@@ -190,14 +191,14 @@ class Login implements AuthInterface
         return $this->client->getClient()->send($guzzleRequest);
     }
 
-    private function getObjectFromResponse(ResponseInterface $rawResponse): \stdClass
+    private function getObjectFromResponse(ResponseInterface $rawResponse): stdClass
     {
         if ($this->format === 'text') {
             return (object) ['data' => (string) $rawResponse->getBody()];
         } elseif ($this->format === 'json') {
             $response = $this->client->getObjectFromResponse($rawResponse);
 
-            if ($response instanceof \stdClass) {
+            if ($response instanceof stdClass) {
                 return $response;
             }
 
@@ -217,7 +218,7 @@ class Login implements AuthInterface
     /**
      * Gets expiration from the login response
      */
-    private function getExpirationFromResponse(\stdClass $response): ?int
+    private function getExpirationFromResponse(stdClass $response): ?int
     {
         if (!isset($this->authentication['expires'])) {
             return null;
@@ -244,11 +245,11 @@ class Login implements AuthInterface
         return null;
     }
 
-    protected function buildApiRequestFunctions(array $functions, \stdClass $loginResponse): array
+    protected function buildApiRequestFunctions(array $functions, stdClass $loginResponse): array
     {
         $result = UserFunction::build(
             $functions,
-            LoginAuthApiRequestContext::create($loginResponse, $this->configAttributes)
+            LoginAuthApiRequestContext::create($loginResponse, $this->configAttributes),
         );
 
         // for backward compatibility, check the values if they are a valid path within the response

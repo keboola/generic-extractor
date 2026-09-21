@@ -1,0 +1,2773 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Authentication\\Basic\:\:__construct\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/Basic.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Authentication\\Basic\:\:\$password \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Authentication/Basic.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Authentication\\Basic\:\:\$username \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Authentication/Basic.php
+
+		-
+			message: '#^Cannot access offset ''endpoint'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Authentication/Login.php
+
+		-
+			message: '#^Cannot access offset ''headers'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Authentication/Login.php
+
+		-
+			message: '#^Cannot access offset ''query'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Authentication/Login.php
+
+		-
+			message: '#^Cannot access offset ''response'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Authentication/Login.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Authentication\\Login\:\:__construct\(\) has parameter \$authentication with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/Login.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Authentication\\Login\:\:__construct\(\) has parameter \$configAttributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/Login.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Authentication\\Login\:\:buildApiRequestFunctions\(\) has parameter \$functions with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/Login.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Authentication\\Login\:\:buildApiRequestFunctions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/Login.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Authentication\\Login\:\:getLoginRequest\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/Login.php
+
+		-
+			message: '#^Parameter \#1 \$config of method Keboola\\GenericExtractor\\Authentication\\Login\:\:getLoginRequest\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Authentication/Login.php
+
+		-
+			message: '#^Parameter \#1 \$datetime of function strtotime expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Authentication/Login.php
+
+		-
+			message: '#^Parameter \#1 \$functions of method Keboola\\GenericExtractor\\Authentication\\Login\:\:buildApiRequestFunctions\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Authentication/Login.php
+
+		-
+			message: '#^Parameter \#1 \$functions of static method Keboola\\GenericExtractor\\Configuration\\UserFunction\:\:build\(\) expects array\|stdClass, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Authentication/Login.php
+
+		-
+			message: '#^Parameter \#1 \$path of function Keboola\\Utils\\getDataFromPath expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Authentication/Login.php
+
+		-
+			message: '#^Part \$rExpiry \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: src/Authentication/Login.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Authentication\\Login\:\:\$authentication type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/Login.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Authentication\\Login\:\:\$configAttributes type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/Login.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Authentication\\Login\:\:\$format \(string\|null\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Authentication/Login.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Authentication\\Login\:\:\$signatureHeaders type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/Login.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Authentication\\Login\:\:\$signatureQuery type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/Login.php
+
+		-
+			message: '#^Cannot access offset ''\#appSecret'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Authentication/OAuth10.php
+
+		-
+			message: '#^Cannot access offset ''\#appSecret''\|''\#data''\|''appKey'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Authentication/OAuth10.php
+
+		-
+			message: '#^Cannot access offset ''\#data'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Authentication/OAuth10.php
+
+		-
+			message: '#^Cannot access offset ''appKey'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Authentication/OAuth10.php
+
+		-
+			message: '#^Cannot access offset ''credentials'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Authentication/OAuth10.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Authentication\\OAuth10\:\:__construct\(\) has parameter \$authorization with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/OAuth10.php
+
+		-
+			message: '#^Parameter \#1 \$json of function Keboola\\Utils\\jsonDecode expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Authentication/OAuth10.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Authentication\\OAuth10\:\:\$consumerKey \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Authentication/OAuth10.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Authentication\\OAuth10\:\:\$consumerSecret \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Authentication/OAuth10.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Authentication\\OAuth10\:\:\$token \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Authentication/OAuth10.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Authentication\\OAuth10\:\:\$tokenSecret \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Authentication/OAuth10.php
+
+		-
+			message: '#^Cannot access offset ''\#appSecret'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Authentication/OAuth20.php
+
+		-
+			message: '#^Cannot access offset ''\#appSecret''\|''\#data''\|''appKey'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Authentication/OAuth20.php
+
+		-
+			message: '#^Cannot access offset ''\#data'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: src/Authentication/OAuth20.php
+
+		-
+			message: '#^Cannot access offset ''appKey'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Authentication/OAuth20.php
+
+		-
+			message: '#^Cannot access offset ''credentials'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Authentication/OAuth20.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 4
+			path: src/Authentication/OAuth20.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Authentication\\OAuth20\:\:__construct\(\) has parameter \$authentication with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/OAuth20.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Authentication\\OAuth20\:\:__construct\(\) has parameter \$authorization with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/OAuth20.php
+
+		-
+			message: '#^Part \$authentication\[''format''\] \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: src/Authentication/OAuth20.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Authentication\\OAuth20\:\:\$clientSecret is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Authentication/OAuth20.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Authentication\\OAuth20\:\:\$headers \(array\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Authentication/OAuth20.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Authentication\\OAuth20\:\:\$headers type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/OAuth20.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Authentication\\OAuth20\:\:\$query \(array\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Authentication/OAuth20.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Authentication\\OAuth20\:\:\$query type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/OAuth20.php
+
+		-
+			message: '#^Cannot access offset ''\#appSecret'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Authentication/OAuth20Login.php
+
+		-
+			message: '#^Cannot access offset ''\#appSecret''\|''\#data''\|''appKey'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Authentication/OAuth20Login.php
+
+		-
+			message: '#^Cannot access offset ''\#data'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Authentication/OAuth20Login.php
+
+		-
+			message: '#^Cannot access offset ''appKey'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Authentication/OAuth20Login.php
+
+		-
+			message: '#^Cannot access offset ''credentials'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Authentication/OAuth20Login.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 2
+			path: src/Authentication/OAuth20Login.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Authentication\\OAuth20Login\:\:__construct\(\) has parameter \$authentication with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/OAuth20Login.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Authentication\\OAuth20Login\:\:__construct\(\) has parameter \$authorization with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/OAuth20Login.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Authentication\\OAuth20Login\:\:__construct\(\) has parameter \$configAttributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/OAuth20Login.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Authentication\\OAuth20Login\:\:getLoginRequest\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/OAuth20Login.php
+
+		-
+			message: '#^Parameter \#1 \$functions of static method Keboola\\GenericExtractor\\Configuration\\UserFunction\:\:build\(\) expects array\|stdClass, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Authentication/OAuth20Login.php
+
+		-
+			message: '#^Parameter \#1 \$json of function Keboola\\Utils\\jsonDecode expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Authentication/OAuth20Login.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Authentication\\OAuth20Login\:\:\$auth type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/OAuth20Login.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Authentication\\OAuth20Login\:\:\$data \(array\) does not accept array\|object\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Authentication/OAuth20Login.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Authentication\\OAuth20Login\:\:\$data type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/OAuth20Login.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Authentication\\OAuth20Login\:\:\$params type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/OAuth20Login.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Authentication\\Query\:\:__construct\(\) has parameter \$authentication with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/Query.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Authentication\\Query\:\:__construct\(\) has parameter \$configAttributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/Query.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Authentication\\Query\:\:\$configAttributes type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/Query.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Authentication\\Query\:\:\$query \(array\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Authentication/Query.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Authentication\\Query\:\:\$query type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Authentication/Query.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\AwsSignature\\AwsSignatureMiddleware\:\:create\(\) has parameter \$awsSignatureCredentials with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/AwsSignature/AwsSignatureMiddleware.php
+
+		-
+			message: '#^Parameter \#1 \$key of class Aws\\Credentials\\Credentials constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/AwsSignature/AwsSignatureMiddleware.php
+
+		-
+			message: '#^Parameter \#1 \$service of class Aws\\Signature\\SignatureV4 constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/AwsSignature/AwsSignatureMiddleware.php
+
+		-
+			message: '#^Parameter \#2 \$region of class Aws\\Signature\\SignatureV4 constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/AwsSignature/AwsSignatureMiddleware.php
+
+		-
+			message: '#^Parameter \#2 \$secret of class Aws\\Credentials\\Credentials constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/AwsSignature/AwsSignatureMiddleware.php
+
+		-
+			message: '#^Cannot access offset ''connectTimeout'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Cannot access offset ''defaultOptions'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Cannot access offset ''ignoreErrors'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Cannot access offset ''query'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Cannot access offset ''requestTimeout'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Cannot access offset ''type'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Api\:\:__construct\(\) has parameter \$api with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Api\:\:__construct\(\) has parameter \$authorization with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Api\:\:__construct\(\) has parameter \$configAttributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Api\:\:createAuth\(\) has parameter \$api with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Api\:\:createAuth\(\) has parameter \$authorization with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Api\:\:createAuth\(\) has parameter \$configAttributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Api\:\:createBaseUrl\(\) has parameter \$api with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Api\:\:createBaseUrl\(\) has parameter \$configAttributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Api\:\:createBaseUrl\(\) should return string but returns mixed\.$#'
+			identifier: return.type
+			count: 2
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Api\:\:getDefaultRequestOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Api\:\:getIgnoreErrors\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Api\:\:getRetryConfig\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Parameter \#2 \$authentication of class Keboola\\GenericExtractor\\Authentication\\Login constructor expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Parameter \#2 \$authentication of class Keboola\\GenericExtractor\\Authentication\\OAuth20 constructor expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Parameter \#2 \$authentication of class Keboola\\GenericExtractor\\Authentication\\Query constructor expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Parameter \#3 \$authentication of class Keboola\\GenericExtractor\\Authentication\\OAuth20Login constructor expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Part \$api\[''authentication''\]\[''type''\] \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 2
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Configuration\\Api\:\:\$caCertificate \(string\|null\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Configuration\\Api\:\:\$clientCertificate \(string\|null\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Configuration\\Api\:\:\$defaultRequestOptions \(array\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Configuration\\Api\:\:\$defaultRequestOptions type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Configuration\\Api\:\:\$ignoreErrors type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Configuration\\Api\:\:\$name \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Configuration\\Api\:\:\$retryConfig type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Configuration\\Api\:\:\$scrollerConfig type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Result of && is always false\.$#'
+			identifier: booleanAnd.alwaysFalse
+			count: 1
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Variable \$config in empty\(\) is never defined\.$#'
+			identifier: empty.variable
+			count: 2
+			path: src/Configuration/Api.php
+
+		-
+			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 3
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Binary operation "\." between ''\{'' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Binary operation "\.\=" between mixed and non\-falsy\-string results in an error\.$#'
+			identifier: assignOp.invalid
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Cannot access offset ''\#secretKey''\|''accessKeyId''\|''regionName''\|''serviceName'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Cannot access offset ''allowed_hosts'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Cannot access offset ''api'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 3
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Cannot access offset ''aws'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Cannot access offset ''baseUrl'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Cannot access offset ''cache'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Cannot access offset ''config'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Cannot access offset ''credentials'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Cannot access offset ''endpoint'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Cannot access offset ''host'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Cannot access offset ''iterations'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Cannot access offset ''jobs'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Cannot access offset ''params'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Cannot access offset ''placeholders'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Cannot access offset ''port'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Cannot access offset ''scheme'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Cannot access offset ''signature'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Cannot access offset ''sshProxy'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Cannot access offset ''ttl'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Extractor\:\:buildUrls\(\) has parameter \$baseUrl with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Extractor\:\:buildUrls\(\) has parameter \$configAttributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Extractor\:\:buildUrls\(\) has parameter \$endpoints with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Extractor\:\:buildUrls\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Extractor\:\:getApi\(\) has parameter \$configAttributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Extractor\:\:getAwsSignatureCredentials\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Extractor\:\:getAwsSignatureCredentials\(\) should return array\|null but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Extractor\:\:getConfig\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Extractor\:\:getMetadata\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Extractor\:\:getSshProxy\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Extractor\:\:getSshProxy\(\) should return array\|null but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Extractor\:\:loadConfigFile\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Extractor\:\:loadJSONFile\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Extractor\:\:loadJSONFile\(\) should return array but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Extractor\:\:loadStateFile\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Extractor\:\:saveConfigMetadata\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Extractor\:\:validateAllowedHosts\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Extractor\:\:validateAllowedHosts\(\) has parameter \$configAttributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_replace expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Parameter \#1 \$baseUrl of method Keboola\\GenericExtractor\\Configuration\\Extractor\:\:buildUrls\(\) expects array\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Parameter \#1 \$data of function http_build_query expects array\|object, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Parameter \#1 \$haystack of function strpos expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Parameter \#1 \$params of method Keboola\\GenericExtractor\\Configuration\\Extractor\:\:getConfig\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Parameter \#1 \$string of function ltrim expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Parameter \#1 \$string of function rtrim expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Parameter \#1 \$url of function parse_url expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Parameter \#2 \$api of class Keboola\\GenericExtractor\\Configuration\\Api constructor expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Parameter \#2 \$array of function array_key_exists expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Parameter \#2 \$endpoints of method Keboola\\GenericExtractor\\Configuration\\Extractor\:\:buildUrls\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Parameter \#3 \$subject of function str_replace expects array\<string\>\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Parameter \#4 \$authorization of class Keboola\\GenericExtractor\\Configuration\\Api constructor expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Configuration\\Extractor\:\:\$config type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Configuration\\Extractor\:\:\$state type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Extractor.php
+
+		-
+			message: '#^Cannot call method cannotBeEmpty\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Configuration/Extractor/Node/Api.php
+
+		-
+			message: '#^Cannot call method end\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: src/Configuration/Extractor/Node/Api.php
+
+		-
+			message: '#^Cannot call method end\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 7
+			path: src/Configuration/Extractor/Node/Authorization.php
+
+		-
+			message: '#^Cannot call method isRequired\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: src/Configuration/Extractor/Node/Authorization.php
+
+		-
+			message: '#^Cannot call method scalarNode\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Configuration/Extractor/Node/Authorization.php
+
+		-
+			message: '#^Cannot call method end\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 8
+			path: src/Configuration/Extractor/Node/AwsSignature.php
+
+		-
+			message: '#^Cannot call method isRequired\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: src/Configuration/Extractor/Node/AwsSignature.php
+
+		-
+			message: '#^Cannot call method scalarNode\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: src/Configuration/Extractor/Node/AwsSignature.php
+
+		-
+			message: '#^Cannot call method end\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 4
+			path: src/Configuration/Extractor/Node/SshProxy.php
+
+		-
+			message: '#^Cannot call method isRequired\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: src/Configuration/Extractor/Node/SshProxy.php
+
+		-
+			message: '#^Cannot call method scalarNode\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: src/Configuration/Extractor/Node/SshProxy.php
+
+		-
+			message: '#^Cannot call method arrayNode\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Configuration/Extractor/StateFile.php
+
+		-
+			message: '#^Cannot call method isRequired\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Configuration/Extractor/StateFile.php
+
+		-
+			message: '#^Cannot access offset ''headers'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: src/Configuration/Headers.php
+
+		-
+			message: '#^Cannot access offset ''requiredHeaders'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Configuration/Headers.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Headers\:\:__construct\(\) has parameter \$api with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Headers.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Headers\:\:__construct\(\) has parameter \$configAttributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Headers.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Headers\:\:getHeaders\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Headers.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\Headers\:\:loadConfig\(\) has parameter \$configAttributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Headers.php
+
+		-
+			message: '#^Part \$rHeader \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: src/Configuration/Headers.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Configuration/Headers.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Configuration\\Headers\:\:\$apiHeaders type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Headers.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Configuration\\Headers\:\:\$configHeaders type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Headers.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Configuration\\Headers\:\:\$requiredHeaders type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Headers.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\JuicerRest\:\:convertRetry\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/JuicerRest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\JuicerRest\:\:convertRetry\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/JuicerRest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\UserFunction\:\:build\(\) has parameter \$functions with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/UserFunction.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\UserFunction\:\:build\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/UserFunction.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Configuration\\UserFunction\:\:build\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/UserFunction.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Context\\LoginAuthApiRequestContext\:\:create\(\) has parameter \$configAttributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Context/LoginAuthApiRequestContext.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Context\\LoginAuthApiRequestContext\:\:create\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Context/LoginAuthApiRequestContext.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Context\\LoginAuthLoginRequestContext\:\:create\(\) has parameter \$configAttributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Context/LoginAuthLoginRequestContext.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Context\\LoginAuthLoginRequestContext\:\:create\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Context/LoginAuthLoginRequestContext.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Context\\OAuth20Context\:\:create\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Context/OAuth20Context.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Context\\OAuth20Context\:\:getAuthorizationContext\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Context/OAuth20Context.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Context\\OAuth20LoginContext\:\:create\(\) has parameter \$configAttributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Context/OAuth20LoginContext.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Context\\OAuth20LoginContext\:\:create\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Context/OAuth20LoginContext.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Context\\OAuth20LoginContext\:\:create\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Context/OAuth20LoginContext.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Context\\QueryAuthContext\:\:create\(\) has parameter \$configAttributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Context/QueryAuthContext.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Context\\QueryAuthContext\:\:create\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Context/QueryAuthContext.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Context\\RequestContext\:\:create\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Context/RequestContext.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Exception\\ApplicationException\:\:__construct\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Exception/ApplicationException.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Exception\\ApplicationException\:\:getData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Exception/ApplicationException.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Exception\\ApplicationException\:\:\$data type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Exception/ApplicationException.php
+
+		-
+			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Executor.php
+
+		-
+			message: '#^Cannot access offset ''currentStart'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 3
+			path: src/Executor.php
+
+		-
+			message: '#^Cannot access offset ''previousStart'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 3
+			path: src/Executor.php
+
+		-
+			message: '#^Instanceof between Monolog\\Handler\\AbstractHandler and Monolog\\Handler\\AbstractHandler will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: src/Executor.php
+
+		-
+			message: '#^Parameter \#1 \$level of method Monolog\\Handler\\AbstractHandler\:\:setLevel\(\) expects 100\|200\|250\|300\|400\|500\|550\|600\|''ALERT''\|''alert''\|''CRITICAL''\|''critical''\|''DEBUG''\|''debug''\|''EMERGENCY''\|''emergency''\|''ERROR''\|''error''\|''INFO''\|''info''\|''NOTICE''\|''notice''\|''WARNING''\|''warning'', mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Executor.php
+
+		-
+			message: '#^Parameter \#1 \$string of function rtrim expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Executor.php
+
+		-
+			message: '#^Parameter \#4 \$incremental of method Keboola\\GenericExtractor\\Configuration\\Extractor\:\:storeResults\(\) expects bool, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Executor.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 4
+			path: src/Executor.php
+
+		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 1
+			path: src/GenericExtractor.php
+
+		-
+			message: '#^Instanceof between Keboola\\Juicer\\Parser\\ParserInterface and Keboola\\Juicer\\Parser\\ParserInterface will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: src/GenericExtractor.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractor\:\:__construct\(\) has parameter \$awsSignatureCredentials with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractor.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractor\:\:getMetadata\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractor.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractor\:\:setMetadata\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractor.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\GenericExtractor\:\:\$awsSignatureCredentials type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractor.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\GenericExtractor\:\:\$metadata type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractor.php
+
+		-
+			message: '#^Binary operation "\." between ''No \\''placeholders\\''…'' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Cannot access offset ''field'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Cannot access offset ''placeholder'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Cannot access offset ''value'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractorJob\:\:__construct\(\) has parameter \$attributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractorJob\:\:__construct\(\) has parameter \$metadata with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractorJob\:\:__construct\(\) has parameter \$parentParams with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractorJob\:\:__construct\(\) has parameter \$parentResults with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractorJob\:\:buildParams\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractorJob\:\:createChild\(\) has parameter \$parentResults with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractorJob\:\:filterResponse\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractorJob\:\:filterResponse\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractorJob\:\:firstPage\(\) never returns bool so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractorJob\:\:firstPage\(\) should return bool\|Keboola\\Juicer\\Client\\RestRequest but returns Keboola\\Juicer\\Client\\RestRequest\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractorJob\:\:getParentCols\(\) has parameter \$parentIdCols with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractorJob\:\:getParentCols\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractorJob\:\:getParentId\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractorJob\:\:nextPage\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractorJob\:\:nextPage\(\) never returns false so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractorJob\:\:nextPage\(\) should return Keboola\\Juicer\\Client\\RestRequest\|false but returns Keboola\\Juicer\\Client\\RestRequest\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractorJob\:\:parse\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractorJob\:\:parse\(\) has parameter \$parentId with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractorJob\:\:parse\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractorJob\:\:runChildJobs\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractorJob\:\:runResponseModules\(\) has parameter \$response with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\GenericExtractorJob\:\:runResponseModules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Parameter \#1 \$filterString of static method Keboola\\Filter\\FilterFactory\:\:create\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Parameter \#1 \$placeholders of static method Keboola\\GenericExtractor\\PlaceholdersUtils\:\:getParamsForChildJobs\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Parameter \#1 \$request of method Keboola\\GenericExtractor\\GenericExtractorJob\:\:download\(\) expects Keboola\\Juicer\\Client\\RestRequest, bool\|Keboola\\Juicer\\Client\\RestRequest given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Parameter \#1 \$response of method Keboola\\GenericExtractor\\GenericExtractorJob\:\:runResponseModules\(\) expects array\|object, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Parameter \#1 \$string of method Keboola\\GenericExtractor\\GenericExtractorJob\:\:prependParent\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Parameter \#10 \$parentParams of class Keboola\\GenericExtractor\\GenericExtractorJob constructor expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Parameter \#3 \$response of method Keboola\\Juicer\\Pagination\\ScrollerInterface\:\:getNextRequest\(\) expects array\|object, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Parameter \#3 \$subject of function str_replace expects array\<string\>\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Part \$params\[''placeholder''\] \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\GenericExtractorJob\:\:\$attributes type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\GenericExtractorJob\:\:\$metadata type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\GenericExtractorJob\:\:\$parentParams type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\GenericExtractorJob\:\:\$parentResults type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\GenericExtractorJob\:\:\$scroller in empty\(\) is not falsy nor uninitialized\.$#'
+			identifier: empty.initializedProperty
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\GenericExtractorJob\:\:\$userParentId type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between bool\|Keboola\\Juicer\\Client\\RestRequest and null will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: src/GenericExtractorJob.php
+
+		-
+			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: src/MissingTableHelper.php
+
+		-
+			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 2
+			path: src/MissingTableHelper.php
+
+		-
+			message: '#^Cannot access offset ''destination'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 4
+			path: src/MissingTableHelper.php
+
+		-
+			message: '#^Cannot access offset ''primaryKey'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/MissingTableHelper.php
+
+		-
+			message: '#^Cannot call method getAttribute\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 7
+			path: src/MissingTableHelper.php
+
+		-
+			message: '#^Cannot call method getAttributes\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/MissingTableHelper.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\MissingTableHelper\:\:checkConfigs\(\) has parameter \$configs with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/MissingTableHelper.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\MissingTableHelper\:\:fillMissingTableMapping\(\) has parameter \$mapping with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/MissingTableHelper.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\MissingTableHelper\:\:fillMissingTableMapping\(\) has parameter \$parentKey with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/MissingTableHelper.php
+
+		-
+			message: '#^Parameter \#1 \$configAttributes of method Keboola\\GenericExtractor\\Configuration\\Extractor\:\:getApi\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/MissingTableHelper.php
+
+		-
+			message: '#^Parameter \#2 \$outputBucket of static method Keboola\\GenericExtractor\\MissingTableHelper\:\:fillMissingTableMapping\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/MissingTableHelper.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/MissingTableHelper.php
+
+		-
+			message: '#^Parameter \#3 \$incremental of static method Keboola\\GenericExtractor\\MissingTableHelper\:\:fillMissingTableMapping\(\) expects bool, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/MissingTableHelper.php
+
+		-
+			message: '#^Parameter \#4 \$name of static method Keboola\\GenericExtractor\\MissingTableHelper\:\:fillMissingTableMapping\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/MissingTableHelper.php
+
+		-
+			message: '#^Parameter \#5 \$mapping of static method Keboola\\GenericExtractor\\MissingTableHelper\:\:fillMissingTableMapping\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/MissingTableHelper.php
+
+		-
+			message: '#^Parameter \#6 \$parentKey of static method Keboola\\GenericExtractor\\MissingTableHelper\:\:fillMissingTableMapping\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/MissingTableHelper.php
+
+		-
+			message: '#^Cannot access offset ''placeholder'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/PlaceholdersUtils.php
+
+		-
+			message: '#^Cannot access offset ''value'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: src/PlaceholdersUtils.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: src/PlaceholdersUtils.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\PlaceholdersUtils\:\:cartesian\(\) has parameter \$input with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/PlaceholdersUtils.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\PlaceholdersUtils\:\:cartesian\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/PlaceholdersUtils.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\PlaceholdersUtils\:\:getParamsForChildJobs\(\) has parameter \$parentParams with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/PlaceholdersUtils.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\PlaceholdersUtils\:\:getParamsForChildJobs\(\) has parameter \$parentResults with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/PlaceholdersUtils.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\PlaceholdersUtils\:\:getParamsForChildJobs\(\) has parameter \$placeholders with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/PlaceholdersUtils.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\PlaceholdersUtils\:\:getParamsForChildJobs\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/PlaceholdersUtils.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\PlaceholdersUtils\:\:getParamsPerChildJob\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/PlaceholdersUtils.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\PlaceholdersUtils\:\:getParamsPerChildJob\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/PlaceholdersUtils.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\PlaceholdersUtils\:\:getPlaceholder\(\) has parameter \$field with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/PlaceholdersUtils.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\PlaceholdersUtils\:\:getPlaceholder\(\) has parameter \$parentResults with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/PlaceholdersUtils.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\PlaceholdersUtils\:\:getPlaceholder\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/PlaceholdersUtils.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\PlaceholdersUtils\:\:getPlaceholderValue\(\) has parameter \$parentResults with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/PlaceholdersUtils.php
+
+		-
+			message: '#^Parameter \#1 \$array of function current expects array\|object, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/PlaceholdersUtils.php
+
+		-
+			message: '#^Parameter \#1 \$array of function next expects array\|object, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/PlaceholdersUtils.php
+
+		-
+			message: '#^Parameter \#1 \$array of function reset expects array\|object, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/PlaceholdersUtils.php
+
+		-
+			message: '#^Parameter \#1 \$value of function sizeof expects array\|Countable, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/PlaceholdersUtils.php
+
+		-
+			message: '#^Parameter \#2 \$data of function Keboola\\Utils\\getDataFromPath expects array\|object, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/PlaceholdersUtils.php
+
+		-
+			message: '#^Parameter \#2 \$field of static method Keboola\\GenericExtractor\\PlaceholdersUtils\:\:getPlaceholder\(\) expects array\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/PlaceholdersUtils.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 3
+			path: src/PlaceholdersUtils.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Response\\Filter\:\:run\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Response/Filter.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Response\\Filter\:\:run\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Response/Filter.php
+
+		-
+			message: '#^PHPDoc tag @var for variable \$currentPath has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Response/Filter.php
+
+		-
+			message: '#^PHPDoc tag @var with type array is not subtype of native type list\<string\>\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: src/Response/Filter.php
+
+		-
+			message: '#^Parameter \#1 \$separator of function explode expects non\-empty\-string, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Response/Filter.php
+
+		-
+			message: '#^Parameter \#1 \$string of function substr expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Response/Filter.php
+
+		-
+			message: '#^Parameter \#2 \$path of method Keboola\\GenericExtractor\\Response\\Filter\:\:filterItem\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 3
+			path: src/Response/Filter.php
+
+		-
+			message: '#^Parameter \#2 \$property of function property_exists expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Response/Filter.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Response\\Filter\:\:\$delimiter \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Response/Filter.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Response\\Filter\:\:\$filters type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Response/Filter.php
+
+		-
+			message: '#^Binary operation "\." between ''More than one array…'' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Response/FindResponseArray.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Response\\FindResponseArray\:\:process\(\) has parameter \$response with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Response/FindResponseArray.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Response\\FindResponseArray\:\:process\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Response/FindResponseArray.php
+
+		-
+			message: '#^Parameter \#1 \$path of function Keboola\\Utils\\getDataFromPath expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Response/FindResponseArray.php
+
+		-
+			message: '#^Parameter \#3 \$separator of function Keboola\\Utils\\getDataFromPath expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Response/FindResponseArray.php
+
+		-
+			message: '#^Part \$config\[''endpoint''\] \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: src/Response/FindResponseArray.php
+
+		-
+			message: '#^Part \$path \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: src/Response/FindResponseArray.php
+
+		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 1
+			path: src/SshTunnel/SshTunnelFactory.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\SshTunnel\\SshTunnelFactory\:\:create\(\) has parameter \$sshConfig with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/SshTunnel/SshTunnelFactory.php
+
+		-
+			message: '#^Parameter \#2 \$sshUser of class Keboola\\GenericExtractor\\SshTunnel\\SshTunnel constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/SshTunnel/SshTunnelFactory.php
+
+		-
+			message: '#^Parameter \#3 \$sshHost of class Keboola\\GenericExtractor\\SshTunnel\\SshTunnel constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/SshTunnel/SshTunnelFactory.php
+
+		-
+			message: '#^Parameter \#6 \$privateKey of class Keboola\\GenericExtractor\\SshTunnel\\SshTunnel constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/SshTunnel/SshTunnelFactory.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Utils\:\:checkHeadersForStdClass\(\) has parameter \$array with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Utils.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Utils\:\:checkHeadersForStdClass\(\) has parameter \$path with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Utils.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Utils\:\:mergeHeaders\(\) has parameter \$headers with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Utils.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Utils\:\:mergeQueries\(\) has parameter \$query1 with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Utils.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Utils\:\:mergeQueries\(\) has parameter \$query2 with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Utils.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_unique expects an array of values castable to string, list given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Utils.php
+
+		-
+			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Utils.php
+
+		-
+			message: '#^Parameter \#2 \$value of method Psr\\Http\\Message\\MessageInterface\:\:withHeader\(\) expects array\<string\>\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Utils.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\Authentication\\BasicTest\:\:credentialsProvider\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/Authentication/BasicTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\Authentication\\BasicTest\:\:testAuthenticateClient\(\) has parameter \$credentials with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/Authentication/BasicTest.php
+
+		-
+			message: '#^Cannot access offset ''\#data'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: tests/phpunit/Authentication/OAuth20Test.php
+
+		-
+			message: '#^Cannot access offset ''api'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: tests/phpunit/Authentication/OAuth20Test.php
+
+		-
+			message: '#^Cannot access offset ''authentication'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: tests/phpunit/Authentication/OAuth20Test.php
+
+		-
+			message: '#^Cannot access offset ''authorization'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 3
+			path: tests/phpunit/Authentication/OAuth20Test.php
+
+		-
+			message: '#^Cannot access offset ''credentials'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: tests/phpunit/Authentication/OAuth20Test.php
+
+		-
+			message: '#^Cannot access offset ''oauth_api'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: tests/phpunit/Authentication/OAuth20Test.php
+
+		-
+			message: '#^Cannot access offset ''parameters'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: tests/phpunit/Authentication/OAuth20Test.php
+
+		-
+			message: '#^Parameter \#1 \$authorization of class Keboola\\GenericExtractor\\Authentication\\OAuth20 constructor expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/phpunit/Authentication/OAuth20Test.php
+
+		-
+			message: '#^Parameter \#1 \$json of function json_decode expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/Authentication/OAuth20Test.php
+
+		-
+			message: '#^Parameter \#2 \$authData of method Keboola\\GenericExtractor\\Tests\\Authentication\\OAuth20Test\:\:assertMacRequest\(\) expects stdClass, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/phpunit/Authentication/OAuth20Test.php
+
+		-
+			message: '#^Parameter \#2 \$authentication of class Keboola\\GenericExtractor\\Authentication\\OAuth20 constructor expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/phpunit/Authentication/OAuth20Test.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/Authentication/OAuth20Test.php
+
+		-
+			message: '#^Parameter \#3 \$key of function hash_hmac expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/Authentication/OAuth20Test.php
+
+		-
+			message: '#^Cannot access offset 1 on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 7
+			path: tests/phpunit/CacheTest.php
+
+		-
+			message: '#^Cannot call method getPathname\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: tests/phpunit/CacheTest.php
+
+		-
+			message: '#^Cannot call method isDir\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/phpunit/CacheTest.php
+
+		-
+			message: '#^Cannot call method isLink\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/phpunit/CacheTest.php
+
+		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 7
+			path: tests/phpunit/CacheTest.php
+
+		-
+			message: '#^Parameter \#1 \$directory of function rmdir expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/CacheTest.php
+
+		-
+			message: '#^Parameter \#1 \$filename of function unlink expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/CacheTest.php
+
+		-
+			message: '#^Cannot access offset ''api'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: tests/phpunit/Config/ApiTest.php
+
+		-
+			message: '#^Cannot access offset ''authorization'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: tests/phpunit/Config/ApiTest.php
+
+		-
+			message: '#^Cannot access offset ''parameters'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: tests/phpunit/Config/ApiTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\Config\\ApiTest\:\:testPaginationPagesInvalidValues\(\) has parameter \$pagesValue with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/Config/ApiTest.php
+
+		-
+			message: '#^Parameter \#2 \$api of class Keboola\\GenericExtractor\\Configuration\\Api constructor expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/phpunit/Config/ApiTest.php
+
+		-
+			message: '#^Parameter \#4 \$authorization of class Keboola\\GenericExtractor\\Configuration\\Api constructor expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/phpunit/Config/ApiTest.php
+
+		-
+			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertContainsOnlyInstancesOf\(\) with ''Keboola\\\\Juicer\\\\Config\\\\Config'' and array\<Keboola\\Juicer\\Config\\Config\> will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 2
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Cannot access offset ''config'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 3
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Cannot access offset ''endpoint'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Cannot access offset ''host'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Cannot access offset ''id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Cannot access offset ''iterations'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Cannot access offset ''outputBucket'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Cannot access offset ''parameters'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 5
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Cannot access offset ''port'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Cannot access offset ''scheme'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Cannot call method getPathname\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Cannot call method isDir\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Cannot call method isLink\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\Config\\ConfigurationTest\:\:createTestConfig\(\) has parameter \$allowedHosts with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\Config\\ConfigurationTest\:\:createTestConfig\(\) has parameter \$endpoints with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\Config\\ConfigurationTest\:\:createTestConfig\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\Config\\ConfigurationTest\:\:invokeMethod\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Parameter \#1 \$directory of function rmdir expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Parameter \#1 \$filename of function unlink expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Parameter \#2 \$content of method Symfony\\Component\\Filesystem\\Filesystem\:\:dumpFile\(\) expects resource\|string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$replacements of function array_replace expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: tests/phpunit/Config/ConfigurationTest.php
+
+		-
+			message: '#^Cannot access offset ''codes'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: tests/phpunit/Config/JuicerRestTest.php
+
+		-
+			message: '#^Cannot access offset ''retryHeader'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: tests/phpunit/Config/JuicerRestTest.php
+
+		-
+			message: '#^Parameter \#2 \$array of static method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			identifier: argument.type
+			count: 3
+			path: tests/phpunit/Config/JuicerRestTest.php
+
+		-
+			message: '#^PHPDoc tag @var for variable \$functions has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/Config/UserFunctionTest.php
+
+		-
+			message: '#^PHPDoc tag @var with type array is not subtype of native type ''not array''\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: tests/phpunit/Config/UserFunctionTest.php
+
+		-
+			message: '#^Cannot access offset ''nonce'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 4
+			path: tests/phpunit/Context/OAuth20ContextTest.php
+
+		-
+			message: '#^Cannot access offset ''timestamp'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 4
+			path: tests/phpunit/Context/OAuth20ContextTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\Context\\RequestContextTest\:\:getExpectedContext\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/Context/RequestContextTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\ExtractorTestCase\:\:callMethod\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/ExtractorTestCase.php
+
+		-
+			message: '#^Cannot call method getPathname\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: tests/phpunit/FunctionalTest.php
+
+		-
+			message: '#^Cannot call method isDir\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/phpunit/FunctionalTest.php
+
+		-
+			message: '#^Cannot call method isLink\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/phpunit/FunctionalTest.php
+
+		-
+			message: '#^Parameter \#1 \$dirPath of method Keboola\\GenericExtractor\\Tests\\FunctionalTest\:\:rmDir\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/FunctionalTest.php
+
+		-
+			message: '#^Parameter \#1 \$directory of function rmdir expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/FunctionalTest.php
+
+		-
+			message: '#^Parameter \#1 \$filename of function unlink expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/FunctionalTest.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Tests\\FunctionalTest\:\:\$rmDirs type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/FunctionalTest.php
+
+		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertContainsOnlyInstancesOf\(\) with ''\\\\Keboola\\\\CsvTable…'' and array\<Keboola\\CsvTable\\Table\> will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 1
+			path: tests/phpunit/GenericExtractorJobTest.php
+
+		-
+			message: '#^Cannot access offset 0 on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: tests/phpunit/GenericExtractorJobTest.php
+
+		-
+			message: '#^Cannot access property \$anotherItem on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/phpunit/GenericExtractorJobTest.php
+
+		-
+			message: '#^Cannot access property \$complexItem on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/phpunit/GenericExtractorJobTest.php
+
+		-
+			message: '#^Cannot call method getEndpoint\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: tests/phpunit/GenericExtractorJobTest.php
+
+		-
+			message: '#^Cannot call method getParams\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/phpunit/GenericExtractorJobTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\GenericExtractorJobTest\:\:createJob\(\) has parameter \$attributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/GenericExtractorJobTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\GenericExtractorJobTest\:\:createJob\(\) has parameter \$metadata with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/GenericExtractorJobTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\GenericExtractorJobTest\:\:nextPageProvider\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/GenericExtractorJobTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\GenericExtractorJobTest\:\:parentIdProvider\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/GenericExtractorJobTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\GenericExtractorJobTest\:\:testGetParentId\(\) has parameter \$expected with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/GenericExtractorJobTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\GenericExtractorJobTest\:\:testNextPage\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/GenericExtractorJobTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\GenericExtractorJobTest\:\:testNextPage\(\) has parameter \$expectedParams with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/GenericExtractorJobTest.php
+
+		-
+			message: '#^Cannot call method getPathname\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 4
+			path: tests/phpunit/MockExecutionTest.php
+
+		-
+			message: '#^Cannot call method isDir\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/phpunit/MockExecutionTest.php
+
+		-
+			message: '#^Cannot call method isLink\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/phpunit/MockExecutionTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\MockExecutionTest\:\:configProvider\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/MockExecutionTest.php
+
+		-
+			message: '#^PHPDoc tag @var for variable \$expectedFile has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/MockExecutionTest.php
+
+		-
+			message: '#^PHPDoc tag @var for variable \$file has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/MockExecutionTest.php
+
+		-
+			message: '#^PHPDoc tag @var with type array is not subtype of native type list\<string\>\|false\.$#'
+			identifier: varTag.nativeType
+			count: 2
+			path: tests/phpunit/MockExecutionTest.php
+
+		-
+			message: '#^Parameter \#1 \$directory of function rmdir expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/MockExecutionTest.php
+
+		-
+			message: '#^Parameter \#1 \$expected of static method PHPUnit\\Framework\\Assert\:\:assertFileEquals\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/MockExecutionTest.php
+
+		-
+			message: '#^Parameter \#1 \$filename of function unlink expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/MockExecutionTest.php
+
+		-
+			message: '#^Parameter \#1 \$string of function str_getcsv expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/MockExecutionTest.php
+
+		-
+			message: '#^Parameter \#3 \$subject of function str_replace expects array\<string\>\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/phpunit/MockExecutionTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\PlaceholdersUtilsTest\:\:paramsProvider\(\) return type has no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/PlaceholdersUtilsTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\PlaceholdersUtilsTest\:\:placeholderErrorValueProvider\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/PlaceholdersUtilsTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\PlaceholdersUtilsTest\:\:placeholderProvider\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/PlaceholdersUtilsTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\PlaceholdersUtilsTest\:\:placeholderProviderIntPath\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/PlaceholdersUtilsTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\PlaceholdersUtilsTest\:\:placeholderValueProvider\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/PlaceholdersUtilsTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\PlaceholdersUtilsTest\:\:testConvertParamsPerChildJob\(\) has parameter \$expected with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/PlaceholdersUtilsTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\PlaceholdersUtilsTest\:\:testConvertParamsPerChildJob\(\) has parameter \$input with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/PlaceholdersUtilsTest.php
+
+		-
+			message: '#^Parameter \#2 \$field of static method Keboola\\GenericExtractor\\PlaceholdersUtils\:\:getPlaceholder\(\) expects array\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/phpunit/PlaceholdersUtilsTest.php
+
+		-
+			message: '#^Parameter \#2 \$parentResults of static method Keboola\\GenericExtractor\\PlaceholdersUtils\:\:getPlaceholderValue\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/PlaceholdersUtilsTest.php
+
+		-
+			message: '#^Parameter \#3 \$level of static method Keboola\\GenericExtractor\\PlaceholdersUtils\:\:getPlaceholderValue\(\) expects int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/PlaceholdersUtilsTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\RecursiveJobTest\:\:createJob\(\) has parameter \$responses with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/RecursiveJobTest.php
+
+		-
+			message: '#^Parameter \#1 \$responses of method Keboola\\Juicer\\Tests\\RestClientMockBuilder\:\:setResponses\(\) expects array\<Psr\\Http\\Message\\ResponseInterface\>, array\|GuzzleHttp\\Psr7\\Response given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/RecursiveJobTest.php
+
+		-
+			message: '#^Parameter \#3 \$body of class GuzzleHttp\\Psr7\\Response constructor expects Psr\\Http\\Message\\StreamInterface\|resource\|string\|null, string\|false given\.$#'
+			identifier: argument.type
+			count: 16
+			path: tests/phpunit/RecursiveJobTest.php
+
+		-
+			message: '#^Variable \$scroller on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.variable
+			count: 1
+			path: tests/phpunit/RecursiveJobTest.php
+
+		-
+			message: '#^Cannot access offset ''name'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: tests/phpunit/SshTunnelRetryTest.php
+
+		-
+			message: '#^Cannot call method getPathname\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: tests/phpunit/SshTunnelRetryTest.php
+
+		-
+			message: '#^Cannot call method isDir\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/phpunit/SshTunnelRetryTest.php
+
+		-
+			message: '#^Cannot call method isLink\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/phpunit/SshTunnelRetryTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\SshTunnelRetryTest\:\:simulateNetworkLimitDataThenDown\(\) should return string but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/phpunit/SshTunnelRetryTest.php
+
+		-
+			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, Closure\(array\)\: mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/SshTunnelRetryTest.php
+
+		-
+			message: '#^Parameter \#1 \$dirPath of method Keboola\\GenericExtractor\\Tests\\SshTunnelRetryTest\:\:rmDir\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/SshTunnelRetryTest.php
+
+		-
+			message: '#^Parameter \#1 \$directory of function rmdir expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/SshTunnelRetryTest.php
+
+		-
+			message: '#^Parameter \#1 \$filename of function unlink expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/SshTunnelRetryTest.php
+
+		-
+			message: '#^Parameter \#2 \$array of function array_map expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/SshTunnelRetryTest.php
+
+		-
+			message: '#^Part \$name \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: tests/phpunit/SshTunnelRetryTest.php
+
+		-
+			message: '#^Property Keboola\\GenericExtractor\\Tests\\SshTunnelRetryTest\:\:\$rmDirs type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/SshTunnelRetryTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\UtilsTest\:\:getTestHeaders\(\) return type has no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/UtilsTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\UtilsTest\:\:getTestQueries\(\) return type has no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/UtilsTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\UtilsTest\:\:getTestUris\(\) return type has no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/UtilsTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\UtilsTest\:\:testMergeHeaders\(\) has parameter \$a with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/UtilsTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\UtilsTest\:\:testMergeHeaders\(\) has parameter \$b with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/UtilsTest.php
+
+		-
+			message: '#^Method Keboola\\GenericExtractor\\Tests\\UtilsTest\:\:testMergeHeaders\(\) has parameter \$expected with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/UtilsTest.php
+
+		-
+			message: '#^Parameter \#2 \$value of method GuzzleHttp\\Psr7\\Request\:\:withHeader\(\) expects array\<string\>\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/UtilsTest.php

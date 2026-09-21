@@ -1,4 +1,4 @@
-FROM php:7.4-cli
+FROM php:8.5-cli-bookworm
 
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         locales \
         unzip \
         ssh \
-        netcat \
+        netcat-traditional \
         wget \
         build-essential \
         libbluetooth-dev \
@@ -123,17 +123,6 @@ RUN npm install --global curlconverter
 ENV LANGUAGE=en_US.UTF-8
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
-
-## Add additional certificates
-## Certificates downloaded from: https://www.digicert.com/digicert-root-certificates.htm
-##
-## From "man update-ca-certificates":
-## > Furthermore all certificates with a .crt  extension found below
-## > /usr/local/share/ca-certificates are also included as implicitly trusted.
-RUN curl https://cacerts.digicert.com/GeoTrustRSACA2018.crt.pem --output /usr/local/share/ca-certificates/GeoTrustRSACA2018.crt \
-    && curl https://cacerts.digicert.com/DigiCertGlobalRootCA.crt.pem --output /usr/local/share/ca-certificates/DigiCertGlobalRootCA.crt \
-    && update-ca-certificates
-
 
 ## Composer - deps always cached unless changed
 # First copy only composer files

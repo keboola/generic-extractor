@@ -40,7 +40,7 @@ class FunctionalTest extends TestCase
         Assert::assertSame(1, $process->getExitCode());
         Assert::assertStringContainsString(
             'Invalid configuration: invalid type "object" in headers at path: Authorization.0',
-            $stdout
+            $stdout,
         );
     }
 
@@ -53,7 +53,7 @@ class FunctionalTest extends TestCase
         Assert::assertSame(1, $process->getExitCode());
         Assert::assertStringContainsString(
             'Invalid configuration: invalid type "object" in headers at path: Authorization [] []',
-            $stdout
+            $stdout,
         );
     }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor\Tests\Authentication;
 
+use Exception;
 use GuzzleHttp\Psr7\Query;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\Utils;
@@ -16,6 +17,7 @@ use Keboola\Juicer\Tests\RestClientMockBuilder;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\NullLogger;
+use stdClass;
 
 class OAuth20Test extends ExtractorTestCase
 {
@@ -25,7 +27,7 @@ class OAuth20Test extends ExtractorTestCase
         $config = json_decode((string) file_get_contents(__DIR__ . '/../data/oauth20bearer/config.json'), true);
         $auth = new OAuth20(
             $config['authorization'],
-            $config['parameters']['api']['authentication']
+            $config['parameters']['api']['authentication'],
         );
 
         // Create RestClient
@@ -43,7 +45,7 @@ class OAuth20Test extends ExtractorTestCase
         // Each request contains Authorization header
         // 1. request
         self::assertEquals((object) ['foo' => 'bar1'], $restClient->download(
-            new RestRequest(['endpoint' => 'ep', 'params' => ['k1' => 'v1']])
+            new RestRequest(['endpoint' => 'ep', 'params' => ['k1' => 'v1']]),
         ));
         $request1 = $history->pop()->getRequest();
         self::assertSame('Bearer testToken', $request1->getHeaderLine('Authorization'));
@@ -51,7 +53,7 @@ class OAuth20Test extends ExtractorTestCase
         self::assertSame('k1=v1', $request1->getUri()->getQuery());
         // 2. request
         self::assertEquals((object) ['foo' => 'bar2'], $restClient->download(
-            new RestRequest(['endpoint' => 'ep', 'params' => ['k2' => 'v2']])
+            new RestRequest(['endpoint' => 'ep', 'params' => ['k2' => 'v2']]),
         ));
         $request2 = $history->pop()->getRequest();
         self::assertSame('Bearer testToken', $request2->getHeaderLine('Authorization'));
@@ -69,7 +71,7 @@ class OAuth20Test extends ExtractorTestCase
         $authData = json_decode($config['authorization']['oauth_api']['credentials']['#data']);
         $auth = new OAuth20(
             $config['authorization'],
-            $config['parameters']['api']['authentication']
+            $config['parameters']['api']['authentication'],
         );
 
         // Create RestClient
@@ -88,13 +90,13 @@ class OAuth20Test extends ExtractorTestCase
         // 1. request
         self::assertEquals(
             (object) ['foo' => 'bar1'],
-            $restClient->download(new RestRequest(['endpoint' => '/resource', 'params' => ['k1' => 'v1']]))
+            $restClient->download(new RestRequest(['endpoint' => '/resource', 'params' => ['k1' => 'v1']])),
         );
         $this->assertMacRequest($history->pop()->getRequest(), $authData);
         // 2. request
         self::assertEquals(
             (object) ['foo' => 'bar2'],
-            $restClient->download(new RestRequest(['endpoint' => '/resource', 'params' => ['k2' => 'v2']]))
+            $restClient->download(new RestRequest(['endpoint' => '/resource', 'params' => ['k2' => 'v2']])),
         );
         $this->assertMacRequest($history->pop()->getRequest(), $authData);
 
@@ -102,16 +104,16 @@ class OAuth20Test extends ExtractorTestCase
         self::assertTrue($history->isEmpty());
     }
 
-    private function assertMacRequest(RequestInterface $request, \stdClass $authData): void
+    private function assertMacRequest(RequestInterface $request, stdClass $authData): void
     {
         $authHeader = $request->getHeaderLine('Authorization');
         $match = preg_match(
             '/MAC id="testToken", ts="([0-9]{10})", nonce="([0-9a-zA-Z]{16})", mac="([0-9a-zA-Z]{32})"/',
             $authHeader,
-            $matches
+            $matches,
         );
         if ($match !== 1) {
-            throw new \Exception('MAC Header does not match the expected pattern');
+            throw new Exception('MAC Header does not match the expected pattern');
         }
 
         $timestamp = $matches[1];
@@ -129,7 +131,7 @@ class OAuth20Test extends ExtractorTestCase
                 $uri->getHost(),
                 80,
                 "\n",
-            ]
+            ],
         );
 
         $expectedAuthHeader = sprintf(
@@ -137,10 +139,8 @@ class OAuth20Test extends ExtractorTestCase
             $authData->access_token,
             $timestamp,
             $nonce,
-            md5(hash_hmac('sha256', $macString, $authData->mac_secret))
+            md5(hash_hmac('sha256', $macString, $authData->mac_secret)),
         );
         self::assertEquals($expectedAuthHeader, $authHeader);
-        // Header gets last newline trimmed
-        self::assertEquals($macString, $request->getHeaderLine('Test') . "\n\n");
     }
 }

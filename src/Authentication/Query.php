@@ -26,7 +26,7 @@ class Query implements AuthInterface
     {
         if (empty($authentication['query'])) {
             throw new UserException(
-                "The query authentication method requires 'query' configuration in 'authentication' section."
+                "The query authentication method requires 'query' configuration in 'authentication' section.",
             );
         }
         $this->query = $authentication['query'];
@@ -43,9 +43,9 @@ class Query implements AuthInterface
                 // Append auth query
                 $uri = $request->getUri();
                 return $request->withUri($uri->withQuery(
-                    Utils::mergeQueries($uri->getQuery(), $authQuery)
+                    Utils::mergeQueries($uri->getQuery(), $authQuery),
                 ));
-            }
+            },
         ));
     }
 }

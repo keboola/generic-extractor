@@ -18,7 +18,7 @@ class FindResponseArrayTest extends TestCase
             [
             'endpoint' => 'a',
             'dataField' => 'results',
-            ]
+            ],
         );
 
         $module = new FindResponseArray(new NullLogger());
@@ -41,7 +41,7 @@ class FindResponseArrayTest extends TestCase
             [
             'endpoint' => 'a',
             'dataField' => 'data.results',
-            ]
+            ],
         );
 
         $module = new FindResponseArray(new NullLogger());
@@ -65,7 +65,7 @@ class FindResponseArrayTest extends TestCase
         $cfg = new JobConfig(
             [
             'endpoint' => 'a',
-            ]
+            ],
         );
 
         $module = new FindResponseArray(new NullLogger());
@@ -81,7 +81,7 @@ class FindResponseArrayTest extends TestCase
         $this->expectException(UserException::class);
         $this->expectExceptionMessage(
             "More than one array found in response! Use 'dataField' parameter to specify a key to the data array. " .
-            '(endpoint: a, arrays in response root: results, otherArray)'
+            '(endpoint: a, arrays in response root: results, otherArray)',
         );
         $module->process($response, $cfg);
     }

@@ -17,7 +17,7 @@ class FilterTest extends TestCase
             [
             'endpoint' => 'ep',
             'responseFilter' => 'out.arr[].in',
-            ]
+            ],
         );
 
         $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
@@ -54,7 +54,7 @@ class FilterTest extends TestCase
                     ],
                 ],
             ],
-            $filter->run($data)
+            $filter->run($data),
         );
     }
 
@@ -64,7 +64,7 @@ class FilterTest extends TestCase
             [
             'endpoint' => 'ep',
             'responseFilter' => 'out.arr[]',
-            ]
+            ],
         );
 
         $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
@@ -99,7 +99,7 @@ class FilterTest extends TestCase
                     ],
                 ],
             ],
-            $filter->run($data)
+            $filter->run($data),
         );
     }
 
@@ -109,7 +109,7 @@ class FilterTest extends TestCase
             [
             'endpoint' => 'ep',
             'responseFilter' => 'out.arr[].in',
-            ]
+            ],
         );
 
         $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
@@ -152,7 +152,7 @@ class FilterTest extends TestCase
                     ],
                 ],
             ],
-            $filter->run($data)
+            $filter->run($data),
         );
     }
 
@@ -162,7 +162,7 @@ class FilterTest extends TestCase
             [
             'endpoint' => 'ep',
             'responseFilter' => ['out.arr[]', 'out.in'],
-            ]
+            ],
         );
         $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
 
@@ -216,7 +216,7 @@ class FilterTest extends TestCase
                     ],
                 ],
             ],
-            $filter->run($data)
+            $filter->run($data),
         );
     }
 
@@ -227,7 +227,7 @@ class FilterTest extends TestCase
             'endpoint' => 'ep',
             'responseFilter' => 'out/in',
             'responseFilterDelimiter' => '/',
-            ]
+            ],
         );
         $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
 
@@ -247,7 +247,7 @@ class FilterTest extends TestCase
                     ],
                 ],
             ],
-            $filter->run($data)
+            $filter->run($data),
         );
     }
 
@@ -257,7 +257,7 @@ class FilterTest extends TestCase
             [
             'endpoint' => 'ep',
             'responseFilter' => 'out.arr[].arr2[]',
-            ]
+            ],
         );
         $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
 
@@ -285,7 +285,7 @@ class FilterTest extends TestCase
                 ],
             ],
             ],
-            $filter->run($data)
+            $filter->run($data),
         );
     }
 
@@ -295,7 +295,7 @@ class FilterTest extends TestCase
             [
             'endpoint' => 'ep',
             'responseFilter' => 'data',
-            ]
+            ],
         );
 
         $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY_SCALAR);
@@ -329,7 +329,7 @@ class FilterTest extends TestCase
                     "id": 7,
                     "data": [42]
                 }
-            ]'
+            ]',
         );
 
         self::assertEquals(
@@ -363,7 +363,7 @@ class FilterTest extends TestCase
                     'data' => '[42]',
                 ],
             ],
-            $filter->run($data)
+            $filter->run($data),
         );
     }
 
@@ -373,7 +373,7 @@ class FilterTest extends TestCase
             [
             'endpoint' => 'ep',
             'responseFilter' => 'data',
-            ]
+            ],
         );
 
         $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
@@ -407,7 +407,7 @@ class FilterTest extends TestCase
                     "id": 7,
                     "data": [42]
                 }
-            ]'
+            ]',
         );
 
         self::assertEquals(
@@ -441,7 +441,7 @@ class FilterTest extends TestCase
                     'data' => '[42]',
                 ],
             ],
-            $filter->run($data)
+            $filter->run($data),
         );
     }
 
@@ -451,7 +451,7 @@ class FilterTest extends TestCase
             [
             'endpoint' => 'ep',
             'responseFilter' => 'data[]',
-            ]
+            ],
         );
 
         $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_FILTER_EMPTY_SCALAR);
@@ -465,7 +465,7 @@ class FilterTest extends TestCase
                     "id": 2,
                     "data": ["foo", 0, ["bar"]]
                 }
-            ]'
+            ]',
         );
 
         self::assertEquals(
@@ -479,7 +479,7 @@ class FilterTest extends TestCase
                     'data' => ['foo', 0, '["bar"]'],
                 ],
             ],
-            $filter->run($data)
+            $filter->run($data),
         );
     }
 
@@ -489,7 +489,7 @@ class FilterTest extends TestCase
             [
             'endpoint' => 'ep',
             'responseFilter' => 'data[]',
-            ]
+            ],
         );
 
         $filter = new Filter($jobConfig, GenericExtractor::COMPAT_LEVEL_LATEST);
@@ -503,7 +503,7 @@ class FilterTest extends TestCase
                     "id": 2,
                     "data": ["foo", 0, ["bar"]]
                 }
-            ]'
+            ]',
         );
 
         self::assertEquals(
@@ -517,7 +517,7 @@ class FilterTest extends TestCase
                     'data' => ['"foo"', '0', '["bar"]'],
                 ],
             ],
-            $filter->run($data)
+            $filter->run($data),
         );
     }
 }

@@ -44,7 +44,7 @@ class PlaceholdersUtils
             if (empty($field['path'])) {
                 throw new UserException(
                     "The path for placeholder '{$placeholder}' must be a string value or an object " .
-                    "containing 'path' and 'function'."
+                    "containing 'path' and 'function'.",
                 );
             }
 
@@ -80,7 +80,7 @@ class PlaceholdersUtils
             if (!array_key_exists($level, $parentResults)) {
                 $maxLevel = empty($parentResults) ? 0 : (int) max(array_keys($parentResults)) + 1;
                 throw new UserException(
-                    'Level ' . ++$level . ' not found in parent results! Maximum level: ' . $maxLevel
+                    'Level ' . ++$level . ' not found in parent results! Maximum level: ' . $maxLevel,
                 );
             }
 
@@ -92,7 +92,7 @@ class PlaceholdersUtils
                 null,
                 [
                     'parents' => $parentResults,
-                ]
+                ],
             );
         }
     }
