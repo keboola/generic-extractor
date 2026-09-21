@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Keboola\GenericExtractor\Tests;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
 class ExtractorTestCase extends TestCase
 {
@@ -13,7 +14,7 @@ class ExtractorTestCase extends TestCase
      */
     protected static function callMethod(object $obj, string $name, array $args = [])
     {
-        $class = new \ReflectionClass($obj);
+        $class = new ReflectionClass($obj);
         $method = $class->getMethod($name);
         $method->setAccessible(true);
 

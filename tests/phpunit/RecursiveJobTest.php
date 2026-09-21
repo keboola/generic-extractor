@@ -26,7 +26,7 @@ class RecursiveJobTest extends TestCase
             'dataType' => 'tickets_export',
             'userData' => ['userData' => 'hello'],
         ]);
-        $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
+        $parser = new Json(new NullLogger(), []);
         $response = '{
             "data": [
                 {
@@ -49,14 +49,14 @@ class RecursiveJobTest extends TestCase
 
         self::assertEquals(
             ['tickets_export', 'tickets_export_c'],
-            array_keys($parser->getResults())
+            array_keys($parser->getResults()),
         );
 
         self::assertEquals(
             '"a","id","c","userData"' . "\n" .
             '"first","1","tickets_export_708eef46be0d529f9495cf672287fbb5","hello"' . "\n" .
             '"second","2","tickets_export_2e8ef466fbc672e6eb065306273f60f6","hello"' . "\n",
-            file_get_contents($parser->getResults()['tickets_export']->getPathname())
+            file_get_contents($parser->getResults()['tickets_export']->getPathname()),
         );
         self::assertEquals(
             '"data","JSON_parentId"'. "\n" .
@@ -66,7 +66,7 @@ class RecursiveJobTest extends TestCase
             '"dva","tickets_export_2e8ef466fbc672e6eb065306273f60f6"' . "\n" .
             '"two","tickets_export_2e8ef466fbc672e6eb065306273f60f6"' . "\n" .
             '"2","tickets_export_2e8ef466fbc672e6eb065306273f60f6"' . "\n",
-            file_get_contents($parser->getResults()['tickets_export_c']->getPathname())
+            file_get_contents($parser->getResults()['tickets_export_c']->getPathname()),
         );
     }
 
@@ -97,41 +97,41 @@ class RecursiveJobTest extends TestCase
                 ],
             ],
         ]);
-        $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
+        $parser = new Json(new NullLogger(), []);
         $history = new HistoryContainer();
         $job = $this->createJob($jobConfig, $parser, $history, [
             new Response(200, [], json_encode(
-                ['data' => [['id' => 123, '1st' => 1]]]
+                ['data' => [['id' => 123, '1st' => 1]]],
             )),
             new Response(200, [], json_encode(
-                ['data' => [['id' => 456, '2nd' => 2], ['id' => 789, '2nd' => 3]]]
+                ['data' => [['id' => 456, '2nd' => 2], ['id' => 789, '2nd' => 3]]],
             )),
             new Response(200, [], json_encode(
-                ['data' => [['3rd' => 4]]]
+                ['data' => [['3rd' => 4]]],
             )),
             new Response(200, [], json_encode(
-                ['data' => [['3rd' => 5]]]
+                ['data' => [['3rd' => 5]]],
             )),
         ]);
         $job->run();
 
         self::assertEquals(
             ['first', 'second', 'third'],
-            array_keys($parser->getResults())
+            array_keys($parser->getResults()),
         );
 
         self::assertEquals(4, $history->count());
         self::assertEquals(
             "\"id\",\"1st\"\n\"123\",\"1\"\n",
-            file_get_contents($parser->getResults()['first']->getPathname())
+            file_get_contents($parser->getResults()['first']->getPathname()),
         );
         self::assertEquals(
             "\"id\",\"2nd\",\"parent_id\"\n\"456\",\"2\",\"123\"\n\"789\",\"3\",\"123\"\n",
-            file_get_contents($parser->getResults()['second']->getPathname())
+            file_get_contents($parser->getResults()['second']->getPathname()),
         );
         self::assertEquals(
             "\"3rd\",\"parent_id\"\n\"4\",\"456\"\n\"5\",\"789\"\n",
-            file_get_contents($parser->getResults()['third']->getPathname())
+            file_get_contents($parser->getResults()['third']->getPathname()),
         );
     }
 
@@ -166,41 +166,41 @@ class RecursiveJobTest extends TestCase
                 ],
             ],
         ]);
-        $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
+        $parser = new Json(new NullLogger(), []);
         $history = new HistoryContainer();
         $job = $this->createJob($jobConfig, $parser, $history, [
             new Response(200, [], json_encode(
-                ['data' => [['id' => 123, '1st' => 1]]]
+                ['data' => [['id' => 123, '1st' => 1]]],
             )),
             new Response(200, [], json_encode(
-                ['data' => [['id' => 456, '2nd' => 2], ['id' => 789, '2nd' => 3]]]
+                ['data' => [['id' => 456, '2nd' => 2], ['id' => 789, '2nd' => 3]]],
             )),
             new Response(200, [], json_encode(
-                ['data' => [['3rd' => 4]]]
+                ['data' => [['3rd' => 4]]],
             )),
             new Response(200, [], json_encode(
-                ['data' => [['3rd' => 5]]]
+                ['data' => [['3rd' => 5]]],
             )),
         ]);
         $job->run();
 
         self::assertEquals(
             ['first', 'second', 'third'],
-            array_keys($parser->getResults())
+            array_keys($parser->getResults()),
         );
 
         self::assertEquals(4, $history->count());
         self::assertEquals(
             "\"id\",\"1st\"\n\"123\",\"1\"\n",
-            file_get_contents($parser->getResults()['first']->getPathname())
+            file_get_contents($parser->getResults()['first']->getPathname()),
         );
         self::assertEquals(
             "\"id\",\"2nd\",\"parent_id\"\n\"456\",\"2\",\"123\"\n\"789\",\"3\",\"123\"\n",
-            file_get_contents($parser->getResults()['second']->getPathname())
+            file_get_contents($parser->getResults()['second']->getPathname()),
         );
         self::assertEquals(
             "\"3rd\",\"parent_id\"\n\"4\",\"456\"\n\"5\",\"789\"\n",
-            file_get_contents($parser->getResults()['third']->getPathname())
+            file_get_contents($parser->getResults()['third']->getPathname()),
         );
     }
 
@@ -236,41 +236,41 @@ class RecursiveJobTest extends TestCase
             ],
         ]);
 
-        $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
+        $parser = new Json(new NullLogger(), []);
         $history = new HistoryContainer();
         $job = $this->createJob($jobConfig, $parser, $history, [
             new Response(200, [], json_encode(
-                ['data' => [['id' => 123, '1st' => 1]]]
+                ['data' => [['id' => 123, '1st' => 1]]],
             )),
             new Response(200, [], json_encode(
-                ['data' => [['id' => 456, '2nd' => 2], ['id' => 789, '2nd' => 3]]]
+                ['data' => [['id' => 456, '2nd' => 2], ['id' => 789, '2nd' => 3]]],
             )),
             new Response(200, [], json_encode(
-                ['data' => [['3rd' => 4]]]
+                ['data' => [['3rd' => 4]]],
             )),
             new Response(200, [], json_encode(
-                ['data' => [['3rd' => 5]]]
+                ['data' => [['3rd' => 5]]],
             )),
         ]);
         $job->run();
 
         self::assertEquals(
             ['first', 'second', 'third'],
-            array_keys($parser->getResults())
+            array_keys($parser->getResults()),
         );
 
         self::assertEquals(4, $history->count());
         self::assertEquals(
             "\"id\",\"1st\"\n\"123\",\"1\"\n",
-            file_get_contents($parser->getResults()['first']->getPathname())
+            file_get_contents($parser->getResults()['first']->getPathname()),
         );
         self::assertEquals(
             "\"id\",\"2nd\",\"parent_id\"\n\"456\",\"2\",\"123\"\n\"789\",\"3\",\"123\"\n",
-            file_get_contents($parser->getResults()['second']->getPathname())
+            file_get_contents($parser->getResults()['second']->getPathname()),
         );
         self::assertEquals(
             "\"3rd\",\"parent_id\"\n\"4\",\"123\"\n\"5\",\"123\"\n",
-            file_get_contents($parser->getResults()['third']->getPathname())
+            file_get_contents($parser->getResults()['third']->getPathname()),
         );
     }
 
@@ -305,146 +305,41 @@ class RecursiveJobTest extends TestCase
                 ],
             ],
         ]);
-        $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
+        $parser = new Json(new NullLogger(), []);
         $history = new HistoryContainer();
         $job = $this->createJob($jobConfig, $parser, $history, [
             new Response(200, [], json_encode(
-                ['data' => [['id' => 123, '1st' => 1]]]
+                ['data' => [['id' => 123, '1st' => 1]]],
             )),
             new Response(200, [], json_encode(
-                ['data' => [['id' => 456, '2nd' => 2], ['id' => 789, '2nd' => 3]]]
+                ['data' => [['id' => 456, '2nd' => 2], ['id' => 789, '2nd' => 3]]],
             )),
             new Response(200, [], json_encode(
-                ['data' => [['3rd' => 4]]]
+                ['data' => [['3rd' => 4]]],
             )),
             new Response(200, [], json_encode(
-                ['data' => [['3rd' => 5]]]
+                ['data' => [['3rd' => 5]]],
             )),
         ]);
         $job->run();
 
         self::assertEquals(
             ['first', 'second', 'third'],
-            array_keys($parser->getResults())
+            array_keys($parser->getResults()),
         );
 
         self::assertEquals(4, $history->count());
         self::assertEquals(
             "\"id\",\"1st\"\n\"123\",\"1\"\n",
-            file_get_contents($parser->getResults()['first']->getPathname())
+            file_get_contents($parser->getResults()['first']->getPathname()),
         );
         self::assertEquals(
             "\"id\",\"2nd\",\"parent_id\"\n\"456\",\"2\",\"123\"\n\"789\",\"3\",\"123\"\n",
-            file_get_contents($parser->getResults()['second']->getPathname())
+            file_get_contents($parser->getResults()['second']->getPathname()),
         );
         self::assertEquals(
             "\"3rd\",\"parent_id\"\n\"4\",\"123\"\n\"5\",\"123\"\n",
-            file_get_contents($parser->getResults()['third']->getPathname())
-        );
-    }
-
-    public function testUserDataAddLegacy(): void
-    {
-        $jobConfig = new JobConfig([
-            'id' => 'multiCfg',
-            'endpoint' => 'exports/tickets.json',
-            'dataType' => 'tickets_export',
-            'userData' => ['column' => 'hello'],
-        ]);
-        $parser = new Json(new NullLogger(), [], Json::LEGACY_VERSION);
-        $response = '{
-            "data": [
-                {
-                    "column": "first",
-                    "id": 1
-                },
-                {
-                    "column": "second",
-                    "id": 2
-                }
-            ]
-        }';
-
-        $job = $this->createJob($jobConfig, $parser, null, [
-            new Response(200, [], $response),
-        ]);
-        $job->run();
-
-        self::assertEquals(
-            ['tickets_export'],
-            array_keys($parser->getResults())
-        );
-
-        self::assertEquals(
-            '"column","id","1afd32818d1c9525f82aff4c09efd254"' . "\n" .
-            '"hello","1",""' . "\n" .
-            '"hello","2",""' . "\n",
-            file_get_contents($parser->getResults()['tickets_export']->getPathname())
-        );
-    }
-
-    public function testUserDataAddLegacyMetadata(): void
-    {
-        $jobConfig = new JobConfig([
-            'id' => 'multiCfg',
-            'endpoint' => 'exports/tickets.json',
-            'dataType' => 'tickets_export',
-            'userData' => ['column' => 'hello'],
-        ]);
-        $metadata = [
-            'time' => [
-                'previousStart' => 1492606006,
-            ],
-            'json_parser.struct' => [
-                'tickets_export' => [
-                    'column' => 'scalar',
-                    'id' => 'scalar',
-                    'modified' => 'scalar',
-                ],
-            ],
-            'json_parser.structVersion' => 2,
-        ];
-        $parser = new Json(new NullLogger(), $metadata, Json::LATEST_VERSION);
-        $response = '{
-            "data": [
-                {
-                    "column": "first",
-                    "id": 1
-                },
-                {
-                    "column": "second",
-                    "id": 2
-                }
-            ]
-        }';
-
-        $job = $this->createJob($jobConfig, $parser, null, [
-            new Response(200, [], $response),
-        ]);
-        $job->run();
-
-        self::assertEquals(
-            ['tickets_export'],
-            array_keys($parser->getResults())
-        );
-        self::assertEquals(
-            '"column","id","modified","1afd32818d1c9525f82aff4c09efd254"' . "\n" .
-            '"hello","1","",""' . "\n" .
-            '"hello","2","",""' . "\n",
-            file_get_contents($parser->getResults()['tickets_export']->getPathname())
-        );
-        self::assertEquals(
-            [
-                'json_parser.struct' => [
-                    'tickets_export' => [
-                        'column' => 'scalar',
-                        'id' => 'scalar',
-                        'modified' => 'scalar',
-                    ],
-                ],
-                'json_parser.structVersion' => 2.0,
-            ],
-            $parser->getMetadata()
+            file_get_contents($parser->getResults()['third']->getPathname()),
         );
     }
 
@@ -490,7 +385,7 @@ class RecursiveJobTest extends TestCase
             ],
             'json_parser.structVersion' => 3,
         ];
-        $parser = new Json(new NullLogger(), $metadata, Json::LATEST_VERSION);
+        $parser = new Json(new NullLogger(), $metadata);
         $response = '{
             "data": [
                 {
@@ -511,13 +406,13 @@ class RecursiveJobTest extends TestCase
 
         self::assertEquals(
             ['tickets_export'],
-            array_keys($parser->getResults())
+            array_keys($parser->getResults()),
         );
         self::assertEquals(
             '"id","column","modified","column_u0"' . "\n" .
             '"1","first","","hello"' . "\n" .
             '"2","second","","hello"' . "\n",
-            file_get_contents($parser->getResults()['tickets_export']->getPathname())
+            file_get_contents($parser->getResults()['tickets_export']->getPathname()),
         );
         self::assertEquals(
             [
@@ -554,7 +449,7 @@ class RecursiveJobTest extends TestCase
                 ],
                 'json_parser.structVersion' => 3,
             ],
-            $parser->getMetadata()
+            $parser->getMetadata(),
         );
     }
 
@@ -566,7 +461,7 @@ class RecursiveJobTest extends TestCase
             'dataType' => 'tickets_export',
             'userData' => ['column' => 'hello'],
         ]);
-        $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
+        $parser = new Json(new NullLogger(), []);
         $response = '{
             "data": [
                 {
@@ -587,14 +482,14 @@ class RecursiveJobTest extends TestCase
 
         self::assertEquals(
             ['tickets_export'],
-            array_keys($parser->getResults())
+            array_keys($parser->getResults()),
         );
 
         self::assertEquals(
             '"column","id","column_u0"' . "\n" .
             '"first","1","hello"' . "\n" .
             '"second","2","hello"' . "\n",
-            file_get_contents($parser->getResults()['tickets_export']->getPathname())
+            file_get_contents($parser->getResults()['tickets_export']->getPathname()),
         );
     }
 
@@ -607,7 +502,7 @@ class RecursiveJobTest extends TestCase
             'dataField' => '.',
             'userData' => ['column' => 'hello'],
         ]);
-        $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
+        $parser = new Json(new NullLogger(), []);
         $response = '{
             "data": {
                 "column": "second",
@@ -622,13 +517,13 @@ class RecursiveJobTest extends TestCase
 
         self::assertEquals(
             ['tickets_export'],
-            array_keys($parser->getResults())
+            array_keys($parser->getResults()),
         );
 
         self::assertEquals(
             '"data_column","data_id","column"' . "\n" .
             '"second","2","hello"' . "\n",
-            file_get_contents($parser->getResults()['tickets_export']->getPathname())
+            file_get_contents($parser->getResults()['tickets_export']->getPathname()),
         );
     }
 
@@ -636,14 +531,14 @@ class RecursiveJobTest extends TestCase
         JobConfig $config,
         ?ParserInterface $parser,
         ?HistoryContainer $history,
-        ?array $responses = null
+        ?array $responses = null,
     ): GenericExtractorJob {
         $attributes = [];
         $metadata = [];
         $scroller = new NoScroller();
         $logger = new NullLogger();
         $scroller = $scroller ?? new NoScroller();
-        $parser = $parser ?? new Json($logger, [], Json::LATEST_VERSION);
+        $parser = $parser ?? new Json($logger, []);
         $responses = $responses ?? new Response(200, [], '[{"result": "data"}]');
         $restClientBuilder = RestClientMockBuilder::create()
             ->setResponses($responses)
@@ -663,7 +558,7 @@ class RecursiveJobTest extends TestCase
             $scroller,
             $attributes,
             $metadata,
-            GenericExtractor::COMPAT_LEVEL_LATEST
+            GenericExtractor::COMPAT_LEVEL_LATEST,
         );
     }
 }

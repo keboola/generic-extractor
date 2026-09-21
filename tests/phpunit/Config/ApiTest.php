@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Keboola\GenericExtractor\Tests\Config;
 
 use Generator;
+use GuzzleHttp\Psr7\Query as Psr7Query;
 use Keboola\GenericExtractor\Authentication\OAuth20;
 use Keboola\GenericExtractor\Authentication\OAuth20Login;
 use Keboola\GenericExtractor\Authentication\Query;
-use GuzzleHttp\Psr7\Query as Psr7Query;
 use Keboola\GenericExtractor\Configuration\Api;
 use Keboola\GenericExtractor\Exception\ApplicationException;
 use Keboola\GenericExtractor\Exception\UserException;
@@ -98,7 +98,7 @@ class ApiTest extends TestCase
 
         self::assertEquals(
             (object) ['foo' => 'bar'],
-            $restClient->download($restClient->createRequest(['endpoint' => 'http://example.com?foo=bar']))
+            $restClient->download($restClient->createRequest(['endpoint' => 'http://example.com?foo=bar'])),
         );
 
         $request = $history->shift()->getRequest();
@@ -132,7 +132,7 @@ class ApiTest extends TestCase
 
         self::assertEquals(
             (object) ['foo' => 'bar'],
-            $restClient->download($restClient->createRequest(['endpoint' => 'http://example.com?foo=bar']))
+            $restClient->download($restClient->createRequest(['endpoint' => 'http://example.com?foo=bar'])),
         );
 
         $request = $history->shift()->getRequest();
@@ -155,7 +155,7 @@ class ApiTest extends TestCase
 
         self::assertEquals(
             (object) ['foo' => 'bar'],
-            $restClient->download($restClient->createRequest(['endpoint' => 'http://example.com?foo=bar']))
+            $restClient->download($restClient->createRequest(['endpoint' => 'http://example.com?foo=bar'])),
         );
 
         $request = $history->shift()->getRequest();
@@ -165,7 +165,7 @@ class ApiTest extends TestCase
         self::assertEquals(['foo' => 'bar'], Psr7Query::parse($request->getUri()->getQuery()));
         self::assertEquals(
             ['Host' => ['example.com'], 'Authorization' => ['Bearer testToken']],
-            $headers
+            $headers,
         );
     }
 
@@ -188,7 +188,7 @@ class ApiTest extends TestCase
 
         self::assertEquals(
             (object) ['foo' => 'bar'],
-            $restClient->download($restClient->createRequest(['endpoint' => 'http://example.com?foo=bar']))
+            $restClient->download($restClient->createRequest(['endpoint' => 'http://example.com?foo=bar'])),
         );
 
         // Login request
@@ -205,7 +205,7 @@ class ApiTest extends TestCase
         self::assertInstanceOf(OAuth20Login::class, $api->getAuth());
         self::assertEquals(
             ['foo' => 'bar', 'oauth2_access_token' => 'baz'],
-            Psr7Query::parse($apiRequest->getUri()->getQuery())
+            Psr7Query::parse($apiRequest->getUri()->getQuery()),
         );
         self::assertEquals(['Host' => ['example.com']], $headers);
 
@@ -296,7 +296,7 @@ class ApiTest extends TestCase
         ];
         $this->expectException(UserException::class);
         $this->expectExceptionMessage(
-            'The "baseUrl" attribute in API configuration resulted in an invalid URL (http:///087-function-baseurl/)'
+            'The "baseUrl" attribute in API configuration resulted in an invalid URL (http:///087-function-baseurl/)',
         );
         new Api(new NullLogger(), $apiConfig, [], []);
     }
@@ -324,14 +324,14 @@ class ApiTest extends TestCase
         $this->expectException(UserException::class);
         $this->expectExceptionMessage(sprintf(
             'Value "pages" in "api.pagination" has to be int, %s given.',
-            getType($pagesValue)
+            getType($pagesValue),
         ));
 
         $string = 'https://third.second.com/TEST/Something/';
         new Api(new NullLogger(), ['baseUrl' => $string, 'pagination' => ['pages' => $pagesValue]], [], []);
     }
 
-    public function invalidPagesValues(): Generator
+    public static function invalidPagesValues(): Generator
     {
         yield 'string' => ['two'];
 

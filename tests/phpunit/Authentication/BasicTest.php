@@ -35,16 +35,16 @@ class BasicTest extends TestCase
         self::assertEquals((object) ['foo' => 'bar1'], $restClient->download(new RestRequest(['endpoint' => 'ep'])));
         self::assertSame(
             'Basic dGVzdDpwYXNz',
-            $history->pop()->getRequest()->getHeaderLine('Authorization')
+            $history->pop()->getRequest()->getHeaderLine('Authorization'),
         );
         self::assertEquals((object) ['foo' => 'bar2'], $restClient->download(new RestRequest(['endpoint' => 'ep'])));
         self::assertSame(
             'Basic dGVzdDpwYXNz',
-            $history->pop()->getRequest()->getHeaderLine('Authorization')
+            $history->pop()->getRequest()->getHeaderLine('Authorization'),
         );
     }
 
-    public function credentialsProvider(): array
+    public static function credentialsProvider(): array
     {
         return [
             [

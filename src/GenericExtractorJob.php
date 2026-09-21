@@ -13,8 +13,8 @@ use Keboola\GenericExtractor\Response\FindResponseArray;
 use Keboola\Juicer\Client\RestClient;
 use Keboola\Juicer\Client\RestRequest;
 use Keboola\Juicer\Config\JobConfig;
-use Keboola\Juicer\Pagination\ScrollerInterface;
 use Keboola\Juicer\Pagination\NoScroller;
+use Keboola\Juicer\Pagination\ScrollerInterface;
 use Keboola\Juicer\Parser\ParserInterface;
 use Psr\Log\LoggerInterface;
 
@@ -79,7 +79,7 @@ class GenericExtractorJob
         array $metadata,
         int $compatLevel,
         array $parentResults = [],
-        array $parentParams = []
+        array $parentParams = [],
     ) {
         $this->logger = $logger;
         $this->config = $config;
@@ -97,8 +97,8 @@ class GenericExtractorJob
         foreach ($this->parentParams as $params) {
             $this->config->setEndpoint(str_replace(
                 "{{$params['placeholder']}}",
-                $params['value'],
-                $this->config->getConfig()['endpoint']
+                (string) $params['value'],
+                $this->config->getConfig()['endpoint'],
             ));
         }
     }
@@ -125,8 +125,8 @@ class GenericExtractorJob
                 $this->logger->debug(
                     sprintf(
                         "Job '%s' finished when last response matched the previous!",
-                        $this->getJobId()
-                    )
+                        $this->getJobId(),
+                    ),
                 );
                 $this->scroller->reset();
                 break;
@@ -191,7 +191,7 @@ class GenericExtractorJob
         $paramsForChildJobs = PlaceholdersUtils::getParamsForChildJobs(
             $placeholders,
             $parentResults,
-            $this->parentParams
+            $this->parentParams,
         );
 
         $jobs = [];
@@ -257,7 +257,6 @@ class GenericExtractorJob
      * Create subsequent jobs for recursive endpoints. Uses "children" section of the job config
      *
      * @param  array $parentId ID (or list thereof) to be passed to parser
-     * @return array
      */
     private function parse(array $data, ?array $parentId = null): array
     {
@@ -300,7 +299,7 @@ class GenericExtractorJob
             [
                 'attr' => $this->attributes,
                 'time' => !empty($this->metadata['time']) ? $this->metadata['time'] : [],
-            ]
+            ],
         );
     }
 
@@ -322,7 +321,7 @@ class GenericExtractorJob
             [
                 'attr' => $this->attributes,
                 'time' => !empty($this->metadata['time']) ? $this->metadata['time'] : [],
-            ]
+            ],
         );
     }
 
@@ -362,7 +361,7 @@ class GenericExtractorJob
                 'User defined parent ID must be a key:value pair, or multiple such pairs.',
                 0,
                 null,
-                ['id' => $id]
+                ['id' => $id],
             );
         }
 

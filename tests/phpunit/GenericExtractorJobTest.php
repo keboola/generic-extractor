@@ -15,6 +15,7 @@ use Keboola\Juicer\Parser\Json;
 use Keboola\Juicer\Parser\ParserInterface;
 use Keboola\Juicer\Tests\RestClientMockBuilder;
 use Psr\Log\NullLogger;
+use stdClass;
 
 class GenericExtractorJobTest extends ExtractorTestCase
 {
@@ -28,7 +29,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
         self::assertEquals($expected, self::callMethod($job, 'getParentId', []));
     }
 
-    public function parentIdProvider(): array
+    public static function parentIdProvider(): array
     {
         return [
             [
@@ -38,7 +39,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
                         'userData' => [
                             'k' => 'v',
                         ],
-                    ]
+                    ],
                 ),
                 [
                     'k' => 'v',
@@ -48,7 +49,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 new JobConfig(
                     [
                         'endpoint' => 'ep',
-                    ]
+                    ],
                 ),
                 null,
             ],
@@ -57,7 +58,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
                     [
                         'endpoint' => 'ep',
                         'userData' => 'v',
-                    ]
+                    ],
                 ),
                 [
                     'job_parent_id' => 'v',
@@ -75,7 +76,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
                                 ],
                             ],
                         ],
-                    ]
+                    ],
                 ),
                 [
                     'hash' => md5('a'),
@@ -91,10 +92,10 @@ class GenericExtractorJobTest extends ExtractorTestCase
             new JobConfig(
                 [
                     'endpoint' => 'ep',
-                ]
+                ],
             ),
             [],
-            []
+            [],
         );
         $job->setUserParentId($value);
 
@@ -111,16 +112,16 @@ class GenericExtractorJobTest extends ExtractorTestCase
                         'cfg' => 'cfgVal',
                         'both' => 'cfgVal',
                     ],
-                ]
+                ],
             ),
             [],
-            []
+            [],
         );
         $job->setUserParentId(
             [
                 'inj' => 'injVal',
                 'both' => 'injVal',
-            ]
+            ],
         );
 
         self::assertEquals(
@@ -129,7 +130,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 'both' => 'cfgVal',
                 'inj' => 'injVal',
             ],
-            self::callMethod($job, 'getParentId', [])
+            self::callMethod($job, 'getParentId', []),
         );
     }
 
@@ -141,7 +142,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 'params' => [
                     'first' => 1,
                 ],
-            ]
+            ],
         );
         $job = $this->createJob($cfg, [], []);
 
@@ -160,12 +161,12 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 'params' => [
                     'first' => 1,
                 ],
-            ]
+            ],
         );
         $job = $this->createJob($cfg, [], [], new ResponseUrlScroller($config, new NullLogger()));
         self::callMethod($job, 'buildParams', [$cfg]);
 
-        $response = new \stdClass();
+        $response = new stdClass();
         $response->nextPage = 'http://example.com/api/ep?something=2';
         $response->results = [1, 2];
 
@@ -176,14 +177,14 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 $cfg,
                 $response,
                 $response->results,
-            ]
+            ],
         );
 
         self::assertEquals($response->nextPage, $req->getEndpoint());
         self::assertEquals($expectedParams, $req->getParams());
     }
 
-    public function nextPageProvider(): array
+    public static function nextPageProvider(): array
     {
         return [
             [['urlKey' => 'nextPage', 'includeParams' => true], ['first' => 1]],
@@ -214,7 +215,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
                         ],
                     ],
                 ],
-            ]
+            ],
         );
         $job = $this->createJob(
             $cfg,
@@ -224,14 +225,14 @@ class GenericExtractorJobTest extends ExtractorTestCase
                     'previousStart' => 0,
                     'currentStart' => time(),
                 ],
-            ]
+            ],
         );
         $params = self::callMethod(
             $job,
             'buildParams',
             [
                 $cfg,
-            ]
+            ],
         );
 
         self::assertEquals(
@@ -239,7 +240,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
                 'timeframe' => 'this_24_hours',
                 'filters' => date('Y-m-d') . 'stringsomething interesting',
             ],
-            $params
+            $params,
         );
     }
 
@@ -253,7 +254,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
                         'function' => 'date',
                     ],
                 ],
-            ]
+            ],
         );
         $job = $this->createJob(
             $cfg,
@@ -263,10 +264,10 @@ class GenericExtractorJobTest extends ExtractorTestCase
                     'previousStart' => 0,
                     'currentStart' => time(),
                 ],
-            ]
+            ],
         );
         $this->expectException(UserException::class);
-        $this->expectExceptionMessage('User script error: date() expects at least 1 parameter, 0 given');
+        $this->expectExceptionMessage('User script error: date() expects at least 1 argument, 0 given');
         self::callMethod($job, 'buildParams', [$cfg]);
     }
 
@@ -276,7 +277,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
             [
                 'endpoint' => 'fooBar',
                 'responseFilter' => 'complexItem',
-            ]
+            ],
         );
 
         $job = $this->createJob($cfg, [], []);
@@ -303,7 +304,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
     public function testRun(): void
     {
         $jobConfig = new JobConfig(['endpoint' => 'ep']);
-        $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
+        $parser = new Json(new NullLogger(), []);
         $job = $this->createJob($jobConfig, [], [], null, $parser);
         $job->run();
 
@@ -316,11 +317,11 @@ class GenericExtractorJobTest extends ExtractorTestCase
         array $attributes = [],
         array $metadata = [],
         ?ScrollerInterface $scroller = null,
-        ?ParserInterface $parser = null
+        ?ParserInterface $parser = null,
     ): GenericExtractorJob {
         $logger = new NullLogger();
         $scroller = $scroller ?? new NoScroller();
-        $parser = $parser ?? new Json($logger, [], Json::LATEST_VERSION);
+        $parser = $parser ?? new Json($logger, []);
         $restClient = RestClientMockBuilder::create()
             ->addResponse200('[{"result": "data"}]')
             ->setBaseUri('http://example.com/api/')
@@ -333,7 +334,7 @@ class GenericExtractorJobTest extends ExtractorTestCase
             $scroller,
             $attributes,
             $metadata,
-            GenericExtractor::COMPAT_LEVEL_LATEST
+            GenericExtractor::COMPAT_LEVEL_LATEST,
         );
     }
 }

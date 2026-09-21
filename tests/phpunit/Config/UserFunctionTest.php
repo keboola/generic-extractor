@@ -31,7 +31,7 @@ class UserFunctionTest extends TestCase
                 'attribute' => $data['attr']['attrName'],
                 'fn' => md5($functions['fn']['args'][0]),
             ],
-            UserFunction::build($functions, $data)
+            UserFunction::build($functions, $data),
         );
     }
 

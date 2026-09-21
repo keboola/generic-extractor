@@ -129,7 +129,7 @@ class GenericExtractorTest extends TestCase
 
     public function testGetParser(): void
     {
-        $parser = new Json(new NullLogger(), [], Json::LATEST_VERSION);
+        $parser = new Json(new NullLogger(), []);
         $api = new Api(new NullLogger(), ['baseUrl' => 'http://example.com'], [], []);
         $extractor = new GenericExtractor(new Temp(), new NullLogger(), $api);
         $extractor->setParser($parser);

@@ -2,17 +2,21 @@
 
 declare(strict_types=1);
 
+use GuzzleHttp\Exception\RequestException;
 use Keboola\GenericExtractor\Exception\ApplicationException;
 use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\GenericExtractor\Executor;
+use Keboola\Juicer\Exception\UserException as JuicerUserException;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // initialize logger
-$logger = new Monolog\Logger('logger');
+$logger = new Logger('logger');
 /** @var resource $stream */
 $stream = fopen('php://stdout', 'r');
-$logger->pushHandler(new \Monolog\Handler\StreamHandler($stream));
+$logger->pushHandler(new StreamHandler($stream));
 //$logger->debug("Starting up");
 
 try {
@@ -21,14 +25,14 @@ try {
 } catch (UserException $e) {
     $logger->error($e->getMessage(), (array) $e->getData());
     exit(1);
-} catch (\Keboola\Juicer\Exception\UserException $e) {
+} catch (JuicerUserException $e) {
     $logger->error($e->getMessage(), (array) $e->getData());
     exit(1);
 } catch (ApplicationException $e) {
     $logger->error($e->getMessage(), (array) $e->getData());
     exit($e->getCode() > 1 ? $e->getCode() : 2);
-} catch (\Throwable $e) {
-    if ($e instanceof \GuzzleHttp\Exception\RequestException
+} catch (Throwable $e) {
+    if ($e instanceof RequestException
         && $e->getPrevious() instanceof UserException
     ) {
         /** @var UserException $ex */
@@ -43,7 +47,7 @@ try {
         'errLine' => $e->getLine(),
         'trace' => $e->getTrace(),
         'exception' => get_class($e),
-        ]
+        ],
     );
     exit(2);
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor\Cache;
 
+use DateTime;
 use Kevinrob\GuzzleCache\CacheEntry;
 use Kevinrob\GuzzleCache\Storage\CacheStorageInterface;
 use Kevinrob\GuzzleCache\Strategy\PublicCacheStrategy;
@@ -29,7 +30,7 @@ class CacheAllStrategy extends PublicCacheStrategy
         return new CacheEntry(
             $request,
             $response,
-            new \DateTime(sprintf('+%d seconds', $this->ttl))
+            new DateTime(sprintf('+%d seconds', $this->ttl)),
         );
     }
 

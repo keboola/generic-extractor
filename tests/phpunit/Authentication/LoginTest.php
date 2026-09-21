@@ -61,7 +61,7 @@ class LoginTest extends ExtractorTestCase
         // Run
         self::assertEquals(
             (object) ['data' => [1, 2, 3]],
-            $restClient->download($restClient->createRequest(['endpoint' => '/api/get']))
+            $restClient->download($restClient->createRequest(['endpoint' => '/api/get'])),
         );
         self::assertEquals(
             (object) ['data' => [4, 5, 6]],
@@ -69,14 +69,14 @@ class LoginTest extends ExtractorTestCase
                 'endpoint' => '/api/get',
                 'params' => ['foo1' => 'bar1'],
                 'headers' => ['X-Request-Param' => 'bar2'],
-            ]))
+            ])),
         );
 
         // Assert login call, "first" attribute is in body, "second" int the header
         $loginCall = $history->shift();
         self::assertEquals(
             (string) json_encode(['par' => $attrs['first']]),
-            (string) $loginCall->getRequest()->getBody()
+            (string) $loginCall->getRequest()->getBody(),
         );
         self::assertEquals($attrs['second'], $loginCall->getRequest()->getHeaderLine('X-Header'));
 
@@ -174,7 +174,7 @@ class LoginTest extends ExtractorTestCase
         $loginCall = $history->shift();
         self::assertEquals(
             (string) json_encode(['par' => $attrs['first']]),
-            (string) $loginCall->getRequest()->getBody()
+            (string) $loginCall->getRequest()->getBody(),
         );
         self::assertEquals($attrs['second'], $loginCall->getRequest()->getHeaderLine('X-Header'));
 
@@ -238,7 +238,7 @@ class LoginTest extends ExtractorTestCase
         $loginCall = $history->shift();
         self::assertEquals(
             (string) json_encode(['par' => $attrs['first']]),
-            (string) $loginCall->getRequest()->getBody()
+            (string) $loginCall->getRequest()->getBody(),
         );
         self::assertEquals($attrs['second'], $loginCall->getRequest()->getHeaderLine('X-Header'));
 
@@ -298,7 +298,7 @@ class LoginTest extends ExtractorTestCase
         $loginCall = $history->shift();
         self::assertEquals(
             (string) json_encode(['par' => $attrs['first']]),
-            (string) $loginCall->getRequest()->getBody()
+            (string) $loginCall->getRequest()->getBody(),
         );
         self::assertEquals($attrs['second'], $loginCall->getRequest()->getHeaderLine('X-Header'));
 
@@ -399,7 +399,7 @@ class LoginTest extends ExtractorTestCase
         self::assertEquals('1234', $apiCall1->getRequest()->getHeaderLine('Authorization3'));
         self::assertEquals(
             'qToken1=4321&qToken2=qt4321&qToken3=4321',
-            $apiCall1->getRequest()->getUri()->getQuery()
+            $apiCall1->getRequest()->getUri()->getQuery(),
         );
         $apiCall2 = $history->shift();
         self::assertEquals('1234', $apiCall2->getRequest()->getHeaderLine('Authorization1'));
@@ -407,7 +407,7 @@ class LoginTest extends ExtractorTestCase
         self::assertEquals('1234', $apiCall2->getRequest()->getHeaderLine('Authorization3'));
         self::assertEquals(
             'qToken1=4321&qToken2=qt4321&qToken3=4321',
-            $apiCall2->getRequest()->getUri()->getQuery()
+            $apiCall2->getRequest()->getUri()->getQuery(),
         );
 
         // No more history items
@@ -458,7 +458,7 @@ class LoginTest extends ExtractorTestCase
         $this->expectException(UserException::class);
         $this->expectExceptionMessage(
             "The 'expires' attribute must be either an integer " .
-            "or an array with 'response' key containing a path in the response"
+            "or an array with 'response' key containing a path in the response",
         );
         new Login([], $api);
     }

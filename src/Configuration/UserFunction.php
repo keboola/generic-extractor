@@ -7,6 +7,7 @@ namespace Keboola\GenericExtractor\Configuration;
 use Keboola\Code\Builder;
 use Keboola\Code\Exception\UserScriptException;
 use Keboola\GenericExtractor\Exception\UserException;
+use stdClass;
 use function Keboola\Utils\arrayToObject;
 
 /**
@@ -27,8 +28,8 @@ class UserFunction
                 sprintf(
                     "Expected 'object' type, given '%s' type, value '%s'.",
                     gettype($functions),
-                    json_encode($functions)
-                )
+                    json_encode($functions),
+                ),
             );
         }
 
@@ -38,8 +39,8 @@ class UserFunction
             array_walk(
                 $functions,
                 function (&$value, $key) use ($params, $builder): void {
-                    $value = $value instanceof \stdClass ? $builder->run($value, $params) : $value;
-                }
+                    $value = $value instanceof stdClass ? $builder->run($value, $params) : $value;
+                },
             );
         } catch (UserScriptException $e) {
             throw new UserException('User script error: ' . $e->getMessage());

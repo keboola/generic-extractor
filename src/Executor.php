@@ -89,11 +89,11 @@ class Executor
                         $client->getHandlerStack()->after(
                             'retry',
                             $sshTunnel->getMiddleware(),
-                            'ssh-tunnel'
+                            'ssh-tunnel',
                         );
                     }
                 },
-                $awsSignatureCredentials
+                $awsSignatureCredentials,
             );
 
             if ($cacheStorage) {
@@ -123,7 +123,7 @@ class Executor
                 $parser->getResults(),
                 $bucket === '__kbc_default' ? null : (string) $bucket,
                 true,
-                $result['incremental']
+                $result['incremental'],
             );
 
             // move files and flatten file structure
