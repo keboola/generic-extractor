@@ -86,7 +86,7 @@ class GenericExtractorTest extends TestCase
         ];
 
         $cfg = new Config(['jobs' => [['endpoint' => 'get']]]);
-        $api = new Api(new NullLogger(), ['baseUrl' => 'http://private-834388-extractormock.apiary-mock.com/'], [], []);
+        $api = new Api(new NullLogger(), ['baseUrl' => 'http://jsontest/'], [], []);
         $ex = new GenericExtractor(new Temp(), new NullLogger(), $api);
 
         $ex->setMetadata($meta);

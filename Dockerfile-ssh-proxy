@@ -1,18 +1,22 @@
-FROM ubuntu:14.04
+FROM debian:bookworm-slim
 
-RUN apt-get update
+ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get install -y openssh-server
-RUN mkdir /var/run/sshd
+# OpenSSH 6.6 on the old ubuntu:14.04 base only supported ssh-rsa (SHA-1),
+# which modern OpenSSH clients (bookworm, 9.x) refuse. A current base accepts
+# the same RSA key via rsa-sha2, so no client/component change is needed.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends openssh-server \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -p /run/sshd \
+    && echo 'root:root' | chpasswd \
+    && sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 
-RUN echo 'root:root' |chpasswd
-
-RUN sed -ri 's/^PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
-RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
-
-RUN mkdir ~/.ssh
-RUN echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDawTcaNLLjlBh+H/aomeAe1lwpXTH3EfXhOI9RZL+I1agkE//AnLXlh03Z7d9b97jC11zCLQrzo3LkwpkO1O90/ZptRWoOdq14JxP9M4ULslp6D2+dFyQNBTnK4dTO5Y8qRK7/NJa6iDB7bp/xTdsBF8RIWJItlYl+6+WiAWDCDn/gEQ8ZAiSw3yEqdsSLkOcjlS9gFNgYN3TQNz2mt+2ecL8mA6N282FWMxrtk7GysYue4OwgNX/ONDlAvAFS6VUdxOTNTMRdXvABTwupdRTP28mXCq4yTlHAhuVp3u27Fw6DQjOfNDiV4tfbGctQXoCimBiJ+suo+Mj4KRwt9BIx dev" >> ~/.ssh/authorized_keys
+RUN mkdir -p /root/.ssh \
+    && echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDawTcaNLLjlBh+H/aomeAe1lwpXTH3EfXhOI9RZL+I1agkE//AnLXlh03Z7d9b97jC11zCLQrzo3LkwpkO1O90/ZptRWoOdq14JxP9M4ULslp6D2+dFyQNBTnK4dTO5Y8qRK7/NJa6iDB7bp/xTdsBF8RIWJItlYl+6+WiAWDCDn/gEQ8ZAiSw3yEqdsSLkOcjlS9gFNgYN3TQNz2mt+2ecL8mA6N282FWMxrtk7GysYue4OwgNX/ONDlAvAFS6VUdxOTNTMRdXvABTwupdRTP28mXCq4yTlHAhuVp3u27Fw6DQjOfNDiV4tfbGctQXoCimBiJ+suo+Mj4KRwt9BIx dev" > /root/.ssh/authorized_keys \
+    && chmod 700 /root/.ssh \
+    && chmod 600 /root/.ssh/authorized_keys
 
 EXPOSE 22
 
-CMD    ["/usr/sbin/sshd", "-D"]
+CMD    ["/usr/sbin/sshd", "-D", "-e"]
