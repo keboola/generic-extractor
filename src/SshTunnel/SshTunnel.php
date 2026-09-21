@@ -73,6 +73,11 @@ class SshTunnel
             '-o BatchMode=yes ' . // don't ask for password
             '-o ExitOnForwardFailure=yes ' . // exit on error
             '-o StrictHostKeyChecking=no ' .
+            // Keep tunnels working with legacy SSH servers (OpenSSH < 7.2, ssh-rsa/SHA-1 only),
+            // which OpenSSH 9.x on the php:8.5-cli-bookworm base disables by default. This
+            // preserves the connectivity the php:7.4-cli image had.
+            '-o PubkeyAcceptedAlgorithms=+ssh-rsa ' .
+            '-o HostKeyAlgorithms=+ssh-rsa ' .
             '-o ServerAliveInterval=%d -o ServerAliveCountMax=1', // exit if server not alive
             $this->localPort,
             $this->sshUser,
