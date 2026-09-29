@@ -4,21 +4,13 @@
     "license": "MIT",
     "type": "project",
     "minimum-stability": "stable",
-    "prefer-stable": true,
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/keboola/juicer.git",
-            "no-api": true
-        }
-    ],
     "require": {
         "php": ">=8.5",
         "ext-json": "*",
         "aws/aws-sdk-php": "^3.208",
         "guzzlehttp/oauth-subscriber": "^0.9",
         "keboola/filter": "^2.0",
-        "keboola/juicer": "dev-php-8.5-upgrade as 6.0.0",
+        "keboola/juicer": "^6.0",
         "keboola/php-csvtable": "^2.1",
         "keboola/php-temp": "^2.0",
         "keboola/php-utils": "^4.1",

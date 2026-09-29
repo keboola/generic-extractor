@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6b9d53464535bfd25020e1ed3334c0e5",
+    "content-hash": "ce1f6bd46ec472c05ad7be10e68472da",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -850,16 +850,16 @@
         },
         {
             "name": "keboola/juicer",
-            "version": "dev-php-8.5-upgrade",
+            "version": "6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/juicer.git",
-                "reference": "6b9d1cd8ae13a04f3c85a8d08482c0d890759857"
+                "reference": "d3f7d0ca78e0eef83cb93a9b14cd8c3b1b17702f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/juicer/zipball/6b9d1cd8ae13a04f3c85a8d08482c0d890759857",
-                "reference": "6b9d1cd8ae13a04f3c85a8d08482c0d890759857",
+                "url": "https://api.github.com/repos/keboola/juicer/zipball/d3f7d0ca78e0eef83cb93a9b14cd8c3b1b17702f",
+                "reference": "d3f7d0ca78e0eef83cb93a9b14cd8c3b1b17702f",
                 "shasum": ""
             },
             "require": {
@@ -888,41 +888,7 @@
                     "Keboola\\Juicer\\": "src"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Keboola\\Juicer\\Tests\\": "tests/phpunit"
-                }
-            },
-            "scripts": {
-                "tests-phpunit": [
-                    "XDEBUG_MODE=coverage phpunit"
-                ],
-                "tests": [
-                    "@tests-phpunit"
-                ],
-                "phpstan": [
-                    "phpstan analyse ./src ./tests --level=max --no-progress -c phpstan.neon"
-                ],
-                "phpcs": [
-                    "phpcs -n --ignore=vendor --extensions=php ."
-                ],
-                "phpcbf": [
-                    "phpcbf -n --ignore=vendor --extensions=php ."
-                ],
-                "phplint": [
-                    "parallel-lint -j 10 --exclude vendor ."
-                ],
-                "build": [
-                    "@phplint",
-                    "@phpcs",
-                    "@phpstan",
-                    "@tests"
-                ],
-                "ci": [
-                    "@composer validate --no-check-publish --no-check-all",
-                    "@build"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -938,7 +904,11 @@
                 "json",
                 "rest"
             ],
-            "time": "2026-09-21T14:41:26+00:00"
+            "support": {
+                "issues": "https://github.com/keboola/juicer/issues",
+                "source": "https://github.com/keboola/juicer/tree/6.0.0"
+            },
+            "time": "2026-09-29T11:05:01+00:00"
         },
         {
             "name": "keboola/php-csvtable",
@@ -5561,19 +5531,10 @@
             "time": "2025-11-17T20:03:58+00:00"
         }
     ],
-    "aliases": [
-        {
-            "package": "keboola/juicer",
-            "version": "dev-php-8.5-upgrade",
-            "alias": "6.0.0",
-            "alias_normalized": "6.0.0.0"
-        }
-    ],
+    "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "keboola/juicer": 20
-    },
-    "prefer-stable": true,
+    "stability-flags": {},
+    "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": ">=8.5",
