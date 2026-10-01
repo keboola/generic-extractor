@@ -74,32 +74,6 @@
               },
               "\""
             ]
-          },
-          "Test": {
-            "function": "implode",
-            "args": [
-              "\n",
-              [
-                {
-                  "authorization": "timestamp"
-                },
-                {
-                  "authorization": "nonce"
-                },
-                {
-                  "request": "method"
-                },
-                {
-                  "request": "resource"
-                },
-                {
-                  "request": "hostname"
-                },
-                {
-                  "request": "port"
-                }
-              ]
-            ]
           }
         }
       }

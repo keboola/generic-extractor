@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor\Tests;
 
+use FilesystemIterator;
 use Keboola\Csv\CsvReader;
 use PHPUnit\Framework\TestCase;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 class CacheTest extends TestCase
 {
@@ -76,12 +79,12 @@ class CacheTest extends TestCase
         if (!file_exists($dirPath)) {
             return;
         }
-        foreach (new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator(
+        foreach (new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator(
                 $dirPath,
-                \FilesystemIterator::SKIP_DOTS
+                FilesystemIterator::SKIP_DOTS,
             ),
-            \RecursiveIteratorIterator::CHILD_FIRST
+            RecursiveIteratorIterator::CHILD_FIRST,
         ) as $path) {
             $path->isDir() && !$path->isLink() ? rmdir($path->getPathname()) : unlink($path->getPathname());
         }

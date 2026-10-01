@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor\Tests;
 
+use FilesystemIterator;
 use Keboola\GenericExtractor\Tests\Traits\RmDirTrait;
 use PHPUnit\Framework\TestCase;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 class MockExecutionTest extends TestCase
 {
@@ -24,14 +27,14 @@ class MockExecutionTest extends TestCase
         self::assertStringContainsString('Extractor finished successfully.', implode("\n", $output));
         self::assertDirectoryEquals(
             __DIR__ . "/data/{$configDir}/expected/tables",
-            __DIR__ . "/data/{$configDir}/out/tables"
+            __DIR__ . "/data/{$configDir}/out/tables",
         );
 
         self::assertEquals(0, $retval);
         $this->rmDir(__DIR__ . "/data/{$configDir}/out");
     }
 
-    public function configProvider(): array
+    public static function configProvider(): array
     {
         return [
             ['responseUrlScroll'],
@@ -93,12 +96,12 @@ class MockExecutionTest extends TestCase
 
     protected function assertDirectoryEquals(string $pathToExpected, string $pathToActual): void
     {
-        foreach (new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator(
+        foreach (new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator(
                 $pathToExpected,
-                \FilesystemIterator::SKIP_DOTS
+                FilesystemIterator::SKIP_DOTS,
             ),
-            \RecursiveIteratorIterator::SELF_FIRST
+            RecursiveIteratorIterator::SELF_FIRST,
         ) as $file) {
             $relPath = str_replace($pathToExpected, '', $file->getPathname());
             self::assertFileEquals($file->getPathname(), $pathToActual . $relPath);

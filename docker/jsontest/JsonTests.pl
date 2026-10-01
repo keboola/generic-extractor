@@ -93,6 +93,57 @@ get '/cookie' => sub {
   $c->render(text => '{"time": "' . $time_t . '"}');
 };
 
+#
+# ExtractorMock routes (local replacement for the decommissioned Apiary mock,
+# private-834388-extractormock.apiary-mock.com). Responses mirror apiary.apib.
+#
+sub _json {
+  my ($c, $body, $status) = @_;
+  $c->res->headers->header("Content-Type" => 'application/json');
+  $c->res->headers->header("Access-Control-Allow-Origin" => '*');
+  $c->render(text => $body, status => $status);
+}
+
+get '/get' => sub {
+  my $c = shift;
+  _json($c, '[{"id":"321","status":"get"},{"id":"girlfriend","status":"imaginary"}]', 201);
+};
+
+post '/post' => sub {
+  my $c = shift;
+  _json($c, '[{"id":"123","status":"post"},{"id":"potato","status":"mashed"}]', 201);
+};
+
+get '/scroll' => sub {
+  my $c = shift;
+  _json($c, '{"data":[{"id":"1.0","status":"first"},{"id":"1.1","status":"page"}],"next":"/scroll/next"}', 201);
+};
+
+get '/scroll/next' => sub {
+  my $c = shift;
+  _json($c, '{"data":[{"id":"2.0","status":"next"},{"id":"2.1","status":"page"}],"next":"/scroll/last"}', 201);
+};
+
+get '/scroll/last' => sub {
+  my $c = shift;
+  _json($c, '{"data":[{"id":"3.0","status":"last"},{"id":"3.1","status":"page"}],"next":""}', 201);
+};
+
+get '/basic' => sub {
+  my $c = shift;
+  _json($c, '[{"id":"1","status":"basic"}]', 201);
+};
+
+get '/defaultBucket' => sub {
+  my $c = shift;
+  _json($c, '[{"key":"value"}]', 200);
+};
+
+get '/defaultOptions' => sub {
+  my $c = shift;
+  _json($c, '[]', 200);
+};
+
 app->secrets(['passphrase1']);
 app->start;
 

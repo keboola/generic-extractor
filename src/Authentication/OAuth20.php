@@ -11,6 +11,7 @@ use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\GenericExtractor\Utils;
 use Keboola\Juicer\Client\RestClient;
 use Psr\Http\Message\RequestInterface;
+use function Keboola\Utils\jsonDecode;
 
 /**
  * OAuth 2.0 Bearer implementation
@@ -70,7 +71,7 @@ class OAuth20 implements AuthInterface
             case 'json':
                 // authorization: { data: key }
                 /** @var object $data */
-                $data = \Keboola\Utils\jsonDecode((string) $oauthApiDetails['#data']);
+                $data = jsonDecode((string) $oauthApiDetails['#data']);
                 $this->data = $data;
                 break;
             case 'text':
@@ -103,7 +104,7 @@ class OAuth20 implements AuthInterface
                 $uri = $request->getUri();
                 $query = UserFunction::build($this->query, $fnContext);
                 $request = $request->withUri($uri->withQuery(
-                    Utils::mergeQueries($uri->getQuery(), $query)
+                    Utils::mergeQueries($uri->getQuery(), $query),
                 ));
 
                 // Add headers
@@ -112,7 +113,7 @@ class OAuth20 implements AuthInterface
                 $request = Utils::mergeHeaders($request, $headers);
 
                 return $request;
-            }
+            },
         ));
     }
 }

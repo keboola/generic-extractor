@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Keboola\GenericExtractor\Context;
 
+use stdClass;
 use function Keboola\Utils\objectToArray;
 
 /**
@@ -11,7 +12,7 @@ use function Keboola\Utils\objectToArray;
  */
 class LoginAuthApiRequestContext
 {
-    public static function create(\stdClass $loginResponse, array $configAttributes): array
+    public static function create(stdClass $loginResponse, array $configAttributes): array
     {
         return [
             'response' => objectToArray($loginResponse),

@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Keboola\GenericExtractor\Authentication;
 
 use GuzzleHttp\Middleware;
+use GuzzleHttp\Subscriber\Oauth\Oauth1;
 use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\Juicer\Client\RestClient;
-use GuzzleHttp\Subscriber\Oauth\Oauth1;
 use Keboola\Utils\Exception\JsonDecodeException;
 use Psr\Http\Message\RequestInterface;
+use stdClass;
 use function Keboola\Utils\jsonDecode;
 
 /**
@@ -46,22 +47,22 @@ class OAuth10 implements AuthInterface
             throw new UserException('The OAuth #data is not a valid JSON.');
         }
 
-        if (!$data instanceof \stdClass) {
+        if (!$data instanceof stdClass) {
             throw new UserException(sprintf(
                 "Key 'oauth_api.credentials'.#data must be object, given '%s'.",
-                gettype($data)
+                gettype($data),
             ));
         }
 
         if (!isset($data->oauth_token)) {
             throw new UserException(
-                "Missing 'oauth_api.credentials.#data.oauth_token' for OAuth 1.0 authorization."
+                "Missing 'oauth_api.credentials.#data.oauth_token' for OAuth 1.0 authorization.",
             );
         }
 
         if (!isset($data->oauth_token_secret)) {
             throw new UserException(
-                "Missing 'oauth_api.credentials.#data.oauth_token_secret' for OAuth 1.0 authorization."
+                "Missing 'oauth_api.credentials.#data.oauth_token_secret' for OAuth 1.0 authorization.",
             );
         }
 

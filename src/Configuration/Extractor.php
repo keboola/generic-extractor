@@ -152,7 +152,7 @@ class Extractor
         $cacheDir = $this->dataDir . DIRECTORY_SEPARATOR . 'cache';
         return new CacheAllStrategy(
             new FlysystemStorage(new Local($cacheDir)),
-            $ttl
+            $ttl,
         );
     }
 
@@ -182,8 +182,8 @@ class Extractor
                 throw new UserException(
                     sprintf(
                         'Option "%s" under "parameters.aws.signature.credentials" cannot be empty.',
-                        $requiredParam
-                    )
+                        $requiredParam,
+                    ),
                 );
             }
         }
@@ -210,7 +210,7 @@ class Extractor
         array $csvFiles,
         ?string $bucketName = null,
         bool $sapiPrefix = true,
-        bool $incremental = false
+        bool $incremental = false,
     ): void {
         $path = "{$this->dataDir}/out/tables/";
 
@@ -304,7 +304,7 @@ class Extractor
         } else {
             try {
                 $baseUrlCreated = UserFunction::build([$baseUrl], ['attr' => $configAttributes])[0];
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 throw new UserException('Error in baseUrl function: ' . $e->getMessage());
             }
         }
@@ -317,7 +317,7 @@ class Extractor
             // Replace placeholders if present
             if (!empty($endpointData['placeholders'])) {
                 foreach ($endpointData['placeholders'] as $placeholder => $value) {
-                    $endpoint = str_replace('{' . $placeholder . '}', $value, $endpoint);
+                    $endpoint = str_replace('{' . $placeholder . '}', (string) $value, $endpoint);
                 }
             }
 

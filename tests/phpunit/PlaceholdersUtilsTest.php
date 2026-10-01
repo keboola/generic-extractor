@@ -24,7 +24,7 @@ class PlaceholdersUtilsTest extends ExtractorTestCase
                     'field' => 'data',
                     'id' => '1:1',
                 ],
-            ]
+            ],
         );
 
         self::assertEquals(
@@ -33,11 +33,11 @@ class PlaceholdersUtilsTest extends ExtractorTestCase
                 'field' => 'id',
                 'value' => $expectedValue,
             ],
-            $value
+            $value,
         );
     }
 
-    public function placeholderProvider(): array
+    public static function placeholderProvider(): array
     {
         return [
             'function' => [
@@ -72,7 +72,7 @@ class PlaceholdersUtilsTest extends ExtractorTestCase
                     'field' => 'data',
                     '123' => '1:1',
                 ],
-            ]
+            ],
         );
 
         self::assertEquals(
@@ -81,11 +81,11 @@ class PlaceholdersUtilsTest extends ExtractorTestCase
                 'field' => '123',
                 'value' => $expectedValue,
             ],
-            $value
+            $value,
         );
     }
 
-    public function placeholderProviderIntPath(): array
+    public static function placeholderProviderIntPath(): array
     {
         return [
             'function' => [
@@ -145,7 +145,7 @@ class PlaceholdersUtilsTest extends ExtractorTestCase
         }
     }
 
-    public function placeholderErrorValueProvider(): array
+    public static function placeholderErrorValueProvider(): array
     {
         return [
             [[], 'Level 1 not found in parent results! Maximum level: 0'],
@@ -153,7 +153,7 @@ class PlaceholdersUtilsTest extends ExtractorTestCase
         ];
     }
 
-    public function placeholderValueProvider(): array
+    public static function placeholderValueProvider(): array
     {
         return [
             [
@@ -175,7 +175,7 @@ class PlaceholdersUtilsTest extends ExtractorTestCase
         self::assertEquals(PlaceholdersUtils::getParamsPerChildJob($input), $expected);
     }
 
-    public function paramsProvider(): iterable
+    public static function paramsProvider(): iterable
     {
         yield 'one-scalar' => [
             [

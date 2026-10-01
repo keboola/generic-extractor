@@ -15,6 +15,7 @@ use Keboola\Utils\Exception\JsonDecodeException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\Constraints\Url;
 use Symfony\Component\Validator\Validation;
+use function Keboola\Utils\jsonDecode;
 
 /**
  * API Description
@@ -63,7 +64,7 @@ class Api
                 } else {
                     throw new UserException(sprintf(
                         'Value "pages" in "api.pagination" has to be int, %s given.',
-                        getType($api['pagination']['pages'])
+                        getType($api['pagination']['pages']),
                     ));
                 }
             }
@@ -144,7 +145,7 @@ class Api
         if (is_string($api['baseUrl'])) {
             // For backwards compatibility
             try {
-                $fn = \Keboola\Utils\jsonDecode($api['baseUrl']);
+                $fn = jsonDecode($api['baseUrl']);
                 $this->logger->warning('Passing json-encoded baseUrl is deprecated.');
             } catch (JsonDecodeException $e) {
                 throw new UserException("The 'baseUrl' attribute in API configuration is not a valid URL");
@@ -158,8 +159,8 @@ class Api
             throw new UserException(
                 sprintf(
                     'The "baseUrl" attribute in API configuration resulted in an invalid URL (%s)',
-                    $baseUrl
-                )
+                    $baseUrl,
+                ),
             );
         }
 

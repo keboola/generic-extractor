@@ -45,27 +45,27 @@ class OAuth10Test extends TestCase
         // 1. requests
         self::assertEquals(
             (object) ['data' => [1, 2, 3]],
-            $restClient->download($restClient->createRequest(['endpoint' => '/']))
+            $restClient->download($restClient->createRequest(['endpoint' => '/'])),
         );
         $authHeader1 = $history->pop()->getRequest()->getHeaderLine('Authorization');
         self::assertMatchesRegularExpression(
             '/^OAuth oauth_consumer_key="aaa", oauth_nonce="([0-9a-zA-Z]*)", '.
             'oauth_signature="([0-9a-zA-Z%]*)", oauth_signature_method="HMAC-SHA1", '.
             'oauth_timestamp="([0-9]{10})", oauth_token="token", oauth_version="1.0"$/',
-            $authHeader1
+            $authHeader1,
         );
 
         // 2. request
         self::assertEquals(
             (object) ['data' => [4, 5, 6]],
-            $restClient->download($restClient->createRequest(['endpoint' => '/']))
+            $restClient->download($restClient->createRequest(['endpoint' => '/'])),
         );
         $authHeader2 = $history->pop()->getRequest()->getHeaderLine('Authorization');
         self::assertMatchesRegularExpression(
             '/^OAuth oauth_consumer_key="aaa", oauth_nonce="([0-9a-zA-Z]*)", '.
             'oauth_signature="([0-9a-zA-Z%]*)", oauth_signature_method="HMAC-SHA1", '.
             'oauth_timestamp="([0-9]{10})", oauth_token="token", oauth_version="1.0"$/',
-            $authHeader2
+            $authHeader2,
         );
 
         // No more history items

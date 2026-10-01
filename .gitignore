@@ -3,6 +3,7 @@ vendor/
 .idea/
 .tmp
 .phpunit.result.cache
+.phpunit.cache
 /cc-test-reporter
 /doc/examples/*/out/state.json
 /doc/examples/*/out/tables/*

@@ -42,7 +42,7 @@ class RequestContextTest extends TestCase
             [
                 'X-Test-Foo' => 'Bar',
             ],
-            '{"some": "body"}'
+            '{"some": "body"}',
         );
     }
 

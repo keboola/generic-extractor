@@ -7,6 +7,7 @@ namespace Keboola\GenericExtractor\Response;
 use Keboola\GenericExtractor\Exception\UserException;
 use Keboola\Juicer\Config\JobConfig;
 use Psr\Log\LoggerInterface;
+use function Keboola\Utils\getDataFromPath;
 
 class FindResponseArray
 {
@@ -44,7 +45,7 @@ class FindResponseArray
                 throw new UserException("'dataField' must be either a path string or an object with 'path' attribute.");
             }
 
-            $data = \Keboola\Utils\getDataFromPath($path, $response, $separator);
+            $data = getDataFromPath($path, $response, $separator);
             if (empty($data)) {
                 $this->logger->warning("dataField '{$path}' contains no data!");
                 $data = [];
@@ -72,7 +73,7 @@ class FindResponseArray
                     "No data array found in response! (endpoint: {$config['endpoint']})",
                     [
                     'response' => json_encode($response),
-                    ]
+                    ],
                 );
                 $data = [];
             } else {
@@ -85,7 +86,7 @@ class FindResponseArray
                     [
                         'response' => json_encode($response),
                         'arrays found' => $arrayNames,
-                    ]
+                    ],
                 );
             }
         } else {

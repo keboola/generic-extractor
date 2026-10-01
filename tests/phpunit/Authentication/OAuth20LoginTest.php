@@ -25,7 +25,7 @@ class OAuth20LoginTest extends ExtractorTestCase
                     'access_token' => '1234',
                     'refresh_token' => 'asdf',
                     'expires_in' => 3600,
-                ]
+                ],
             ),
         ];
 

@@ -69,7 +69,7 @@ class TestComponent(unittest.TestCase):
         expected_request_data = '{"parameter": "value"}'
         self.assertEqual(output["request"]["data"], expected_request_data)
         # url params are dropped
-        self.assertEqual(output["request"]["url"], "http://private-834388-extractormock.apiary-mock.com/post")
+        self.assertEqual(output["request"]["url"], "http://jsontest/post")
         # correct content type
         self.assertEqual(output["request"]["headers"]["Content-Type"], "application/json")
 
@@ -91,7 +91,7 @@ class TestComponent(unittest.TestCase):
         expected_request_data = "parameter=value"
         self.assertEqual(output["request"]["data"], expected_request_data)
         # url params are dropped
-        self.assertEqual(output["request"]["url"], "http://private-834388-extractormock.apiary-mock.com/post")
+        self.assertEqual(output["request"]["url"], "http://jsontest/post")
         # request method is POST
         self.assertEqual(output["request"]["method"], "POST")
         # correct content type

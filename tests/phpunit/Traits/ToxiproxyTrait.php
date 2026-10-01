@@ -28,7 +28,7 @@ trait ToxiproxyTrait
                 '{"name": "%s", "upstream": "%s", "listen": "0.0.0.0:%s"}',
                 $proxyName,
                 $upstream,
-                $listenPort
+                $listenPort,
             ),
         ]);
     }

@@ -22,7 +22,7 @@ class SshTunnelFactory
     {
         $missingParams = array_diff(
             ['user', 'host', 'port', '#privateKey'],
-            array_keys($sshConfig)
+            array_keys($sshConfig),
         );
 
         if (!empty($missingParams)) {

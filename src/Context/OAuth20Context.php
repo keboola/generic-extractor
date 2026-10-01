@@ -40,7 +40,7 @@ class OAuth20Context
         if (!is_scalar($data)) {
             $authorization = array_merge(
                 $authorization,
-                flattenArray(objectToArray($data), 'data.')
+                flattenArray(objectToArray($data), 'data.'),
             );
         } else {
             $authorization['data'] = $data;

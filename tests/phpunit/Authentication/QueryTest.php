@@ -44,14 +44,14 @@ class QueryTest extends ExtractorTestCase
         // Run
         self::assertEquals(
             (object) ['data' => [1, 2, 3]],
-            $restClient->download($restClient->createRequest(['endpoint' => '/']))
+            $restClient->download($restClient->createRequest(['endpoint' => '/'])),
         );
 
         // Assert request query
         $apiCall = $history->shift();
         self::assertEquals(
             'paramOne=1&paramTwo=' . md5($configAttributes['second']) . '&paramThree=string',
-            $apiCall->getRequest()->getUri()->getQuery()
+            $apiCall->getRequest()->getUri()->getQuery(),
         );
 
         // No more history items
@@ -81,15 +81,15 @@ class QueryTest extends ExtractorTestCase
         self::assertEquals(
             (object) ['data' => [1, 2, 3]],
             $restClient->download(
-                $restClient->createRequest(['endpoint' => '/query', 'params' => ['param' => 'value']])
-            )
+                $restClient->createRequest(['endpoint' => '/query', 'params' => ['param' => 'value']]),
+            ),
         );
 
         // Assert request query
         $apiCall = $history->shift();
         self::assertEquals(
             'param=value&authParam=secretCodeWow',
-            $apiCall->getRequest()->getUri()->getQuery()
+            $apiCall->getRequest()->getUri()->getQuery(),
         );
 
         // No more history items
@@ -138,8 +138,8 @@ class QueryTest extends ExtractorTestCase
         self::assertEquals(
             (object) ['data' => [1, 2, 3]],
             $restClient->download(
-                $restClient->createRequest(['endpoint' => '/query', 'params' => ['param' => 'value']])
-            )
+                $restClient->createRequest(['endpoint' => '/query', 'params' => ['param' => 'value']]),
+            ),
         );
 
         // Assert request query
@@ -151,7 +151,7 @@ class QueryTest extends ExtractorTestCase
                 'urlTokenParamHash' => md5($originalUrl . $configAttributes['token'] . 'value'),
                 'urlTokenParam' => $originalUrl . $configAttributes['token'] . 'value',
             ]),
-            $apiCall->getRequest()->getUri()->getQuery()
+            $apiCall->getRequest()->getUri()->getQuery(),
         );
 
         // No more history items
